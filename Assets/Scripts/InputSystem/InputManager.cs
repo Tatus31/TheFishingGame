@@ -40,11 +40,11 @@ public class InputManager : MonoBehaviour
 
     public bool IsHoldingSprintKey()
     {
-        return playerInputActions.Player.Sprint.IsPressed(); 
+        return playerInputActions.Player.Sprint.IsPressed();
     }
 
     public bool IsLeftMouseButtonPressed()
     {
-        return playerInputActions.Player.LeftMouse.IsPressed();
+        return playerInputActions.Player.LeftMouse.WasPerformedThisFrame();
     }
 }
