@@ -14,7 +14,8 @@ public class CameraEffectsManager : MonoBehaviour
 
     CinemachineVirtualCamera virtualCamera;
     InputManager inputManager;
-    Throw rodThrow;
+    Throw throwState;
+    FishingStateManager fishingStateManager;
 
     CameraEffectsBaseState currentState;
 
@@ -29,12 +30,16 @@ public class CameraEffectsManager : MonoBehaviour
     void Start()
     {
         inputManager = InputManager.Instance;
-        rodThrow = FindObjectOfType<Throw>();
+        fishingStateManager = FindObjectOfType<FishingStateManager>();
+        throwState = fishingStateManager.throwState;
+
+        if (throwState == null)
+            Debug.LogError("Throw component not found!");
 
         currentState = headBobState;
-
         currentState.EnterState(this);
     }
+
 
     void Update()
     {
@@ -51,5 +56,7 @@ public class CameraEffectsManager : MonoBehaviour
 
     public InputManager GetInputManager() { return inputManager; }
 
-    public Throw GetRodThrow() { return rodThrow; }
+    public Throw GetRodThrow() { return throwState; }
+
+    public FishingStateManager GetFishingStateManager() { return fishingStateManager; }
 }

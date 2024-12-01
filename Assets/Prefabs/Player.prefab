@@ -165,7 +165,6 @@ GameObject:
   - component: {fileID: 2184651733772993514}
   - component: {fileID: 6285445224299944270}
   - component: {fileID: 3197308657267518842}
-  - component: {fileID: 2707069121784616019}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -238,19 +237,3 @@ MonoBehaviour:
   sprintAccelAmount: 2
   sprintFrictionAmount: 1
   rb: {fileID: 6285445224299944270}
---- !u!114 &2707069121784616019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7840135613657749102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2acb895ed6fba64382eeda54842e6ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lineLength: 10
-  lineColor: {r: 1, g: 0, b: 0, a: 1}
-  orientation: {fileID: 6229843712686157687}
-  trajectoryHeight: 2

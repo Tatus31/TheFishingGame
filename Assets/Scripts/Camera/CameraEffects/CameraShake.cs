@@ -18,40 +18,41 @@ public class CameraShake : CameraEffectsBaseState
         isThrowing = e;
     }
 
+
     public override void EnterState(CameraEffectsManager cameraEffect)
     {
-        cameraEffect.GetRodThrow().OnThrowStrenghtChange += Throw_OnThrowStrenghtChange;
-        cameraEffect.GetRodThrow().OnThrowing += Throw_OnThrowing;
+        var throwState = cameraEffect.GetRodThrow();
+
+        throwState.OnThrowStrenghtChange += Throw_OnThrowStrenghtChange;
+        throwState.OnThrowing += Throw_OnThrowing;
+
+        previousThrowStrength = throwStrength;
+        isThrowing = false;
     }
 
     public override void UpdateState(CameraEffectsManager cameraEffect)
     {
         var perlin = cameraEffect.GetVirtualCamera().GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        float targetFrequency;
+        float targetFrequency = Mathf.Max(perlin.m_FrequencyGain - 0.15f, cameraEffect.WalkFrequency);
 
-        if (!isThrowing)
+        float strengthDifference = throwStrength - previousThrowStrength;
+        if (Mathf.Abs(strengthDifference) > 0.01f)
         {
-            targetFrequency = Mathf.Max(perlin.m_FrequencyGain - 0.15f, cameraEffect.WalkFrequency);
-            if(targetFrequency < cameraEffect.WalkFrequency)
-            {
-                cameraEffect.SwitchState(cameraEffect.headBobState);
-            }
+            targetFrequency = Mathf.Min(perlin.m_FrequencyGain + 0.1f, 1f);
         }
         else
         {
-            float strengthDifference = throwStrength - previousThrowStrength;
-            if (Mathf.Abs(strengthDifference) > 0)
-            {
-                targetFrequency = Mathf.Min(perlin.m_FrequencyGain + 0.1f, 1);
-            }
-            else
-            {
-                targetFrequency = Mathf.Max(perlin.m_FrequencyGain - 0.15f, cameraEffect.WalkFrequency);
-            }
+            targetFrequency = Mathf.Max(perlin.m_FrequencyGain - 0.15f, cameraEffect.WalkFrequency);
         }
 
         perlin.m_FrequencyGain = Mathf.Lerp(perlin.m_FrequencyGain, targetFrequency, Time.deltaTime * 7f);
 
         previousThrowStrength = throwStrength;
+
+        if (targetFrequency <= cameraEffect.WalkFrequency + 0.01f && !isThrowing)
+        {
+            cameraEffect.SwitchState(cameraEffect.headBobState);
+        }
     }
+
 }

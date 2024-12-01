@@ -16,12 +16,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float maxSpeed = 5f;
     [SerializeField] float accelAmount = 2f;
     public float maxSpeedTime = 1f;
+
     [Header("Counter Movement")]
     [SerializeField] float frictionAmount = 2f;
     [Space(10)]
+
     [Header("Sprint Movement")]
     [SerializeField] float sprintMaxSpeed = 8f;
     [SerializeField] float sprintAccelAmount = 4f;
+
     [Header("Sprint Counter Movement")]
     [SerializeField] float sprintFrictionAmount = 1f;
 

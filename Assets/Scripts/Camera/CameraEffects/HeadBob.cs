@@ -24,11 +24,6 @@ public class HeadBob : CameraEffectsBaseState
 
     public override void UpdateState(CameraEffectsManager cameraEffect)
     {
-        if (isThrowing)
-        {
-            cameraEffect.SwitchState(cameraEffect.cameraShakeState);
-        }
-
         if (cameraEffect.GetInputManager().IsHoldingSprintKey() && flatVel.magnitude > 0.01f)
         {
             cameraEffect.GetVirtualCamera().GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain = cameraEffect.SprintFrequency;
@@ -36,6 +31,11 @@ public class HeadBob : CameraEffectsBaseState
         else
         {
             cameraEffect.GetVirtualCamera().GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain = cameraEffect.WalkFrequency;
+        }
+
+        if (isThrowing)
+        {
+            cameraEffect.SwitchState(cameraEffect.cameraShakeState);
         }
     }
 }

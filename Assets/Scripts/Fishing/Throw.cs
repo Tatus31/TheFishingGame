@@ -1,32 +1,21 @@
-using System;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Throw : MonoBehaviour
+public class Throw : FishingBaseState
 {
     public event EventHandler<float> OnThrowStrenghtChange;
     public event EventHandler<bool> OnThrowing;
 
-    [Header("References")]
-    [SerializeField] Transform orientation;
-    [SerializeField] Transform cameraHolder;
-    [SerializeField] Transform hitVisual;
-
-    [Header("Throw Settings")]
-    [SerializeField] float maxLineLength = 10f;
-    [SerializeField] float minLineLength = 1f;
-    [SerializeField] float lineGrowthRate = 5f;
-    [Space(10)]
-    [SerializeField] float minTrajectoryHeight = 1f;
-
-    [Header("Gizmo Visuals")]
-    [SerializeField] Color lineColor = Color.red;
-    [SerializeField] Slider holdProgressBar;
-    bool throwing = false;
+    Transform orientation;
+    Transform hitVisual;
+    Slider holdProgressBar;
 
     InputManager inputManager;
+    ThrowSettings settings;
 
+    bool throwing = false;
     Vector3 throwVelocity;
     Vector3 startPosition;
     List<Vector3> trajectoryPoints = new List<Vector3>();
@@ -35,16 +24,23 @@ public class Throw : MonoBehaviour
     float maxHoldDuration;
     float lineLength = 1f;
     float trajectoryHeight;
-    float previousViewAngle = 0f;
-    float lastCheckTime = 0f;
-    float checkInterval = 0.1f;
-    float adjustedValue;
     float easeOutPower = 3;
 
-    void Start()
+    public void Initialize(ThrowSettings throwSettings, Transform orientation, Transform hitVisual, Slider holdProgressBar)
+    {
+        this.settings = throwSettings;
+        this.orientation = orientation;
+        this.hitVisual = hitVisual;
+        this.holdProgressBar = holdProgressBar;
+
+        trajectoryHeight = settings.minTrajectoryHeight;
+        inputManager = InputManager.Instance;
+    }
+
+    public override void EnterState(FishingStateManager fishingState)
     {
         inputManager = InputManager.Instance;
-        trajectoryHeight = minTrajectoryHeight;
+        trajectoryHeight = settings.minTrajectoryHeight;
 
         if (holdProgressBar != null)
         {
@@ -53,11 +49,16 @@ public class Throw : MonoBehaviour
         }
     }
 
-    void Update()
+    public override void UpdateState(FishingStateManager fishingState)
     {
+        if (!fishingState.IsCooldownOver() || MouseWorldPosition.GetMouseWorldPosition() == Vector3.zero)
+        {
+            return;
+        }
+
         if (inputManager.IsLeftMouseButtonPressed())
         {
-            InitializeThrow();
+            StartThrow(fishingState);
         }
 
         if (inputManager.IsLeftMouseButtonHeld())
@@ -67,48 +68,34 @@ public class Throw : MonoBehaviour
 
         if (inputManager.IsLeftMouseButtonReleased())
         {
-            ExecuteThrow();
+            EndThrow(fishingState);
         }
     }
 
-    void InitializeThrow()
+    void StartThrow(FishingStateManager fishingState)
     {
-        startPosition = transform.position;
         throwing = true;
         holdDuration = 0;
         lineLength = 0.01f;
+        startPosition = fishingState.GetCurrentTransform().transform.position + Vector3.up * 0.5f;
         trajectoryPoints.Clear();
-
         OnThrowing?.Invoke(this, throwing);
     }
 
     void UpdateThrow()
     {
         Vector3 mouseWorldPos = MouseWorldPosition.GetMouseWorldPosition();
-        maxHoldDuration = Mathf.Min(Vector3.Distance(startPosition, mouseWorldPos), maxLineLength) / lineGrowthRate;
+        if (mouseWorldPos == Vector3.zero) return;
 
-        if (mouseWorldPos == Vector3.zero)
-        {
-            lineLength = AdjustValueBasedOnCameraAngle(lineLength, minLineLength, maxLineLength);
+        maxHoldDuration = Mathf.Min(Vector3.Distance(startPosition, mouseWorldPos), settings.maxLineLength) / settings.lineGrowthRate;
 
-            if (holdDuration <= maxHoldDuration + 2f)
-            {
-                easeOutPower = 4;
+        easeOutPower = 3;
 
-                float easedDuration = EaseOut(holdDuration / maxHoldDuration, easeOutPower);
-                lineLength += Mathf.Clamp(Mathf.Min(easedDuration * lineGrowthRate, maxLineLength), minLineLength, maxLineLength);
-            }
-        }
-        else
-        {
-            easeOutPower = 3;
-
-            lineLength = Vector3.Distance(startPosition, mouseWorldPos);
-            lineLength = Mathf.Min(holdDuration * lineGrowthRate, lineLength);
-            lineLength = Mathf.Min(lineLength, maxLineLength);
-        }
+        lineLength = Mathf.Min(holdDuration * settings.lineGrowthRate, Vector3.Distance(startPosition, mouseWorldPos));
+        lineLength = Mathf.Clamp(lineLength, settings.minLineLength, settings.maxLineLength);
 
         holdDuration += Time.deltaTime;
+
         OnThrowStrenghtChange?.Invoke(this, lineLength);
 
         if (holdProgressBar != null)
@@ -118,12 +105,11 @@ public class Throw : MonoBehaviour
         }
     }
 
-    void ExecuteThrow()
+    void EndThrow(FishingStateManager fishingState)
     {
         Vector3 endPoint = startPosition + orientation.forward * lineLength;
         throwVelocity = CalculateThrowVelocity(startPosition, endPoint, trajectoryHeight);
         throwing = false;
-
         OnThrowStrenghtChange?.Invoke(this, lineLength);
 
         if (holdProgressBar != null)
@@ -131,52 +117,19 @@ public class Throw : MonoBehaviour
             holdProgressBar.value = 0;
         }
 
-        GenerateTrajectoryPoints();
-
-        adjustedValue = 1f;
-        OnThrowing?.Invoke(this, throwing);
-    }
-
-    float AdjustValueBasedOnCameraAngle(float value, float min, float max)
-    {
-        if (Time.time - lastCheckTime >= checkInterval)
+        if (!throwing)
         {
-            float viewAngle = cameraHolder.eulerAngles.x;
-            float angleDifference = viewAngle - previousViewAngle;
-
-            if (angleDifference > 180)
-            {
-                angleDifference -= 360;
-            }
-            else if (angleDifference < -180)
-            {
-                angleDifference += 360;
-            }
-
-            bool isIncreasing = angleDifference > 0.01f;
-
-            if (angleDifference > 0.05f || angleDifference < -0.05f)
-            {
-                float adjustment = isIncreasing ? -0.40f : 0.25f;
-                adjustedValue = Mathf.Clamp(adjustedValue + adjustment, min, max);
-            }
-
-            previousViewAngle = viewAngle;
-            lastCheckTime = Time.time;
-            value = adjustedValue;
-
-            return adjustedValue;
+            fishingState.SwitchState(fishingState.catchState);
         }
 
-        value = adjustedValue;
-
-        return adjustedValue;
+        OnThrowing?.Invoke(this, throwing);
+        GenerateTrajectoryPoints(fishingState);
     }
 
-    void GenerateTrajectoryPoints()
+    void GenerateTrajectoryPoints(FishingStateManager fishingState)
     {
         trajectoryPoints.Clear();
-        Vector3 position = transform.position + Vector3.up * 0.5f;
+        Vector3 position = fishingState.GetCurrentTransform().transform.position + Vector3.up * 0.5f;
         Vector3 velocity = throwVelocity;
         float timeStep = 0.1f;
 
@@ -192,6 +145,7 @@ public class Throw : MonoBehaviour
             {
                 trajectoryPoints.Add(hit.point);
                 hitVisual.position = hit.point;
+
                 break;
             }
         }
@@ -214,10 +168,10 @@ public class Throw : MonoBehaviour
         return 1 - Mathf.Pow(1 - t, easeOutPow);
     }
 
-    void OnDrawGizmos()
+    public override void DrawGizmos(FishingStateManager fishingState)
     {
-        Gizmos.color = lineColor;
-        Vector3 startPosition = transform.position + Vector3.up * 0.5f;
+        Gizmos.color = settings.lineColor;
+        Vector3 startPosition = fishingState.GetCurrentTransform().transform.position + Vector3.up * 0.5f;
         Vector3 endPosition = startPosition + orientation.forward * lineLength;
         Gizmos.DrawLine(startPosition, endPosition);
 
@@ -230,4 +184,50 @@ public class Throw : MonoBehaviour
             }
         }
     }
+
+
+    //Might be usefull
+
+    //Transform cameraHolder;
+
+    //float previousViewAngle = 0f;
+    //float lastCheckTime = 0f;
+    //float checkInterval = 0.1f;
+    //float adjustedValue;
+
+    //float AdjustValueBasedOnCameraAngle(float value, float min, float max)
+    //{
+    //    if (Time.time - lastCheckTime >= checkInterval)
+    //    {
+    //        float viewAngle = cameraHolder.eulerAngles.x;
+    //        float angleDifference = viewAngle - previousViewAngle;
+
+    //        if (angleDifference > 180)
+    //        {
+    //            angleDifference -= 360;
+    //        }
+    //        else if (angleDifference < -180)
+    //        {
+    //            angleDifference += 360;
+    //        }
+
+    //        bool isIncreasing = angleDifference > 0.01f;
+
+    //        if (angleDifference > 0.05f || angleDifference < -0.05f)
+    //        {
+    //            float adjustment = isIncreasing ? -0.40f : 0.25f;
+    //            adjustedValue = Mathf.Clamp(adjustedValue + adjustment, min, max);
+    //        }
+
+    //        previousViewAngle = viewAngle;
+    //        lastCheckTime = Time.time;
+    //        value = adjustedValue;
+
+    //        return adjustedValue;
+    //    }
+
+    //    value = adjustedValue;
+
+    //    return adjustedValue;
+    //}
 }
