@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Xml;
+using Cinemachine;
 
 public class FishingStateManager : MonoBehaviour
 {
@@ -9,9 +10,10 @@ public class FishingStateManager : MonoBehaviour
     [SerializeField] ThrowSettings throwSettings;
 
     [Header("References")]
+    [SerializeField] CinemachineVirtualCamera virtualCamera;
     [SerializeField] Transform orientation;
     [SerializeField] Transform cameraHolder;
-    [SerializeField] Transform hitVisual;
+    [SerializeField] Transform fishObject;
     [SerializeField] Slider holdProgressBar;
     [SerializeField] Image pullCheck;
 
@@ -29,10 +31,10 @@ public class FishingStateManager : MonoBehaviour
 
     void Start()
     {
-        throwState.Initialize(throwSettings, orientation, hitVisual, holdProgressBar);
+        throwState.Initialize(throwSettings, orientation, fishObject, holdProgressBar);
         catchState.Initialize(pullCheck);
-        reelState.Initialize(hitVisual, pullCheck, reelInTime);
-        fleeState.Initialize(hitVisual, pullCheck, reelInTime);
+        reelState.Initialize(fishObject, pullCheck, reelInTime);
+        fleeState.Initialize(fishObject, pullCheck, reelInTime);
 
         currentState = throwState;
         currentState.EnterState(this);
@@ -62,7 +64,6 @@ public class FishingStateManager : MonoBehaviour
     public void StartCooldown()
     {
         cooldownTimer = cooldownTime;
-
     }
 
     void OnDrawGizmos()
@@ -72,9 +73,9 @@ public class FishingStateManager : MonoBehaviour
 
     void OnValidate()
     {
-        throwState.Initialize(throwSettings, orientation, hitVisual, holdProgressBar);
+        throwState.Initialize(throwSettings, orientation, fishObject, holdProgressBar);
         catchState.Initialize(pullCheck);
-        reelState.Initialize(hitVisual, pullCheck, reelInTime);
+        reelState.Initialize(fishObject, pullCheck, reelInTime);
     }
 
     public Transform GetCurrentTransform() => transform;
@@ -82,4 +83,6 @@ public class FishingStateManager : MonoBehaviour
     public Vector3 GetStartFishPosition() => reelState.GetStartFishPosition();
 
     public float GetCurrentReelInTimer() => reelState.GetCurrentReelInTimer();
+
+    public CinemachineVirtualCamera GetCinemachineVirtualCamera() => virtualCamera;
 }

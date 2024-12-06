@@ -1,8 +1,14 @@
+using System;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class Flee : FishingBaseState
 {
+    public event EventHandler<bool> OnFleeingFish;
+
     Transform fishObject;
     Image pullCheck;
 
@@ -12,9 +18,16 @@ public class Flee : FishingBaseState
     float reelInTimer = 0;
     float reelInTime = 1f;
 
-    float minFleeTime = 0.5f;
-    float maxFleeTime = 2f;
+    float minFleeTime = 2f;
+    float maxFleeTime = 5f;
     float fleeTimer;
+
+    bool isFleeing;
+
+    //bool isLookingBehind;
+
+    public enum FleeDirection { Left, Right }
+    public FleeDirection CurrentFleeDirection { get; private set; }
 
     public void Initialize(Transform fishObject, Image pullCheck, float reelInTime)
     {
@@ -25,40 +38,79 @@ public class Flee : FishingBaseState
 
     public override void EnterState(FishingStateManager fishingState)
     {
+        isFleeing = true;
+        OnFleeingFish?.Invoke(this, isFleeing);
+
         pullCheck.color = Color.red;
 
-        fleeStartPosition = fishObject.position;
+        fleeStartPosition = fishObject.position; 
         Vector3 originalPosition = fishingState.GetStartFishPosition();
 
-        Vector3 offset = new Vector3(Random.Range(-0.5f, 0.5f), 0, Random.Range(-0.5f, 0.5f));
-        fleeTargetPosition = originalPosition + offset;
+        // Determine flee direction only once
+        int directionChoice = Random.Range(0, 2);
+        CurrentFleeDirection = directionChoice == 0 ? FleeDirection.Left : FleeDirection.Right;
+
+        float horizontalOffset = (CurrentFleeDirection == FleeDirection.Left) ? -1.0f : 1.0f;
+        fleeTargetPosition = originalPosition + new Vector3(0, 0, horizontalOffset); 
 
         ResetFleeTimer();
         reelInTimer = 0f;
     }
 
+    //private void Testing_OnLookingBehind(object sender, bool e)
+    //{
+    //    isLookingBehind = e;
+    //}
+
     public override void UpdateState(FishingStateManager fishingState)
     {
-        if (reelInTimer < reelInTime)
-        {
-            reelInTimer += Time.deltaTime;
-
-            float t = reelInTimer / reelInTime;
-            t = Mathf.Clamp01(t);
-
-            fishObject.position = Vector3.Lerp(fleeStartPosition, fleeTargetPosition, t);
-        }
-
         fleeTimer -= Time.deltaTime;
+
         if (fleeTimer <= 0)
         {
-            ResetFleeTimer();
+            isFleeing = false;
+            //isLookingBehind = false;
+
+            OnFleeingFish?.Invoke(this, isFleeing);
             fishingState.SwitchState(fishingState.reelState);
+            return;
         }
+
+        //if (isLookingBehind)
+        //{
+        //    Debug.Log("holding");
+
+        //    return;
+        //}
+
+        reelInTimer += Time.deltaTime;
+        float t = Mathf.Clamp01(reelInTimer / reelInTime);
+        fishObject.position = Vector3.Lerp(fleeStartPosition, fleeTargetPosition, t);
     }
 
     void ResetFleeTimer()
     {
         fleeTimer = Random.Range(minFleeTime, maxFleeTime);
+    }
+
+    //Testing
+    public void ReduceFleeProgress(float reductionAmount)
+    {
+        reelInTimer -= reductionAmount;
+
+        reelInTimer = Mathf.Clamp(reelInTimer, 0f, reelInTime);
+
+        float t = reelInTimer / reelInTime;
+        fishObject.position = Vector3.Lerp(fleeStartPosition, fleeTargetPosition, t);
+    }
+
+
+    public override void DrawGizmos(FishingStateManager fishingState)
+    {
+        Gizmos.color = Color.black;
+
+#if UNITY_EDITOR
+        Handles.DrawLine(fishObject.position, fleeTargetPosition, 3f);
+#endif
     }
 }

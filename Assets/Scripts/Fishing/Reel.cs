@@ -1,9 +1,13 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class Reel : FishingBaseState
 {
+    public event EventHandler<bool> OnReeledIn; 
+
     Transform fishObject;
     Image pullCheck;
 
@@ -14,6 +18,7 @@ public class Reel : FishingBaseState
     float reelInTime = 2f;
 
     bool canReelIn;
+    bool reeledIn;
 
     float fleeTimer;
     float minFleeTime = 1f;
@@ -31,6 +36,7 @@ public class Reel : FishingBaseState
         StartReeling(fishingState);
         ResetFleeTimer();
 
+        reeledIn = false;
         reelInTimer = 0f;
     }
 
@@ -39,12 +45,9 @@ public class Reel : FishingBaseState
         if (!canReelIn)
             return;
 
-        Debug.Log("reel in progress");
-
         fleeTimer -= Time.deltaTime;
         if (fleeTimer <= 0)
         {
-            Debug.Log("fish is trying to flee");
             fishingState.SwitchState(fishingState.fleeState);
             return;
         }
@@ -53,22 +56,23 @@ public class Reel : FishingBaseState
         {
             reelInTimer += Time.deltaTime;
             float t = Mathf.Clamp01(reelInTimer / reelInTime);
-
             fishObject.position = Vector3.Lerp(startPosition, targetPosition, t);
 
             if (reelInTimer >= reelInTime)
             {
-                fishObject.position = targetPosition;
-
-                canReelIn = false;
-                Debug.Log("reeled in successfully");
+                reeledIn = true;
+                OnReeledIn?.Invoke(this, reeledIn);
 
                 pullCheck.color = Color.white;
 
-                reelInTimer = 0f;
+                if (reeledIn)
+                {
+                    Debug.Log("Reeled in");
+                    fishingState.GetCinemachineVirtualCamera().LookAt = null;
 
-                fishingState.StartCooldown();
-                fishingState.SwitchState(fishingState.throwState);
+                    fishingState.StartCooldown();
+                    fishingState.SwitchState(fishingState.throwState);
+                }
             }
         }
     }
@@ -79,10 +83,14 @@ public class Reel : FishingBaseState
         pullCheck.color = Color.green;
 
         canReelIn = true;
-
         startPosition = fishObject.position;
-        targetPosition = fishingState.GetCurrentTransform().position;
 
+        if (targetPosition == default || reeledIn)
+        {
+            targetPosition = fishingState.GetCurrentTransform().position;
+        }
+
+        reelInTimer = 0f; 
         ResetFleeTimer();
     }
 
