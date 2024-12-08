@@ -8,6 +8,9 @@ public class ThrowSettings : ScriptableObject
     public float minLineLength = 1f;
     public float lineGrowthRate = 5f;
     public float minTrajectoryHeight = 1f;
+    public float reelInTime = 2f;
+    public float rotationSpeed = 3f;
+    public float cooldownTime = 2f;
 
     [Header("Gizmo Visuals")]
     public Color lineColor = Color.red;

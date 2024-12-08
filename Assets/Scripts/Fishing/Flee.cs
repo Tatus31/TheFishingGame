@@ -7,6 +7,8 @@ using Random = UnityEngine.Random;
 
 public class Flee : FishingBaseState
 {
+    //TODO: Rework this script
+
     public event EventHandler<bool> OnFleeingFish;
 
     Transform fishObject;
@@ -24,6 +26,7 @@ public class Flee : FishingBaseState
 
     bool isFleeing;
 
+    Vector3 originalPosition;
     //bool isLookingBehind;
 
     public enum FleeDirection { Left, Right }
@@ -44,9 +47,8 @@ public class Flee : FishingBaseState
         pullCheck.color = Color.red;
 
         fleeStartPosition = fishObject.position; 
-        Vector3 originalPosition = fishingState.GetStartFishPosition();
+        originalPosition = fishingState.GetStartFishPosition();
 
-        // Determine flee direction only once
         int directionChoice = Random.Range(0, 2);
         CurrentFleeDirection = directionChoice == 0 ? FleeDirection.Left : FleeDirection.Right;
 
@@ -93,7 +95,6 @@ public class Flee : FishingBaseState
         fleeTimer = Random.Range(minFleeTime, maxFleeTime);
     }
 
-    //Testing
     public void ReduceFleeProgress(float reductionAmount)
     {
         reelInTimer -= reductionAmount;
@@ -112,5 +113,6 @@ public class Flee : FishingBaseState
 #if UNITY_EDITOR
         Handles.DrawLine(fishObject.position, fleeTargetPosition, 3f);
 #endif
+        Gizmos.DrawSphere(fleeTargetPosition, 0.1f);
     }
 }

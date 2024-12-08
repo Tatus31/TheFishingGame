@@ -2692,7 +2692,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.70090926, y: 0, z: 0, w: 0.71325046}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2815,7 +2815,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 20e81ead8d0e9494bb56d574659a9e1e, type: 2}
+  - {fileID: 2100000, guid: 1c1a15f7f90492b44bc7df8a62f73645, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8696,6 +8696,7 @@ MonoBehaviour:
   fishObject: {fileID: 359262714}
   holdProgressBar: {fileID: 1241553435}
   pullCheck: {fileID: 697632804}
+  isCameraLockedOn: 0
 --- !u!114 &1810834753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9196,12 +9197,12 @@ PrefabInstance:
     - target: {fileID: 8269974781245783549, guid: 3a3d5ecd416694c45a0271a81a310869,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.71325046
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8269974781245783549, guid: 3a3d5ecd416694c45a0271a81a310869,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.70090926
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8269974781245783549, guid: 3a3d5ecd416694c45a0271a81a310869,
         type: 3}

@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using System.Xml;
 using Cinemachine;
 
 public class FishingStateManager : MonoBehaviour
@@ -17,10 +16,9 @@ public class FishingStateManager : MonoBehaviour
     [SerializeField] Slider holdProgressBar;
     [SerializeField] Image pullCheck;
 
-    float reelInTime = 2f;
-
-    float cooldownTime = 2f;
     float cooldownTimer = 0f;
+
+    public bool isCameraLockedOn;
 
     FishingBaseState currentState;
 
@@ -28,13 +26,14 @@ public class FishingStateManager : MonoBehaviour
     public Catch catchState = new Catch();
     public Reel reelState = new Reel();
     public Flee fleeState = new Flee();
+    public Escaped escapedState = new Escaped();
 
     void Start()
     {
         throwState.Initialize(throwSettings, orientation, fishObject, holdProgressBar);
         catchState.Initialize(pullCheck);
-        reelState.Initialize(fishObject, pullCheck, reelInTime);
-        fleeState.Initialize(fishObject, pullCheck, reelInTime);
+        reelState.Initialize(fishObject, pullCheck, throwSettings.reelInTime);
+        fleeState.Initialize(fishObject, pullCheck, throwSettings.reelInTime);
 
         currentState = throwState;
         currentState.EnterState(this);
@@ -46,6 +45,8 @@ public class FishingStateManager : MonoBehaviour
         {
             cooldownTimer -= Time.deltaTime;
         }
+
+        CameraLock();
 
         currentState.UpdateState(this);
     }
@@ -63,7 +64,7 @@ public class FishingStateManager : MonoBehaviour
 
     public void StartCooldown()
     {
-        cooldownTimer = cooldownTime;
+        cooldownTimer = throwSettings.cooldownTime;
     }
 
     void OnDrawGizmos()
@@ -75,7 +76,18 @@ public class FishingStateManager : MonoBehaviour
     {
         throwState.Initialize(throwSettings, orientation, fishObject, holdProgressBar);
         catchState.Initialize(pullCheck);
-        reelState.Initialize(fishObject, pullCheck, reelInTime);
+        reelState.Initialize(fishObject, pullCheck, throwSettings.reelInTime);
+    }
+
+    public void CameraLock()
+    {
+        if (!isCameraLockedOn) return;
+
+        Vector3 direction = fishObject.position - virtualCamera.transform.position;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+        virtualCamera.transform.rotation = Quaternion.Slerp(virtualCamera.transform.rotation, targetRotation, throwSettings.rotationSpeed * Time.deltaTime);
     }
 
     public Transform GetCurrentTransform() => transform;
@@ -85,4 +97,6 @@ public class FishingStateManager : MonoBehaviour
     public float GetCurrentReelInTimer() => reelState.GetCurrentReelInTimer();
 
     public CinemachineVirtualCamera GetCinemachineVirtualCamera() => virtualCamera;
+
+    public Transform GetOrientation() => orientation;
 }

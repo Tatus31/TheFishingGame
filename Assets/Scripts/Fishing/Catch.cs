@@ -6,9 +6,12 @@ public class Catch : FishingBaseState
 {
     Image pullCheck;
 
-    float waitTime;
     float pullInWindowDuration = 2.0f;
-    bool canPullIn = false;
+
+    bool canPullIn;
+
+    float startCatchingTimeMin = 1f;
+    float startCatchingTimeMax = 5f;
 
     public void Initialize(Image pullCheck)
     {
@@ -17,9 +20,11 @@ public class Catch : FishingBaseState
 
     public override void EnterState(FishingStateManager fishingState)
     {
+        fishingState.isCameraLockedOn = true;
+
         pullCheck.color = Color.white;
 
-        fishingState.StartCoroutine(StartCatchSequence(fishingState));
+        fishingState.StartCoroutine(StartCatching(fishingState));
     }
 
     public override void UpdateState(FishingStateManager fishingState)
@@ -33,13 +38,9 @@ public class Catch : FishingBaseState
         }
     }
 
-    public override void ExitState() { }
-
-    public override void DrawGizmos(FishingStateManager fishingState) { }
-
-    IEnumerator StartCatchSequence(FishingStateManager fishingState)
+    IEnumerator StartCatching(FishingStateManager fishingState)
     {
-        waitTime = Random.Range(1f, 5f);
+        float waitTime = Random.Range(startCatchingTimeMin, startCatchingTimeMax);
         yield return new WaitForSeconds(waitTime);
 
         canPullIn = true;
@@ -53,7 +54,7 @@ public class Catch : FishingBaseState
             pullCheck.color = Color.black;
 
             fishingState.StartCooldown();
-            fishingState.SwitchState(fishingState.throwState);
+            fishingState.SwitchState(fishingState.escapedState);
         }
     }
 }

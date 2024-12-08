@@ -67,11 +67,12 @@ public class Reel : FishingBaseState
 
                 if (reeledIn)
                 {
-                    Debug.Log("Reeled in");
-                    fishingState.GetCinemachineVirtualCamera().LookAt = null;
+                    //Debug.Log("Reeled in");
 
-                    fishingState.StartCooldown();
-                    fishingState.SwitchState(fishingState.throwState);
+                    fishingState.StartCooldown();     
+                    
+                    //TODO: add a cought state
+                    fishingState.SwitchState(fishingState.escapedState);
                 }
             }
         }
@@ -87,7 +88,8 @@ public class Reel : FishingBaseState
 
         if (targetPosition == default || reeledIn)
         {
-            targetPosition = fishingState.GetCurrentTransform().position;
+            float reelInOffset = 1.1f;
+            targetPosition = fishingState.GetCurrentTransform().position + fishingState.GetOrientation().forward * reelInOffset;
         }
 
         reelInTimer = 0f; 
@@ -99,13 +101,14 @@ public class Reel : FishingBaseState
         fleeTimer = Random.Range(minFleeTime, maxFleeTime);
     }
 
-    public Vector3 GetStartFishPosition()
-    {
-        return startPosition;
-    }
+    public Vector3 GetStartFishPosition() => startPosition;
 
-    public float GetCurrentReelInTimer()
+    public float GetCurrentReelInTimer() => reelInTimer;
+
+    public override void DrawGizmos(FishingStateManager fishingState)
     {
-        return reelInTimer;
+        Gizmos.color = Color.grey;
+
+        Gizmos.DrawLine(fishingState.GetCurrentTransform().position + Vector3.up * 0.5f, targetPosition);
     }
 }

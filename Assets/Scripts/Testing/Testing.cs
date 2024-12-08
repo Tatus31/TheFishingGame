@@ -8,7 +8,7 @@ public class Testing : MonoBehaviour
 {
     public static Testing Instance;
 
-    public event EventHandler<bool> OnLookingBehind;
+    //public event EventHandler<bool> OnLookingBehind;
 
     [SerializeField] Transform testingSphere;
     [SerializeField] Transform orientation;
@@ -16,16 +16,15 @@ public class Testing : MonoBehaviour
 
     FishingStateManager fishingStateManager;
 
-    bool onFleeing;
-    bool onReeledIn;
-    bool directionsSet;
-    bool isLookingRight;
-    float rotationSpeed = 5f; 
+    //bool onFleeing;
+    //bool onReeledIn;
+    //bool directionsSet;
+    //bool isLookingRight;
 
-    Vector3 lineDirectionLeft;
-    Vector3 lineDirectionRight;
+    //Vector3 lineDirectionLeft;
+    //Vector3 lineDirectionRight;
 
-    float behindAngleThreshold = 30f;
+    //float behindAngleThreshold = 30f;
     //float gizmoLineLength = 2f;
 
     private void Awake()
@@ -37,8 +36,8 @@ public class Testing : MonoBehaviour
     {
         fishingStateManager = FindObjectOfType<FishingStateManager>();
 
-        fishingStateManager.fleeState.OnFleeingFish += fishingStateManager_OnFleeingFish;
-        fishingStateManager.reelState.OnReeledIn += fishingStateManager_OnReeledIn;
+        //fishingStateManager.fleeState.OnFleeingFish += fishingStateManager_OnFleeingFish;
+        //fishingStateManager.reelState.OnReeledIn += fishingStateManager_OnReeledIn;
     }
 
     void Update()
@@ -48,11 +47,7 @@ public class Testing : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space))
         {
-            Vector3 direction = fishObject.position - fishingStateManager.GetCinemachineVirtualCamera().transform.position;
 
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-            fishingStateManager.GetCinemachineVirtualCamera().transform.rotation = Quaternion.Slerp(fishingStateManager.GetCinemachineVirtualCamera().transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
 
         if (Input.GetKey(KeyCode.L))
@@ -71,60 +66,60 @@ public class Testing : MonoBehaviour
         //}
     }
 
-    private void fishingStateManager_OnFleeingFish(object sender, bool e)
-    {
-        onFleeing = e;
+    //private void fishingStateManager_OnFleeingFish(object sender, bool e)
+    //{
+    //    onFleeing = e;
 
-        if (onFleeing && !directionsSet)
-        {
-            lineDirectionLeft = -orientation.right;
-            lineDirectionRight = orientation.right;
+    //    if (onFleeing && !directionsSet)
+    //    {
+    //        lineDirectionLeft = -orientation.right;
+    //        lineDirectionRight = orientation.right;
 
-            directionsSet = true;
-        }
-    }
+    //        directionsSet = true;
+    //    }
+    //}
 
-    private void fishingStateManager_OnReeledIn(object sender, bool e)
-    {
-        onReeledIn = e;
+    //private void fishingStateManager_OnReeledIn(object sender, bool e)
+    //{
+    //    onReeledIn = e;
 
-        if (onReeledIn)
-        {
-            directionsSet = false;
-        }
-    }
+    //    if (onReeledIn)
+    //    {
+    //        directionsSet = false;
+    //    }
+    //}
 
-    void CheckIfLookingBehind()
-    {
-        float angleToLeft = Vector3.SignedAngle(-orientation.forward, lineDirectionLeft, Vector3.up);
-        float angleToRight = Vector3.SignedAngle(-orientation.forward, lineDirectionRight, Vector3.up);
+    //void CheckIfLookingBehind()
+    //{
+    //    float angleToLeft = Vector3.SignedAngle(-orientation.forward, lineDirectionLeft, Vector3.up);
+    //    float angleToRight = Vector3.SignedAngle(-orientation.forward, lineDirectionRight, Vector3.up);
 
-        if (angleToLeft <= 5f && angleToLeft >= -behindAngleThreshold)
-        {
-            if(fishingStateManager.fleeState.CurrentFleeDirection == Flee.FleeDirection.Left)
-            {
-                isLookingRight = true;
+    //    if (angleToLeft <= 5f && angleToLeft >= -behindAngleThreshold)
+    //    {
+    //        if(fishingStateManager.fleeState.CurrentFleeDirection == Flee.FleeDirection.Left)
+    //        {
+    //            isLookingRight = true;
 
-                OnLookingBehind?.Invoke(this, isLookingRight);
-                Debug.Log("looking behind the right line");
-            }
-        }
-        else if (angleToRight >= -5f && angleToRight <= behindAngleThreshold)
-        {
-            if (fishingStateManager.fleeState.CurrentFleeDirection == Flee.FleeDirection.Right)
-            {
-                isLookingRight = true;
+    //            OnLookingBehind?.Invoke(this, isLookingRight);
+    //            Debug.Log("looking behind the right line");
+    //        }
+    //    }
+    //    else if (angleToRight >= -5f && angleToRight <= behindAngleThreshold)
+    //    {
+    //        if (fishingStateManager.fleeState.CurrentFleeDirection == Flee.FleeDirection.Right)
+    //        {
+    //            isLookingRight = true;
 
-                OnLookingBehind?.Invoke(this, isLookingRight);
-                Debug.Log("looking behind the left line");
-            }
-        }
-        else
-        {
-            Debug.Log("not looking directly behind either line");
-        }
+    //            OnLookingBehind?.Invoke(this, isLookingRight);
+    //            Debug.Log("looking behind the left line");
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("not looking directly behind either line");
+    //    }
 
-    }
+    //}
 
     //private void OnDrawGizmos()
     //{
