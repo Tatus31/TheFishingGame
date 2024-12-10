@@ -14,6 +14,8 @@ public class FishFleeingControl : MonoBehaviour
 
     [SerializeField] float correctionStrength = 0.9f;
 
+    [SerializeField] float fishStrengthOffset = 6;
+
     FishingStateManager fishingStateManager;
     InputManager inputManager;
 
@@ -56,7 +58,7 @@ public class FishFleeingControl : MonoBehaviour
 
         fishDirection = fishingStateManager.fleeState.CurrentFleeDirection == Flee.FleeDirection.Right ? 1 : -1;       
 
-        if ((fishDirection > 0 && mouseInput < 0) || (fishDirection < 0 && mouseInput > 0))
+        if ((fishDirection > 0 && mouseInput < -fishStrengthOffset) || (fishDirection < 0 && mouseInput > fishStrengthOffset))
         {
             fishingStateManager.fleeState.ReduceFleeProgress(correctionStrength * Time.deltaTime);
             //Debug.Log("countered flee");

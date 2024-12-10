@@ -37,7 +37,7 @@ public class WalkState : IMovementState
         ApplyFriction();
     }
 
-    private void ApplyFriction()
+    void ApplyFriction()
     {
         if (player.GetMoveDirection().magnitude < 0.01f)
         {

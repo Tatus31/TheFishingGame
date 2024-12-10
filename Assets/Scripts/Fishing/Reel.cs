@@ -37,7 +37,6 @@ public class Reel : FishingBaseState
         ResetFleeTimer();
 
         reeledIn = false;
-        reelInTimer = 0f;
     }
 
     public override void UpdateState(FishingStateManager fishingState)
@@ -107,7 +106,7 @@ public class Reel : FishingBaseState
 
     public override void DrawGizmos(FishingStateManager fishingState)
     {
-        Gizmos.color = Color.grey;
+        Gizmos.color = Color.cyan;
 
         Gizmos.DrawLine(fishingState.GetCurrentTransform().position + Vector3.up * 0.5f, targetPosition);
     }

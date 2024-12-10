@@ -17,11 +17,11 @@ public class Flee : FishingBaseState
     Vector3 fleeStartPosition;
     Vector3 fleeTargetPosition;
 
-    float reelInTimer = 0;
+    float reelInTimer;
     float reelInTime = 1f;
 
     float minFleeTime = 2f;
-    float maxFleeTime = 5f;
+    float maxFleeTime = 3f;
     float fleeTimer;
 
     bool isFleeing;
