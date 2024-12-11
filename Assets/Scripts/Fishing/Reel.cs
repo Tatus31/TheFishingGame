@@ -21,8 +21,8 @@ public class Reel : FishingBaseState
     bool reeledIn;
 
     float fleeTimer;
-    float minFleeTime = 1f;
-    float maxFleeTime = 3f;
+    float minFleeTime = 3f;
+    float maxFleeTime = 5f;
 
     public void Initialize(Transform fishObject, Image pullCheck, float reelInTime)
     {
@@ -53,7 +53,8 @@ public class Reel : FishingBaseState
 
         if (InputManager.Instance.IsLeftMouseButtonHeld())
         {
-            reelInTimer += Time.deltaTime;
+            float fleeSpeedMultiplier = 0.5f;
+            reelInTimer += Time.deltaTime * fleeSpeedMultiplier;
             float t = Mathf.Clamp01(reelInTimer / reelInTime);
             fishObject.position = Vector3.Lerp(startPosition, targetPosition, t);
 
