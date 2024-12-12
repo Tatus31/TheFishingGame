@@ -29,10 +29,10 @@ public class Flee : FishingBaseState
     bool isFleeing;
 
     Vector3 originalPosition;
-    float fleeRadius = 2f;
+    float fleeRadius = 1.75f;
 
     float fleeTimes = 3;
-    List<Vector3> fleeDirections = new List<Vector3>();
+    List<FleeData> fleeDirections = new List<FleeData>();
     int currentFleeDirectionIndex = 0;
 
     //bool isLookingBehind;
@@ -85,7 +85,8 @@ public class Flee : FishingBaseState
             if (currentFleeDirectionIndex < fleeDirections.Count)
             {
                 fleeStartPosition = fishObject.position;
-                fleeTargetPosition = fleeDirections[currentFleeDirectionIndex];
+                fleeTargetPosition = GetFleeTargetByIndex(currentFleeDirectionIndex);
+
                 ResetFleeTimer();
                 reelInTimer = 0f;
             }
@@ -97,6 +98,7 @@ public class Flee : FishingBaseState
                 return;
             }
         }
+
 
         float fleeSpeedMultiplier = 0.5f;
         reelInTimer += Time.deltaTime * fleeSpeedMultiplier;
@@ -135,19 +137,27 @@ public class Flee : FishingBaseState
         for (int i = 0; i < fleeTimes; i++)
         {
             FleeDirection direction = (Random.Range(0, 2) == 0) ? FleeDirection.Left : FleeDirection.Right;
-            OnCurrentFleeDirection?.Invoke(this, direction);
-
             float horizontalOffset = (direction == FleeDirection.Left) ? -2f : 2f;
+
             Vector3 newFleeTarget = currentPosition + new Vector3(0, 0, horizontalOffset);
 
-            fleeDirections.Add(newFleeTarget);
+            fleeDirections.Add(new FleeData(newFleeTarget, direction));
             currentPosition = newFleeTarget;
         }
 
-        fleeTargetPosition = fleeDirections[currentFleeDirectionIndex];
+        fleeTargetPosition = GetFleeTargetByIndex(currentFleeDirectionIndex);
     }
 
+    Vector3 GetFleeTargetByIndex(int index)
+    {
+        if (index < fleeDirections.Count)
+        {
+            OnCurrentFleeDirection?.Invoke(this, fleeDirections[index].Direction);
+            return fleeDirections[index].Position;
+        }
 
+        return Vector3.zero;
+    }
 
     public override void DrawGizmos(FishingStateManager fishingState)
     {
