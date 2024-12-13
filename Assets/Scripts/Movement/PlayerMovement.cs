@@ -49,8 +49,6 @@ public class PlayerMovement : MonoBehaviour
         Instance = this;
 
         rb = GetComponent<Rigidbody>();
-        animator = AnimationController.Instance;
-
         FlatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         WalkState = new WalkState(this, maxSpeed, accelAmount, frictionAmount);
@@ -60,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         inputManager = InputManager.Instance;
+        animator = AnimationController.Instance;
 
         SwitchState(WalkState);
     }

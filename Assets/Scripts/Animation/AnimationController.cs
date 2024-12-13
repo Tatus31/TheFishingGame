@@ -17,10 +17,7 @@ public class AnimationController: MonoBehaviour
             Debug.LogWarning($"there already is a {Instance.name} in the scene");
 
         Instance = this;
-    }
 
-    void Start()
-    {
         animator = GetComponent<Animator>();
     }
 
