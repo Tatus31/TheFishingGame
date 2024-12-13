@@ -7,6 +7,7 @@ public class BoatMove : MonoBehaviour
 
     public float turnspeed = 1000f;
     public float accelerateSpeed = 1000f;
+    public string test;
 
     private Rigidbody rb;
 
