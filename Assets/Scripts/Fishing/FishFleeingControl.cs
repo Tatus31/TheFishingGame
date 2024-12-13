@@ -68,7 +68,7 @@ public class FishFleeingControl : MonoBehaviour
         if ((fishDirection > 0 && mouseInput < 0) || (fishDirection < 0 && mouseInput > 0))
         {
             fishingStateManager.fleeState.ReduceFleeProgress(correctionStrength * Time.deltaTime);
-            Debug.Log("countered flee");
+            //Debug.Log("countered flee");
         }
         else
         {

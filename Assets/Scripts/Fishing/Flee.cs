@@ -29,7 +29,7 @@ public class Flee : FishingBaseState
     bool isFleeing;
 
     Vector3 originalPosition;
-    float fleeRadius = 3f;
+    float fleeRadius = 1.75f;
 
     float fleeTimes = 3;
     List<FleeData> fleeDirections = new List<FleeData>();

@@ -21,8 +21,8 @@ public class Reel : FishingBaseState
     bool reeledIn;
 
     float fleeTimer;
-    float minFleeTime = 3f;
-    float maxFleeTime = 5f;
+    float minFleeTime = 2.5f;
+    float maxFleeTime = 4.35f;
 
     public void Initialize(Transform fishObject, Image pullCheck, float reelInTime)
     {
@@ -92,7 +92,7 @@ public class Reel : FishingBaseState
         targetPosition = fishingState.GetCurrentTransform().position + fishingState.GetOrientation().forward * reelInOffset;
 
         float remainingDistance = Vector3.Distance(fishObject.position, targetPosition);
-        float remainingTimeFactor = remainingDistance / fishingState.throwState.lineLength;
+        float remainingTimeFactor = remainingDistance / fishingState.throwState.GetLineLength();
 
         reelInTime = Mathf.Lerp(0.5f, 2f, remainingTimeFactor);
 

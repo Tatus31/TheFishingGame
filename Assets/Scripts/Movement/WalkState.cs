@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class WalkState : IMovementState
 {
-    private PlayerMovement player;
-    private float maxSpeed;
-    private float accelAmount;
-    private float frictionAmount;
+    PlayerMovement player;
+    float maxSpeed;
+    float accelAmount;
+    float frictionAmount;
 
     public WalkState(PlayerMovement player, float maxSpeed, float accelAmount, float frictionAmount)
     {
@@ -19,6 +19,7 @@ public class WalkState : IMovementState
 
     public void EnterState(PlayerMovement player) 
     {
+        player.GetAnimationController().PlayAnimation(player.GetAnimationController().ON_RUN, false);
         //Debug.Log("Entered Walk State");
     }
 

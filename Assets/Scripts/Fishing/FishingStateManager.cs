@@ -99,4 +99,5 @@ public class FishingStateManager : MonoBehaviour
     public CinemachineVirtualCamera GetCinemachineVirtualCamera() => virtualCamera;
 
     public Transform GetOrientation() => orientation;
+
 }

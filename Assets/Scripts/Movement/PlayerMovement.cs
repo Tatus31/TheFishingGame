@@ -33,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
 
     float xDir, yDir;
 
+    AnimationController animator;
+
     public Vector3 FlatVel { get; set; }
 
     private IMovementState currentState;
@@ -47,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
         Instance = this;
 
         rb = GetComponent<Rigidbody>();
+        animator = AnimationController.Instance;
 
         FlatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
@@ -115,4 +118,6 @@ public class PlayerMovement : MonoBehaviour
         xDir = inputManager.GetPlayerMovement().x;
         yDir = inputManager.GetPlayerMovement().y;
     }
+
+    public AnimationController GetAnimationController() => animator;
 }

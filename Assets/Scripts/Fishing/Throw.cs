@@ -22,7 +22,7 @@ public class Throw : FishingBaseState
 
     float holdDuration;
     float maxHoldDuration;
-    public float lineLength = 1f;
+    float lineLength = 1f;
     float trajectoryHeight;
     float easeOutPower = 3;
 
@@ -185,6 +185,7 @@ public class Throw : FishingBaseState
         }
     }
 
+    public float GetLineLength() => lineLength;
 
     //Might be usefull
 
