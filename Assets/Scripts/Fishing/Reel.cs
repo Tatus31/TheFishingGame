@@ -82,19 +82,23 @@ public class Reel : FishingBaseState
     void StartReeling(FishingStateManager fishingState)
     {
         pullCheck.color = Color.green;
-
         canReelIn = true;
+
+        reelInTimer = 0f;
+
         startPosition = fishObject.position;
 
-        if (targetPosition == default || reeledIn)
-        {
-            float reelInOffset = 1.1f;
-            targetPosition = fishingState.GetCurrentTransform().position + fishingState.GetOrientation().forward * reelInOffset;
-        }
+        float reelInOffset = 1.1f;
+        targetPosition = fishingState.GetCurrentTransform().position + fishingState.GetOrientation().forward * reelInOffset;
 
-        reelInTimer = 0f; 
+        float remainingDistance = Vector3.Distance(fishObject.position, targetPosition);
+        float remainingTimeFactor = remainingDistance / fishingState.throwState.lineLength;
+
+        reelInTime = Mathf.Lerp(0.5f, 2f, remainingTimeFactor);
+
         ResetFleeTimer();
     }
+
 
     void ResetFleeTimer()
     {
