@@ -27,4 +27,10 @@ public class BoatMove : MonoBehaviour
         rb.AddTorque(0f, h * turnspeed * Time.deltaTime, 0f);
         rb.AddForce(transform.forward * v * accelerateSpeed * Time.deltaTime);
     }
+
+    private void FixedUpdate()
+    {
+        Vector3 lateralVelocity = Vector3.Dot(rb.velocity, transform.right) * transform.right;
+        rb.AddForce(-lateralVelocity * 100f, ForceMode.Acceleration);
+    }
 }
