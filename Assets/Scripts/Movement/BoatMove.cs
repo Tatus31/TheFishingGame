@@ -12,8 +12,10 @@ public class BoatMove : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
+    {   
+
         rb = GetComponent<Rigidbody>();
+        this.enabled = false;
     }
 
     // Update is called once per frame
