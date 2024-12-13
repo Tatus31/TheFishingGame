@@ -29,7 +29,7 @@ public class Flee : FishingBaseState
     bool isFleeing;
 
     Vector3 originalPosition;
-    float fleeRadius = 1.75f;
+    float fleeRadius = 3f;
 
     float fleeTimes = 3;
     List<FleeData> fleeDirections = new List<FleeData>();
@@ -139,7 +139,7 @@ public class Flee : FishingBaseState
             FleeDirection direction = (Random.Range(0, 2) == 0) ? FleeDirection.Left : FleeDirection.Right;
             float horizontalOffset = (direction == FleeDirection.Left) ? -2f : 2f;
 
-            Vector3 newFleeTarget = currentPosition + new Vector3(0, 0, horizontalOffset);
+            Vector3 newFleeTarget = currentPosition + new Vector3(-1, 0, horizontalOffset);
 
             fleeDirections.Add(new FleeData(newFleeTarget, direction));
             currentPosition = newFleeTarget;
