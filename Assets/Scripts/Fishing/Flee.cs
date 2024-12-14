@@ -8,8 +8,6 @@ using Random = UnityEngine.Random;
 
 public class Flee : FishingBaseState
 {
-    //TODO: Rework this script
-
     public event EventHandler<bool> OnFleeingFish;
     public event EventHandler<FleeDirection> OnCurrentFleeDirection;
 
@@ -50,6 +48,9 @@ public class Flee : FishingBaseState
     {
         isFleeing = true;
         OnFleeingFish?.Invoke(this, isFleeing);
+
+        //TODO: change after adding the reeling animation
+        fishingState.GetAnimationController().PlayAnimation(AnimationController.FLEE_LEFT, false);
 
         pullCheck.color = Color.red;
 

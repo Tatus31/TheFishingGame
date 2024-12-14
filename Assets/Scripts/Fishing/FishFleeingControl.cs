@@ -57,9 +57,9 @@ public class FishFleeingControl : MonoBehaviour
         fishDirection = currentFleeDirection == Flee.FleeDirection.Right ? 1 : -1;
     }
 
-
     void CounterFlee()
     {
+        var animation = fishingStateManager.GetAnimationController();
         mouseInput = inputManager.GetMouseDelta().x;
 
         angleToLeftText.text = fishDirection.ToString("F1");
@@ -68,10 +68,30 @@ public class FishFleeingControl : MonoBehaviour
         if ((fishDirection > 0 && mouseInput < 0) || (fishDirection < 0 && mouseInput > 0))
         {
             fishingStateManager.fleeState.ReduceFleeProgress(correctionStrength * Time.deltaTime);
+
+            if (fishDirection > 0)
+            {
+                animation.PlayAnimation(AnimationController.FLEE_RIGHT, true);
+                animation.PlayAnimation(AnimationController.FLEE_LEFT, false);
+            }
+            else
+            {
+                animation.PlayAnimation(AnimationController.FLEE_RIGHT, false);
+                animation.PlayAnimation(AnimationController.FLEE_LEFT, true);
+            }
             //Debug.Log("countered flee");
         }
         else
         {
+            //TODO: change after making the reel animation
+            if (fishDirection > 0)
+            {
+                animation.PlayAnimation(AnimationController.FLEE_RIGHT, false);
+            }
+            else
+            {
+                animation.PlayAnimation(AnimationController.FLEE_LEFT, false);
+            }
             //Debug.Log("Fish escaping");
         }
     }

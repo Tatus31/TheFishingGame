@@ -9,6 +9,8 @@ public class AnimationController: MonoBehaviour
 
     [HideInInspector] public static string ON_RUN = "onRun";
     [HideInInspector] public static string ON_THROW = "onThrow";
+    [HideInInspector] public static string FLEE_LEFT = "fleeLeft";
+    [HideInInspector] public static string FLEE_RIGHT = "fleeRight";
 
     Animator animator;
 
