@@ -19,7 +19,7 @@ public class WalkState : IMovementState
 
     public void EnterState(PlayerMovement player) 
     {
-        player.GetAnimationController().PlayAnimation(player.GetAnimationController().ON_RUN, false);
+        player.GetAnimationController().PlayAnimation(AnimationController.ON_RUN, false);
         //Debug.Log("Entered Walk State");
     }
 

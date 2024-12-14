@@ -7,7 +7,8 @@ public class AnimationController: MonoBehaviour
 {
     public static AnimationController Instance;
 
-    public string ON_RUN = "onRun";
+    [HideInInspector] public static string ON_RUN = "onRun";
+    [HideInInspector] public static string ON_THROW = "onThrow";
 
     Animator animator;
 

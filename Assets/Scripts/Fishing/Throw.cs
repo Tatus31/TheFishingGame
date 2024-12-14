@@ -80,6 +80,8 @@ public class Throw : FishingBaseState
         startPosition = fishingState.GetCurrentTransform().transform.position + Vector3.up * 0.5f;
         trajectoryPoints.Clear();
         OnThrowing?.Invoke(this, throwing);
+
+        fishingState.GetAnimationController().PlayAnimation(AnimationController.ON_THROW, true);
     }
 
     void UpdateThrow()
