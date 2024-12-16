@@ -57,7 +57,7 @@ public class FishingStateManager : MonoBehaviour
 
     public void SwitchState(FishingBaseState newState)
     {
-        currentState.ExitState();
+        newState.ExitState();
         currentState = newState;
         newState.EnterState(this);
     }

@@ -26,13 +26,21 @@ public class FishFleeingControl : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        fishingStateManager = FindObjectOfType<FishingStateManager>();
     }
 
     void Start()
     {
-        fishingStateManager = FindObjectOfType<FishingStateManager>();
-        fishingStateManager.fleeState.OnFleeingFish += fishingStateManager_OnFleeingFish;
-        fishingStateManager.fleeState.OnCurrentFleeDirection += fishingStateManager_OnCurrentFleeDirection;
+
+        if (fishingStateManager != null)
+        {
+            fishingStateManager.fleeState.OnFleeingFish += fishingStateManager_OnFleeingFish;
+            fishingStateManager.fleeState.OnCurrentFleeDirection += fishingStateManager_OnCurrentFleeDirection;
+        }
+        else
+        {
+            Debug.LogError("fishingStateManager not in scene");
+        }
 
         inputManager = InputManager.Instance;
     }
@@ -84,7 +92,7 @@ public class FishFleeingControl : MonoBehaviour
         else
         {
             //TODO: change after making the reel animation
-            animation.PlayAnimation(AnimationController.REEL, false);
+            //animation.PlayAnimation(AnimationController.DONE_FISHING, false);
             //Debug.Log("Fish escaping");
         }
     }
