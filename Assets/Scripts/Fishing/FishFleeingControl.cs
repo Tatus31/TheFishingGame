@@ -39,7 +39,7 @@ public class FishFleeingControl : MonoBehaviour
         }
         else
         {
-            Debug.LogError("fishingStateManager not in scene");
+            Debug.LogError("fishingStateManager not created yet");
         }
 
         inputManager = InputManager.Instance;
