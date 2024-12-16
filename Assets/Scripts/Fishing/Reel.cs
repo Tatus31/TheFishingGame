@@ -14,6 +14,8 @@ public class Reel : FishingBaseState
     Vector3 startPosition;
     Vector3 targetPosition;
 
+    float groundY;
+
     float reelInTimer;
     float reelInTime;
 
@@ -59,7 +61,11 @@ public class Reel : FishingBaseState
             float fleeSpeedMultiplier = 0.5f;
             reelInTimer += Time.deltaTime * fleeSpeedMultiplier;
             float t = Mathf.Clamp01(reelInTimer / reelInTime);
-            fishObject.position = Vector3.Lerp(startPosition, targetPosition, t);
+
+            Vector3 nextPosition = Vector3.Lerp(startPosition, targetPosition, t);
+            nextPosition.y = groundY;
+
+            fishObject.position = nextPosition;
 
             if (reelInTimer >= reelInTime)
             {
@@ -70,11 +76,7 @@ public class Reel : FishingBaseState
 
                 if (reeledIn)
                 {
-                    //Debug.Log("Reeled in");
-
-                    fishingState.StartCooldown();     
-                    
-                    //TODO: add a cought state
+                    fishingState.StartCooldown();
                     fishingState.SwitchState(fishingState.escapedState);
                 }
             }
@@ -94,6 +96,9 @@ public class Reel : FishingBaseState
         float reelInOffset = 1.1f;
         targetPosition = fishingState.GetCurrentTransform().position + fishingState.GetOrientation().forward * reelInOffset;
 
+        targetPosition = AdjustToGround(targetPosition);
+        groundY = startPosition.y;
+
         float remainingDistance = Vector3.Distance(fishObject.position, targetPosition);
         float remainingTimeFactor = remainingDistance / fishingState.throwState.GetLineLength();
 
@@ -102,6 +107,20 @@ public class Reel : FishingBaseState
         ResetFleeTimer();
     }
 
+    Vector3 AdjustToGround(Vector3 position)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(position + Vector3.up * 5f, Vector3.down, out hit, 10f, LayerMask.GetMask("WaterLayer")))
+        {
+            position.y = hit.point.y;
+        }
+        else
+        {
+            position.y = startPosition.y;
+        }
+
+        return position;
+    }
 
     void ResetFleeTimer()
     {
