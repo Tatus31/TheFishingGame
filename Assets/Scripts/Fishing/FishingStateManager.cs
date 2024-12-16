@@ -30,15 +30,15 @@ public class FishingStateManager : MonoBehaviour
     public Flee fleeState = new Flee();
     public Escaped escapedState = new Escaped();
 
-    void Awake()
+    void Start()
     {
         throwState.Initialize(fishingSettings.minTrajectoryHeight,
-            fishingSettings.maxLineLength,
-            fishingSettings.minLineLength,
-            fishingSettings.lineGrowthRate,
-            orientation,
-            fishObject,
-            holdProgressBar);
+        fishingSettings.maxLineLength,
+        fishingSettings.minLineLength,
+        fishingSettings.lineGrowthRate,
+        orientation,
+        fishObject,
+        holdProgressBar);
 
         catchState.Initialize(pullCheck);
 
@@ -55,10 +55,7 @@ public class FishingStateManager : MonoBehaviour
             fishingSettings.maxFleeTime,
             fishingSettings.fleeRadius,
             fishingSettings.fleeTimes);
-    }
 
-    void Start()
-    {
         currentState = throwState;
         currentState.EnterState(this);
 
