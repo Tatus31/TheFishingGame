@@ -17,7 +17,7 @@ RenderSettings:
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogDensity: 0.09
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -4861,7 +4861,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: a6560a915ef98420e9faacc1c7438823, type: 2}
+  sharedProfile: {fileID: 11400000, guid: b27ee9f8c8129de4d9c44baeb0039d76, type: 2}
 --- !u!4 &832575519
 Transform:
   m_ObjectHideFlags: 0
@@ -9123,6 +9123,12 @@ PrefabInstance:
       propertyPath: virtualCamera
       value: 
       objectReference: {fileID: 7887625505017193561}
+    - target: {fileID: 2057564937266314144, guid: 40902f13d663667438a3341b0421e4c0,
+        type: 3}
+      propertyPath: fishingSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: bdfd9e3e72d01ab4a8ed1dd9acc4bb57,
+        type: 2}
     - target: {fileID: 2057564937266314144, guid: 40902f13d663667438a3341b0421e4c0,
         type: 3}
       propertyPath: holdProgressBar

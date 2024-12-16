@@ -20,7 +20,7 @@ public class Flee : FishingBaseState
     float reelInTimer;
     float reelInTime = 2f;
 
-    float minFleeTime = 4f;
+    float minFleeTime = 2f;
     float maxFleeTime = 5f;
     float fleeTimer;
 
@@ -37,11 +37,15 @@ public class Flee : FishingBaseState
 
     public enum FleeDirection { Left, Right }
 
-    public void Initialize(Transform fishObject, Image pullCheck, float reelInTime)
+    public void Initialize(Transform fishObject, Image pullCheck, float reelInTime, float minFleeTime, float maxFleeTime, float fleeRadius, float fleeTimes)
     {
         this.fishObject = fishObject;
         this.pullCheck = pullCheck;
         this.reelInTime = reelInTime;
+        this.minFleeTime = minFleeTime;
+        this.maxFleeTime = maxFleeTime;
+        this.fleeRadius = fleeRadius;
+        this.fleeTimes = fleeTimes;
     }
 
     public override void EnterState(FishingStateManager fishingState)

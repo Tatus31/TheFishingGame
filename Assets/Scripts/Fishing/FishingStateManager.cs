@@ -6,7 +6,7 @@ using Cinemachine;
 public class FishingStateManager : MonoBehaviour
 {
     [Header("Serialized Objects")]
-    [SerializeField] ThrowSettings throwSettings;
+    [SerializeField] FishingSettings fishingSettings;
 
     [Header("References")]
     [SerializeField] CinemachineVirtualCamera virtualCamera;
@@ -30,13 +30,35 @@ public class FishingStateManager : MonoBehaviour
     public Flee fleeState = new Flee();
     public Escaped escapedState = new Escaped();
 
+    void Awake()
+    {
+        throwState.Initialize(fishingSettings.minTrajectoryHeight,
+            fishingSettings.maxLineLength,
+            fishingSettings.minLineLength,
+            fishingSettings.lineGrowthRate,
+            orientation,
+            fishObject,
+            holdProgressBar);
+
+        catchState.Initialize(pullCheck);
+
+        reelState.Initialize(fishObject,
+            pullCheck,
+            fishingSettings.reelInTime,
+            fishingSettings.minStartFleeingTime,
+            fishingSettings.maxStartFleeingTime);
+
+        fleeState.Initialize(fishObject,
+            pullCheck,
+            fishingSettings.reelInTime,
+            fishingSettings.minFleeTime,
+            fishingSettings.maxFleeTime,
+            fishingSettings.fleeRadius,
+            fishingSettings.fleeTimes);
+    }
+
     void Start()
     {
-        throwState.Initialize(throwSettings, orientation, fishObject, holdProgressBar);
-        catchState.Initialize(pullCheck);
-        reelState.Initialize(fishObject, pullCheck, throwSettings.reelInTime);
-        fleeState.Initialize(fishObject, pullCheck, throwSettings.reelInTime);
-
         currentState = throwState;
         currentState.EnterState(this);
 
@@ -68,7 +90,7 @@ public class FishingStateManager : MonoBehaviour
 
     public void StartCooldown()
     {
-        cooldownTimer = throwSettings.cooldownTime;
+        cooldownTimer = fishingSettings.cooldownTime;
     }
 
     void OnDrawGizmos()
@@ -78,9 +100,39 @@ public class FishingStateManager : MonoBehaviour
 
     void OnValidate()
     {
-        throwState.Initialize(throwSettings, orientation, fishObject, holdProgressBar);
-        catchState.Initialize(pullCheck);
-        reelState.Initialize(fishObject, pullCheck, throwSettings.reelInTime);
+        if (fishingSettings == null) return;
+
+        throwState.Initialize(
+            fishingSettings.minTrajectoryHeight,
+            fishingSettings.maxLineLength,
+            fishingSettings.minLineLength,
+            fishingSettings.lineGrowthRate,
+            orientation,
+            fishObject,
+            holdProgressBar
+        );
+
+        if (pullCheck != null)
+        {
+            catchState.Initialize(pullCheck);
+            reelState.Initialize(
+                fishObject,
+                pullCheck,
+                fishingSettings.reelInTime,
+                fishingSettings.minStartFleeingTime,
+                fishingSettings.maxStartFleeingTime
+            );
+
+            fleeState.Initialize(
+                fishObject,
+                pullCheck,
+                fishingSettings.reelInTime,
+                fishingSettings.minFleeTime,
+                fishingSettings.maxFleeTime,
+                fishingSettings.fleeRadius,
+                fishingSettings.fleeTimes
+            );
+        }
     }
 
     public void CameraLock()
@@ -91,7 +143,7 @@ public class FishingStateManager : MonoBehaviour
 
         Quaternion targetRotation = Quaternion.LookRotation(direction);
 
-        virtualCamera.transform.rotation = Quaternion.Slerp(virtualCamera.transform.rotation, targetRotation, throwSettings.rotationSpeed * Time.deltaTime);
+        virtualCamera.transform.rotation = Quaternion.Slerp(virtualCamera.transform.rotation, targetRotation, fishingSettings.rotationSpeed * Time.deltaTime);
     }
 
     public Transform GetCurrentTransform() => transform;

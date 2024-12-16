@@ -14,21 +14,23 @@ public class Reel : FishingBaseState
     Vector3 startPosition;
     Vector3 targetPosition;
 
-    float reelInTimer = 0f;
-    float reelInTime = 2f;
+    float reelInTimer;
+    float reelInTime;
 
     bool canReelIn;
     bool reeledIn;
 
     float fleeTimer;
-    float minFleeTime = 2.5f;
-    float maxFleeTime = 4.35f;
+    float minStartFleeingTime = 2.5f;
+    float maxStartFleeingTime = 4.35f;
 
-    public void Initialize(Transform fishObject, Image pullCheck, float reelInTime)
+    public void Initialize(Transform fishObject, Image pullCheck, float reelInTime, float minStartFleeingTime, float maxStartFleeingTime)
     {
         this.fishObject = fishObject;
         this.pullCheck = pullCheck;
         this.reelInTime = reelInTime;
+        this.minStartFleeingTime = minStartFleeingTime;
+        this.maxStartFleeingTime = maxStartFleeingTime;
     }
 
     public override void EnterState(FishingStateManager fishingState)
@@ -103,7 +105,7 @@ public class Reel : FishingBaseState
 
     void ResetFleeTimer()
     {
-        fleeTimer = Random.Range(minFleeTime, maxFleeTime);
+        fleeTimer = Random.Range(minStartFleeingTime, maxStartFleeingTime);
     }
 
     public Vector3 GetStartFishPosition() => startPosition;

@@ -13,7 +13,6 @@ public class Throw : FishingBaseState
     Slider holdProgressBar;
 
     InputManager inputManager;
-    ThrowSettings settings;
 
     bool throwing = false;
     Vector3 throwVelocity;
@@ -25,23 +24,26 @@ public class Throw : FishingBaseState
     float lineLength = 1f;
     float trajectoryHeight;
     float easeOutPower = 3;
+    float maxLineLength;
+    float lineGrowthRate;
+    float minLineLength;
 
-    public void Initialize(ThrowSettings throwSettings, Transform orientation, Transform hitVisual, Slider holdProgressBar)
+
+    public void Initialize(float trajectoryHeight, float maxLineLength, float minLineLength, float lineGrowthRate, Transform orientation, Transform hitVisual, Slider holdProgressBar)
     {
-        this.settings = throwSettings;
         this.orientation = orientation;
         this.hitVisual = hitVisual;
         this.holdProgressBar = holdProgressBar;
+        this.trajectoryHeight = trajectoryHeight;
+        this.minLineLength = minLineLength;
+        this.maxLineLength = maxLineLength;
+        this.lineGrowthRate = lineGrowthRate;
 
-        trajectoryHeight = settings.minTrajectoryHeight;
         inputManager = InputManager.Instance;
     }
 
     public override void EnterState(FishingStateManager fishingState)
     {
-        inputManager = InputManager.Instance;
-        trajectoryHeight = settings.minTrajectoryHeight;
-
         if (holdProgressBar != null)
         {
             holdProgressBar.minValue = 0;
@@ -89,12 +91,12 @@ public class Throw : FishingBaseState
         Vector3 mouseWorldPos = MouseWorldPosition.GetMouseWorldPosition();
         if (mouseWorldPos == Vector3.zero) return;
 
-        maxHoldDuration = Mathf.Min(Vector3.Distance(startPosition, mouseWorldPos), settings.maxLineLength) / settings.lineGrowthRate;
+        maxHoldDuration = Mathf.Min(Vector3.Distance(startPosition, mouseWorldPos), maxLineLength) / lineGrowthRate;
 
         easeOutPower = 3;
 
-        lineLength = Mathf.Min(holdDuration * settings.lineGrowthRate, Vector3.Distance(startPosition, mouseWorldPos));
-        lineLength = Mathf.Clamp(lineLength, settings.minLineLength, settings.maxLineLength);
+        lineLength = Mathf.Min(holdDuration * lineGrowthRate, Vector3.Distance(startPosition, mouseWorldPos));
+        lineLength = Mathf.Clamp(lineLength, minLineLength, maxLineLength);
 
         holdDuration += Time.deltaTime;
 
@@ -173,7 +175,7 @@ public class Throw : FishingBaseState
 
     public override void DrawGizmos(FishingStateManager fishingState)
     {
-        Gizmos.color = settings.lineColor;
+        Gizmos.color = Color.red;
         Vector3 startPosition = fishingState.GetCurrentTransform().transform.position + Vector3.up * 0.5f;
         Vector3 endPosition = startPosition + orientation.forward * lineLength;
         Gizmos.DrawLine(startPosition, endPosition);

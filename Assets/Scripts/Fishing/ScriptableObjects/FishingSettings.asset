@@ -10,14 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24e1bc0d0ae27b445a57d86f3804339c, type: 3}
-  m_Name: ThrowSettings
+  m_Name: FishingSettings
   m_EditorClassIdentifier: 
-  orientation: {fileID: 0}
-  cameraHolder: {fileID: 0}
-  hitVisual: {fileID: 0}
   maxLineLength: 10
   minLineLength: 1
   lineGrowthRate: 5
   minTrajectoryHeight: 1
+  cooldownTime: 2
+  rotationSpeed: 3
+  reelInTime: 2
+  minStartFleeingTime: 2.5
+  maxStartFleeingTime: 4.35
+  minFleeTime: 2
+  maxFleeTime: 5
+  fleeRadius: 1.75
+  fleeTimes: 3
   lineColor: {r: 1, g: 0, b: 0, a: 1}
-  holdProgressBar: {fileID: 0}
