@@ -11,6 +11,8 @@ public class AnimationController: MonoBehaviour
     [HideInInspector] public static string ON_THROW = "onThrow";
     [HideInInspector] public static string FLEE_LEFT = "fleeLeft";
     [HideInInspector] public static string FLEE_RIGHT = "fleeRight";
+    [HideInInspector] public static string REEL = "reel";
+    [HideInInspector] public static string DONE_FISHING = "doneFishing";
 
     Animator animator;
 

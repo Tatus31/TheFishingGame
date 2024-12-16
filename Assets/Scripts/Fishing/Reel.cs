@@ -33,6 +33,7 @@ public class Reel : FishingBaseState
 
     public override void EnterState(FishingStateManager fishingState)
     {
+        fishingState.GetAnimationController().PlayAnimation(AnimationController.REEL, true);
         StartReeling(fishingState);
         ResetFleeTimer();
 

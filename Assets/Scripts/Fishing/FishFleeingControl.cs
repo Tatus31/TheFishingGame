@@ -84,14 +84,7 @@ public class FishFleeingControl : MonoBehaviour
         else
         {
             //TODO: change after making the reel animation
-            if (fishDirection > 0)
-            {
-                animation.PlayAnimation(AnimationController.FLEE_RIGHT, false);
-            }
-            else
-            {
-                animation.PlayAnimation(AnimationController.FLEE_LEFT, false);
-            }
+            animation.PlayAnimation(AnimationController.REEL, false);
             //Debug.Log("Fish escaping");
         }
     }

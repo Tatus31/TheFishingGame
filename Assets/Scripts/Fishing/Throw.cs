@@ -124,6 +124,7 @@ public class Throw : FishingBaseState
             fishingState.SwitchState(fishingState.catchState);
         }
 
+        fishingState.GetAnimationController().PlayAnimation(AnimationController.DONE_FISHING, false);
         OnThrowing?.Invoke(this, throwing);
         GenerateTrajectoryPoints(fishingState);
     }

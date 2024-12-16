@@ -8,6 +8,8 @@ public class Escaped : FishingBaseState
     {
         fishingState.isCameraLockedOn = false;
         fishingState.GetAnimationController().PlayAnimation(AnimationController.ON_THROW, false);
+        fishingState.GetAnimationController().PlayAnimation(AnimationController.REEL, false);
+        fishingState.GetAnimationController().PlayAnimation(AnimationController.DONE_FISHING, true);
         fishingState.SwitchState(fishingState.throwState);
     }
 
