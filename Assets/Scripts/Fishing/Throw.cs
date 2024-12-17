@@ -28,7 +28,6 @@ public class Throw : FishingBaseState
     float lineGrowthRate;
     float minLineLength;
 
-
     public void Initialize(float trajectoryHeight, float maxLineLength, float minLineLength, float lineGrowthRate, Transform orientation, Transform hitVisual, Slider holdProgressBar)
     {
         this.orientation = orientation;
@@ -83,7 +82,7 @@ public class Throw : FishingBaseState
         trajectoryPoints.Clear();
         OnThrowing?.Invoke(this, throwing);
 
-        fishingState.GetAnimationController().PlayAnimation(AnimationController.ON_THROW, true);
+        fishingState.GetAnimationController().PlayAnimation(fishingState.GetCharacterAnimator(), AnimationController.ON_THROW, true);
     }
 
     void UpdateThrow()
@@ -126,7 +125,7 @@ public class Throw : FishingBaseState
             fishingState.SwitchState(fishingState.catchState);
         }
 
-        fishingState.GetAnimationController().PlayAnimation(AnimationController.DONE_FISHING, false);
+        fishingState.GetAnimationController().PlayAnimation(fishingState.GetCharacterAnimator(), AnimationController.DONE_FISHING, false);
         OnThrowing?.Invoke(this, throwing);
         GenerateTrajectoryPoints(fishingState);
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.PackageManager;
@@ -7,6 +8,25 @@ public class AnimationController: MonoBehaviour
 {
     public static AnimationController Instance;
 
+    [Serializable]
+    public enum Animators
+    {
+        CharacterAnimator,
+        LureAnimator
+    }
+
+    [Serializable]
+    public class AnimatorEntry
+    {
+        public Animators animatorType;
+        public Animator animator;
+    }
+
+    [SerializeField]
+    List<AnimatorEntry> animators = new List<AnimatorEntry>();
+
+    Dictionary<Animators, Animator> animatorDictionary = new Dictionary<Animators, Animator>();
+
     [HideInInspector] public static string ON_RUN = "onRun";
     [HideInInspector] public static string ON_THROW = "onThrow";
     [HideInInspector] public static string FLEE_LEFT = "fleeLeft";
@@ -14,8 +34,7 @@ public class AnimationController: MonoBehaviour
     [HideInInspector] public static string REEL = "reel";
     [HideInInspector] public static string DONE_FISHING = "doneFishing";
     [HideInInspector] public static string FISH_FLEEING = "fishFleeing";
-
-    Animator animator;
+    [HideInInspector] public static string LURE_CATCH = "lureCatch";
 
     void Awake()
     {
@@ -24,11 +43,36 @@ public class AnimationController: MonoBehaviour
 
         Instance = this;
 
-        animator = GetComponent<Animator>();
+        foreach (var entry in animators)
+        {
+            if (entry.animator != null && !animatorDictionary.ContainsKey(entry.animatorType))
+            {
+                animatorDictionary.Add(entry.animatorType, entry.animator);
+            }
+        }
     }
 
-    public void PlayAnimation<T>(string parameterName, T value)
+    public Animator GetAnimator(Animators animatorType)
     {
+        if (animatorDictionary.TryGetValue(animatorType, out Animator animator))
+        {
+            return animator;
+        }
+        else
+        {
+            Debug.LogWarning($"Animator of type {animatorType} not found!");
+            return null;
+        }
+    }
+
+    public void PlayAnimation<T>(Animator animator, string parameterName, T value)
+    {
+        if (animator == null)
+        {
+            Debug.LogError("Cannot play animation no aniamtor");
+            return;
+        }
+
         switch (value)
         {
             case bool boolValue:
@@ -48,7 +92,7 @@ public class AnimationController: MonoBehaviour
                 break;
 
             default:
-                Debug.LogError($"there is no {value} type of parameter");
+                Debug.LogError($"no {typeof(T)} as a animator parameter");
                 break;
         }
     }

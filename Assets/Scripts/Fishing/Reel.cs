@@ -37,7 +37,7 @@ public class Reel : FishingBaseState
 
     public override void EnterState(FishingStateManager fishingState)
     {
-        fishingState.GetAnimationController().PlayAnimation(AnimationController.REEL, true);
+        fishingState.GetAnimationController().PlayAnimation(fishingState.GetCharacterAnimator(), AnimationController.REEL, true);
         StartReeling(fishingState);
         ResetFleeTimer();
 
@@ -66,6 +66,13 @@ public class Reel : FishingBaseState
             nextPosition.y = groundY;
 
             fishObject.position = nextPosition;
+
+            Vector3 directionToTarget = (targetPosition - fishObject.position).normalized;
+            if (directionToTarget != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+                fishObject.rotation = Quaternion.Slerp(fishObject.rotation, targetRotation, Time.deltaTime * 5f);
+            }
 
             if (reelInTimer >= reelInTime)
             {

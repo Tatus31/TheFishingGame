@@ -24,6 +24,9 @@ public class FishingStateManager : MonoBehaviour
 
     AnimationController animator;
 
+    Animator characterAnimator;
+    Animator lureAnimator;
+
     public Throw throwState = new Throw();
     public Catch catchState = new Catch();
     public Reel reelState = new Reel();
@@ -60,6 +63,9 @@ public class FishingStateManager : MonoBehaviour
         currentState.EnterState(this);
 
         animator = AnimationController.Instance;
+
+        characterAnimator = animator.GetAnimator(AnimationController.Animators.CharacterAnimator);
+        lureAnimator = animator.GetAnimator(AnimationController.Animators.LureAnimator);
     }
 
     void Update()
@@ -154,4 +160,8 @@ public class FishingStateManager : MonoBehaviour
     public Transform GetOrientation() => orientation;
 
     public AnimationController GetAnimationController() => animator;
+
+    public Animator GetCharacterAnimator() => characterAnimator;
+
+    public Animator GetLureAnimator() => lureAnimator;
 }

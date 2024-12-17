@@ -79,13 +79,13 @@ public class FishFleeingControl : MonoBehaviour
 
             if (fishDirection > 0)
             {
-                animation.PlayAnimation(AnimationController.FLEE_RIGHT, true);
-                animation.PlayAnimation(AnimationController.FLEE_LEFT, false);
+                animation.PlayAnimation(fishingStateManager.GetCharacterAnimator(), AnimationController.FLEE_RIGHT, true);
+                animation.PlayAnimation(fishingStateManager.GetCharacterAnimator(), AnimationController.FLEE_LEFT, false);
             }
             else
             {
-                animation.PlayAnimation(AnimationController.FLEE_RIGHT, false);
-                animation.PlayAnimation(AnimationController.FLEE_LEFT, true);
+                animation.PlayAnimation(fishingStateManager.GetCharacterAnimator(), AnimationController.FLEE_RIGHT, false);
+                animation.PlayAnimation(fishingStateManager.GetCharacterAnimator(), AnimationController.FLEE_LEFT, true);
             }
             //Debug.Log("countered flee");
         }
