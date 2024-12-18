@@ -6,7 +6,7 @@ public class MoveCamera : MonoBehaviour
     [SerializeField]   
     private Transform player;
 
-    float offsetY = 0.6f;
+    float offsetY = 0.9f;
 
     void Update()
     {
