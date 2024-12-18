@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571337, b: 0.3069219, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9149,7 +9149,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 953146288}
     m_Modifications:
     - target: {fileID: 282033509963310333, guid: 40902f13d663667438a3341b0421e4c0,
         type: 3}
@@ -9168,18 +9168,33 @@ PrefabInstance:
       objectReference: {fileID: 1191358734}
     - target: {fileID: 527980311912991017, guid: 40902f13d663667438a3341b0421e4c0,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.0669272
+      objectReference: {fileID: 0}
+    - target: {fileID: 527980311912991017, guid: 40902f13d663667438a3341b0421e4c0,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.0669272
+      objectReference: {fileID: 0}
+    - target: {fileID: 527980311912991017, guid: 40902f13d663667438a3341b0421e4c0,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.0669272
+      objectReference: {fileID: 0}
+    - target: {fileID: 527980311912991017, guid: 40902f13d663667438a3341b0421e4c0,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2
+      value: -0.062007263
       objectReference: {fileID: 0}
     - target: {fileID: 527980311912991017, guid: 40902f13d663667438a3341b0421e4c0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 2.2529507
       objectReference: {fileID: 0}
     - target: {fileID: 527980311912991017, guid: 40902f13d663667438a3341b0421e4c0,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2
+      value: 0.5787396
       objectReference: {fileID: 0}
     - target: {fileID: 527980311912991017, guid: 40902f13d663667438a3341b0421e4c0,
         type: 3}
@@ -9189,7 +9204,7 @@ PrefabInstance:
     - target: {fileID: 527980311912991017, guid: 40902f13d663667438a3341b0421e4c0,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 527980311912991017, guid: 40902f13d663667438a3341b0421e4c0,
         type: 3}
@@ -9199,7 +9214,7 @@ PrefabInstance:
     - target: {fileID: 527980311912991017, guid: 40902f13d663667438a3341b0421e4c0,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 527980311912991017, guid: 40902f13d663667438a3341b0421e4c0,
         type: 3}
@@ -9241,6 +9256,12 @@ PrefabInstance:
       propertyPath: virtualCamera
       value: 
       objectReference: {fileID: 1066652596}
+    - target: {fileID: 2057564937266314144, guid: 40902f13d663667438a3341b0421e4c0,
+        type: 3}
+      propertyPath: fishingSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: bdfd9e3e72d01ab4a8ed1dd9acc4bb57,
+        type: 2}
     - target: {fileID: 2057564937266314144, guid: 40902f13d663667438a3341b0421e4c0,
         type: 3}
       propertyPath: holdProgressBar
@@ -9919,6 +9940,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1659347133}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: fac7f0a113f046e4788b24e63bfd4d6c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1845961569}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fac7f0a113f046e4788b24e63bfd4d6c,
         type: 3}
@@ -10047,4 +10072,3 @@ SceneRoots:
   - {fileID: 359262714}
   - {fileID: 2133876046}
   - {fileID: 1753851795}
-  - {fileID: 1719729601}
