@@ -7,7 +7,9 @@ public class Escaped : FishingBaseState
     public override void EnterState(FishingStateManager fishingState)
     {
         fishingState.isCameraLockedOn = false;
-        fishingState.GetAnimationController().PlayAnimation(AnimationController.ON_THROW, false);
+        fishingState.GetAnimationController().PlayAnimation(fishingState.GetCharacterAnimator(), AnimationController.ON_THROW, false);
+        fishingState.GetAnimationController().PlayAnimation(fishingState.GetCharacterAnimator(),AnimationController.REEL, false);
+        fishingState.GetAnimationController().PlayAnimation(fishingState.GetCharacterAnimator(), AnimationController.DONE_FISHING, true);
         fishingState.SwitchState(fishingState.throwState);
     }
 

@@ -33,7 +33,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: 
+  m_LockedProperties: _Horizon_Color _Nadir_Blend _Star_Blend
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -51,6 +51,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_56aa25f44e9147f4afb3c33e3d6d578f_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: f24f785c067f5e048ab4b5b64a4bded1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_80d2773f1edf4de58732e2fc5e6bb311_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 3ccfd70b28f0bec43ba1f4b7db0d5c9b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Textura_Flakes:
@@ -75,11 +79,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Clump_Size: 2
-    - _Culling_Clumps: 1
+    - _Clump_Size: 0.3
+    - _Culling_Clumps: 1.97
     - _Culling_Flake: 1
     - _Culling_Main: 1.5
-    - _Flake_Amount: 10
+    - _EliX: 0.55
+    - _EliY: 0.18
+    - _Flake_Amount: 8
     - _Flake_Angle: 14.5
     - _G_W_S_Support: 1
     - _G_W_Speed: 0.1
@@ -94,15 +100,15 @@ Material:
     - _Speed_Vo_Horizontal: 0.25
     - _Speed_Vo_Main: 0.1
     - _Speed_Vo_Vertical: 0.25
-    - _Star_Blend: 0.8
+    - _Star_Blend: 0.01
     - _Star_Density: 161
-    - _Star_Size: 39
+    - _Star_Size: 27.5
     - _Wysoko: 0.181
     - _Zenit_Blend: 0.2
     m_Colors:
     - _G_W_Limits: {r: 0.25, g: 1, b: 0, a: 0}
     - _Horizon_Color: {r: 0.21698111, g: 0.19249722, b: 0.1463599, a: 0}
     - _Nadir_Color: {r: 0.0746262, g: 0.122641504, b: 0.08483605, a: 0}
-    - _Star_Color: {r: 347.77347, g: 143.4362, b: 131.09785, a: 0}
+    - _Star_Color: {r: 208.49913, g: 28.151041, b: 18.489534, a: 0}
     - _Zenit_Color: {r: 0.066037714, g: 0.034022577, b: 0.008410464, a: 0}
   m_BuildTextureStacks: []

@@ -26,13 +26,21 @@ public class FishFleeingControl : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        fishingStateManager = FindObjectOfType<FishingStateManager>();
     }
 
     void Start()
     {
-        fishingStateManager = FindObjectOfType<FishingStateManager>();
-        fishingStateManager.fleeState.OnFleeingFish += fishingStateManager_OnFleeingFish;
-        fishingStateManager.fleeState.OnCurrentFleeDirection += fishingStateManager_OnCurrentFleeDirection;
+
+        if (fishingStateManager != null)
+        {
+            fishingStateManager.fleeState.OnFleeingFish += fishingStateManager_OnFleeingFish;
+            fishingStateManager.fleeState.OnCurrentFleeDirection += fishingStateManager_OnCurrentFleeDirection;
+        }
+        else
+        {
+            Debug.LogError("fishingStateManager not created yet");
+        }
 
         inputManager = InputManager.Instance;
     }
@@ -71,27 +79,20 @@ public class FishFleeingControl : MonoBehaviour
 
             if (fishDirection > 0)
             {
-                animation.PlayAnimation(AnimationController.FLEE_RIGHT, true);
-                animation.PlayAnimation(AnimationController.FLEE_LEFT, false);
+                animation.PlayAnimation(fishingStateManager.GetCharacterAnimator(), AnimationController.FLEE_RIGHT, true);
+                animation.PlayAnimation(fishingStateManager.GetCharacterAnimator(), AnimationController.FLEE_LEFT, false);
             }
             else
             {
-                animation.PlayAnimation(AnimationController.FLEE_RIGHT, false);
-                animation.PlayAnimation(AnimationController.FLEE_LEFT, true);
+                animation.PlayAnimation(fishingStateManager.GetCharacterAnimator(), AnimationController.FLEE_RIGHT, false);
+                animation.PlayAnimation(fishingStateManager.GetCharacterAnimator(), AnimationController.FLEE_LEFT, true);
             }
             //Debug.Log("countered flee");
         }
         else
         {
             //TODO: change after making the reel animation
-            if (fishDirection > 0)
-            {
-                animation.PlayAnimation(AnimationController.FLEE_RIGHT, false);
-            }
-            else
-            {
-                animation.PlayAnimation(AnimationController.FLEE_LEFT, false);
-            }
+            //animation.PlayAnimation(AnimationController.DONE_FISHING, false);
             //Debug.Log("Fish escaping");
         }
     }

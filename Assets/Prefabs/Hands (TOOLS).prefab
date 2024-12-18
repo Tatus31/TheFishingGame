@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dc48f5db797449428dd17a7512f60c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ON_RUN: onRun
+  animators: []
 --- !u!1001 &886545101941589920
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -420,6 +420,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -259.246
       objectReference: {fileID: 0}
+    - target: {fileID: -5258144809359283753, guid: 9bf3dc321edce404caa59b841e789c6f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a5966e97b2bed18459d228fe06c98ab3, type: 2}
     - target: {fileID: -5099930675036857526, guid: 9bf3dc321edce404caa59b841e789c6f,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -1240,6 +1245,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 70.693
       objectReference: {fileID: 0}
+    - target: {fileID: 5797384429611982230, guid: 9bf3dc321edce404caa59b841e789c6f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a5966e97b2bed18459d228fe06c98ab3, type: 2}
     - target: {fileID: 6443364384608564678, guid: 9bf3dc321edce404caa59b841e789c6f,
         type: 3}
       propertyPath: m_LocalRotation.w

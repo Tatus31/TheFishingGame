@@ -34,6 +34,7 @@ public class Catch : FishingBaseState
             canPullIn = false;
 
             fishingState.StartCooldown();
+            fishingState.GetAnimationController().PlayAnimation(fishingState.GetLureAnimator(),AnimationController.LURE_CATCH, false);
             fishingState.SwitchState(fishingState.reelState);
         }
     }
@@ -46,13 +47,14 @@ public class Catch : FishingBaseState
         canPullIn = true;
 
         pullCheck.color = Color.blue;
+        fishingState.GetAnimationController().PlayAnimation(fishingState.GetLureAnimator(),AnimationController.LURE_CATCH, true);
 
         yield return new WaitForSeconds(pullInWindowDuration);
 
         if (canPullIn)
         {
             pullCheck.color = Color.black;
-
+            fishingState.GetAnimationController().PlayAnimation(fishingState.GetLureAnimator(), AnimationController.LURE_CATCH, false);
             fishingState.StartCooldown();
             fishingState.SwitchState(fishingState.escapedState);
         }

@@ -6,7 +6,7 @@ using Cinemachine;
 public class FishingStateManager : MonoBehaviour
 {
     [Header("Serialized Objects")]
-    [SerializeField] ThrowSettings throwSettings;
+    [SerializeField] FishingSettings fishingSettings;
 
     [Header("References")]
     [SerializeField] CinemachineVirtualCamera virtualCamera;
@@ -24,6 +24,9 @@ public class FishingStateManager : MonoBehaviour
 
     AnimationController animator;
 
+    Animator characterAnimator;
+    Animator lureAnimator;
+
     public Throw throwState = new Throw();
     public Catch catchState = new Catch();
     public Reel reelState = new Reel();
@@ -32,15 +35,37 @@ public class FishingStateManager : MonoBehaviour
 
     void Start()
     {
-        throwState.Initialize(throwSettings, orientation, fishObject, holdProgressBar);
+        throwState.Initialize(fishingSettings.minTrajectoryHeight,
+        fishingSettings.maxLineLength,
+        fishingSettings.minLineLength,
+        fishingSettings.lineGrowthRate,
+        orientation,
+        fishObject,
+        holdProgressBar);
+
         catchState.Initialize(pullCheck);
-        reelState.Initialize(fishObject, pullCheck, throwSettings.reelInTime);
-        fleeState.Initialize(fishObject, pullCheck, throwSettings.reelInTime);
+
+        reelState.Initialize(fishObject,
+            pullCheck,
+            fishingSettings.reelInTime,
+            fishingSettings.minStartFleeingTime,
+            fishingSettings.maxStartFleeingTime);
+
+        fleeState.Initialize(fishObject,
+            pullCheck,
+            fishingSettings.reelInTime,
+            fishingSettings.minFleeTime,
+            fishingSettings.maxFleeTime,
+            fishingSettings.fleeRadius,
+            fishingSettings.fleeTimes);
 
         currentState = throwState;
         currentState.EnterState(this);
 
         animator = AnimationController.Instance;
+
+        characterAnimator = animator.GetAnimator(AnimationController.Animators.CharacterAnimator);
+        lureAnimator = animator.GetAnimator(AnimationController.Animators.LureAnimator);
     }
 
     void Update()
@@ -57,7 +82,7 @@ public class FishingStateManager : MonoBehaviour
 
     public void SwitchState(FishingBaseState newState)
     {
-        currentState.ExitState();
+        newState.ExitState();
         currentState = newState;
         newState.EnterState(this);
     }
@@ -68,7 +93,7 @@ public class FishingStateManager : MonoBehaviour
 
     public void StartCooldown()
     {
-        cooldownTimer = throwSettings.cooldownTime;
+        cooldownTimer = fishingSettings.cooldownTime;
     }
 
     void OnDrawGizmos()
@@ -78,9 +103,39 @@ public class FishingStateManager : MonoBehaviour
 
     void OnValidate()
     {
-        throwState.Initialize(throwSettings, orientation, fishObject, holdProgressBar);
-        catchState.Initialize(pullCheck);
-        reelState.Initialize(fishObject, pullCheck, throwSettings.reelInTime);
+        if (fishingSettings == null) return;
+
+        throwState.Initialize(
+            fishingSettings.minTrajectoryHeight,
+            fishingSettings.maxLineLength,
+            fishingSettings.minLineLength,
+            fishingSettings.lineGrowthRate,
+            orientation,
+            fishObject,
+            holdProgressBar
+        );
+
+        if (pullCheck != null)
+        {
+            catchState.Initialize(pullCheck);
+            reelState.Initialize(
+                fishObject,
+                pullCheck,
+                fishingSettings.reelInTime,
+                fishingSettings.minStartFleeingTime,
+                fishingSettings.maxStartFleeingTime
+            );
+
+            fleeState.Initialize(
+                fishObject,
+                pullCheck,
+                fishingSettings.reelInTime,
+                fishingSettings.minFleeTime,
+                fishingSettings.maxFleeTime,
+                fishingSettings.fleeRadius,
+                fishingSettings.fleeTimes
+            );
+        }
     }
 
     public void CameraLock()
@@ -91,7 +146,7 @@ public class FishingStateManager : MonoBehaviour
 
         Quaternion targetRotation = Quaternion.LookRotation(direction);
 
-        virtualCamera.transform.rotation = Quaternion.Slerp(virtualCamera.transform.rotation, targetRotation, throwSettings.rotationSpeed * Time.deltaTime);
+        virtualCamera.transform.rotation = Quaternion.Slerp(virtualCamera.transform.rotation, targetRotation, fishingSettings.rotationSpeed * Time.deltaTime);
     }
 
     public Transform GetCurrentTransform() => transform;
@@ -105,4 +160,8 @@ public class FishingStateManager : MonoBehaviour
     public Transform GetOrientation() => orientation;
 
     public AnimationController GetAnimationController() => animator;
+
+    public Animator GetCharacterAnimator() => characterAnimator;
+
+    public Animator GetLureAnimator() => lureAnimator;
 }

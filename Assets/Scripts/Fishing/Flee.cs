@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -20,7 +21,7 @@ public class Flee : FishingBaseState
     float reelInTimer;
     float reelInTime = 2f;
 
-    float minFleeTime = 4f;
+    float minFleeTime = 2f;
     float maxFleeTime = 5f;
     float fleeTimer;
 
@@ -37,11 +38,15 @@ public class Flee : FishingBaseState
 
     public enum FleeDirection { Left, Right }
 
-    public void Initialize(Transform fishObject, Image pullCheck, float reelInTime)
+    public void Initialize(Transform fishObject, Image pullCheck, float reelInTime, float minFleeTime, float maxFleeTime, float fleeRadius, float fleeTimes)
     {
         this.fishObject = fishObject;
         this.pullCheck = pullCheck;
         this.reelInTime = reelInTime;
+        this.minFleeTime = minFleeTime;
+        this.maxFleeTime = maxFleeTime;
+        this.fleeRadius = fleeRadius;
+        this.fleeTimes = fleeTimes;
     }
 
     public override void EnterState(FishingStateManager fishingState)
@@ -50,7 +55,7 @@ public class Flee : FishingBaseState
         OnFleeingFish?.Invoke(this, isFleeing);
 
         //TODO: change after adding the reeling animation
-        fishingState.GetAnimationController().PlayAnimation(AnimationController.FLEE_LEFT, false);
+        fishingState.GetAnimationController().PlayAnimation(fishingState.GetCharacterAnimator(), AnimationController.FISH_FLEEING, true);
 
         pullCheck.color = Color.red;
 
@@ -95,6 +100,7 @@ public class Flee : FishingBaseState
             {
                 isFleeing = false;
                 OnFleeingFish?.Invoke(this, isFleeing);
+                fishingState.GetAnimationController().PlayAnimation(fishingState.GetCharacterAnimator(), AnimationController.FISH_FLEEING, false);
                 fishingState.SwitchState(fishingState.reelState);
                 return;
             }
@@ -105,6 +111,13 @@ public class Flee : FishingBaseState
         reelInTimer += Time.deltaTime * fleeSpeedMultiplier;
         float t = Mathf.Clamp01(reelInTimer / reelInTime);
         fishObject.position = Vector3.Lerp(fleeStartPosition, fleeTargetPosition, t);
+
+        Vector3 directionToTarget = (fleeTargetPosition - fishObject.position).normalized;
+        if (directionToTarget != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+            fishObject.rotation = Quaternion.Slerp(fishObject.rotation, targetRotation, Time.deltaTime * 5f);
+        }
     }
 
     void ResetFleeTimer()
@@ -140,7 +153,7 @@ public class Flee : FishingBaseState
             FleeDirection direction = (Random.Range(0, 2) == 0) ? FleeDirection.Left : FleeDirection.Right;
             float horizontalOffset = (direction == FleeDirection.Left) ? -2f : 2f;
 
-            Vector3 newFleeTarget = currentPosition + new Vector3(-1, 0, horizontalOffset);
+            Vector3 newFleeTarget = currentPosition + new Vector3(-1f, 0, horizontalOffset);
 
             fleeDirections.Add(new FleeData(newFleeTarget, direction));
             currentPosition = newFleeTarget;

@@ -14,25 +14,30 @@ public class Reel : FishingBaseState
     Vector3 startPosition;
     Vector3 targetPosition;
 
-    float reelInTimer = 0f;
-    float reelInTime = 2f;
+    float groundY;
+
+    float reelInTimer;
+    float reelInTime;
 
     bool canReelIn;
     bool reeledIn;
 
     float fleeTimer;
-    float minFleeTime = 2.5f;
-    float maxFleeTime = 4.35f;
+    float minStartFleeingTime = 2.5f;
+    float maxStartFleeingTime = 4.35f;
 
-    public void Initialize(Transform fishObject, Image pullCheck, float reelInTime)
+    public void Initialize(Transform fishObject, Image pullCheck, float reelInTime, float minStartFleeingTime, float maxStartFleeingTime)
     {
         this.fishObject = fishObject;
         this.pullCheck = pullCheck;
         this.reelInTime = reelInTime;
+        this.minStartFleeingTime = minStartFleeingTime;
+        this.maxStartFleeingTime = maxStartFleeingTime;
     }
 
     public override void EnterState(FishingStateManager fishingState)
     {
+        fishingState.GetAnimationController().PlayAnimation(fishingState.GetCharacterAnimator(), AnimationController.REEL, true);
         StartReeling(fishingState);
         ResetFleeTimer();
 
@@ -56,7 +61,18 @@ public class Reel : FishingBaseState
             float fleeSpeedMultiplier = 0.5f;
             reelInTimer += Time.deltaTime * fleeSpeedMultiplier;
             float t = Mathf.Clamp01(reelInTimer / reelInTime);
-            fishObject.position = Vector3.Lerp(startPosition, targetPosition, t);
+
+            Vector3 nextPosition = Vector3.Lerp(startPosition, targetPosition, t);
+            nextPosition.y = groundY;
+
+            fishObject.position = nextPosition;
+
+            Vector3 directionToTarget = (targetPosition - fishObject.position).normalized;
+            if (directionToTarget != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+                fishObject.rotation = Quaternion.Slerp(fishObject.rotation, targetRotation, Time.deltaTime * 5f);
+            }
 
             if (reelInTimer >= reelInTime)
             {
@@ -67,11 +83,7 @@ public class Reel : FishingBaseState
 
                 if (reeledIn)
                 {
-                    //Debug.Log("Reeled in");
-
-                    fishingState.StartCooldown();     
-                    
-                    //TODO: add a cought state
+                    fishingState.StartCooldown();
                     fishingState.SwitchState(fishingState.escapedState);
                 }
             }
@@ -91,6 +103,9 @@ public class Reel : FishingBaseState
         float reelInOffset = 1.1f;
         targetPosition = fishingState.GetCurrentTransform().position + fishingState.GetOrientation().forward * reelInOffset;
 
+        targetPosition = AdjustToGround(targetPosition);
+        groundY = startPosition.y;
+
         float remainingDistance = Vector3.Distance(fishObject.position, targetPosition);
         float remainingTimeFactor = remainingDistance / fishingState.throwState.GetLineLength();
 
@@ -99,10 +114,24 @@ public class Reel : FishingBaseState
         ResetFleeTimer();
     }
 
+    Vector3 AdjustToGround(Vector3 position)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(position + Vector3.up * 5f, Vector3.down, out hit, 10f, LayerMask.GetMask("WaterLayer")))
+        {
+            position.y = hit.point.y;
+        }
+        else
+        {
+            position.y = startPosition.y;
+        }
+
+        return position;
+    }
 
     void ResetFleeTimer()
     {
-        fleeTimer = Random.Range(minFleeTime, maxFleeTime);
+        fleeTimer = Random.Range(minStartFleeingTime, maxStartFleeingTime);
     }
 
     public Vector3 GetStartFishPosition() => startPosition;
