@@ -151,7 +151,7 @@ public class Flee : FishingBaseState
         for (int i = 0; i < fleeTimes; i++)
         {
             FleeDirection direction = (Random.Range(0, 2) == 0) ? FleeDirection.Left : FleeDirection.Right;
-            float horizontalOffset = (direction == FleeDirection.Left) ? -2f : 2f;
+            float horizontalOffset = (direction == FleeDirection.Left) ? -3f : 3f;
 
             Vector3 newFleeTarget = currentPosition + new Vector3(-1f, 0, horizontalOffset);
 
