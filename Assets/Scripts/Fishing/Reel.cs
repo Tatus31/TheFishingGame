@@ -100,7 +100,7 @@ public class Reel : FishingBaseState
 
         startPosition = fishObject.position;
 
-        float reelInOffset = 2f;
+        float reelInOffset = 5f;
         targetPosition = fishingState.GetCurrentTransform().position + fishingState.GetOrientation().forward * reelInOffset;
 
         targetPosition = AdjustToGround(targetPosition);
