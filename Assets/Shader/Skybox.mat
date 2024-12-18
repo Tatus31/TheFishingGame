@@ -33,7 +33,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: 
+  m_LockedProperties: _Horizon_Color _Nadir_Blend _Star_Blend
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -51,6 +51,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_56aa25f44e9147f4afb3c33e3d6d578f_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: f24f785c067f5e048ab4b5b64a4bded1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_80d2773f1edf4de58732e2fc5e6bb311_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 3ccfd70b28f0bec43ba1f4b7db0d5c9b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Textura_Flakes:
@@ -79,7 +83,7 @@ Material:
     - _Culling_Clumps: 1.97
     - _Culling_Flake: 1
     - _Culling_Main: 1.5
-    - _EliX: 0.038
+    - _EliX: 0.55
     - _EliY: 0.18
     - _Flake_Amount: 8
     - _Flake_Angle: 14.5
