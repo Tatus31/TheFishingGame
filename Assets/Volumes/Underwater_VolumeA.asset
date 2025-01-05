@@ -1,27 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7012554727354929234
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5485954d14dfb9a4c8ead8edb0ded5b1, type: 3}
-  m_Name: LiftGammaGain
-  m_EditorClassIdentifier: 
-  active: 0
-  lift:
-    m_OverrideState: 0
-    m_Value: {x: 0.96630603, y: 1, z: 0.9718129, w: 0.0000000014688206}
-  gamma:
-    m_OverrideState: 1
-    m_Value: {x: 0.98181087, y: 1, z: 0.98070675, w: -5.205263e-10}
-  gain:
-    m_OverrideState: 1
-    m_Value: {x: 0.88750315, y: 1, z: 0.89213675, w: -0.3607215}
 --- !u!114 &-4357001189996744800
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -94,7 +72,6 @@ MonoBehaviour:
   - {fileID: 4293256168161606988}
   - {fileID: 6388352274303215273}
   - {fileID: 4748329582705689186}
-  - {fileID: -7012554727354929234}
   - {fileID: -1212205348620258427}
   - {fileID: 6249839069755846875}
   - {fileID: -4357001189996744800}
@@ -113,7 +90,7 @@ MonoBehaviour:
   active: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0.36
+    m_Value: 0.6
 --- !u!114 &4748329582705689186
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -172,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 558a8e2b6826cf840aae193990ba9f2e, type: 3}
   m_Name: ShadowsMidtonesHighlights
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   shadows:
     m_OverrideState: 1
     m_Value: {x: 0.99325234, y: 1, z: 1, w: -0.06644519}
