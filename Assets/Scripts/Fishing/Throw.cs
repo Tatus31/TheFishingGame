@@ -82,7 +82,7 @@ public class Throw : FishingBaseState
         trajectoryPoints.Clear();
         OnThrowing?.Invoke(this, throwing);
 
-        fishingState.GetAnimationController().PlayAnimation(fishingState.GetCharacterAnimator(), AnimationController.ON_THROW, true);
+        fishingState.GetAnimationController().PlayAnimation(fishingState.GetFishingAnimator(), AnimationController.ON_THROW, true);
     }
 
     void UpdateThrow()
@@ -125,7 +125,7 @@ public class Throw : FishingBaseState
             fishingState.SwitchState(fishingState.catchState);
         }
 
-        fishingState.GetAnimationController().PlayAnimation(fishingState.GetCharacterAnimator(), AnimationController.DONE_FISHING, false);
+        fishingState.GetAnimationController().PlayAnimation(fishingState.GetFishingAnimator(), AnimationController.DONE_FISHING, false);
         OnThrowing?.Invoke(this, throwing);
         GenerateTrajectoryPoints(fishingState);
     }

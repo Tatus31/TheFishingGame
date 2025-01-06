@@ -10,8 +10,9 @@ public class AnimationController: MonoBehaviour
     [Serializable]
     public enum Animators
     {
-        CharacterAnimator,
-        LureAnimator
+        FishingAnimator,
+        LureAnimator,
+        DivingSuitAnimator
     }
 
     [Serializable]

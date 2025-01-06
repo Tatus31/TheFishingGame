@@ -1,6 +1,7 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
@@ -11,6 +12,10 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("References")]
     [SerializeField] Transform orientation;
+    //TODO: Make script for all the item interactions and shit
+    [SerializeField] GameObject fishingHands;
+    [SerializeField] GameObject divingSuitHands;
+    [SerializeField] FishingStateManager fishingStateManager;
 
     [Header("Movement")]
     [SerializeField] float maxSpeed = 5f;
@@ -33,15 +38,20 @@ public class PlayerMovement : MonoBehaviour
 
     float xDir, yDir;
 
+    public bool isInDivingSuit = false;
+
     AnimationController animator;
 
-    Animator characterAnimator;
+    Animator fishingAnimator;
+    Animator suitAnimator;
 
     public Vector3 FlatVel { get; set; }
 
     private IMovementState currentState;
     public WalkState WalkState { get; private set; }
     public SprintState SprintState { get; private set; }
+    public WalkState SuitWalkState { get; private set; }
+    public SprintState SuitSprintState { get; private set; }
 
     void Awake()
     {
@@ -62,7 +72,8 @@ public class PlayerMovement : MonoBehaviour
     {
         inputManager = InputManager.Instance;
         animator = AnimationController.Instance;
-        characterAnimator = animator.GetAnimator(AnimationController.Animators.CharacterAnimator);
+        fishingAnimator = animator.GetAnimator(AnimationController.Animators.FishingAnimator);
+        suitAnimator = animator.GetAnimator(AnimationController.Animators.DivingSuitAnimator);
 
         SwitchState(WalkState);
     }
@@ -76,6 +87,21 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         GetPlayerInput();
+
+        if (MouseWorldPosition.GetInteractable() && !isInDivingSuit && Input.GetKeyDown(KeyCode.E))
+        {
+            isInDivingSuit = true;
+            divingSuitHands.SetActive(true);
+            fishingHands.SetActive(false);
+            fishingStateManager.enabled = false;
+        }
+        else if (MouseWorldPosition.GetInteractable() && isInDivingSuit && Input.GetKeyDown(KeyCode.E))
+        {
+            isInDivingSuit = false;
+            divingSuitHands.SetActive(false);
+            fishingHands.SetActive(true);
+            fishingStateManager.enabled = true;
+        }
 
         if (inputManager.IsHoldingSprintKey() && currentState != SprintState)
         {
@@ -124,5 +150,5 @@ public class PlayerMovement : MonoBehaviour
 
     public AnimationController GetAnimationController() => animator;
 
-    public Animator GetCharacterAnimator() => characterAnimator;
+    public Animator GetFishingAnimator() => fishingAnimator;
 }

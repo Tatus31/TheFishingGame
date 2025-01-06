@@ -19,7 +19,7 @@ public class SprintState : IMovementState
 
     public void EnterState(PlayerMovement player)
     {
-        player.GetAnimationController().PlayAnimation(player.GetCharacterAnimator(), AnimationController.ON_RUN, true);
+        player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, true);
         //Debug.Log("Entered Sprint State");
     }
 

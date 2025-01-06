@@ -24,13 +24,13 @@ public class FishingStateManager : MonoBehaviour
 
     AnimationController animator;
 
-    Animator characterAnimator;
+    Animator fishingAnimator;
     Animator lureAnimator;
 
     public Throw throwState = new Throw();
     public Catch catchState = new Catch();
     public Reel reelState = new Reel();
-    public Flee fleeState = new Flee();
+    //public Flee fleeState = new Flee();
     public Escaped escapedState = new Escaped();
 
     void Start()
@@ -51,20 +51,20 @@ public class FishingStateManager : MonoBehaviour
             fishingSettings.minStartFleeingTime,
             fishingSettings.maxStartFleeingTime);
 
-        fleeState.Initialize(fishObject,
-            pullCheck,
-            fishingSettings.reelInTime,
-            fishingSettings.minFleeTime,
-            fishingSettings.maxFleeTime,
-            fishingSettings.fleeRadius,
-            fishingSettings.fleeTimes);
+        //fleeState.Initialize(fishObject,
+        //    pullCheck,
+        //    fishingSettings.reelInTime,
+        //    fishingSettings.minFleeTime,
+        //    fishingSettings.maxFleeTime,
+        //    fishingSettings.fleeRadius,
+        //    fishingSettings.fleeTimes);
 
         currentState = throwState;
         currentState.EnterState(this);
 
         animator = AnimationController.Instance;
 
-        characterAnimator = animator.GetAnimator(AnimationController.Animators.CharacterAnimator);
+        fishingAnimator = animator.GetAnimator(AnimationController.Animators.FishingAnimator);
         lureAnimator = animator.GetAnimator(AnimationController.Animators.LureAnimator);
     }
 
@@ -126,15 +126,15 @@ public class FishingStateManager : MonoBehaviour
                 fishingSettings.maxStartFleeingTime
             );
 
-            fleeState.Initialize(
-                fishObject,
-                pullCheck,
-                fishingSettings.reelInTime,
-                fishingSettings.minFleeTime,
-                fishingSettings.maxFleeTime,
-                fishingSettings.fleeRadius,
-                fishingSettings.fleeTimes
-            );
+            //fleeState.Initialize(
+            //    fishObject,
+            //    pullCheck,
+            //    fishingSettings.reelInTime,
+            //    fishingSettings.minFleeTime,
+            //    fishingSettings.maxFleeTime,
+            //    fishingSettings.fleeRadius,
+            //    fishingSettings.fleeTimes
+            //);
         }
     }
 
@@ -161,7 +161,7 @@ public class FishingStateManager : MonoBehaviour
 
     public AnimationController GetAnimationController() => animator;
 
-    public Animator GetCharacterAnimator() => characterAnimator;
+    public Animator GetFishingAnimator() => fishingAnimator;
 
     public Animator GetLureAnimator() => lureAnimator;
 }

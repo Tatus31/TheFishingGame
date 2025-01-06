@@ -55,7 +55,7 @@ public class Flee : FishingBaseState
         OnFleeingFish?.Invoke(this, isFleeing);
 
         //TODO: change after adding the reeling animation
-        fishingState.GetAnimationController().PlayAnimation(fishingState.GetCharacterAnimator(), AnimationController.FISH_FLEEING, true);
+        fishingState.GetAnimationController().PlayAnimation(fishingState.GetFishingAnimator(), AnimationController.FISH_FLEEING, true);
 
         pullCheck.color = Color.red;
 
@@ -100,7 +100,7 @@ public class Flee : FishingBaseState
             {
                 isFleeing = false;
                 OnFleeingFish?.Invoke(this, isFleeing);
-                fishingState.GetAnimationController().PlayAnimation(fishingState.GetCharacterAnimator(), AnimationController.FISH_FLEEING, false);
+                fishingState.GetAnimationController().PlayAnimation(fishingState.GetFishingAnimator(), AnimationController.FISH_FLEEING, false);
                 fishingState.SwitchState(fishingState.reelState);
                 return;
             }

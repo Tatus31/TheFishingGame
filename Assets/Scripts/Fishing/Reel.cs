@@ -22,24 +22,24 @@ public class Reel : FishingBaseState
     bool canReelIn;
     bool reeledIn;
 
-    float fleeTimer;
-    float minStartFleeingTime = 2.5f;
-    float maxStartFleeingTime = 4.35f;
+    //float fleeTimer;
+    //float minStartFleeingTime = 2.5f;
+    //float maxStartFleeingTime = 4.35f;
 
     public void Initialize(Transform fishObject, Image pullCheck, float reelInTime, float minStartFleeingTime, float maxStartFleeingTime)
     {
         this.fishObject = fishObject;
         this.pullCheck = pullCheck;
         this.reelInTime = reelInTime;
-        this.minStartFleeingTime = minStartFleeingTime;
-        this.maxStartFleeingTime = maxStartFleeingTime;
+        //this.minStartFleeingTime = minStartFleeingTime;
+        //this.maxStartFleeingTime = maxStartFleeingTime;
     }
 
     public override void EnterState(FishingStateManager fishingState)
     {
-        fishingState.GetAnimationController().PlayAnimation(fishingState.GetCharacterAnimator(), AnimationController.REEL, true);
+        fishingState.GetAnimationController().PlayAnimation(fishingState.GetFishingAnimator(), AnimationController.REEL, true);
         StartReeling(fishingState);
-        ResetFleeTimer();
+        //ResetFleeTimer();
 
         reeledIn = false;
     }
@@ -49,12 +49,12 @@ public class Reel : FishingBaseState
         if (!canReelIn)
             return;
 
-        fleeTimer -= Time.deltaTime;
-        if (fleeTimer <= 0)
-        {
-            fishingState.SwitchState(fishingState.fleeState);
-            return;
-        }
+        //fleeTimer -= Time.deltaTime;
+        //if (fleeTimer <= 0)
+        //{
+        //    fishingState.SwitchState(fishingState.fleeState);
+        //    return;
+        //}
 
         if (InputManager.Instance.IsLeftMouseButtonHeld())
         {
@@ -100,7 +100,7 @@ public class Reel : FishingBaseState
 
         startPosition = fishObject.position;
 
-        float reelInOffset = 5f;
+        float reelInOffset = 1f;
         targetPosition = fishingState.GetCurrentTransform().position + fishingState.GetOrientation().forward * reelInOffset;
 
         targetPosition = AdjustToGround(targetPosition);
@@ -111,7 +111,7 @@ public class Reel : FishingBaseState
 
         reelInTime = Mathf.Lerp(0.5f, 2f, remainingTimeFactor);
 
-        ResetFleeTimer();
+        //ResetFleeTimer();
     }
 
     Vector3 AdjustToGround(Vector3 position)
@@ -129,10 +129,10 @@ public class Reel : FishingBaseState
         return position;
     }
 
-    void ResetFleeTimer()
-    {
-        fleeTimer = Random.Range(minStartFleeingTime, maxStartFleeingTime);
-    }
+    //void ResetFleeTimer()
+    //{
+    //    fleeTimer = Random.Range(minStartFleeingTime, maxStartFleeingTime);
+    //}
 
     public Vector3 GetStartFishPosition() => startPosition;
 
