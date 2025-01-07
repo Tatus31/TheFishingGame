@@ -1,7 +1,5 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
@@ -24,6 +22,13 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Counter Movement")]
     [SerializeField] float frictionAmount = 2f;
+
+    [Header("Suit Movement")]
+    [SerializeField] float suitMaxSpeed = 3.25f;
+    [SerializeField] float suitAccelAmount = 1f;
+
+    [Header("Suit Counter Movement")]
+    [SerializeField] float suitFrictionAmount = 1f;
     [Space(10)]
 
     [Header("Sprint Movement")]
@@ -33,12 +38,27 @@ public class PlayerMovement : MonoBehaviour
     [Header("Sprint Counter Movement")]
     [SerializeField] float sprintFrictionAmount = 1f;
 
+    [Header("Suit Sprint Movement")]
+    [SerializeField] float suitSprintMaxSpeed = 5f;
+    [SerializeField] float suitSprintAccelAmount = 2f;
+
+    [Header("Suit Sprint Counter Movement")]
+    [SerializeField] float suitSprintFrictionAmount = .5f;
+
+    [Header("Swimming")]
+    [SerializeField] float swimMaxSpeed = 5f;
+    [SerializeField] float swimAccelAmount = 2f;
+
+    [Header("Water Detection")]
+    [SerializeField] private LayerMask waterLayer;
+
     [HideInInspector] public Rigidbody rb;
-    InputManager inputManager;
+    public InputManager inputManager;
 
     float xDir, yDir;
 
     public bool isInDivingSuit = false;
+    bool isSwimming = false;
 
     AnimationController animator;
 
@@ -47,11 +67,13 @@ public class PlayerMovement : MonoBehaviour
 
     public Vector3 FlatVel { get; set; }
 
-    private IMovementState currentState;
+    private MovementBaseState currentState;
     public WalkState WalkState { get; private set; }
     public SprintState SprintState { get; private set; }
-    public WalkState SuitWalkState { get; private set; }
-    public SprintState SuitSprintState { get; private set; }
+    public SuitWalkState SuitWalkState { get; private set; }
+    public SuitSprintState SuitSprintState { get; private set; }
+
+    public SwimmingState SwimmingState { get; private set; }
 
     void Awake()
     {
@@ -66,6 +88,9 @@ public class PlayerMovement : MonoBehaviour
 
         WalkState = new WalkState(this, maxSpeed, accelAmount, frictionAmount);
         SprintState = new SprintState(this, sprintMaxSpeed, sprintAccelAmount, sprintFrictionAmount);
+        SuitWalkState = new SuitWalkState(this, suitMaxSpeed, suitAccelAmount, suitFrictionAmount);
+        SuitSprintState = new SuitSprintState(this, suitSprintMaxSpeed, suitSprintAccelAmount, suitSprintFrictionAmount);
+        SwimmingState = new SwimmingState(this, swimMaxSpeed, swimAccelAmount);
     }
 
     void Start()
@@ -82,11 +107,18 @@ public class PlayerMovement : MonoBehaviour
     {
         WalkState = new WalkState(this, maxSpeed, accelAmount, frictionAmount);
         SprintState = new SprintState(this, sprintMaxSpeed, sprintAccelAmount, sprintFrictionAmount);
+        SuitWalkState = new SuitWalkState(this, suitMaxSpeed, suitAccelAmount, suitFrictionAmount);
+        SuitSprintState = new SuitSprintState(this, suitSprintMaxSpeed, suitSprintAccelAmount, suitSprintFrictionAmount);
     }
 
     void Update()
     {
         GetPlayerInput();
+
+        if (isSwimming)
+        {
+            return;
+        }
 
         if (MouseWorldPosition.GetInteractable() && !isInDivingSuit && Input.GetKeyDown(KeyCode.E))
         {
@@ -106,10 +138,20 @@ public class PlayerMovement : MonoBehaviour
         if (inputManager.IsHoldingSprintKey() && currentState != SprintState)
         {
             SwitchState(SprintState);
+
+            if (isInDivingSuit)
+            {
+                SwitchState(SuitSprintState);
+            }
         }
         else if (!inputManager.IsHoldingSprintKey() && currentState != WalkState)
         {
             SwitchState(WalkState);
+
+            if (isInDivingSuit)
+            {
+                SwitchState(SuitWalkState);
+            }
         }
 
         OnPlayerSpeedChange?.Invoke(this, FlatVel);
@@ -121,11 +163,28 @@ public class PlayerMovement : MonoBehaviour
         currentState.FixedUpdateState();
     }
 
-    public void SwitchState(IMovementState newState)
+    public void SwitchState(MovementBaseState newState)
     {
         currentState?.ExitState();
         currentState = newState;
         currentState.EnterState(this);
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if ((waterLayer.value & (1 << other.gameObject.layer)) != 0)
+        {
+            SwitchState(SwimmingState);
+            isSwimming = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if ((waterLayer.value & (1 << other.gameObject.layer)) != 0)
+        {
+            SwitchState(SuitWalkState);
+            isSwimming = false;
+        }
     }
 
     public Vector3 GetMoveDirection()

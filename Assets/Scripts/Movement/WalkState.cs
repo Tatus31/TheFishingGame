@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WalkState : IMovementState
+public class WalkState : MovementBaseState
 {
     PlayerMovement player;
     float maxSpeed;
@@ -17,53 +17,34 @@ public class WalkState : IMovementState
         this.frictionAmount = frictionAmount;
     }
 
-    public void EnterState(PlayerMovement player) 
+    public override void EnterState(PlayerMovement player) 
     {
         player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, false);
         //Debug.Log("Entered Walk State");
     }
 
-    public void ExitState() 
+    public override void ExitState() 
     {
         //Debug.Log("Exited Walk State");
     }
 
-    public void UpdateState() { }
+    public override void UpdateState() { }
 
-    public void FixedUpdateState()
+    public override void FixedUpdateState()
     {
-        //Debug.Log("in walk fixed");
+        //Debug.Log("in sprint fixed");
 
-        Move(player.maxSpeedTime);
-        ApplyFriction();
+        Move(player, player.maxSpeedTime, maxSpeed, accelAmount);
+        ApplyFriction(player, frictionAmount);
     }
 
-    void ApplyFriction()
+    public override void ApplyFriction(PlayerMovement player, float frictionAmount)
     {
-        if (player.GetMoveDirection().magnitude < 0.01f)
-        {
-            Vector3 horizontalVelocity = new Vector3(player.rb.velocity.x, 0, player.rb.velocity.z);
-            if (horizontalVelocity.magnitude > 0)
-            {
-                float friction = Mathf.Min(horizontalVelocity.magnitude, frictionAmount);
-                Vector3 frictionForce = -horizontalVelocity.normalized * friction;
-                player.rb.AddForce(frictionForce, ForceMode.Acceleration);
-            }
-        }
+        base.ApplyFriction(player, frictionAmount);
     }
 
-    void Move(float maxSpeedTime)
+    public override void Move(PlayerMovement player, float maxSpeedTime, float maxSpeed, float accelAmount)
     {
-        player.FlatVel = new Vector3(player.rb.velocity.x, 0f, player.rb.velocity.z);
-
-        Vector3 moveDirection = player.GetMoveDirection();
-
-        player.rb.AddForce(Vector3.down);
-
-        float targetSpeed = moveDirection.magnitude * maxSpeed;
-        Vector3 targetVelocity = moveDirection * targetSpeed;
-        Vector3 velocityChange = (targetVelocity - player.FlatVel) * maxSpeedTime;
-
-        player.rb.AddForce(velocityChange * accelAmount, ForceMode.Acceleration);
+        base.Move(player, maxSpeedTime, maxSpeed, accelAmount);
     }
 }
