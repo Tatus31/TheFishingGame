@@ -53,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask waterLayer;
 
     [HideInInspector] public Rigidbody rb;
-    public InputManager inputManager;
+    [HideInInspector] public InputManager inputManager;
 
     float xDir, yDir;
 
