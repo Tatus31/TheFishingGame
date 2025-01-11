@@ -12,7 +12,8 @@ public class AnimationController: MonoBehaviour
     {
         FishingAnimator,
         LureAnimator,
-        DivingSuitAnimator
+        DivingSuitAnimator,
+        HarpoonAnimator
     }
 
     [Serializable]
@@ -24,8 +25,6 @@ public class AnimationController: MonoBehaviour
 
     [SerializeField]
     List<AnimatorEntry> animators = new List<AnimatorEntry>();
-
-    Dictionary<Animators, Animator> animatorDictionary = new Dictionary<Animators, Animator>();
 
     [HideInInspector] public static string ON_RUN = "onRun";
     [HideInInspector] public static string ON_THROW = "onThrow";
@@ -42,27 +41,21 @@ public class AnimationController: MonoBehaviour
             Debug.LogWarning($"there already is a {Instance.name} in the scene");
 
         Instance = this;
-
-        foreach (var entry in animators)
-        {
-            if (entry.animator != null && !animatorDictionary.ContainsKey(entry.animatorType))
-            {
-                animatorDictionary.Add(entry.animatorType, entry.animator);
-            }
-        }
     }
 
     public Animator GetAnimator(Animators animatorType)
     {
-        if (animatorDictionary.TryGetValue(animatorType, out Animator animator))
+
+        foreach (var animator in animators)
         {
-            return animator;
+            if (animator.animatorType == animatorType)
+            {
+                return animator.animator;
+            }
         }
-        else
-        {
-            Debug.LogWarning($"Animator of type {animatorType} not found!");
-            return null;
-        }
+
+        Debug.LogError($"there is no animator {animatorType}");
+        return null;
     }
 
     public void PlayAnimation<T>(Animator animator, string parameterName, T value)

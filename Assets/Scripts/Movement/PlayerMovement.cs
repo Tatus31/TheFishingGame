@@ -11,9 +11,6 @@ public class PlayerMovement : MonoBehaviour
     [Header("References")]
     [SerializeField] Transform orientation;
     //TODO: Make script for all the item interactions and shit
-    [SerializeField] GameObject fishingHands;
-    [SerializeField] GameObject divingSuitHands;
-    [SerializeField] FishingStateManager fishingStateManager;
 
     [Header("Movement")]
     [SerializeField] float maxSpeed = 5f;
@@ -57,7 +54,6 @@ public class PlayerMovement : MonoBehaviour
 
     float xDir, yDir;
 
-    public bool isInDivingSuit = false;
     bool isSwimming = false;
 
     AnimationController animator;
@@ -120,26 +116,11 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        if (MouseWorldPosition.GetInteractable() && !isInDivingSuit && Input.GetKeyDown(KeyCode.E))
-        {
-            isInDivingSuit = true;
-            divingSuitHands.SetActive(true);
-            fishingHands.SetActive(false);
-            fishingStateManager.enabled = false;
-        }
-        else if (MouseWorldPosition.GetInteractable() && isInDivingSuit && Input.GetKeyDown(KeyCode.E))
-        {
-            isInDivingSuit = false;
-            divingSuitHands.SetActive(false);
-            fishingHands.SetActive(true);
-            fishingStateManager.enabled = true;
-        }
-
         if (inputManager.IsHoldingSprintKey() && currentState != SprintState)
         {
             SwitchState(SprintState);
 
-            if (isInDivingSuit)
+            if (InteractionManager.Instance.IsInDivingSuit)
             {
                 SwitchState(SuitSprintState);
             }
@@ -148,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
         {
             SwitchState(WalkState);
 
-            if (isInDivingSuit)
+            if (InteractionManager.Instance.IsInDivingSuit)
             {
                 SwitchState(SuitWalkState);
             }

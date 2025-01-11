@@ -10,6 +10,7 @@ public class FishEscape : MonoBehaviour
     [SerializeField] float fleeSpeed = 5f;
     [SerializeField] float rotationSpeed = 15f;
     [SerializeField] float sphereRadius = 2f;
+    [SerializeField] float bounceAngleModifier = 0.5f;
 
     float fleeTimer = 0f;
     float maxFleeTimer = 0.5f;
@@ -74,9 +75,14 @@ public class FishEscape : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         float speed = lastVelocity.magnitude;
-        Vector3 direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
-        rb.velocity = direction * Mathf.Max(speed, 0f);
-        targetDirection = direction; 
+        Vector3 normal = collision.contacts[0].normal;
+
+        Vector3 reflectedDirection = Vector3.Reflect(lastVelocity.normalized, normal);
+        Vector3 adjustedDirection = Vector3.Lerp(reflectedDirection, normal, bounceAngleModifier).normalized;
+        adjustedDirection = Quaternion.Euler(0, Random.Range(-15f, 15f), 0) * adjustedDirection;
+
+        rb.velocity = adjustedDirection * Mathf.Max(speed, 0f);
+        targetDirection = adjustedDirection;
     }
 
     private void OnTriggerEnter(Collider other)

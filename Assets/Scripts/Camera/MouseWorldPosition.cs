@@ -7,7 +7,7 @@ public class MouseWorldPosition : MonoBehaviour
     [SerializeField]
     LayerMask groundLayerMask;
     [SerializeField]
-    LayerMask InteractableMask;
+    public LayerMask InteractableMask;
 
     [SerializeField]
     float interactionRange = 1f;
@@ -24,14 +24,17 @@ public class MouseWorldPosition : MonoBehaviour
         return raycastHit.point;
     }
 
-    public static bool GetInteractable()
+    public static bool GetInteractable(LayerMask mask)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, Instance.interactionRange, Instance.InteractableMask))
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, Instance.interactionRange, Instance.InteractableMask))
         {
-            return true; 
+            if (((1 << hitInfo.collider.gameObject.layer) & mask) != 0)
+            {
+                return true;
+            }
         }
 
-        return false; 
+        return false;
     }
 }
