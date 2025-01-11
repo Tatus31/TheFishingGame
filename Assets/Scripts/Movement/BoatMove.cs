@@ -43,6 +43,7 @@ public class BoatMove : MonoBehaviour
     {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
+        v = Mathf.Clamp(v,0,1);
         bool isHori = true;
 
         rb.AddTorque(0f, h * turnspeed * Time.deltaTime, 0f);
