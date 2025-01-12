@@ -7583,6 +7583,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &581196453 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8053324004500612632, guid: 40902f13d663667438a3341b0421e4c0,
+    type: 3}
+  m_PrefabInstance: {fileID: 3910970255237795044}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &582433830
 GameObject:
   m_ObjectHideFlags: 0
@@ -7595,7 +7601,7 @@ GameObject:
   - component: {fileID: 582433833}
   - component: {fileID: 582433832}
   - component: {fileID: 582433831}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7696,6 +7702,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 582985367105149998, guid: 6b859cbea58f8d54f89a68c3004aeab7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336361662195271303, guid: 6b859cbea58f8d54f89a68c3004aeab7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3228428277355967067, guid: 6b859cbea58f8d54f89a68c3004aeab7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625569800454557725, guid: 6b859cbea58f8d54f89a68c3004aeab7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 5042164613438043230, guid: 6b859cbea58f8d54f89a68c3004aeab7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7746,10 +7772,55 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5330085394984334457, guid: 6b859cbea58f8d54f89a68c3004aeab7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5334560856688197941, guid: 6b859cbea58f8d54f89a68c3004aeab7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5743506142909036681, guid: 6b859cbea58f8d54f89a68c3004aeab7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 6558332170931498202, guid: 6b859cbea58f8d54f89a68c3004aeab7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7310434794484096064, guid: 6b859cbea58f8d54f89a68c3004aeab7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7455490938085770837, guid: 6b859cbea58f8d54f89a68c3004aeab7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8393977269183045330, guid: 6b859cbea58f8d54f89a68c3004aeab7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 8511841284035537574, guid: 6b859cbea58f8d54f89a68c3004aeab7,
         type: 3}
       propertyPath: m_Name
       value: Fish
+      objectReference: {fileID: 0}
+    - target: {fileID: 8511841284035537574, guid: 6b859cbea58f8d54f89a68c3004aeab7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 9067045458866683611, guid: 6b859cbea58f8d54f89a68c3004aeab7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7846,6 +7917,7 @@ MonoBehaviour:
   divingSuitHands: {fileID: 1265539941}
   harpoonHands: {fileID: 734517401}
   fishingStateManager: {fileID: 7211871209663687529}
+  hasHarpoon: 0
   HookMask:
     serializedVersion: 2
     m_Bits: 2048
@@ -8636,7 +8708,7 @@ GameObject:
   - component: {fileID: 1270223126}
   - component: {fileID: 1270223125}
   - component: {fileID: 1270223124}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10126,10 +10198,20 @@ PrefabInstance:
       propertyPath: testingSphere
       value: 
       objectReference: {fileID: 1083620190}
+    - target: {fileID: 562229352171340135, guid: ee204cb6cb0fb01429f492652e8d07ac,
+        type: 3}
+      propertyPath: Interactable.m_Bits
+      value: 5120
+      objectReference: {fileID: 0}
     - target: {fileID: 2730226335861871061, guid: ee204cb6cb0fb01429f492652e8d07ac,
         type: 3}
       propertyPath: InteractableMask.m_Bits
       value: 2304
+      objectReference: {fileID: 0}
+    - target: {fileID: 2730226335861871061, guid: ee204cb6cb0fb01429f492652e8d07ac,
+        type: 3}
+      propertyPath: HarpoonInteractableMask.m_Bits
+      value: 1024
       objectReference: {fileID: 0}
     - target: {fileID: 6457795096094294152, guid: ee204cb6cb0fb01429f492652e8d07ac,
         type: 3}
@@ -12460,7 +12542,7 @@ GameObject:
   - component: {fileID: 1735876597}
   - component: {fileID: 1735876596}
   - component: {fileID: 1735876595}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12565,7 +12647,7 @@ GameObject:
   - component: {fileID: 1741974744}
   - component: {fileID: 1741974743}
   - component: {fileID: 1741974742}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13206,6 +13288,11 @@ PrefabInstance:
       propertyPath: holdProgressBar
       value: 
       objectReference: {fileID: 1241553435}
+    - target: {fileID: 2057564937266314144, guid: 40902f13d663667438a3341b0421e4c0,
+        type: 3}
+      propertyPath: fishingLayerMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 2537179670897922002, guid: 40902f13d663667438a3341b0421e4c0,
         type: 3}
       propertyPath: ExternalForcesModule.enabled
@@ -13276,7 +13363,11 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 2736158828569080816, guid: 40902f13d663667438a3341b0421e4c0, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8053324004500612632, guid: 40902f13d663667438a3341b0421e4c0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7211871209663687532}
   m_SourcePrefab: {fileID: 100100000, guid: 40902f13d663667438a3341b0421e4c0, type: 3}
 --- !u!1001 &5697022866825482968
 PrefabInstance:
@@ -13756,6 +13847,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestingSphere
       objectReference: {fileID: 0}
+    - target: {fileID: 3291179682782793860, guid: 806adc2de5d2ce34cb56a7525b15d3ee,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3933752179451803435, guid: 806adc2de5d2ce34cb56a7525b15d3ee,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -13823,12 +13919,33 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 3910970255237795044}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 581196453}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0ecba25073931448b724e857622cf4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7211871209663687532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581196453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eee2411ba7e0c0f40b5263ff3458bab0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHarpoonDistance: 10
+  harpoonPullForce: 20
+  harpoonMaxSpeed: 10
+  minReturnDelay: 0.1
+  maxReturnDelay: 1
+  harpoonLayerMask:
+    serializedVersion: 2
+    m_Bits: 5120
+  detachDistance: 25
 --- !u!114 &7887625505017193561 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7394533855227758584, guid: 116c090f5489a754090f66a9ab6e29c2,

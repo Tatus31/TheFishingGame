@@ -12,13 +12,14 @@ public class InteractionManager : MonoBehaviour
     [SerializeField] FishingStateManager fishingStateManager;
 
     bool isInDivingSuit;
-    bool hasHarpoon;
+    public bool hasHarpoon;
 
     [SerializeField] LayerMask HookMask;
     [SerializeField] LayerMask SuitMask;
 
 
     public bool IsInDivingSuit { get { return isInDivingSuit; } private set { isInDivingSuit = value; } }
+    public bool HasHarpoon { get {  return hasHarpoon; } private set {  hasHarpoon = value; } }
 
     private void Awake()
     {

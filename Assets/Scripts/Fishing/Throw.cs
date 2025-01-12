@@ -28,7 +28,9 @@ public class Throw : FishingBaseState
     float lineGrowthRate;
     float minLineLength;
 
-    public void Initialize(float trajectoryHeight, float maxLineLength, float minLineLength, float lineGrowthRate, Transform orientation, Transform hitVisual, Slider holdProgressBar)
+    LayerMask fishingLayerMask;
+
+    public void Initialize(float trajectoryHeight, float maxLineLength, float minLineLength, float lineGrowthRate, Transform orientation, Transform hitVisual, Slider holdProgressBar, LayerMask fishingLayerMask)
     {
         this.orientation = orientation;
         this.hitVisual = hitVisual;
@@ -37,6 +39,7 @@ public class Throw : FishingBaseState
         this.minLineLength = minLineLength;
         this.maxLineLength = maxLineLength;
         this.lineGrowthRate = lineGrowthRate;
+        this.fishingLayerMask = fishingLayerMask;
 
         inputManager = InputManager.Instance;
     }
@@ -52,7 +55,7 @@ public class Throw : FishingBaseState
 
     public override void UpdateState(FishingStateManager fishingState)
     {
-        if (!fishingState.IsCooldownOver() || MouseWorldPosition.GetMouseWorldPosition() == Vector3.zero)
+        if (!fishingState.IsCooldownOver() || MouseWorldPosition.GetMouseWorldPosition(maxLineLength, fishingLayerMask) == Vector3.zero)
         {
             return;
         }
@@ -87,7 +90,7 @@ public class Throw : FishingBaseState
 
     void UpdateThrow()
     {
-        Vector3 mouseWorldPos = MouseWorldPosition.GetMouseWorldPosition();
+        Vector3 mouseWorldPos = MouseWorldPosition.GetMouseWorldPosition(maxLineLength, fishingLayerMask);
         if (mouseWorldPos == Vector3.zero) return;
 
         maxHoldDuration = Mathf.Min(Vector3.Distance(startPosition, mouseWorldPos), maxLineLength) / lineGrowthRate;
