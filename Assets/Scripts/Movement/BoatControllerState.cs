@@ -15,18 +15,20 @@ public class BoatControllerState : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+        Boat.GetComponent<BoatControllerv2>().enabled = false;
        
     }
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+        
+        
         if (Input.GetKey("1"))
         {
             PlayerMainCamera.SetActive(false);
             Boat.GetComponent<Rigidbody>().isKinematic = false;
-            Boat.GetComponent<BoatMove>().enabled = true;
+            Boat.GetComponent<BoatControllerv2>().enabled = true;
             BoatCamera.SetActive(true);
 
             player.SetActive(false);
@@ -38,7 +40,7 @@ public class BoatControllerState : MonoBehaviour
         {
             PlayerMainCamera.SetActive(true);
             Boat.GetComponent<Rigidbody>().isKinematic = true;
-            Boat.GetComponent<BoatMove>().enabled = false;
+            Boat.GetComponent<BoatControllerv2>().enabled = false;
             BoatCamera.SetActive(false);
 
             player.SetActive(true);
