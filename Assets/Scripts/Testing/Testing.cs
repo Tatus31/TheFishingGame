@@ -13,6 +13,7 @@ public class Testing : MonoBehaviour
     [SerializeField] Transform testingSphere;
     [SerializeField] Transform orientation;
     [SerializeField] Transform fishObject;
+    [SerializeField] LayerMask Interactable;
 
     FishingStateManager fishingStateManager;
 
@@ -42,7 +43,7 @@ public class Testing : MonoBehaviour
 
     void Update()
     {
-        testingSphere.position = MouseWorldPosition.GetMouseWorldPosition();
+        testingSphere.position = MouseWorldPosition.GetMouseWorldPosition(10, Interactable);
 
 
         if (Input.GetKey(KeyCode.Space))

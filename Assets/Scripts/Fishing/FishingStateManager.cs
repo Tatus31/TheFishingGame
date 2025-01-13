@@ -16,6 +16,9 @@ public class FishingStateManager : MonoBehaviour
     [SerializeField] Slider holdProgressBar;
     [SerializeField] Image pullCheck;
 
+    [Header("LayerMasks")]
+    [SerializeField] LayerMask fishingLayerMask;
+
     float cooldownTimer = 0f;
 
     public bool isCameraLockedOn;
@@ -41,7 +44,8 @@ public class FishingStateManager : MonoBehaviour
         fishingSettings.lineGrowthRate,
         orientation,
         fishObject,
-        holdProgressBar);
+        holdProgressBar,
+        fishingLayerMask);
 
         catchState.Initialize(pullCheck);
 
@@ -112,7 +116,8 @@ public class FishingStateManager : MonoBehaviour
             fishingSettings.lineGrowthRate,
             orientation,
             fishObject,
-            holdProgressBar
+            holdProgressBar,
+            fishingLayerMask
         );
 
         if (pullCheck != null)

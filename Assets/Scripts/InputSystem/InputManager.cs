@@ -57,4 +57,18 @@ public class InputManager : MonoBehaviour
     {
         return playerInputActions.Player.LeftMouse.WasReleasedThisFrame();
     }
+    public bool IsRightMouseButtonPressed()
+    {
+        return playerInputActions.Player.RightMouse.WasPressedThisFrame();
+    }
+
+    public bool IsRighttMouseButtonHeld()
+    {
+        return playerInputActions.Player.RightMouse.IsPressed();
+    }
+
+    public bool IsRightMouseButtonReleased()
+    {
+        return playerInputActions.Player.RightMouse.WasReleasedThisFrame();
+    }
 }
