@@ -17,6 +17,8 @@ public class InteractionManager : MonoBehaviour
     [SerializeField] LayerMask HookMask;
     [SerializeField] LayerMask SuitMask;
 
+    Animator harpoonAnimator;
+
 
     public bool IsInDivingSuit { get { return isInDivingSuit; } private set { isInDivingSuit = value; } }
     public bool HasHarpoon { get {  return hasHarpoon; } private set {  hasHarpoon = value; } }
@@ -31,7 +33,7 @@ public class InteractionManager : MonoBehaviour
 
     private void Start()
     {
-
+        harpoonAnimator = AnimationController.Instance.GetAnimator(AnimationController.Animators.HarpoonAnimator);
     }
 
     private void Update()
@@ -50,6 +52,7 @@ public class InteractionManager : MonoBehaviour
             divingSuitHands.SetActive(false);
             fishingHands.SetActive(false);
             fishingStateManager.enabled = false;
+            //AnimationController.Instance.PlayAnimation(harpoonAnimator, AnimationController.HARPOON_IDLE, true);
         }
         else if (MouseWorldPosition.GetInteractable(HookMask) && hasHarpoon && Input.GetKeyDown(KeyCode.E))
         {
