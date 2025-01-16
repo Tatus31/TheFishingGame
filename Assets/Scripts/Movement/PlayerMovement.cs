@@ -1,4 +1,6 @@
 using System;
+using Unity.VisualScripting;
+using UnityEditor.Animations;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -60,6 +62,7 @@ public class PlayerMovement : MonoBehaviour
 
     Animator fishingAnimator;
     Animator suitAnimator;
+    Animator harpoonAnimator;
 
     public Vector3 FlatVel { get; set; }
 
@@ -68,7 +71,6 @@ public class PlayerMovement : MonoBehaviour
     public SprintState SprintState { get; private set; }
     public SuitWalkState SuitWalkState { get; private set; }
     public SuitSprintState SuitSprintState { get; private set; }
-
     public SwimmingState SwimmingState { get; private set; }
 
     void Awake()
@@ -93,8 +95,10 @@ public class PlayerMovement : MonoBehaviour
     {
         inputManager = InputManager.Instance;
         animator = AnimationController.Instance;
+
         fishingAnimator = animator.GetAnimator(AnimationController.Animators.FishingAnimator);
         suitAnimator = animator.GetAnimator(AnimationController.Animators.DivingSuitAnimator);
+        harpoonAnimator = animator.GetAnimator(AnimationController.Animators.HarpoonAnimator);
 
         SwitchState(WalkState);
     }
@@ -156,6 +160,7 @@ public class PlayerMovement : MonoBehaviour
         {
             SwitchState(SwimmingState);
             isSwimming = true;
+            animator.PlayAnimation(harpoonAnimator, AnimationController.HARPOON_AIM, true);
         }
     }
 
@@ -165,6 +170,7 @@ public class PlayerMovement : MonoBehaviour
         {
             SwitchState(SuitWalkState);
             isSwimming = false;
+            animator.PlayAnimation(harpoonAnimator, AnimationController.HARPOON_AIM, false);
         }
     }
 

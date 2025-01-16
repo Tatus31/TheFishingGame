@@ -6,18 +6,24 @@ public class FishEscape : MonoBehaviour
 {
     Rigidbody rb;
 
-    [SerializeField] LayerMask playerMask, waterLayer;
+    [SerializeField] LayerMask playerMask, waterLayer, obstacleLayer;
     [SerializeField] float fleeSpeed = 5f;
+    [SerializeField] float swimSpeed = 2f;
     [SerializeField] float rotationSpeed = 15f;
     [SerializeField] float sphereRadius = 2f;
     [SerializeField] float bounceAngleModifier = 0.5f;
+    [SerializeField] float minTimeAtTarget = 1f;
 
     float fleeTimer = 0f;
     float maxFleeTimer = 0.5f;
+    float timeAtTarget = 0f;
+
     bool fleeing;
+    bool hasTarget;
 
     Vector3 lastVelocity;
     Vector3 targetDirection;
+    Vector3 currentTarget;
 
     private void Awake()
     {
@@ -42,6 +48,19 @@ public class FishEscape : MonoBehaviour
             LookAt(targetDirection);
         }
 
+        if (hasTarget)
+        {
+            if (Vector3.Distance(transform.position, currentTarget) < 0.2f)
+            {
+                timeAtTarget += Time.deltaTime;
+                if (timeAtTarget >= minTimeAtTarget)
+                {
+                    hasTarget = false;
+                    timeAtTarget = 0f;
+                }
+            }
+        }
+
         lastVelocity = rb.velocity;
     }
 
@@ -55,6 +74,23 @@ public class FishEscape : MonoBehaviour
             Vector3 fleeDirection = (transform.position - playerPosition).normalized;
             rb.AddForce(fleeDirection * fleeSpeed, ForceMode.Acceleration);
             targetDirection = fleeDirection;
+        }
+        else if (!fleeing)
+        {
+            if (!hasTarget)
+            {
+                Vector3 newTarget = GetRandomValidPoint();
+                if (newTarget != Vector3.zero)
+                {
+                    currentTarget = newTarget;
+                    hasTarget = true;
+                }
+            }
+            else
+            {
+                Vector3 directionToTarget = (currentTarget - transform.position).normalized;
+                rb.AddForce(directionToTarget * swimSpeed, ForceMode.Acceleration);
+            }
         }
     }
 
@@ -72,6 +108,25 @@ public class FishEscape : MonoBehaviour
         }
     }
 
+    Vector3 GetRandomValidPoint()
+    {
+        for (int i = 0; i < 10; i++) 
+        {
+            Vector3 randomPoint = transform.position + Random.insideUnitSphere * sphereRadius;
+
+            RaycastHit hit;
+            Vector3 directionToPoint = (randomPoint - transform.position).normalized;
+            float distanceToPoint = Vector3.Distance(transform.position, randomPoint);
+
+            if (!Physics.Raycast(transform.position, directionToPoint, out hit, distanceToPoint, obstacleLayer))
+            {
+                return randomPoint;
+            }
+        }
+
+        return Vector3.zero;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         float speed = lastVelocity.magnitude;
@@ -83,6 +138,8 @@ public class FishEscape : MonoBehaviour
 
         rb.velocity = adjustedDirection * Mathf.Max(speed, 0f);
         targetDirection = adjustedDirection;
+
+        hasTarget = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -103,6 +160,7 @@ public class FishEscape : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.localPosition, 2f);
+        Gizmos.DrawWireSphere(transform.localPosition, sphereRadius);
+        Gizmos.DrawSphere(currentTarget, 0.2f);
     }
 }

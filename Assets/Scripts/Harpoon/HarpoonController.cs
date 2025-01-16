@@ -1,15 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 public class HarpoonController : MonoBehaviour
 {
     [SerializeField] float maxHarpoonDistance = 20f;
     [SerializeField] float harpoonPullForce = 20f;
-    [SerializeField] float harpoonMaxSpeed = 15f;
+    //[SerializeField] float harpoonMaxSpeed = 15f;
     [SerializeField] float minReturnDelay = 0.1f, maxReturnDelay = 1f;
     [SerializeField] LayerMask harpoonLayerMask;
-    [SerializeField] float detachDistance = 25f; 
+    [SerializeField] float detachDistance = 25f;
+    [SerializeField] Transform harpoonPointTransform;
+    [SerializeField] float accelTime = 1f;
+    [SerializeField] float accelRate = 1f;
 
     Rigidbody rb;
 
@@ -27,8 +31,8 @@ public class HarpoonController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         lineRenderer = gameObject.AddComponent<LineRenderer>();
-        lineRenderer.startWidth = 0.1f;
-        lineRenderer.endWidth = 0.1f;
+        lineRenderer.startWidth = 0.01f;
+        lineRenderer.endWidth = 0.01f;
         lineRenderer.enabled = false;
     }
 
@@ -73,15 +77,25 @@ public class HarpoonController : MonoBehaviour
             return;
 
         Vector3 direction = (hookPoint - rb.position).normalized;
-        float distance = Vector3.Distance(hookPoint, rb.position);
+        //float distance = Vector3.Distance(hookPoint, rb.position);
 
-        if (distance > 1f) 
-        {
-            if (rb.velocity.magnitude <= harpoonMaxSpeed)
-            {
-                rb.AddForce(direction * harpoonPullForce, ForceMode.Acceleration);
-            }
-        }
+        //if (distance > 1f)
+        //{
+        //    if (rb.velocity.magnitude <= harpoonMaxSpeed)
+        //    {
+        //        rb.AddForce(direction * harpoonPullForce, ForceMode.Acceleration);
+        //    }
+        //}
+
+        Vector3 targetHarpoonPullForce = direction * harpoonPullForce;
+
+        targetHarpoonPullForce = Vector3.Lerp(rb.velocity, targetHarpoonPullForce, accelTime * Time.deltaTime);
+
+        Vector3 speedDiffrance = targetHarpoonPullForce - rb.velocity;
+
+        Vector3 harpoonPull = speedDiffrance * accelRate;
+
+        rb.AddForce(harpoonPull, ForceMode.Acceleration);
     }
 
     void UpdateHarpoonLine()
@@ -94,7 +108,7 @@ public class HarpoonController : MonoBehaviour
 
         lineRenderer.enabled = true;
         lineRenderer.material.color = Color.black;
-        lineRenderer.SetPosition(0, transform.position);
+        lineRenderer.SetPosition(0, harpoonPointTransform.position);
         lineRenderer.SetPosition(1, hookPoint);
 
         if (Vector3.Distance(transform.position, hookPoint) > detachDistance)

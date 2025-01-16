@@ -34,7 +34,7 @@ public class AnimationController: MonoBehaviour
     [HideInInspector] public static string DONE_FISHING = "doneFishing";
     [HideInInspector] public static string FISH_FLEEING = "fishFleeing";
     [HideInInspector] public static string LURE_CATCH = "lureCatch";
-    [HideInInspector] public static string HARPOON_IDLE = "harpoonIdle";
+    [HideInInspector] public static string HARPOON_AIM = "harpoonAim";
 
     void Awake()
     {
