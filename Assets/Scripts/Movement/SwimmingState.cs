@@ -23,11 +23,8 @@ public class SwimmingState : MovementBaseState
     public override void EnterState(PlayerMovement player)
     {
         this.player = player;
-        player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, false);
-        player.rb.useGravity = false;
 
-        Vector3 horizontalVelocity = new Vector3(player.rb.velocity.x, 0, player.rb.velocity.z);
-        player.rb.velocity = horizontalVelocity;
+        PlayerSetup();
     }
 
     public override void ExitState()
@@ -44,6 +41,11 @@ public class SwimmingState : MovementBaseState
     }
 
     public override void FixedUpdateState()
+    {
+        Move(player, maxSpeed, maxSpeed, accelAmount);
+    }
+
+    public override void Move(PlayerMovement player, float maxSpeedTime, float maxSpeed, float accelAmount)
     {
         Vector3 cameraForward = Camera.main.transform.forward;
         Vector3 cameraRight = Camera.main.transform.right;
@@ -72,7 +74,7 @@ public class SwimmingState : MovementBaseState
         player.FlatVel = new Vector3(player.rb.velocity.x, 0f, player.rb.velocity.z);
     }
 
-    private void EvaluateSubmergence()
+    void EvaluateSubmergence()
     {
         if (Physics.Raycast(
             player.rb.position + upAxis * submergenceOffset,
@@ -89,5 +91,21 @@ public class SwimmingState : MovementBaseState
         {
             submergence = 1f;
         }
+    }
+
+    void PlayerSetup()
+    {
+        player.rb.useGravity = false;
+
+        Vector3 horizontalVelocity = new Vector3(player.rb.velocity.x, 0, player.rb.velocity.z);
+        player.rb.velocity = horizontalVelocity;
+    }
+
+    public override void PlayAnimation(PlayerMovement player)
+    {
+        if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.Empty))
+            player.GetAnimationController().PlayAnimation(player.GetFreeHandAnimator(), AnimationController.ON_RUN, false);
+        else if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.FishingRod))
+            player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, false);
     }
 }

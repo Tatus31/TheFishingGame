@@ -12,7 +12,7 @@ public class AnimationController: MonoBehaviour
     {
         FishingAnimator,
         LureAnimator,
-        DivingSuitAnimator,
+        EmptyHandsAnimator,
         HarpoonAnimator
     }
 

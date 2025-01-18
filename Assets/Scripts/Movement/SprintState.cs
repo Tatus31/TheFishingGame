@@ -19,21 +19,17 @@ public class SprintState : MovementBaseState
 
     public override void EnterState(PlayerMovement player)
     {
-        player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, true);
-        //Debug.Log("Entered Sprint State");
+        base.EnterState(player);
     }
 
     public override void ExitState()
     {
-        //Debug.Log("Exited Sprint State");
     }
 
     public override void UpdateState() { }
 
     public override void FixedUpdateState()
     {
-        //Debug.Log("in sprint fixed");
-
         Move(player, player.maxSpeedTime, maxSpeed, accelAmount);
         ApplyFriction(player, frictionAmount);
     }
@@ -46,6 +42,14 @@ public class SprintState : MovementBaseState
     public override void Move(PlayerMovement player, float maxSpeedTime, float maxSpeed, float accelAmount)
     {
         base.Move(player, maxSpeedTime, maxSpeed, accelAmount);
+    }
+
+    public override void PlayAnimation(PlayerMovement player)
+    {
+        if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.Empty))
+            player.GetAnimationController().PlayAnimation(player.GetFreeHandAnimator(), AnimationController.ON_RUN, true);
+        if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.FishingRod))
+            player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, true);
     }
 }
 

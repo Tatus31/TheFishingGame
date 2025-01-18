@@ -45,7 +45,6 @@ public class Testing : MonoBehaviour
     {
         testingSphere.position = MouseWorldPosition.GetMouseWorldPosition(10, Interactable);
 
-
         if (Input.GetKey(KeyCode.Space))
         {
 

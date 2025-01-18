@@ -10,6 +10,8 @@ public class MouseWorldPosition : MonoBehaviour
     public LayerMask InteractableMask;
     [SerializeField]
     LayerMask HarpoonInteractableMask;
+    [SerializeField]
+    LayerMask ItemInteractableMask;
 
     [SerializeField]
     float interactionRange = 1f;
@@ -29,9 +31,9 @@ public class MouseWorldPosition : MonoBehaviour
     public static bool GetInteractable(LayerMask mask)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, Instance.interactionRange, Instance.InteractableMask))
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, Instance.interactionRange, Instance.InteractableMask))
         {
-            if (((1 << hitInfo.collider.gameObject.layer) & mask) != 0)
+            if (((1 << raycastHit.collider.gameObject.layer) & mask) != 0)
             {
                 return true;
             }

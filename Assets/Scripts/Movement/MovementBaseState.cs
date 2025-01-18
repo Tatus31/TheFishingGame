@@ -3,7 +3,10 @@ using UnityEngine;
 
 public abstract class MovementBaseState
 {
-    public abstract void EnterState(PlayerMovement player);
+    public virtual void EnterState(PlayerMovement player)
+    {
+        PlayAnimation(player);
+    }
     public abstract void ExitState();
     public abstract void UpdateState();
     public abstract void FixedUpdateState();
@@ -34,4 +37,6 @@ public abstract class MovementBaseState
 
         player.rb.AddForce(velocityChange * accelAmount, ForceMode.Acceleration);
     }
+
+    public abstract void PlayAnimation(PlayerMovement player);
 }

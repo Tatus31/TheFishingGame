@@ -1,88 +1,98 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InteractionManager : MonoBehaviour
 {
+    public enum EquipedTool
+    {
+        FishingRod,
+        Harpoon,
+        DivingSuit,
+        Empty
+    }
+
+    [System.Serializable]
+    public class ToolConfiguration
+    {
+        public GameObject handObject;
+        public LayerMask interactionMask;
+        public bool enableFishingState;
+    }
+
     public static InteractionManager Instance;
 
-    [SerializeField] GameObject fishingHands;
-    [SerializeField] GameObject divingSuitHands;
-    [SerializeField] GameObject harpoonHands;
-    [SerializeField] FishingStateManager fishingStateManager;
+    [Header("Tool Configurations")]
+    [SerializeField] private ToolConfiguration fishingConfig;
+    [SerializeField] private ToolConfiguration harpoonConfig;
+    [SerializeField] private ToolConfiguration divingSuitConfig;
+    [SerializeField] private FishingStateManager fishingStateManager;
 
-    bool isInDivingSuit;
-    public bool hasHarpoon;
+    private EquipedTool currentTool = EquipedTool.Empty;
 
-    [SerializeField] LayerMask HookMask;
-    [SerializeField] LayerMask SuitMask;
-
-    Animator harpoonAnimator;
-
-
-    public bool IsInDivingSuit { get { return isInDivingSuit; } private set { isInDivingSuit = value; } }
-    public bool HasHarpoon { get {  return hasHarpoon; } private set {  hasHarpoon = value; } }
+    public EquipedTool CurrentTool => currentTool;
+    public bool HasHarpoon => currentTool == EquipedTool.Harpoon;
+    public bool IsInDivingSuit => currentTool == EquipedTool.DivingSuit;
 
     private void Awake()
     {
         if (Instance != null)
-            Debug.LogWarning($"there already is a {Instance.name} in the scene");
+            Debug.LogWarning($"There already is a {Instance.name} in the scene");
 
         Instance = this;
     }
 
     private void Start()
     {
-        harpoonAnimator = AnimationController.Instance.GetAnimator(AnimationController.Animators.HarpoonAnimator);
+        EquipTool(EquipedTool.DivingSuit);
     }
 
     private void Update()
     {
-        //TODO: Change this shit 
+        if (!Input.GetKeyDown(KeyCode.E)) return;
 
-        //if(MouseWorldPosition.GetInteractable() && Input.GetKeyDown(KeyCode.E))
-        //{
-
-        //}
-
-        if (MouseWorldPosition.GetInteractable(HookMask) && !hasHarpoon && Input.GetKeyDown(KeyCode.E))
+        if (MouseWorldPosition.GetInteractable(harpoonConfig.interactionMask))
         {
-            hasHarpoon = true;
-            harpoonHands.SetActive(true);
-            divingSuitHands.SetActive(false);
-            fishingHands.SetActive(false);
-            fishingStateManager.enabled = false;
-            //AnimationController.Instance.PlayAnimation(harpoonAnimator, AnimationController.HARPOON_IDLE, true);
+            EquipTool(EquipedTool.Harpoon);
         }
-        else if (MouseWorldPosition.GetInteractable(HookMask) && hasHarpoon && Input.GetKeyDown(KeyCode.E))
+        else if (MouseWorldPosition.GetInteractable(divingSuitConfig.interactionMask))
         {
-            hasHarpoon = false;
-            harpoonHands.SetActive(false);
-            divingSuitHands.SetActive(false);
-            fishingHands.SetActive(true);
-            fishingStateManager.enabled = true;
+            EquipTool(EquipedTool.DivingSuit);
         }
-
-        if (MouseWorldPosition.GetInteractable(SuitMask) && !isInDivingSuit && Input.GetKeyDown(KeyCode.E))
+        else if (MouseWorldPosition.GetInteractable(fishingConfig.interactionMask))
         {
-            isInDivingSuit = true;
-            divingSuitHands.SetActive(true);
-            fishingHands.SetActive(false);
-            harpoonHands.SetActive(false);
-            fishingStateManager.enabled = false;
-        }
-        else if (MouseWorldPosition.GetInteractable(SuitMask) && isInDivingSuit && Input.GetKeyDown(KeyCode.E))
-        {
-            isInDivingSuit = false;
-            divingSuitHands.SetActive(false);
-            fishingHands.SetActive(true);
-            harpoonHands.SetActive(false);
-            fishingStateManager.enabled = true;
+            EquipTool(EquipedTool.FishingRod);
         }
     }
 
-    void ChangeHands()
+    public void EquipTool(EquipedTool newTool)
     {
+        fishingConfig.handObject.SetActive(false);
+        harpoonConfig.handObject.SetActive(false);
+        divingSuitConfig.handObject.SetActive(false);
 
+        switch (newTool)
+        {
+            case EquipedTool.FishingRod:
+                fishingConfig.handObject.SetActive(true);
+                fishingStateManager.enabled = true;
+                break;
+
+            case EquipedTool.Harpoon:
+                harpoonConfig.handObject.SetActive(true);
+                fishingStateManager.enabled = false;
+                break;
+
+            case EquipedTool.DivingSuit:
+                divingSuitConfig.handObject.SetActive(true);
+                fishingStateManager.enabled = false;
+                break;
+
+            case EquipedTool.Empty:
+                fishingStateManager.enabled = false;
+                break;
+        }
+
+        currentTool = newTool;
     }
+
+    public bool IsToolEquipped(EquipedTool tool) => currentTool == tool;
 }

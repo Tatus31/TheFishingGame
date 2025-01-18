@@ -12,7 +12,6 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("References")]
     [SerializeField] Transform orientation;
-    //TODO: Make script for all the item interactions and shit
 
     [Header("Movement")]
     [SerializeField] float maxSpeed = 5f;
@@ -61,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
     AnimationController animator;
 
     Animator fishingAnimator;
-    Animator suitAnimator;
+    Animator freeHandAnimator;
     Animator harpoonAnimator;
 
     public Vector3 FlatVel { get; set; }
@@ -97,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
         animator = AnimationController.Instance;
 
         fishingAnimator = animator.GetAnimator(AnimationController.Animators.FishingAnimator);
-        suitAnimator = animator.GetAnimator(AnimationController.Animators.DivingSuitAnimator);
+        freeHandAnimator = animator.GetAnimator(AnimationController.Animators.EmptyHandsAnimator);
         harpoonAnimator = animator.GetAnimator(AnimationController.Animators.HarpoonAnimator);
 
         SwitchState(WalkState);
@@ -124,7 +123,7 @@ public class PlayerMovement : MonoBehaviour
         {
             SwitchState(SprintState);
 
-            if (InteractionManager.Instance.IsInDivingSuit)
+            if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.DivingSuit))
             {
                 SwitchState(SuitSprintState);
             }
@@ -133,7 +132,7 @@ public class PlayerMovement : MonoBehaviour
         {
             SwitchState(WalkState);
 
-            if (InteractionManager.Instance.IsInDivingSuit)
+            if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.DivingSuit))
             {
                 SwitchState(SuitWalkState);
             }
@@ -197,4 +196,6 @@ public class PlayerMovement : MonoBehaviour
     public AnimationController GetAnimationController() => animator;
 
     public Animator GetFishingAnimator() => fishingAnimator;
+
+    public Animator GetFreeHandAnimator() => freeHandAnimator;
 }

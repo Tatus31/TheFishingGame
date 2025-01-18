@@ -19,20 +19,17 @@ public class SuitWalkState : MovementBaseState
 
     public override void EnterState(PlayerMovement player)
     {
-        //Debug.Log("Entered suit Walk State");
+        base.EnterState(player);
     }
 
     public override void ExitState()
     {
-        //Debug.Log("Exited Walk State");
     }
 
     public override void UpdateState() { }
 
     public override void FixedUpdateState()
     {
-        //Debug.Log("in sprint fixed");
-
         Move(player, player.maxSpeedTime, maxSpeed, accelAmount);
         ApplyFriction(player, frictionAmount);
     }
@@ -45,5 +42,13 @@ public class SuitWalkState : MovementBaseState
     public override void Move(PlayerMovement player, float maxSpeedTime, float maxSpeed, float accelAmount)
     {
         base.Move(player, maxSpeedTime, maxSpeed, accelAmount);
+    }
+
+    public override void PlayAnimation(PlayerMovement player)
+    {
+        if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.DivingSuit))
+            player.GetAnimationController().PlayAnimation(player.GetFreeHandAnimator(), AnimationController.ON_RUN, false);
+        if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.FishingRod))
+            player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, false);
     }
 }
