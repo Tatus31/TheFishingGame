@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8997153161354224050}
   - component: {fileID: 2730226335861871061}
   - component: {fileID: 562229352171340135}
+  - component: {fileID: 5528914383924403760}
+  - component: {fileID: 3648356095154676283}
   m_Layer: 0
   m_Name: Core
   m_TagString: Untagged
@@ -61,6 +63,16 @@ MonoBehaviour:
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  InteractableMask:
+    serializedVersion: 2
+    m_Bits: 18688
+  HarpoonInteractableMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  ItemInteractableMask:
+    serializedVersion: 2
+    m_Bits: 8192
+  interactionRange: 1
 --- !u!114 &562229352171340135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,3 +88,58 @@ MonoBehaviour:
   testingSphere: {fileID: 0}
   orientation: {fileID: 0}
   fishObject: {fileID: 0}
+  Interactable:
+    serializedVersion: 2
+    m_Bits: 5120
+--- !u!114 &5528914383924403760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6457795096094294152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc48f5db797449428dd17a7512f60c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animators:
+  - animatorType: 0
+    animator: {fileID: 0}
+  - animatorType: 1
+    animator: {fileID: 0}
+  - animatorType: 2
+    animator: {fileID: 0}
+  - animatorType: 3
+    animator: {fileID: 0}
+--- !u!114 &3648356095154676283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6457795096094294152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 158ebf3592a96a744bbf8e3f751f43b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fishingConfig:
+    handObject: {fileID: 0}
+    interactionMask:
+      serializedVersion: 2
+      m_Bits: 16384
+    enableFishingState: 0
+  harpoonConfig:
+    handObject: {fileID: 0}
+    interactionMask:
+      serializedVersion: 2
+      m_Bits: 2048
+    enableFishingState: 0
+  divingSuitConfig:
+    handObject: {fileID: 0}
+    interactionMask:
+      serializedVersion: 2
+      m_Bits: 256
+    enableFishingState: 0
+  fishingStateManager: {fileID: 0}
