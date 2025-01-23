@@ -10,6 +10,7 @@ public class InventorySlot
     public Item item;
     public int amount;
 
+
     public InventorySlot()
     {
         this.id = -1;

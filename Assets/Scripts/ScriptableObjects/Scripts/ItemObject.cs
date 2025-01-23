@@ -16,6 +16,7 @@ public abstract class ItemObject : ScriptableObject
     public int id;
     public Sprite uiDisplay;
     public ItemType type;
+    public int weight;
     [TextArea(15,20)] public string description;
 }
 
@@ -24,9 +25,11 @@ public class Item
 {
     public string name;
     public int id;
+    public int weight;
     public Item(ItemObject itemObject)
     {
         name = itemObject.name;
         id = itemObject.id;
+        weight = itemObject.weight;
     }
 }

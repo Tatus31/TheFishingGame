@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 
@@ -14,6 +15,7 @@ public class HarpoonController : MonoBehaviour
     [SerializeField] Transform harpoonPointTransform;
     [SerializeField] float accelTime = 1f;
     [SerializeField] float accelRate = 1f;
+    [SerializeField] int maxPullWeight = 5;
 
     Rigidbody rb;
 
@@ -25,6 +27,8 @@ public class HarpoonController : MonoBehaviour
     LineRenderer lineRenderer;
 
     Coroutine returnCoroutine;
+
+    ItemPhysical hookedObject;
 
     private void Start()
     {
@@ -45,14 +49,22 @@ public class HarpoonController : MonoBehaviour
         {
             if (!isHooked)
             {
-
                 hitPoint = MouseWorldPosition.GetMouseWorldPosition(maxHarpoonDistance, harpoonLayerMask);
 
                 if (hitPoint != Vector3.zero)
                     TryHooking(hitPoint);
             }
             else
-                PullTowardsHarpoonHook();
+            {
+                if(hookedObject != null)
+                {
+                    PullTowardsPlayer();
+                }
+                else
+                {
+                    PullTowardsHarpoonHook();
+                }
+            }
         }
         else if (InputManager.Instance.IsRightMouseButtonPressed() && isHooked)
             StartCoroutine(ReturnHarpoon());
@@ -65,6 +77,17 @@ public class HarpoonController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, (point - transform.position).normalized, out hit, maxHarpoonDistance, harpoonLayerMask))
         {
+            if (hit.transform.GetComponent<ItemPhysical>())
+            {
+                hookedObject = hit.transform.GetComponent<ItemPhysical>();
+                if (hookedObject.item.weight <= maxPullWeight)
+                {
+                    isHooked = true;
+                    hookPoint = hit.point;
+                    lineRenderer.enabled = true;
+                }
+            }
+
             isHooked = true;
             hookPoint = hit.point;
             lineRenderer.enabled = true;
@@ -96,6 +119,33 @@ public class HarpoonController : MonoBehaviour
         Vector3 harpoonPull = speedDiffrance * accelRate;
 
         rb.AddForce(harpoonPull, ForceMode.Acceleration);
+    }
+
+    void PullTowardsPlayer()
+    {
+        if (!isHooked && hookedObject == null)
+            return;
+
+
+        Rigidbody objRb = hookedObject.GetComponent<Rigidbody>();
+
+        Vector3 direction = (rb.position - objRb.position).normalized;
+
+        Vector3 targetHarpoonPullForce = direction * harpoonPullForce;
+
+        targetHarpoonPullForce = Vector3.Lerp(objRb.velocity, targetHarpoonPullForce, accelTime * Time.deltaTime);
+
+        Vector3 speedDiffrance = targetHarpoonPullForce - objRb.velocity;
+
+        Vector3 harpoonPull = speedDiffrance * accelRate;
+
+        objRb.AddForce(harpoonPull, ForceMode.Acceleration);
+
+        if (Vector3.Distance(objRb.position, rb.position) < 0.3f)
+        {
+            DetachHarpoon();
+            hookedObject = null;
+        }
     }
 
     void UpdateHarpoonLine()

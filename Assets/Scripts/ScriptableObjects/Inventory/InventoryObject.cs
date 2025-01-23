@@ -10,7 +10,7 @@ public class InventoryObject : ScriptableObject
     public ItemDatabaseObject database;
     public Inventory inventoryContainer;
 
-    public void AddItem(Item item, int amount)
+    public void AddItem(Item item, int amount, int weight)
     {
         for (int i = 0; i < inventoryContainer.Items.Length ; i++)
         {
@@ -20,10 +20,10 @@ public class InventoryObject : ScriptableObject
                 return;
             }
         }
-        SetEmptySlot(item, amount);
+        SetEmptySlot(item, amount, weight);
     }
 
-    public InventorySlot SetEmptySlot(Item item, int amount)
+    public InventorySlot SetEmptySlot(Item item, int amount, int weight)
     {
         for(int i = 0; i < inventoryContainer.Items.Length; i++)
         {

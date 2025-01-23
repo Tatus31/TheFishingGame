@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SwimmingState : MovementBaseState
@@ -7,7 +8,7 @@ public class SwimmingState : MovementBaseState
     private float accelAmount;
     private float buoyancy = 1f; 
     private float waterDrag = 0.5f; 
-    private float submergenceRange = 1f;
+    private float submergenceRange = 10f;
     private float submergenceOffset = 0.5f;
     private float submergence;
     private Vector3 upAxis = Vector3.up;
@@ -37,6 +38,7 @@ public class SwimmingState : MovementBaseState
 
     public override void UpdateState()
     {
+        Debug.Log("Swimming");
         EvaluateSubmergence();
     }
 
@@ -107,5 +109,11 @@ public class SwimmingState : MovementBaseState
             player.GetAnimationController().PlayAnimation(player.GetFreeHandAnimator(), AnimationController.ON_RUN, false);
         else if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.FishingRod))
             player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, false);
+    }
+
+    public override void DrawGizmos(PlayerMovement player)
+    {
+        Gizmos.DrawLine(player.transform.position, Vector3.down * submergenceRange);
+        Gizmos.color = Color.yellow;
     }
 }
