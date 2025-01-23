@@ -49,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Water Detection")]
     [SerializeField] private LayerMask waterLayer;
+    [SerializeField] GameObject volume;
 
     [HideInInspector] public Rigidbody rb;
     [HideInInspector] public InputManager inputManager;
@@ -159,8 +160,9 @@ public class PlayerMovement : MonoBehaviour
         {
             SwitchState(SwimmingState);
             isSwimming = true;
+            volume.SetActive(false);
 
-            if(InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.Harpoon))
+            if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.Harpoon))
                 animator.PlayAnimation(harpoonAnimator, AnimationController.HARPOON_AIM, true);
         }
     }
@@ -171,6 +173,7 @@ public class PlayerMovement : MonoBehaviour
         {
             SwitchState(SuitWalkState);
             isSwimming = false;
+            volume.SetActive(true);
 
             if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.Harpoon))
                 animator.PlayAnimation(harpoonAnimator, AnimationController.HARPOON_AIM, false);
