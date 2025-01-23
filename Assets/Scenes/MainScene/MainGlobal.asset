@@ -1,5 +1,48 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6848134442801320408
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32eb3b8fb939d9b41b04b5621e6d36dd, type: 3}
+  m_Name: Fog
+  m_EditorClassIdentifier: 
+  active: 1
+  fogDensity:
+    m_OverrideState: 1
+    m_Value: 1.07
+  fogDistance:
+    m_OverrideState: 1
+    m_Value: 10.28
+  fogColor:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+  ambientColor:
+    m_OverrideState: 1
+    m_Value: {r: 0.1, g: 0.1, b: 0.1, a: 0.1}
+  fogNear:
+    m_OverrideState: 1
+    m_Value: 1.43
+  fogFar:
+    m_OverrideState: 1
+    m_Value: 100.54
+  fogAltScale:
+    m_OverrideState: 1
+    m_Value: 14.1
+  fogThinning:
+    m_OverrideState: 1
+    m_Value: 100.29
+  noiseScale:
+    m_OverrideState: 1
+    m_Value: 100
+  noiseStrength:
+    m_OverrideState: 1
+    m_Value: 0.05
 --- !u!114 &-2701425363980888070
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -18,7 +61,7 @@ MonoBehaviour:
     m_Value: -0.26
   contrast:
     m_OverrideState: 1
-    m_Value: -11
+    m_Value: -9
   colorFilter:
     m_OverrideState: 1
     m_Value: {r: 0.7132075, g: 0.7132075, b: 0.7132075, a: 1}
@@ -45,6 +88,30 @@ MonoBehaviour:
   - {fileID: -2701425363980888070}
   - {fileID: 5234383204386169496}
   - {fileID: 5071589083603554582}
+  - {fileID: 1561110863223634035}
+  - {fileID: -6848134442801320408}
+--- !u!114 &1561110863223634035
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35a1bd58dd7548198609eabd8ae2bb7d, type: 3}
+  m_Name: Pixelation
+  m_EditorClassIdentifier: 
+  active: 1
+  widthPixelation:
+    m_OverrideState: 0
+    m_Value: 188.8
+  heightPixelation:
+    m_OverrideState: 0
+    m_Value: 507.4
+  colorPrecision:
+    m_OverrideState: 0
+    m_Value: 92.3
 --- !u!114 &5071589083603554582
 MonoBehaviour:
   m_ObjectHideFlags: 3
