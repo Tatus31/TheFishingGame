@@ -39,4 +39,6 @@ public abstract class MovementBaseState
     }
 
     public abstract void PlayAnimation(PlayerMovement player);
+
+    public virtual void DrawGizmos(PlayerMovement player) { }
 }

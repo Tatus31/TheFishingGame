@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Ship_wood
+  m_Name: Wood
   m_Shader: {fileID: -6465566751694194690, guid: 9811a975b6d99df45b93bb716dacc497,
     type: 3}
   m_Parent: {fileID: 0}
@@ -25,11 +25,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_4450AB74:
-        m_Texture: {fileID: 2800000, guid: 0eb16e62e28d0614bbd32872a065a4c9, type: 3}
+        m_Texture: {fileID: 2800000, guid: 649516a81a579544ebdf9d2fafa7060e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: e75e82d50894e1841b74c7afc2ce0efe, type: 3}
+        m_Texture: {fileID: 2800000, guid: 649516a81a579544ebdf9d2fafa7060e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -53,7 +53,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: e75e82d50894e1841b74c7afc2ce0efe, type: 3}
+        m_Texture: {fileID: 2800000, guid: 649516a81a579544ebdf9d2fafa7060e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -93,11 +93,11 @@ Material:
     - Boolean_85059BBE: 1
     - Boolean_8BBF99CD: 1
     - Boolean_D258FF8E: 1
-    - Vector1_21C41D02: 125.1
-    - Vector1_6F288C5B: 1.56
-    - Vector1_B2CC132F: 158.9
-    - Vector1_B9994903: 12.9
-    - Vector1_E8746023: 38.9
+    - Vector1_21C41D02: 256
+    - Vector1_6F288C5B: 0.5
+    - Vector1_B2CC132F: 166
+    - Vector1_B9994903: 12.3
+    - Vector1_E8746023: 23.8
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Blend: 0
@@ -132,14 +132,14 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_2E5415DE: {r: 0.6364614, g: 0.93962264, b: 0.66154194, a: 0}
+    - Color_2E5415DE: {r: 1, g: 1, b: 1, a: 0}
     - Vector2_8044833E: {r: 1, g: 1, b: 0, a: 0}
-    - _BaseColor: {r: 0.9063317, g: 0.9063317, b: 0.9063317, a: 1}
-    - _Color: {r: 0.9063317, g: 0.9063317, b: 0.9063317, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &3456198913620770213
+--- !u!114 &5687260905031682476
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

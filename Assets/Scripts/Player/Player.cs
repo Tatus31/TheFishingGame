@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
         if (item)
         {
             Item _item = new Item(item.item);
-            inventory.AddItem(_item, 1);
+            inventory.AddItem(_item, 1, _item.weight);
             Destroy(other.gameObject);
         }
     }
