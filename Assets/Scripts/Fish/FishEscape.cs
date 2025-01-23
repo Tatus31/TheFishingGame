@@ -15,7 +15,7 @@ public class FishEscape : MonoBehaviour
     [SerializeField] float minTimeAtTarget = 1f;
 
     float fleeTimer = 0f;
-    float maxFleeTimer = 0.5f;
+    float maxFleeTimer = 2f;
     float timeAtTarget = 0f;
 
     bool fleeing;

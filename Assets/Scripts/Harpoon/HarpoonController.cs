@@ -100,22 +100,11 @@ public class HarpoonController : MonoBehaviour
             return;
 
         Vector3 direction = (hookPoint - rb.position).normalized;
-        //float distance = Vector3.Distance(hookPoint, rb.position);
-
-        //if (distance > 1f)
-        //{
-        //    if (rb.velocity.magnitude <= harpoonMaxSpeed)
-        //    {
-        //        rb.AddForce(direction * harpoonPullForce, ForceMode.Acceleration);
-        //    }
-        //}
-
         Vector3 targetHarpoonPullForce = direction * harpoonPullForce;
 
         targetHarpoonPullForce = Vector3.Lerp(rb.velocity, targetHarpoonPullForce, accelTime * Time.deltaTime);
 
         Vector3 speedDiffrance = targetHarpoonPullForce - rb.velocity;
-
         Vector3 harpoonPull = speedDiffrance * accelRate;
 
         rb.AddForce(harpoonPull, ForceMode.Acceleration);
@@ -126,26 +115,17 @@ public class HarpoonController : MonoBehaviour
         if (!isHooked && hookedObject == null)
             return;
 
-
         Rigidbody objRb = hookedObject.GetComponent<Rigidbody>();
 
         Vector3 direction = (rb.position - objRb.position).normalized;
-
         Vector3 targetHarpoonPullForce = direction * harpoonPullForce;
 
         targetHarpoonPullForce = Vector3.Lerp(objRb.velocity, targetHarpoonPullForce, accelTime * Time.deltaTime);
 
         Vector3 speedDiffrance = targetHarpoonPullForce - objRb.velocity;
-
         Vector3 harpoonPull = speedDiffrance * accelRate;
 
         objRb.AddForce(harpoonPull, ForceMode.Acceleration);
-
-        if (Vector3.Distance(objRb.position, rb.position) < 0.3f)
-        {
-            DetachHarpoon();
-            hookedObject = null;
-        }
     }
 
     void UpdateHarpoonLine()
@@ -159,7 +139,15 @@ public class HarpoonController : MonoBehaviour
         lineRenderer.enabled = true;
         lineRenderer.material.color = Color.black;
         lineRenderer.SetPosition(0, harpoonPointTransform.position);
-        lineRenderer.SetPosition(1, hookPoint);
+
+        if(hookedObject != null)
+        {
+            lineRenderer.SetPosition(1, hookedObject.gameObject.transform.position);
+        }
+        else
+        {
+            lineRenderer.SetPosition(1, hookPoint);
+        }
 
         if (Vector3.Distance(transform.position, hookPoint) > detachDistance)
         {
