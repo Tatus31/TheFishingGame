@@ -80,7 +80,7 @@ public class HarpoonController : MonoBehaviour
             if (hit.transform.GetComponent<ItemPhysical>())
             {
                 hookedObject = hit.transform.GetComponent<ItemPhysical>();
-                if (hookedObject.item.weight <= maxPullWeight)
+                if (hookedObject.item.data.weight <= maxPullWeight)
                 {
                     isHooked = true;
                     hookPoint = hit.point;
