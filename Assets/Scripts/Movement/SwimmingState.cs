@@ -38,7 +38,6 @@ public class SwimmingState : MovementBaseState
 
     public override void UpdateState()
     {
-        Debug.Log("Swimming");
         EvaluateSubmergence();
     }
 
@@ -107,8 +106,8 @@ public class SwimmingState : MovementBaseState
     {
         if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.Empty))
             player.GetAnimationController().PlayAnimation(player.GetFreeHandAnimator(), AnimationController.ON_RUN, false);
-        else if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.FishingRod))
-            player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, false);
+        //else if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.FishingRod))
+        //    player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, false);
     }
 
     public override void DrawGizmos(PlayerMovement player)

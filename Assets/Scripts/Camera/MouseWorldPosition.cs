@@ -8,8 +8,6 @@ public class MouseWorldPosition : MonoBehaviour
     LayerMask groundLayerMask;
     [SerializeField]
     public LayerMask InteractableMask;
-    [SerializeField]
-    LayerMask HarpoonInteractableMask;
 
     [SerializeField]
     float interactionRange = 1f;

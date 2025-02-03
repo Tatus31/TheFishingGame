@@ -42,13 +42,13 @@ public class FishEscape : MonoBehaviour
             startTimer();
         }
 
-        if (rb.velocity.magnitude > 0.1f) 
+        if (rb.velocity.magnitude > 0.1f)
         {
             targetDirection = rb.velocity.normalized;
             LookAt(targetDirection);
         }
 
-        if (hasTarget)
+        if (hasTarget && !fleeing)
         {
             if (Vector3.Distance(transform.position, currentTarget) < 0.2f)
             {
@@ -66,7 +66,7 @@ public class FishEscape : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Collider[] collider = Physics.OverlapSphere(transform.localPosition, sphereRadius, playerMask);
+        Collider[] collider = Physics.OverlapSphere(transform.position, sphereRadius, playerMask);
         if (collider.Length >= 1 && fleeTimer < maxFleeTimer)
         {
             fleeing = true;
@@ -160,7 +160,7 @@ public class FishEscape : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.localPosition, sphereRadius);
+        Gizmos.DrawWireSphere(transform.position, sphereRadius);
         Gizmos.DrawSphere(currentTarget, 0.2f);
     }
 }

@@ -48,7 +48,7 @@ public class SuitSprintState : MovementBaseState
     {
         if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.DivingSuit))
             player.GetAnimationController().PlayAnimation(player.GetFreeHandAnimator(), AnimationController.ON_RUN, true);
-        if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.FishingRod))
-            player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, true);
+        //if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.FishingRod))
+        //    player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, true);
     }
 }

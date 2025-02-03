@@ -6,7 +6,15 @@ public class InventoryDisplayController : MonoBehaviour
 {
     bool isHiden = true;
     [SerializeField] GameObject inventoryUIObj;
+    [SerializeField] GameObject shipEquipmentUIObj;
+    [SerializeField] LayerMask interactionLayerUI;
     [SerializeField] CameraLook cameraLookScript;
+
+    private void Start()
+    {
+        inventoryUIObj.SetActive(false);
+        shipEquipmentUIObj.SetActive(false);
+    }
 
     private void Update()
     {
@@ -29,6 +37,10 @@ public class InventoryDisplayController : MonoBehaviour
         Cursor.visible = true;
         isHiden = false;
         inventoryUIObj.SetActive(true);
+        if (MouseWorldPosition.GetInteractable(interactionLayerUI))
+        {
+            shipEquipmentUIObj.SetActive(true);
+        }
         cameraLookScript.enabled = false;
     }
 
@@ -38,6 +50,7 @@ public class InventoryDisplayController : MonoBehaviour
         Cursor.visible = false;
         isHiden = true;
         inventoryUIObj.SetActive(false);
+        shipEquipmentUIObj.SetActive(false);
         cameraLookScript.enabled = true;
     }
 }

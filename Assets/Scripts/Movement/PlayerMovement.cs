@@ -160,7 +160,9 @@ public class PlayerMovement : MonoBehaviour
         {
             SwitchState(SwimmingState);
             isSwimming = true;
-            volume.SetActive(false);
+
+            if(volume != null)
+                volume.SetActive(false);
 
             if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.Harpoon))
                 animator.PlayAnimation(harpoonAnimator, AnimationController.HARPOON_AIM, true);
@@ -173,7 +175,9 @@ public class PlayerMovement : MonoBehaviour
         {
             SwitchState(SuitWalkState);
             isSwimming = false;
-            volume.SetActive(true);
+
+            if (volume != null)
+                volume.SetActive(true);
 
             if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.Harpoon))
                 animator.PlayAnimation(harpoonAnimator, AnimationController.HARPOON_AIM, false);

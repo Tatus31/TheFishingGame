@@ -48,7 +48,7 @@ public class WalkState : MovementBaseState
     {
         if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.Empty))
             player.GetAnimationController().PlayAnimation(player.GetFreeHandAnimator(), AnimationController.ON_RUN, false);
-        else if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.FishingRod))
-            player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, false);
+        //else if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.FishingRod))
+        //    player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, false);
     }
 }

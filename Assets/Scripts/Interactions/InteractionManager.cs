@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class InteractionManager : MonoBehaviour
 {
+    public static InteractionManager Instance;
+
     public enum EquipedTool
     {
-        FishingRod,
         Harpoon,
         DivingSuit,
-        Empty
+        Empty,
     }
 
     [System.Serializable]
@@ -15,18 +16,14 @@ public class InteractionManager : MonoBehaviour
     {
         public GameObject handObject;
         public LayerMask interactionMask;
-        public bool enableFishingState;
     }
 
-    public static InteractionManager Instance;
-
     [Header("Tool Configurations")]
-    [SerializeField] private ToolConfiguration fishingConfig;
-    [SerializeField] private ToolConfiguration harpoonConfig;
-    [SerializeField] private ToolConfiguration divingSuitConfig;
-    [SerializeField] private FishingStateManager fishingStateManager;
+    [SerializeField] ToolConfiguration fishingConfig;
+    [SerializeField] ToolConfiguration harpoonConfig;
+    [SerializeField] ToolConfiguration divingSuitConfig;
 
-    private EquipedTool currentTool = EquipedTool.Empty;
+    EquipedTool currentTool = EquipedTool.Empty;
 
     public EquipedTool CurrentTool => currentTool;
     public bool HasHarpoon => currentTool == EquipedTool.Harpoon;
@@ -57,10 +54,6 @@ public class InteractionManager : MonoBehaviour
         {
             EquipTool(EquipedTool.DivingSuit);
         }
-        else if (MouseWorldPosition.GetInteractable(fishingConfig.interactionMask))
-        {
-            EquipTool(EquipedTool.FishingRod);
-        }
     }
 
     public void EquipTool(EquipedTool newTool)
@@ -71,23 +64,15 @@ public class InteractionManager : MonoBehaviour
 
         switch (newTool)
         {
-            case EquipedTool.FishingRod:
-                fishingConfig.handObject.SetActive(true);
-                fishingStateManager.enabled = true;
-                break;
-
             case EquipedTool.Harpoon:
                 harpoonConfig.handObject.SetActive(true);
-                fishingStateManager.enabled = false;
                 break;
 
             case EquipedTool.DivingSuit:
                 divingSuitConfig.handObject.SetActive(true);
-                fishingStateManager.enabled = false;
                 break;
 
             case EquipedTool.Empty:
-                fishingStateManager.enabled = false;
                 break;
         }
 
