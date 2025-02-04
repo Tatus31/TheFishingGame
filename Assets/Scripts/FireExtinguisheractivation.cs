@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Cinemachine;
 using UnityEngine;
 
 public class FireExtinguisheractivation : MonoBehaviour
@@ -10,6 +11,9 @@ public class FireExtinguisheractivation : MonoBehaviour
     public Inventory inv;
     public Item it;
     private InventorySlot InventorySlot1;
+    public Camera FPCamera;
+    
+    
 
     void Start()
     {
@@ -19,6 +23,7 @@ public class FireExtinguisheractivation : MonoBehaviour
     private void Update()
     {
         Activate();
+        
     }
 
     public void Activate()
@@ -33,6 +38,7 @@ public class FireExtinguisheractivation : MonoBehaviour
                 {
                     particleSystem.Play();
                     Debug.Log("Naciskam N");
+                    HitFire();
                 }   
             }
             else if(Input.GetKey(KeyCode.K))
@@ -46,6 +52,24 @@ public class FireExtinguisheractivation : MonoBehaviour
             return;
         }
         
+        
+    }
+
+    public void HitFire()
+    {
+            // Sprawdza, czy naciśnięto klawisz "E"
+        
+            RaycastHit hit; // Zmienna do przechowywania informacji o trafieniu
+            Ray ray = FPCamera.ScreenPointToRay(Input.mousePosition); // Tworzy promień z pozycji myszy
+
+            if (Physics.Raycast(ray, out hit)) // Sprawdza, czy promień trafił w obiekt
+            {
+                if (hit.collider.gameObject.name == "Fire")
+                {
+                    Debug.Log("Patrzysz na obiekt: " + hit.collider.gameObject.name); // Wypisuje nazwę obiektu    
+                }
+                
+            }
         
     }
     
