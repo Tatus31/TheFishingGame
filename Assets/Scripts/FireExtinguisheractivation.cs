@@ -12,6 +12,7 @@ public class FireExtinguisheractivation : MonoBehaviour
     public Item it;
     private InventorySlot InventorySlot1;
     public Camera FPCamera;
+    private SnapObj SnapObj;
     
     
 
@@ -22,16 +23,16 @@ public class FireExtinguisheractivation : MonoBehaviour
 
     private void Update()
     {
-        Activate();
-        
+
+       Activate();
+       HitFire();
+
     }
 
     public void Activate()
     {
-        it.id = 0;
-        it.name = "Gasnica";
-        if (it.id == 0)
-        {
+       
+        
             if(Input.GetKey(KeyCode.N))
             {
                 if (particleSystem != null)
@@ -46,11 +47,7 @@ public class FireExtinguisheractivation : MonoBehaviour
                 particleSystem.Stop();
                 Debug.Log("Naciskam K");
             }
-        }
-        else
-        {
-            return;
-        }
+        
         
         
     }
