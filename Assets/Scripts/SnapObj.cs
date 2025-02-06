@@ -18,7 +18,7 @@ public class SnapObj : MonoBehaviour
     private void Update()
     {
         Snap(itemtosnap);
-        CheckIfItemInSlot();
+        //CheckIfItemInSlot();
     }
 
     public void Snap(Transform item)
@@ -33,20 +33,24 @@ public class SnapObj : MonoBehaviour
         //Debug.Log(distance);
     }
 
-    public void CheckIfItemInSlot()
-    {
-        if (item2 != null)
-        {
-            if (item2 is GameObject)
-            {
-                float distance2 = Vector3.Distance(item2.transform.position, snappingpoint.position);
-                Debug.Log(distance2);
-                if (distance2 == 0)
-                {   
+    //public void CheckIfItemInSlot()
+    //{
+    //    if (item2 != null)
+    //    {
+    //        if (item2 is GameObject)
+    //        {
+    //            float distance2 = Vector3.Distance(item2.transform.position, snappingpoint.position);
+    //            Debug.Log(distance2);
+    //            if (distance2 == 0)
+    //            {   
                    
-                    Debug.Log("Dziala");
-                }
-            }
-        }
-    }
+    //                Debug.LogError("Dziala");
+    //            }
+    //            else
+    //            {
+    //                Debug.Log("Nie dziala");
+    //            }
+    //        }
+    //    }
+    //}
 }

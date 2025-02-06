@@ -18,7 +18,7 @@ public class ItemSelector : MonoBehaviour, IPointerDownHandler, IBeginDragHandle
     public void OnBeginDrag(PointerEventData eventData)
     {
         //GetComponent<CanvasGroup>().blocksRaycasts = true;
-        Debug.Log("Starting dragging");
+        //Debug.Log("Starting dragging");
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -32,14 +32,14 @@ public class ItemSelector : MonoBehaviour, IPointerDownHandler, IBeginDragHandle
         //    Debug.Log(currentRaycastPosition);
         //}
 
-        Debug.Log("Draging to drag");
+        //Debug.Log("Draging to drag");
        
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         //GetComponent<CanvasGroup>().blocksRaycasts = false;
-        Debug.Log("Ending dragging");
+        //Debug.Log("Ending dragging");
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -49,6 +49,6 @@ public class ItemSelector : MonoBehaviour, IPointerDownHandler, IBeginDragHandle
 
     public void OnDrop(PointerEventData eventData)
     {
-        Debug.Log("Is Dropped");
+        //Debug.Log("Is Dropped");
     }
 }

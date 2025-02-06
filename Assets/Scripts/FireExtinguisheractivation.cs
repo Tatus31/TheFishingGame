@@ -13,13 +13,16 @@ public class FireExtinguisheractivation : MonoBehaviour
     private InventorySlot InventorySlot1;
     public Camera FPCamera;
     private SnapObj SnapObj;
-    
-    
+    public Transform snappingpoint;
+    public GameObject item2;
 
-    void Start()
+
+    private void Awake()
     {
         particleSystem = GetComponent<ParticleSystem>();
     }
+
+    
 
     private void Update()
     {
@@ -30,23 +33,34 @@ public class FireExtinguisheractivation : MonoBehaviour
     }
 
     public void Activate()
-    {
-       
-        
-            if(Input.GetKey(KeyCode.N))
+    {   
+
+        //particleSystem.gameObject.SetActive(false);
+        float distance2 = Vector3.Distance(item2.transform.position, snappingpoint.position);
+        if (distance2 == 0)
+        {
+            if (Input.GetKey(KeyCode.N))
             {
                 if (particleSystem != null)
                 {
                     particleSystem.Play();
                     Debug.Log("Naciskam N");
+                    
                     HitFire();
-                }   
+                }
             }
-            else if(Input.GetKey(KeyCode.K))
+            else if (Input.GetKey(KeyCode.K))
             {
                 particleSystem.Stop();
                 Debug.Log("Naciskam K");
             }
+
+        }
+        else
+        {
+            Debug.Log("Nie dziala");
+        }
+        
         
         
         
