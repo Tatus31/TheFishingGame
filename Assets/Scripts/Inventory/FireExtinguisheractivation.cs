@@ -20,6 +20,7 @@ public class FireExtinguisheractivation : MonoBehaviour
     private void Awake()
     {
         particleSystem = GetComponent<ParticleSystem>();
+        Debug.Log(item2.transform.position);
     }
 
     
@@ -29,6 +30,7 @@ public class FireExtinguisheractivation : MonoBehaviour
 
        Activate();
        HitFire();
+       Unequip();
 
     }
 
@@ -64,6 +66,19 @@ public class FireExtinguisheractivation : MonoBehaviour
         
         
         
+    }
+
+
+    public void Unequip()
+    {
+        float distance2 = Vector3.Distance(item2.transform.position, snappingpoint.position);
+        if (distance2 == 0)
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                item2.transform.position = new Vector3(1070.86f, 118.67f, 0.00f);
+            }
+        }
     }
 
     public void HitFire()

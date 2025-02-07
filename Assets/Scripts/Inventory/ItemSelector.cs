@@ -9,15 +9,17 @@ using System;
 public class ItemSelector : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, IDropHandler
 {
     RectTransform m_RectTransform;
+    private CanvasGroup m_CanvasGroup;
     [SerializeField]private Canvas canvas;
 
     private void Awake()
     {
         m_RectTransform = GetComponent<RectTransform>();
+        m_CanvasGroup = GetComponent<CanvasGroup>();
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
-        //GetComponent<CanvasGroup>().blocksRaycasts = true;
+        m_CanvasGroup.blocksRaycasts = false;
         //Debug.Log("Starting dragging");
     }
 
@@ -38,8 +40,9 @@ public class ItemSelector : MonoBehaviour, IPointerDownHandler, IBeginDragHandle
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        //GetComponent<CanvasGroup>().blocksRaycasts = false;
+        m_CanvasGroup.blocksRaycasts = true;
         //Debug.Log("Ending dragging");
+        
     }
 
     public void OnPointerDown(PointerEventData eventData)

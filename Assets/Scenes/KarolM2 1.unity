@@ -6543,7 +6543,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 038bae30bb159de42b3dbca7b4384575, type: 2}
+  - {fileID: 2100000, guid: 8c6dd3c62b0588a44af31f9e88596f72, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6601,9 +6601,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cube: {fileID: 977793243}
-  texture: {fileID: 2800000, guid: 0ecaae17e141b594ba938bb0f5697524, type: 3}
-  texture2: {fileID: 2800000, guid: 28f9fda0184dd574f89e4956b064c2af, type: 3}
   FPCamera: {fileID: 330585545}
+  textures:
+  - {fileID: 2800000, guid: 28f9fda0184dd574f89e4956b064c2af, type: 3}
+  - {fileID: 2800000, guid: 0ecaae17e141b594ba938bb0f5697524, type: 3}
+  - {fileID: 2800000, guid: 995a65aa7086145439a934204544d18e, type: 3}
+  snappingpoint: {fileID: 2143575127}
+  item2: {fileID: 1896459885}
 --- !u!1 &1062844221
 GameObject:
   m_ObjectHideFlags: 0
@@ -18193,6 +18197,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7211871209663687543}
+    - targetCorrespondingSourceObject: {fileID: 8053324004500612632, guid: 40902f13d663667438a3341b0421e4c0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7211871209663687544}
   m_SourcePrefab: {fileID: 100100000, guid: 40902f13d663667438a3341b0421e4c0, type: 3}
 --- !u!114 &3910970255237795045 stripped
 MonoBehaviour:
@@ -18204,6 +18212,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 718a3437552fa2f4b8ca9d1afa0bf29a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3910970255237795046 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2657799276318675944, guid: 40902f13d663667438a3341b0421e4c0,
+    type: 3}
+  m_PrefabInstance: {fileID: 3910970255237795044}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 139569882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fb21962268c79a498426bef89f9387c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3910970255237795047 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6127150241591780905, guid: 40902f13d663667438a3341b0421e4c0,
+    type: 3}
+  m_PrefabInstance: {fileID: 3910970255237795044}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 139569882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2633719cf767c814cb1bcf607ce09b94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &4193570770356569077
@@ -23670,9 +23702,229 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cube: {fileID: 977793243}
-  texture: {fileID: 2800000, guid: 0ecaae17e141b594ba938bb0f5697524, type: 3}
-  texture2: {fileID: 2800000, guid: 28f9fda0184dd574f89e4956b064c2af, type: 3}
   FPCamera: {fileID: 330585545}
+  textures:
+  - {fileID: 2800000, guid: 28f9fda0184dd574f89e4956b064c2af, type: 3}
+  - {fileID: 2800000, guid: 0ecaae17e141b594ba938bb0f5697524, type: 3}
+  - {fileID: 2800000, guid: 995a65aa7086145439a934204544d18e, type: 3}
+  snappingpoint: {fileID: 2143575127}
+  item2: {fileID: 1896459885}
+--- !u!114 &7211871209663687544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 139569882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb7e16480e692486f838c273dd56994c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Player: {fileID: 3910970255237795047}
+  PlayerMovement: {fileID: 3910970255237795046}
+  flippers: {fileID: 1832222562}
+  inv:
+    Slots:
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+    - AllowedItems: 
+      item:
+        name: 
+        id: -1
+        weight: 1
+        description: 
+        stats: []
+      amount: 0
+  it:
+    name: 
+    id: -1
+    weight: 1
+    description: 
+    stats: []
+  snappingpoint: {fileID: 1567687832}
 --- !u!114 &7887625505017193561 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7394533855227758584, guid: 116c090f5489a754090f66a9ab6e29c2,
