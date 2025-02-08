@@ -116,7 +116,7 @@ PrefabInstance:
     - target: {fileID: 8511841284035537574, guid: 6b859cbea58f8d54f89a68c3004aeab7,
         type: 3}
       propertyPath: m_Name
-      value: Fish 2 Variant
+      value: PufferFish
       objectReference: {fileID: 0}
     - target: {fileID: 8511841284035537574, guid: 6b859cbea58f8d54f89a68c3004aeab7,
         type: 3}
@@ -236,7 +236,10 @@ MonoBehaviour:
   rotationSpeed: 15
   sphereRadius: 3
   bounceAngleModifier: 0.5
-  minTimeAtTarget: 0.1
+  minTimeAtTarget: 0.05
+  allowedDistanceFromTarget: 0.3
+  obstacleAvoidanceDistance: 1
+  obstacleAvoidanceForce: 3
 --- !u!1001 &9109087216271088368
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -248,7 +251,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: c5bc0adb1a2b8d34daee565ca771f500,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.0000019073486
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c5bc0adb1a2b8d34daee565ca771f500,
         type: 3}
@@ -258,27 +261,27 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: c5bc0adb1a2b8d34daee565ca771f500,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.22934246
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c5bc0adb1a2b8d34daee565ca771f500,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.00000035762784
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c5bc0adb1a2b8d34daee565ca771f500,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c5bc0adb1a2b8d34daee565ca771f500,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -1
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c5bc0adb1a2b8d34daee565ca771f500,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c5bc0adb1a2b8d34daee565ca771f500,
         type: 3}
@@ -288,7 +291,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: c5bc0adb1a2b8d34daee565ca771f500,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -180
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c5bc0adb1a2b8d34daee565ca771f500,
         type: 3}
@@ -298,7 +301,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c5bc0adb1a2b8d34daee565ca771f500,
         type: 3}
       propertyPath: m_Name
-      value: PufferFish1
+      value: PufferFishVisual
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

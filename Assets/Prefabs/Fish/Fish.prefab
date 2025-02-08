@@ -9,9 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5042164613438043230}
-  - component: {fileID: 3119636919601261899}
   - component: {fileID: 2638753645528629350}
-  - component: {fileID: 5318928164309590072}
+  - component: {fileID: -854225773047713834}
   m_Layer: 12
   m_Name: Fish
   m_TagString: Untagged
@@ -35,27 +34,6 @@ Transform:
   - {fileID: 242348541253371540}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &3119636919601261899
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8511841284035537574}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.39025307, y: 0.40600586, z: 1}
-  m_Center: {x: -0.026425362, y: 0.011323929, z: 0}
 --- !u!54 &2638753645528629350
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -83,7 +61,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &5318928164309590072
+--- !u!114 &-854225773047713834
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -109,7 +87,10 @@ MonoBehaviour:
   rotationSpeed: 15
   sphereRadius: 3
   bounceAngleModifier: 0.5
-  minTimeAtTarget: 0.1
+  minTimeAtTarget: 0.05
+  allowedDistanceFromTarget: 0.3
+  obstacleAvoidanceDistance: 1
+  obstacleAvoidanceForce: 3
 --- !u!1001 &348544961181950335
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -211,7 +192,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 45efe3a4ff05aa44b977ed86ff01782f,
         type: 3}
       propertyPath: m_Name
-      value: Normal Fish (1)
+      value: StandardFishVisual
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 45efe3a4ff05aa44b977ed86ff01782f,
         type: 3}
