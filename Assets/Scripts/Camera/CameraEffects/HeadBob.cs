@@ -19,7 +19,7 @@ public class HeadBob : CameraEffectsBaseState
     public override void EnterState(CameraEffectsManager cameraEffect)
     {
         PlayerMovement.Instance.OnPlayerSpeedChange += PlayerMovement_OnPlayerSpeedChange;
-        cameraEffect.GetRodThrow().OnThrowing += Throw_OnThrowing;
+        //cameraEffect.GetRodThrow().OnThrowing += Throw_OnThrowing;
     }
 
     public override void UpdateState(CameraEffectsManager cameraEffect)

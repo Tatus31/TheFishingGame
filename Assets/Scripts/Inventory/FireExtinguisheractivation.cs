@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class FireExtinguisheractivation : MonoBehaviour
 {
-    public ParticleSystem particleSystem;
+    public ParticleSystem particle;
     public Camera FPCamera;
     Player player;
     ItemObject item;
@@ -15,7 +15,7 @@ public class FireExtinguisheractivation : MonoBehaviour
 
     private void Awake()
     {
-        particleSystem = GetComponent<ParticleSystem>();
+        particle = GetComponent<ParticleSystem>();
     }
 
     private void Start()
@@ -50,9 +50,9 @@ public class FireExtinguisheractivation : MonoBehaviour
                     {
                         if (Input.GetKey(KeyCode.N))
                         {
-                            if (particleSystem != null)
+                            if (particle != null)
                             {
-                                particleSystem.Play();
+                                particle.Play();
                                 Debug.Log("Naciskam N");
 
                                 HitFire();
@@ -60,7 +60,7 @@ public class FireExtinguisheractivation : MonoBehaviour
                         }
                         else if (Input.GetKey(KeyCode.K))
                         {
-                            particleSystem.Stop();
+                            particle.Stop();
                             Debug.Log("Naciskam K");
                         }
                     }

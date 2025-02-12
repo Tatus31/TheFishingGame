@@ -12113,7 +12113,7 @@ PrefabInstance:
         type: 3}
       propertyPath: fishingStateManager
       value: 
-      objectReference: {fileID: 7211871209663687529}
+      objectReference: {fileID: 0}
     - target: {fileID: 3648356095154676283, guid: ee204cb6cb0fb01429f492652e8d07ac,
         type: 3}
       propertyPath: fishingConfig.handObject
@@ -16249,10 +16249,26 @@ PrefabInstance:
       objectReference: {fileID: 597628602}
     - target: {fileID: 6127150241591780905, guid: 40902f13d663667438a3341b0421e4c0,
         type: 3}
+      propertyPath: equipment
+      value: 
+      objectReference: {fileID: 11400000, guid: ab1500aca3d44e34ea826c6b37ba0624,
+        type: 2}
+    - target: {fileID: 6127150241591780905, guid: 40902f13d663667438a3341b0421e4c0,
+        type: 3}
       propertyPath: inventory
       value: 
       objectReference: {fileID: 11400000, guid: 325506803bc92c94bbdc1d1b34072f40,
         type: 2}
+    - target: {fileID: 6127150241591780905, guid: 40902f13d663667438a3341b0421e4c0,
+        type: 3}
+      propertyPath: playerAttributes.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6127150241591780905, guid: 40902f13d663667438a3341b0421e4c0,
+        type: 3}
+      propertyPath: playerAttributes.Array.data[0].type
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 6585123736472616017, guid: 40902f13d663667438a3341b0421e4c0,
         type: 3}
       propertyPath: m_IsActive
@@ -16263,7 +16279,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2057564937266314144, guid: 40902f13d663667438a3341b0421e4c0, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -16788,18 +16805,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3910970255237795044}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7211871209663687529 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2057564937266314144, guid: 40902f13d663667438a3341b0421e4c0,
-    type: 3}
-  m_PrefabInstance: {fileID: 3910970255237795044}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0ecba25073931448b724e857622cf4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7211871209663687532 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6127150241591780905, guid: 40902f13d663667438a3341b0421e4c0,
