@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class ShipAttributes
+public class PlayerAttributes
 {
     [NonSerialized]
-    public Ship parent;
+    public Player parent;
     public Stats type;
     public ModifiableInt value;
 
-    public void SetParent(Ship parent)
+    public void SetParent(Player parent)
     {
         this.parent = parent;
         value = new ModifiableInt(AttributeModified);

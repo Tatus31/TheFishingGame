@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum InterfaceTyoe
+public enum InterfaceType
 {
     Inventory,
     Equipment
@@ -15,7 +15,7 @@ public class InventoryObject : ScriptableObject
 {
     public ItemDatabaseObject database;
     public Inventory inventoryContainer;
-    public InterfaceTyoe type;
+    public InterfaceType type;
     public InventorySlot[] GetSlots { get { return inventoryContainer.Slots; } }
 
     public bool AddItem(Item item, int amount, int weight)

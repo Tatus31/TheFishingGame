@@ -14,6 +14,7 @@ public class Testing : MonoBehaviour
     [SerializeField] Transform orientation;
     [SerializeField] Transform fishObject;
     [SerializeField] LayerMask Interactable;
+    [SerializeField] GameObject repairBarObject;
 
     FishingStateManager fishingStateManager;
 
@@ -45,20 +46,25 @@ public class Testing : MonoBehaviour
     {
         testingSphere.position = MouseWorldPosition.GetMouseWorldPosition(10, Interactable);
 
-        if (Input.GetKey(KeyCode.Space))
+        if (MouseWorldPosition.GetInteractable(Interactable) && InputManager.Instance.IsLeftMouseButtonPressed())
         {
-
+            repairBarObject.SetActive(true);
         }
 
-        if (Input.GetKey(KeyCode.L))
-        {
-            fishingStateManager.GetCinemachineVirtualCamera().LookAt = fishObject;
-        }
+        //if (Input.GetKey(KeyCode.Space))
+        //{
 
-        if (Input.GetKey(KeyCode.U))
-        {
-            fishingStateManager.GetCinemachineVirtualCamera().LookAt = null;
-        }
+        //}
+
+        //if (Input.GetKey(KeyCode.L))
+        //{
+        //    fishingStateManager.GetCinemachineVirtualCamera().LookAt = fishObject;
+        //}
+
+        //if (Input.GetKey(KeyCode.U))
+        //{
+        //    fishingStateManager.GetCinemachineVirtualCamera().LookAt = null;
+        //}
 
         //if (onFleeing)
         //{

@@ -46,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Swimming")]
     [SerializeField] float swimMaxSpeed = 5f;
     [SerializeField] float swimAccelAmount = 2f;
+    [SerializeField] float flipperAccelAmount = 4f;
 
     [Header("Water Detection")]
     [SerializeField] private LayerMask waterLayer;
@@ -72,6 +73,7 @@ public class PlayerMovement : MonoBehaviour
     public SuitWalkState SuitWalkState { get; private set; }
     public SuitSprintState SuitSprintState { get; private set; }
     public SwimmingState SwimmingState { get; private set; }
+    public FlippersState FlippersState { get; private set; }
 
     void Awake()
     {
@@ -89,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
         SuitWalkState = new SuitWalkState(this, suitMaxSpeed, suitAccelAmount, suitFrictionAmount);
         SuitSprintState = new SuitSprintState(this, suitSprintMaxSpeed, suitSprintAccelAmount, suitSprintFrictionAmount);
         SwimmingState = new SwimmingState(this, swimMaxSpeed, swimAccelAmount);
+        FlippersState = new FlippersState(this, swimMaxSpeed, flipperAccelAmount);
     }
 
     void Start()
@@ -109,6 +112,7 @@ public class PlayerMovement : MonoBehaviour
         SprintState = new SprintState(this, sprintMaxSpeed, sprintAccelAmount, sprintFrictionAmount);
         SuitWalkState = new SuitWalkState(this, suitMaxSpeed, suitAccelAmount, suitFrictionAmount);
         SuitSprintState = new SuitSprintState(this, suitSprintMaxSpeed, suitSprintAccelAmount, suitSprintFrictionAmount);
+        FlippersState = new FlippersState(this, swimMaxSpeed, flipperAccelAmount);
     }
 
     void Update()

@@ -13,15 +13,17 @@ public enum ItemType
     Propeller,
     Storage,
     Detection,
-    Navigation
+    Navigation,
+    fireExtinguisher
 }
 
-public enum ShipStats
+public enum Stats
 {
     Speed,
     Health,
     DetectionRange,
-    StorageSpace
+    StorageSpace,
+    Capacity
 }
 
 public abstract class ItemObject : ScriptableObject
@@ -64,7 +66,7 @@ public class Item
 [Serializable]
 public class StatModification : IModifier
 {
-    public ShipStats stats;
+    public Stats stats;
     public int value;
 
     public void AddValue(ref int baseValue)

@@ -8,77 +8,67 @@ using UnityEngine;
 public class FireExtinguisheractivation : MonoBehaviour
 {
     public ParticleSystem particleSystem;
-    public Inventory inv;
-    public Item it;
-    private InventorySlot InventorySlot1;
     public Camera FPCamera;
-    private SnapObj SnapObj;
-    public Transform snappingpoint;
-    public GameObject item2;
+    Player player;
+    ItemObject item;
 
 
     private void Awake()
     {
         particleSystem = GetComponent<ParticleSystem>();
-        Debug.Log(item2.transform.position);
     }
 
-    
+    private void Start()
+    {
+        player = GetComponent<Player>();
+    }
 
     private void Update()
     {
-
        Activate();
        HitFire();
-       Unequip();
-
     }
 
     public void Activate()
-    {   
+    {
 
-        //particleSystem.gameObject.SetActive(false);
-        float distance2 = Vector3.Distance(item2.transform.position, snappingpoint.position);
-        if (distance2 == 0)
+        for (int i = 0; i < player.equipment.GetSlots.Length; i++)
         {
-            if (Input.GetKey(KeyCode.N))
+            var itemType = player.equipment.GetSlots[i];
+
+            for (int j = 0; j < itemType.AllowedItems.Length; j++)
             {
-                if (particleSystem != null)
+
+                if (itemType.AllowedItems[j] == ItemType.fireExtinguisher)
                 {
-                    particleSystem.Play();
-                    Debug.Log("Naciskam N");
-                    
-                    HitFire();
+                    if (itemType.item.id == -1)
+                    {
+                        return;
+                    }
+
+                    if(itemType.item.id == 11)
+                    {
+                        if (Input.GetKey(KeyCode.N))
+                        {
+                            if (particleSystem != null)
+                            {
+                                particleSystem.Play();
+                                Debug.Log("Naciskam N");
+
+                                HitFire();
+                            }
+                        }
+                        else if (Input.GetKey(KeyCode.K))
+                        {
+                            particleSystem.Stop();
+                            Debug.Log("Naciskam K");
+                        }
+                    }
+
                 }
             }
-            else if (Input.GetKey(KeyCode.K))
-            {
-                particleSystem.Stop();
-                Debug.Log("Naciskam K");
-            }
-
         }
-        else
-        {
-            Debug.Log("Nie dziala");
-        }
-        
-        
-        
-        
-    }
 
-
-    public void Unequip()
-    {
-        float distance2 = Vector3.Distance(item2.transform.position, snappingpoint.position);
-        if (distance2 == 0)
-        {
-            if (Input.GetKeyDown(KeyCode.Mouse1))
-            {
-                item2.transform.position = new Vector3(1070.86f, 118.67f, 0.00f);
-            }
-        }
     }
 
     public void HitFire()

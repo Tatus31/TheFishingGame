@@ -11,10 +11,10 @@ public class Ship : MonoBehaviour
 
     [Header("Basic Ship Parts")]
     [SerializeField] GameObject basicHull;
-    //public GameObject basicPropeller;
-    //public GameObject basicStorage;
-    //public GameObject basicDetection;
-    //public GameObject basicNavigation;
+    //[SerializeField] GameObject basicPropeller;
+    //[SerializeField] GameObject basicStorage;
+    //[SerializeField] GameObject basicDetection;
+    //[SerializeField] GameObject basicNavigation;
 
     GameObject currentHullDisplay;
     GameObject currentPropellerDisplay;
@@ -42,9 +42,9 @@ public class Ship : MonoBehaviour
 
         switch (slot.parent.inventory.type)
         {
-            case InterfaceTyoe.Inventory:
+            case InterfaceType.Inventory:
                 break;
-            case InterfaceTyoe.Equipment:
+            case InterfaceType.Equipment:
                 for (int i = 0; i < slot.item.stats.Length; i++)
                 {
                     for (int j = 0; j < shipAttributes.Length; j++)
@@ -113,9 +113,9 @@ public class Ship : MonoBehaviour
 
         switch (slot.parent.inventory.type)
         {
-            case InterfaceTyoe.Inventory:
+            case InterfaceType.Inventory:
                 break;
-            case InterfaceTyoe.Equipment:
+            case InterfaceType.Equipment:
                 for (int i = 0; i < slot.item.stats.Length; i++)
                 {
                     for (int j = 0; j < shipAttributes.Length; j++)
