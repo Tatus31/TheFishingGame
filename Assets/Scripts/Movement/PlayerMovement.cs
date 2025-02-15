@@ -74,6 +74,9 @@ public class PlayerMovement : MonoBehaviour
     public SuitSprintState SuitSprintState { get; private set; }
     public SwimmingState SwimmingState { get; private set; }
     public FlippersState FlippersState { get; private set; }
+    public ToolBoxState ToolBoxState { get; private set; }
+
+
 
     void Awake()
     {
@@ -92,6 +95,7 @@ public class PlayerMovement : MonoBehaviour
         SuitSprintState = new SuitSprintState(this, suitSprintMaxSpeed, suitSprintAccelAmount, suitSprintFrictionAmount);
         SwimmingState = new SwimmingState(this, swimMaxSpeed, swimAccelAmount);
         FlippersState = new FlippersState(this, swimMaxSpeed, flipperAccelAmount);
+        ToolBoxState = new ToolBoxState(this, maxSpeed,accelAmount);
     }
 
     void Start()
@@ -113,6 +117,7 @@ public class PlayerMovement : MonoBehaviour
         SuitWalkState = new SuitWalkState(this, suitMaxSpeed, suitAccelAmount, suitFrictionAmount);
         SuitSprintState = new SuitSprintState(this, suitSprintMaxSpeed, suitSprintAccelAmount, suitSprintFrictionAmount);
         FlippersState = new FlippersState(this, swimMaxSpeed, flipperAccelAmount);
+        ToolBoxState = new ToolBoxState(this, maxSpeed, accelAmount);
     }
 
     void Update()

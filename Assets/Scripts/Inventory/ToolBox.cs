@@ -4,105 +4,57 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using static UnityEditor.Progress;
+using static UnityEngine.ParticleSystem;
 
-public class ToolBox : MonoBehaviour
+public class ToolBoxState : MovementBaseState
 {
-    [SerializeField]
-    private GameObject cube;
+    
 
-    //[SerializeField]
-    //private Texture texture;
-    //[SerializeField]
-    //private Texture texture2;
+    public PlayerMovement player;
+    float maxSpeed, accelAmount;
+    public ParticleSystem particle;
+    public Camera FPCamera;
+    Player Player;
+    ItemObject item;
 
-    private Renderer renderer;
+    
 
-    [SerializeField]
-    private Camera FPCamera;
-
-    [SerializeField]
-    private Texture[] textures;
-
-    private int textureindex = 0;
-
-    public Transform snappingpoint;
-    public GameObject item2;
-
-    private void Update()
-    {   
-
-        IsHeLooking();
-        Unequip();
-    }
-
-   
-
-    private void Start()
+    public ToolBoxState(PlayerMovement player, float maxSpeed, float accelAmount)
     {
-        renderer = GetComponent<Renderer>();
-        cube = GetComponent<GameObject>();
-        Debug.Log(item2.transform.position);
- 
+        this.player = player;
+        this.maxSpeed = maxSpeed;
+        this.accelAmount = accelAmount;
     }
 
 
-    public void Unequip()
+    public override void EnterState(PlayerMovement player)
     {
-        float distance2 = Vector3.Distance(item2.transform.position, snappingpoint.position);
-        if (distance2 == 0)
-        {
-            if (Input.GetKeyDown(KeyCode.Mouse1))
-            {
-               item2.transform.position = new Vector3(1106.37f,118.67f,0.00f);
-            }
-        }
+        Debug.Log("ToolBox State");
     }
 
-    private void ChangeCubeTexture()
+    public override void ExitState()
     {
-
-        float distance2 = Vector3.Distance(item2.transform.position, snappingpoint.position);
-
-        if (distance2 == 0)
-        {
-            if (Input.GetKeyDown(KeyCode.Mouse1))
-            {
-                Debug.Log("Najpierw to");
-                textureindex = textureindex + 1;
-                renderer.material.mainTexture = textures[textureindex];
-
-               
-            }
-        }
-        else
-        {
-            Debug.Log("DUpa");
-        }
-       
-
-
-
-      
         
     }
 
-    private void IsHeLooking()
+    public override void UpdateState()
     {
-        // Sprawdza, czy naciśnięto klawisz "E"
-
-        RaycastHit hit; // Zmienna do przechowywania informacji o trafieniu
-        Ray ray = FPCamera.ScreenPointToRay(Input.mousePosition); // Tworzy promień z pozycji myszy
-
-        if (Physics.Raycast(ray, out hit)) // Sprawdza, czy promień trafił w obiekt
-        {
-            if (hit.collider.gameObject.name == "ScianaStatku")
-            {
-                ChangeCubeTexture();
-                Debug.Log("Patrzysz na obiekt: " + hit.collider.gameObject.name); // Wypisuje nazwę obiektu    
-            }
-
-        }
-
+       
     }
 
+    public override void FixedUpdateState()
+    {
+        base.Move(player, maxSpeed, maxSpeed, accelAmount);
+        ApplyFriction(player, 1);
+    }
+
+    public override void PlayAnimation(PlayerMovement player)
+    {
+        
+    }
+
+    public override void ApplyFriction(PlayerMovement player, float frictionAmount)
+    {
+        base.ApplyFriction(player, frictionAmount);
+    }
 }    
