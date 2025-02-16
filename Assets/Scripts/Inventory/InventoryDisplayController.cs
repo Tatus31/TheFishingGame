@@ -8,12 +8,14 @@ public class InventoryDisplayController : MonoBehaviour
     [SerializeField] GameObject inventoryUIObj;
     [SerializeField] GameObject shipEquipmentUIObj;
     [SerializeField] LayerMask interactionLayerUI;
-    [SerializeField] CameraLook cameraLookScript;
+    CameraLook cameraLook;
 
     private void Start()
     {
         inventoryUIObj.SetActive(false);
         shipEquipmentUIObj.SetActive(false);
+
+        cameraLook = FindObjectOfType<CameraLook>();
     }
 
     private void Update()
@@ -41,7 +43,7 @@ public class InventoryDisplayController : MonoBehaviour
         {
             shipEquipmentUIObj.SetActive(true);
         }
-        cameraLookScript.enabled = false;
+        cameraLook.enabled = false;
     }
 
     void HideInventory()
@@ -51,6 +53,6 @@ public class InventoryDisplayController : MonoBehaviour
         isHiden = true;
         inventoryUIObj.SetActive(false);
         shipEquipmentUIObj.SetActive(false);
-        cameraLookScript.enabled = true;
+        cameraLook.enabled = true;
     }
 }

@@ -174,6 +174,78 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Ship"",
+            ""id"": ""339aec55-89ec-481c-bcb6-04ba050229a8"",
+            ""actions"": [
+                {
+                    ""name"": ""Movement"",
+                    ""type"": ""Value"",
+                    ""id"": ""5920f755-f00e-4470-b5e7-893d3eea555e"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""0933d439-fdb9-4cf4-b79c-2f0d26e4ea88"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""e5bf1a8a-e660-40d1-8c0a-5530a2afce17"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""95b0f8a2-f5a7-46d9-8247-6179eb4a5b08"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""8781618b-0a4c-4277-93c2-c89aa2355cfc"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""f7810723-b8fc-47e5-a41e-2adfa146b7e5"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -185,6 +257,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_LeftMouse = m_Player.FindAction("LeftMouse", throwIfNotFound: true);
         m_Player_RightMouse = m_Player.FindAction("RightMouse", throwIfNotFound: true);
+        // Ship
+        m_Ship = asset.FindActionMap("Ship", throwIfNotFound: true);
+        m_Ship_Movement = m_Ship.FindAction("Movement", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -320,6 +395,52 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Ship
+    private readonly InputActionMap m_Ship;
+    private List<IShipActions> m_ShipActionsCallbackInterfaces = new List<IShipActions>();
+    private readonly InputAction m_Ship_Movement;
+    public struct ShipActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public ShipActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Movement => m_Wrapper.m_Ship_Movement;
+        public InputActionMap Get() { return m_Wrapper.m_Ship; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(ShipActions set) { return set.Get(); }
+        public void AddCallbacks(IShipActions instance)
+        {
+            if (instance == null || m_Wrapper.m_ShipActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_ShipActionsCallbackInterfaces.Add(instance);
+            @Movement.started += instance.OnMovement;
+            @Movement.performed += instance.OnMovement;
+            @Movement.canceled += instance.OnMovement;
+        }
+
+        private void UnregisterCallbacks(IShipActions instance)
+        {
+            @Movement.started -= instance.OnMovement;
+            @Movement.performed -= instance.OnMovement;
+            @Movement.canceled -= instance.OnMovement;
+        }
+
+        public void RemoveCallbacks(IShipActions instance)
+        {
+            if (m_Wrapper.m_ShipActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IShipActions instance)
+        {
+            foreach (var item in m_Wrapper.m_ShipActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_ShipActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public ShipActions @Ship => new ShipActions(this);
     public interface IPlayerActions
     {
         void OnCamera(InputAction.CallbackContext context);
@@ -327,5 +448,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnSprint(InputAction.CallbackContext context);
         void OnLeftMouse(InputAction.CallbackContext context);
         void OnRightMouse(InputAction.CallbackContext context);
+    }
+    public interface IShipActions
+    {
+        void OnMovement(InputAction.CallbackContext context);
     }
 }

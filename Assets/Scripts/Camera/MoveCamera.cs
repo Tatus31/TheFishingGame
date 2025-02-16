@@ -3,10 +3,9 @@ using UnityEngine;
 public class MoveCamera : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField]   
-    private Transform player;
+    [SerializeField] Transform player;
 
-    float offsetY = 1.1f;
+    [SerializeField] float offsetY = 0.5f;
 
     void Update()
     {

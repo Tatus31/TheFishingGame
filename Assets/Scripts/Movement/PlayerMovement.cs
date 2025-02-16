@@ -11,42 +11,39 @@ public class PlayerMovement : MonoBehaviour
     public event EventHandler<Vector3> OnPlayerSpeedChange;
 
     [Header("References")]
-    [SerializeField] Transform orientation;
+    public Transform orientation;
 
     [Header("Movement")]
     [SerializeField] float maxSpeed = 5f;
     [SerializeField] float accelAmount = 2f;
     public float maxSpeedTime = 1f;
-
-    [Header("Counter Movement")]
     [SerializeField] float frictionAmount = 2f;
 
     [Header("Suit Movement")]
     [SerializeField] float suitMaxSpeed = 3.25f;
     [SerializeField] float suitAccelAmount = 1f;
-
-    [Header("Suit Counter Movement")]
     [SerializeField] float suitFrictionAmount = 1f;
     [Space(10)]
 
     [Header("Sprint Movement")]
     [SerializeField] float sprintMaxSpeed = 8f;
     [SerializeField] float sprintAccelAmount = 4f;
-
-    [Header("Sprint Counter Movement")]
     [SerializeField] float sprintFrictionAmount = 1f;
 
     [Header("Suit Sprint Movement")]
     [SerializeField] float suitSprintMaxSpeed = 5f;
     [SerializeField] float suitSprintAccelAmount = 2f;
-
-    [Header("Suit Sprint Counter Movement")]
     [SerializeField] float suitSprintFrictionAmount = .5f;
 
     [Header("Swimming")]
     [SerializeField] float swimMaxSpeed = 5f;
     [SerializeField] float swimAccelAmount = 2f;
     [SerializeField] float flipperAccelAmount = 4f;
+
+    [Header("Movement On Ship")]
+    [SerializeField] float maxSpeedOnShip = 5f;
+    [SerializeField] float accelAmountOnShip = 2f;
+    [SerializeField] float frictionAmountOnShip = 2f;
 
     [Header("Water Detection")]
     [SerializeField] private LayerMask waterLayer;
@@ -59,6 +56,9 @@ public class PlayerMovement : MonoBehaviour
 
     bool isSwimming = false;
 
+    public bool isControllable = true;
+    public bool IsControllable { get { return isControllable; } set { isControllable = value; } }
+
     AnimationController animator;
 
     Animator fishingAnimator;
@@ -68,15 +68,15 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 FlatVel { get; set; }
 
     private MovementBaseState currentState;
+    public MovementBaseState CurrentState { get { return currentState; } set { currentState = value; } }
     public WalkState WalkState { get; private set; }
     public SprintState SprintState { get; private set; }
     public SuitWalkState SuitWalkState { get; private set; }
     public SuitSprintState SuitSprintState { get; private set; }
     public SwimmingState SwimmingState { get; private set; }
     public FlippersState FlippersState { get; private set; }
+    public WalkOnShipState WalkOnShipState { get; private set; }
     public ToolBoxState ToolBoxState { get; private set; }
-
-
 
     void Awake()
     {
@@ -95,7 +95,8 @@ public class PlayerMovement : MonoBehaviour
         SuitSprintState = new SuitSprintState(this, suitSprintMaxSpeed, suitSprintAccelAmount, suitSprintFrictionAmount);
         SwimmingState = new SwimmingState(this, swimMaxSpeed, swimAccelAmount);
         FlippersState = new FlippersState(this, swimMaxSpeed, flipperAccelAmount);
-        ToolBoxState = new ToolBoxState(this, maxSpeed,accelAmount);
+        WalkOnShipState = new WalkOnShipState(this, maxSpeedOnShip, accelAmountOnShip, frictionAmountOnShip);
+        ToolBoxState = new ToolBoxState(this, maxSpeed, accelAmount);
     }
 
     void Start()
@@ -117,35 +118,36 @@ public class PlayerMovement : MonoBehaviour
         SuitWalkState = new SuitWalkState(this, suitMaxSpeed, suitAccelAmount, suitFrictionAmount);
         SuitSprintState = new SuitSprintState(this, suitSprintMaxSpeed, suitSprintAccelAmount, suitSprintFrictionAmount);
         FlippersState = new FlippersState(this, swimMaxSpeed, flipperAccelAmount);
+        WalkOnShipState = new WalkOnShipState(this, maxSpeedOnShip, accelAmountOnShip, frictionAmountOnShip);
+        SwimmingState = new SwimmingState(this, swimMaxSpeed, swimAccelAmount);
         ToolBoxState = new ToolBoxState(this, maxSpeed, accelAmount);
     }
 
     void Update()
     {
-        GetPlayerInput();
+        if (isControllable)
+            GetPlayerInput();
 
         if (isSwimming)
         {
             return;
         }
 
-        if (inputManager.IsHoldingSprintKey() && currentState != SprintState)
+        if (StickToShip.Instance.IsOnShip)
+        {
+            return;
+        }
+
+        //Think of a better way
+
+        if (inputManager.IsHoldingSprintKey() && currentState != SprintState && currentState != SuitSprintState)
         {
             SwitchState(SprintState);
 
-            if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.DivingSuit))
-            {
-                SwitchState(SuitSprintState);
-            }
         }
-        else if (!inputManager.IsHoldingSprintKey() && currentState != WalkState)
+        else if (!inputManager.IsHoldingSprintKey() && currentState != WalkState && currentState != SuitWalkState)
         {
             SwitchState(WalkState);
-
-            if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.DivingSuit))
-            {
-                SwitchState(SuitWalkState);
-            }
         }
 
         OnPlayerSpeedChange?.Invoke(this, FlatVel);
@@ -168,9 +170,10 @@ public class PlayerMovement : MonoBehaviour
         if ((waterLayer.value & (1 << other.gameObject.layer)) != 0)
         {
             SwitchState(SwimmingState);
+
             isSwimming = true;
 
-            if(volume != null)
+            if (volume != null)
                 volume.SetActive(false);
 
             if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.Harpoon))
@@ -182,8 +185,16 @@ public class PlayerMovement : MonoBehaviour
     {
         if ((waterLayer.value & (1 << other.gameObject.layer)) != 0)
         {
-            SwitchState(SuitWalkState);
             isSwimming = false;
+
+            if (StickToShip.Instance.IsOnShip)
+            {
+                SwitchState(WalkOnShipState);
+            }
+            else
+            {
+                SwitchState(SuitWalkState);
+            }
 
             if (volume != null)
                 volume.SetActive(true);
@@ -204,7 +215,7 @@ public class PlayerMovement : MonoBehaviour
         forward.Normalize();
         right.Normalize();
 
-        return forward * yDir + right * xDir;
+        return (right * xDir + forward * yDir).normalized;
     }
 
     void GetPlayerInput()

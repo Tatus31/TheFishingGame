@@ -33,6 +33,11 @@ public class InputManager : MonoBehaviour
         return playerInputActions.Player.Movement.ReadValue<Vector2>();
     }
 
+    public Vector3 GetShipMovement()
+    {
+        return playerInputActions.Ship.Movement.ReadValue<Vector2>();
+    }
+
     public Vector2 GetMouseDelta()
     {
         return playerInputActions.Player.Camera.ReadValue<Vector2>();
