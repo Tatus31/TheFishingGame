@@ -82,7 +82,7 @@ public class FireExtinguisheractivation : MonoBehaviour
             {
                 if (hit.collider.gameObject.name == "Fire")
                 {
-                    Debug.Log("Patrzysz na obiekt: " + hit.collider.gameObject.name); // Wypisuje nazwę obiektu    
+                    //Debug.Log("Patrzysz na obiekt: " + hit.collider.gameObject.name); // Wypisuje nazwę obiektu    
                 }
                 
             }
