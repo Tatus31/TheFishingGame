@@ -40,6 +40,6 @@ public class CameraLook : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         cameraHolder.transform.localRotation = Quaternion.Euler(xRotation, desiredX, cameraHolder.rotation.z);
-        orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
+        PlayerMovement.Instance.orientation.rotation = Quaternion.Euler(0, desiredX, 0);
     }
 }
