@@ -2,12 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ship : MonoBehaviour
+public class Ship : ObjectInventory
 {
-    public InventoryObject inventory;
-    public InventoryObject equipment;
-
-    public ShipAttributes[] shipAttributes;
+    //public ShipAttributes[] shipAttributes;
 
     [Header("Basic Ship Parts")]
     [SerializeField] GameObject basicHull;
@@ -22,20 +19,20 @@ public class Ship : MonoBehaviour
     GameObject currentDetectionDisplay;
     GameObject currentNavigationDisplay;
 
-    private void Start()
-    {
-        for (int i = 0; i < shipAttributes.Length; i++)
-        {
-            shipAttributes[i].SetParent(this);
-        }
-        for (int i = 0; i < equipment.GetSlots.Length; i++)
-        {
-            equipment.GetSlots[i].OnBeforeUpdate += OnRemoveItem;
-            equipment.GetSlots[i].OnAfterUpdate += OnAddItem;
-        }
-    }
+    //private void Start()
+    //{
+    //    for (int i = 0; i < shipAttributes.Length; i++)
+    //    {
+    //        shipAttributes[i].SetParent(this);
+    //    }
+    //    for (int i = 0; i < equipment.GetSlots.Length; i++)
+    //    {
+    //        equipment.GetSlots[i].OnBeforeUpdate += OnRemoveItem;
+    //        equipment.GetSlots[i].OnAfterUpdate += OnAddItem;
+    //    }
+    //}
 
-    public void OnRemoveItem(InventorySlot slot)
+    public override void OnRemoveItem(InventorySlot slot)
     {
         if (slot.ItemObject == null)
             return;
@@ -47,10 +44,10 @@ public class Ship : MonoBehaviour
             case InterfaceType.Equipment:
                 for (int i = 0; i < slot.item.stats.Length; i++)
                 {
-                    for (int j = 0; j < shipAttributes.Length; j++)
+                    for (int j = 0; j < objectAttributes.Length; j++)
                     {
-                        if (shipAttributes[j].type == slot.item.stats[i].stats)
-                            shipAttributes[j].value.RemoveModifier(slot.item.stats[i]);
+                        if (objectAttributes[j].type == slot.item.stats[i].stats)
+                            objectAttributes[j].value.RemoveModifier(slot.item.stats[i]);
                     }
                 }
 
@@ -106,7 +103,7 @@ public class Ship : MonoBehaviour
         }
     }
 
-    public void OnAddItem(InventorySlot slot)
+    public override void OnAddItem(InventorySlot slot)
     {
         if (slot.ItemObject == null)
             return;
@@ -118,10 +115,10 @@ public class Ship : MonoBehaviour
             case InterfaceType.Equipment:
                 for (int i = 0; i < slot.item.stats.Length; i++)
                 {
-                    for (int j = 0; j < shipAttributes.Length; j++)
+                    for (int j = 0; j < objectAttributes.Length; j++)
                     {
-                        if (shipAttributes[j].type == slot.item.stats[i].stats)
-                            shipAttributes[j].value.AddModifier(slot.item.stats[i]);
+                        if (objectAttributes[j].type == slot.item.stats[i].stats)
+                            objectAttributes[j].value.AddModifier(slot.item.stats[i]);
                     }
                 }
 

@@ -19,8 +19,8 @@ public abstract class MovementBaseState
             Vector3 horizontalVelocity = new Vector3(player.rb.velocity.x, 0, player.rb.velocity.z);
             if (horizontalVelocity.magnitude > 0)
             {
-                float friction = Mathf.Min(horizontalVelocity.magnitude, frictionAmount);
-                Vector3 frictionForce = -horizontalVelocity.normalized * friction;
+                //float friction = Mathf.Min(horizontalVelocity.magnitude, frictionAmount);
+                Vector3 frictionForce = -horizontalVelocity.normalized * frictionAmount;
                 player.rb.AddForce(frictionForce, ForceMode.Acceleration);
             }
         }

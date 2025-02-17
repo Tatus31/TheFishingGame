@@ -4493,6 +4493,7 @@ GameObject:
   - component: {fileID: 423857261}
   - component: {fileID: 423857256}
   - component: {fileID: 423857260}
+  - component: {fileID: 423857262}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -4513,16 +4514,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orientation: {fileID: 1852618419}
-  maxSpeed: 5
-  accelAmount: 2
+  maxSpeed: 3
+  accelAmount: 3
   maxSpeedTime: 1
-  frictionAmount: 2
+  frictionAmount: 3
   suitMaxSpeed: 5
   suitAccelAmount: 2
   suitFrictionAmount: 1
-  sprintMaxSpeed: 8
-  sprintAccelAmount: 4
-  sprintFrictionAmount: 1
+  sprintMaxSpeed: 2.5
+  sprintAccelAmount: 2
+  sprintFrictionAmount: 0.5
   suitSprintMaxSpeed: 6
   suitSprintAccelAmount: 1
   suitSprintFrictionAmount: 0.1
@@ -4598,7 +4599,7 @@ Transform:
   m_GameObject: {fileID: 423857255}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.33799997, y: 1.938, z: 15.6}
+  m_LocalPosition: {x: 0.33799997, y: 0.18799996, z: 7.3500004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4640,6 +4641,30 @@ MonoBehaviour:
     value:
       baseValue: 0
       modifiedValue: 0
+--- !u!114 &423857262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 423857255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eee2411ba7e0c0f40b5263ff3458bab0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHarpoonDistance: 20
+  harpoonPullForce: 1000
+  minReturnDelay: 0.1
+  maxReturnDelay: 0.1
+  harpoonLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  detachDistance: 25
+  harpoonPointTransform: {fileID: 850202995}
+  accelTime: 1
+  accelRate: 1
+  maxPullWeight: 5
 --- !u!1 &423947470
 GameObject:
   m_ObjectHideFlags: 0
@@ -9514,6 +9539,12 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.4002029, y: 0.8128576, z: 0.5427831}
   m_Center: {x: 0.05269698, y: -0.20323443, z: 0.0017679932}
+--- !u!4 &850202995 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 888476486080420700, guid: 116c090f5489a754090f66a9ab6e29c2,
+    type: 3}
+  m_PrefabInstance: {fileID: 5697022866825482968}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &875846715
 GameObject:
   m_ObjectHideFlags: 0
@@ -16240,7 +16271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventory: {fileID: 11400000, guid: 325506803bc92c94bbdc1d1b34072f40, type: 2}
   equipment: {fileID: 11400000, guid: b1b9f3716170d174285592361605a952, type: 2}
-  shipAttributes:
+  objectAttributes:
   - type: 0
     value:
       baseValue: 0
