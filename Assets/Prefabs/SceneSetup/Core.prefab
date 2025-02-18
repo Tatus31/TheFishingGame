@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5528914383924403760}
   - component: {fileID: 3648356095154676283}
   - component: {fileID: 2251196559885108575}
+  - component: {fileID: 3264011705679843235}
   m_Layer: 0
   m_Name: Core
   m_TagString: Untagged
@@ -66,13 +67,7 @@ MonoBehaviour:
     m_Bits: 64
   InteractableMask:
     serializedVersion: 2
-    m_Bits: 18688
-  HarpoonInteractableMask:
-    serializedVersion: 2
-    m_Bits: 1024
-  ItemInteractableMask:
-    serializedVersion: 2
-    m_Bits: 8192
+    m_Bits: 215304
   interactionRange: 1
 --- !u!114 &562229352171340135
 MonoBehaviour:
@@ -91,7 +86,8 @@ MonoBehaviour:
   fishObject: {fileID: 0}
   Interactable:
     serializedVersion: 2
-    m_Bits: 5120
+    m_Bits: 136192
+  repairBarObject: {fileID: 0}
 --- !u!114 &5528914383924403760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,20 +126,16 @@ MonoBehaviour:
     interactionMask:
       serializedVersion: 2
       m_Bits: 16384
-    enableFishingState: 0
   harpoonConfig:
     handObject: {fileID: 0}
     interactionMask:
       serializedVersion: 2
       m_Bits: 2048
-    enableFishingState: 0
   divingSuitConfig:
     handObject: {fileID: 0}
     interactionMask:
       serializedVersion: 2
       m_Bits: 256
-    enableFishingState: 0
-  fishingStateManager: {fileID: 0}
 --- !u!114 &2251196559885108575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,4 +149,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryUIObj: {fileID: 0}
-  cameraLookScript: {fileID: 0}
+  shipEquipmentUIObj: {fileID: 0}
+  interactionLayerUI:
+    serializedVersion: 2
+    m_Bits: 65536
+--- !u!114 &3264011705679843235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6457795096094294152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec94c6fce2a85364ab4a153f57d79579, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

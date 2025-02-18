@@ -74,8 +74,8 @@ Transform:
   m_GameObject: {fileID: 6585123736472616017}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.37, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.35, z: 0.25}
+  m_LocalPosition: {x: -0.000000029802, y: 0.5, z: 0}
+  m_LocalScale: {x: 0.33532, y: 0.47062162, z: 0.33532}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 527980311912991017}
@@ -143,8 +143,8 @@ GameObject:
   - component: {fileID: 4523101367193326997}
   - component: {fileID: 6127150241591780905}
   - component: {fileID: 2657799276318675944}
+  - component: {fileID: 1181114193835403836}
   - component: {fileID: 4862489394729814242}
-  - component: {fileID: 2057564937266314144}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -160,13 +160,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8053324004500612632}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 0, z: 2}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.33799997, y: 0.18799996, z: 7.3500004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6236195514303317415}
   - {fileID: 2482785613849425354}
+  - {fileID: 6236195514303317415}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &3274278463853474618
@@ -215,10 +215,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.124112755
-  m_Height: 0.6906076
+  m_Radius: 0.17698312
+  m_Height: 1
   m_Direction: 1
-  m_Center: {x: -0.0017959476, y: 0.37356636, z: -0.0039955676}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!114 &6127150241591780905
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,6 +232,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventory: {fileID: 11400000, guid: 325506803bc92c94bbdc1d1b34072f40, type: 2}
+  equipment: {fileID: 11400000, guid: ab1500aca3d44e34ea826c6b37ba0624, type: 2}
+  playerAttributes:
+  - type: 4
+    value:
+      baseValue: 0
+      modifiedValue: 0
 --- !u!114 &2657799276318675944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,26 +251,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orientation: {fileID: 2482785613849425354}
-  maxSpeed: 3
+  maxSpeed: 2.5
   accelAmount: 2
-  maxSpeedTime: 2
-  frictionAmount: 2
-  suitMaxSpeed: 3.25
-  suitAccelAmount: 1
+  maxSpeedTime: 1
+  frictionAmount: 4
+  suitMaxSpeed: 5
+  suitAccelAmount: 2
   suitFrictionAmount: 1
-  sprintMaxSpeed: 6
+  sprintMaxSpeed: 3.5
   sprintAccelAmount: 2
-  sprintFrictionAmount: 1
-  suitSprintMaxSpeed: 4
-  suitSprintAccelAmount: 2
-  suitSprintFrictionAmount: 0.5
-  swimMaxSpeed: 3
+  sprintFrictionAmount: 0.5
+  suitSprintMaxSpeed: 6
+  suitSprintAccelAmount: 1
+  suitSprintFrictionAmount: 0.1
+  swimMaxSpeed: 5
   swimAccelAmount: 2
+  flipperAccelAmount: 4
+  maxSpeedOnShip: 2.5
+  accelAmountOnShip: 2
+  frictionAmountOnShip: 4
   waterLayer:
     serializedVersion: 2
     m_Bits: 128
+  volume: {fileID: 0}
   rb: {fileID: 3274278463853474618}
   inputManager: {fileID: 0}
+  isControllable: 1
+--- !u!114 &1181114193835403836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8053324004500612632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f521973b82905e44a2b64749602f7a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shipRb: {fileID: 0}
+  shipControlsLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  additionalDownForce: 20
+  velocityMatchDuration: 3
+  velocityBlendTime: 0.7
 --- !u!114 &4862489394729814242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,37 +308,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eee2411ba7e0c0f40b5263ff3458bab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHarpoonDistance: 10
-  harpoonPullForce: 20
+  maxHarpoonDistance: 20
+  harpoonPullForce: 1000
   minReturnDelay: 0.1
-  maxReturnDelay: 0.3
+  maxReturnDelay: 0.1
   harpoonLayerMask:
     serializedVersion: 2
-    m_Bits: 5120
+    m_Bits: 1024
   detachDistance: 25
   harpoonPointTransform: {fileID: 0}
-  accelTime: 500
-  accelRate: 0.4
---- !u!114 &2057564937266314144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8053324004500612632}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0ecba25073931448b724e857622cf4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fishingSettings: {fileID: 11400000, guid: bdfd9e3e72d01ab4a8ed1dd9acc4bb57, type: 2}
-  virtualCamera: {fileID: 0}
-  orientation: {fileID: 2482785613849425354}
-  cameraHolder: {fileID: 0}
-  fishObject: {fileID: 0}
-  holdProgressBar: {fileID: 0}
-  pullCheck: {fileID: 0}
-  fishingLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  isCameraLockedOn: 0
+  accelTime: 1
+  accelRate: 1
+  maxPullWeight: 5

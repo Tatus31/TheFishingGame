@@ -42,6 +42,9 @@ public class StickToShip : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (shipRb == null)
+            return;
+
         if (!isOnShip) return;
 
         if (isControllingShip)
