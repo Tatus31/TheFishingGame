@@ -71,6 +71,19 @@ public abstract class ObjectInventory : MonoBehaviour
         }
     }
 
+    public virtual int GetModifiedStatValue(Stats statType)
+    {
+        foreach (var attribute in objectAttributes)
+        {
+            if (attribute.type == statType)
+            {
+                return attribute.value.ModifiedValue;
+            }
+        }
+
+        return 0;
+    }
+
     public void AttributeModified(ObjectAttributes attribute)
     {
         Debug.Log($"{attribute.type} changed to {attribute.value.ModifiedValue} points");

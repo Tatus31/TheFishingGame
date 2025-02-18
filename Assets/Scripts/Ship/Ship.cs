@@ -163,6 +163,11 @@ public class Ship : ObjectInventory
         }
     }
 
+    public override int GetModifiedStatValue(Stats statType)
+    {
+       return base.GetModifiedStatValue(statType);
+    }
+
     public void AttributeModified(ShipAttributes attribute)
     {
         Debug.Log($"{attribute.type} changed to {attribute.value.ModifiedValue} points");

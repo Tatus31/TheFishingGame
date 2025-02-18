@@ -140,15 +140,15 @@ public class PlayerMovement : MonoBehaviour
 
         //Think of a better way
 
-        if (inputManager.IsHoldingSprintKey() && currentState != SprintState && currentState != SuitSprintState)
-        {
-            SwitchState(SprintState);
+        //if (inputManager.IsHoldingSprintKey() && currentState != SprintState && currentState != SuitSprintState)
+        //{
+        //    SwitchState(SprintState);
 
-        }
-        else if (!inputManager.IsHoldingSprintKey() && currentState != WalkState && currentState != SuitWalkState)
-        {
-            SwitchState(WalkState);
-        }
+        //}
+        //else if (!inputManager.IsHoldingSprintKey() && currentState != WalkState && currentState != SuitWalkState)
+        //{
+        //    SwitchState(WalkState);
+        //}
 
         OnPlayerSpeedChange?.Invoke(this, FlatVel);
         currentState.UpdateState();
@@ -187,14 +187,7 @@ public class PlayerMovement : MonoBehaviour
         {
             isSwimming = false;
 
-            if (StickToShip.Instance.IsOnShip)
-            {
-                SwitchState(WalkOnShipState);
-            }
-            else
-            {
-                SwitchState(SuitWalkState);
-            }
+            SwitchState(WalkState);
 
             if (volume != null)
                 volume.SetActive(true);

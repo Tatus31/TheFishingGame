@@ -123,10 +123,20 @@ public abstract class UserInterface : MonoBehaviour
             slotsOnInterface[obj].RemoveItem();
             return;
         }
+
         if (MouseData.slotHoveredOver)
         {
             InventorySlot mouseHoverSlotData = MouseData.interfaceMouseIsOver.slotsOnInterface[MouseData.slotHoveredOver];
-            inventory.SwapItems(slotsOnInterface[obj], mouseHoverSlotData);
+
+            if (mouseHoverSlotData.CanPlaceInSlot(slotsOnInterface[obj].ItemObject))
+            {
+                inventory.SwapItems(slotsOnInterface[obj], mouseHoverSlotData);
+
+                if (slotsOnInterface[obj].item.id >= 0)
+                {
+                    slotsOnInterface[obj].RemoveItem();
+                }
+            }
         }
     }
 

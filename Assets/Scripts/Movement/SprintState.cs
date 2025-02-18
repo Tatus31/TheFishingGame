@@ -35,6 +35,11 @@ public class SprintState : MovementBaseState
         //    player.SwitchState(player.SuitSprintState);
         //}
 
+        if (!player.inputManager.IsHoldingSprintKey())
+        {
+            player.SwitchState(player.WalkState);
+        }
+
         Move(player, player.maxSpeedTime, maxSpeed, accelAmount);
         ApplyFriction(player, frictionAmount);
     }
