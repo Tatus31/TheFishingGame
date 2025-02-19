@@ -1,9 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ShipDamage : MonoBehaviour
 {
+    public static ShipDamage Instance;
+
+    public event EventHandler<int> OnDamageTaken;
+
     Ship ship;
     ShipMovement shipMovement;
 
@@ -11,6 +16,14 @@ public class ShipDamage : MonoBehaviour
 
     int currentHealth;
     int baseDamage = 10;
+
+    private void Awake()
+    {
+        if (Instance != null)
+            Debug.LogWarning($"there exists a {Instance.name} in the scene already");
+
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -22,7 +35,7 @@ public class ShipDamage : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(Mathf.Floor(flatVel.magnitude));
+        //Debug.Log(Mathf.Floor(flatVel.magnitude));
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -52,6 +65,7 @@ public class ShipDamage : MonoBehaviour
         currentHealth -= actualDamage;
         currentHealth = Mathf.Max(0, currentHealth);
 
+        OnDamageTaken?.Invoke(this, currentHealth);
         UpdateAttributes();
     }
 

@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class LeaveShip : MonoBehaviour
 {
-    [SerializeField] Transform leaveshipPoint;
+    [SerializeField] Transform leavePoint;
+    [SerializeField] LayerMask layerMask;
 
     private void OnTriggerEnter(Collider other)
     {
-        other.transform.position = leaveshipPoint.position;
+        other.transform.position = leavePoint.position;
     }
 }
