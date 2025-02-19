@@ -24,6 +24,16 @@ public class MouseWorldPosition : MonoBehaviour
         return raycastHit.point;
     }
 
+    public static GameObject GetObjectOverMouse(float maxDistance, LayerMask layerMask)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, maxDistance, layerMask))
+        {
+            return raycastHit.collider.gameObject;
+        }
+        return null;
+    }
+
     public static bool GetInteractable(LayerMask mask)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

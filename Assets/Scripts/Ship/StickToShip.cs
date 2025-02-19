@@ -124,7 +124,7 @@ public class StickToShip : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag("Ship") && !isOnShip)
+        if (collision.collider.CompareTag("Ship") && !isOnShip && !IncreaseWaterLevel.Instance.ShipSank)
         {
             isOnShip = true;
             transform.SetParent(shipRb.transform);

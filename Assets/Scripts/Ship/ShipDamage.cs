@@ -9,13 +9,15 @@ public class ShipDamage : MonoBehaviour
 
     public event EventHandler<int> OnDamageTaken;
 
+    public int PreviousHealth { get; private set; }
+
     Ship ship;
     ShipMovement shipMovement;
 
     Vector3 flatVel;
 
     int currentHealth;
-    int baseDamage = 10;
+    [SerializeField] int baseDamage = 100;
 
     private void Awake()
     {
@@ -48,24 +50,23 @@ public class ShipDamage : MonoBehaviour
 
     void TakeDamage(int baseDamage)
     {
+        PreviousHealth = currentHealth;
         currentHealth = ship.GetModifiedStatValue(Stats.Health);
-
         float maxSpeed = shipMovement.MaxSpeed;
-        float speedRatio = flatVel.magnitude / maxSpeed;
-
+        float speedRatio = Mathf.Floor(flatVel.magnitude) / maxSpeed;
         int actualDamage = 0;
+
         if (speedRatio > 0)
         {
-            float maxDamageMultiplier = 0.5f * currentHealth / baseDamage;
-            float damageMultiplier = speedRatio * maxDamageMultiplier;
-
+            float damageMultiplier = 0.5f + (speedRatio * 1.5f);
             actualDamage = Mathf.RoundToInt(baseDamage * damageMultiplier);
         }
 
+        Debug.Log($"ship took {actualDamage} damage");
+
         currentHealth -= actualDamage;
         currentHealth = Mathf.Max(0, currentHealth);
-
-        OnDamageTaken?.Invoke(this, currentHealth);
+        OnDamageTaken?.Invoke(this, actualDamage);
         UpdateAttributes();
     }
 
