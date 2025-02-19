@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class EnterShip : MonoBehaviour
 {
-    [SerializeField] Transform enterShipPoint;
+    [SerializeField] Transform enterPoint;
+    [SerializeField] LayerMask layerMask;
     private void OnTriggerEnter(Collider other)
     {
-        other.transform.position = enterShipPoint.position;
+        other.transform.position = enterPoint.position;
     }
 }
