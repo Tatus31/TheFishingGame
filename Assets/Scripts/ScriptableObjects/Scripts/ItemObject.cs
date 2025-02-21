@@ -13,7 +13,6 @@ public enum ItemType
     Propeller,
     Storage,
     Detection,
-    Navigation,
     fireExtinguisher
 }
 

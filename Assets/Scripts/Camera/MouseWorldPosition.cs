@@ -24,12 +24,55 @@ public class MouseWorldPosition : MonoBehaviour
         return raycastHit.point;
     }
 
+    public static Vector3 GetMouseWorldPosition()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Physics.Raycast(ray, out RaycastHit raycastHit, Instance.interactionRange, Instance.InteractableMask);
+        return raycastHit.point;
+    }
+
     public static GameObject GetObjectOverMouse(float maxDistance, LayerMask layerMask)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit raycastHit, maxDistance, layerMask))
         {
             return raycastHit.collider.gameObject;
+        }
+        return null;
+    }
+
+    public static GameObject GetObjectOverMouse(LayerMask layerMask)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, Instance.interactionRange, layerMask))
+        {
+            return raycastHit.collider.gameObject;
+        }
+        return null;
+    }
+
+    public static GameObject GetObjectOverMouse(float maxDistance, string tag)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, maxDistance))
+        {
+            if (raycastHit.collider.CompareTag(tag))
+            {
+                return raycastHit.collider.gameObject;
+            }
+        }
+        return null;
+    }
+
+    public static GameObject GetObjectOverMouse(string tag)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, Instance.interactionRange))
+        {
+            if (raycastHit.collider.CompareTag(tag))
+            {
+                return raycastHit.collider.gameObject;
+            }
         }
         return null;
     }

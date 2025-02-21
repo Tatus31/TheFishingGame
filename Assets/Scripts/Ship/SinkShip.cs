@@ -7,7 +7,8 @@ public class SinkShip : MonoBehaviour
 {
     Rigidbody shipRB;
     StableFloatingRigidBody stableFloatingRB;
-    IncreaseWaterLevel waterLevel;
+    ChangeWaterLevelUnderDeck waterLevel;
+    ShipDamage shipDamage;
 
     float sinkingBuoyancy = 0.98f;
     [SerializeField] float sinkingDelay = 3f;
@@ -20,8 +21,16 @@ public class SinkShip : MonoBehaviour
 
     private void Start()
     {
-        waterLevel = IncreaseWaterLevel.Instance;
+        shipDamage = ShipDamage.Instance;
+        waterLevel = ChangeWaterLevelUnderDeck.Instance;
+
         waterLevel.OnSinkingShip += IncreaseWaterLevel_OnSinkingShip;
+        shipDamage.OnSinkingShipByDamage += ShipDamage_OnSinkingShipByDamage;
+    }
+
+    private void ShipDamage_OnSinkingShipByDamage(object sender, EventArgs e)
+    {
+        StartCoroutine(StartSinking());
     }
 
     private void IncreaseWaterLevel_OnSinkingShip(object sender, bool e)

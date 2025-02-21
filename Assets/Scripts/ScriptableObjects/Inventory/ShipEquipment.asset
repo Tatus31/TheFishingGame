@@ -17,46 +17,36 @@ MonoBehaviour:
     Slots:
     - AllowedItems: 03000000
       item:
-        name: MetalHull
-        id: 8
+        name: 
+        id: -1
         weight: 1
         description: 
-        stats:
-        - stats: 1
-          value: 500
-      amount: 1
+        stats: []
+      amount: 0
     - AllowedItems: 05000000
       item:
-        name: MetalStorage
-        id: 9
+        name: 
+        id: -1
         weight: 1
         description: 
-        stats:
-        - stats: 3
-          value: 25
-      amount: 1
+        stats: []
+      amount: 0
     - AllowedItems: 04000000
       item:
         name: 
         id: -1
-        weight: 0
+        weight: 1
         description: 
         stats: []
       amount: 0
     - AllowedItems: 06000000
       item:
-        name: 
-        id: -1
+        name: BasicRadar
+        id: 2
         weight: 0
         description: 
-        stats: []
-      amount: 0
-    - AllowedItems: 07000000
-      item:
-        name: 
-        id: -1
-        weight: 0
-        description: 
-        stats: []
-      amount: 0
+        stats:
+        - stats: 2
+          value: 50
+      amount: 1
   type: 1

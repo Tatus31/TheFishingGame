@@ -6,11 +6,11 @@ using UnityEngine;
 public class CameraEffectsManager : MonoBehaviour
 {
     [Header("HeadBob Frequency")]
-    [SerializeField] float walkFrequency;
-    [SerializeField] float sprintFrequency;
+    [SerializeField] float walkFrequency = 0.01f;
+    [SerializeField] float sprintFrequency = 0.09f;
 
-    public float WalkFrequency { get => walkFrequency = 0.03f; set => value = walkFrequency; }
-    public float SprintFrequency { get => sprintFrequency = 0.13f; set => value = sprintFrequency; }
+    public float WalkFrequency {  get { return walkFrequency; } set {  walkFrequency = value; } }
+    public float SprintFrequency { get { return sprintFrequency; } set {  sprintFrequency = value; } }
 
     CinemachineVirtualCamera virtualCamera;
     InputManager inputManager;

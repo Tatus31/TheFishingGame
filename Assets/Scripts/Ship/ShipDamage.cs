@@ -1,29 +1,26 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ShipDamage : MonoBehaviour
 {
     public static ShipDamage Instance;
 
+    public event EventHandler OnSinkingShipByDamage;
     public event EventHandler<int> OnDamageTaken;
-
     public int PreviousHealth { get; private set; }
-
     Ship ship;
     ShipMovement shipMovement;
-
     Vector3 flatVel;
 
     int currentHealth;
+    int maxHealth;
+
     [SerializeField] int baseDamage = 100;
 
     private void Awake()
     {
         if (Instance != null)
             Debug.LogWarning($"there exists a {Instance.name} in the scene already");
-
         Instance = this;
     }
 
@@ -31,27 +28,30 @@ public class ShipDamage : MonoBehaviour
     {
         ship = GetComponent<Ship>();
         shipMovement = GetComponent<ShipMovement>();
-
         shipMovement.OnShipSpeedChange += ShipMovement_OnShipSpeedChange;
+
+        currentHealth = ship.GetModifiedStatValue(Stats.Health);
+        maxHealth = ship.GetModifiedStatValue(Stats.Health);
     }
 
-    private void Update()
+    public void RestoreHealth(int amount)
     {
-        //Debug.Log(Mathf.Floor(flatVel.magnitude));
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        Debug.Log($"restored {amount} health");
+        UpdateAttributes();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.CompareTag("Danger"))
         {
-            TakeDamage(baseDamage);
+            TakeCollisionDamage(baseDamage);
         }
     }
 
-    void TakeDamage(int baseDamage)
+    void TakeCollisionDamage(int baseDamage)
     {
         PreviousHealth = currentHealth;
-        currentHealth = ship.GetModifiedStatValue(Stats.Health);
         float maxSpeed = shipMovement.MaxSpeed;
         float speedRatio = Mathf.Floor(flatVel.magnitude) / maxSpeed;
         int actualDamage = 0;
@@ -63,6 +63,16 @@ public class ShipDamage : MonoBehaviour
         }
 
         Debug.Log($"ship took {actualDamage} damage");
+        currentHealth -= actualDamage;
+        currentHealth = Mathf.Max(0, currentHealth);
+        OnDamageTaken?.Invoke(this, actualDamage);
+        UpdateAttributes();
+    }
+
+    public void TakeFireDamage()
+    {
+        PreviousHealth = currentHealth;
+        int actualDamage = 5;
 
         currentHealth -= actualDamage;
         currentHealth = Mathf.Max(0, currentHealth);
@@ -76,7 +86,11 @@ public class ShipDamage : MonoBehaviour
         {
             if (attribute.type == Stats.Health)
             {
-                attribute.value.ModifiedValue = currentHealth;
+                attribute.value.SetModifiedValueDirectly(currentHealth);
+                if(currentHealth == 0)
+                {
+                    OnSinkingShipByDamage?.Invoke(this, EventArgs.Empty);
+                }
                 break;
             }
         }
@@ -87,4 +101,11 @@ public class ShipDamage : MonoBehaviour
         flatVel = e;
     }
 
+    private void OnDestroy()
+    {
+        if (shipMovement != null)
+        {
+            shipMovement.OnShipSpeedChange -= ShipMovement_OnShipSpeedChange;
+        }
+    }
 }
