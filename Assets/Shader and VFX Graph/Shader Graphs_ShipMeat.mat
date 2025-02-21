@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-3438652214565033677
+--- !u!114 &-6991100388233445104
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_Dissolve
-  m_Shader: {fileID: -6465566751694194690, guid: 195cf011e1c68a24395394288d364b13,
+  m_Name: Shader Graphs_ShipMeat
+  m_Shader: {fileID: -6465566751694194690, guid: 9b880812cd23aa6468a8025a3dfd1a20,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -37,10 +37,6 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _Texture2D:
-        m_Texture: {fileID: 2800000, guid: 44574b134f468f746bb51c8099e9fddf, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -55,12 +51,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Dir_Swap: 0
-    - _Dissolve: 0.237
-    - _Edge: 0.0491
-    - _Noise_Scale: 30.82
+    - _Float: 1.53
+    - _Noise: 0.3
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _Edge_Color: {r: 0.99056596, g: 0.36925566, b: 0, a: 0}
+    - _Color: {r: 0.5943396, g: 0.10502597, b: 0, a: 0}
+    - _Color_1: {r: 1, g: 0.37757117, b: 0.37264147, a: 0}
+    - _MeatStrings: {r: 1, g: 11.28, b: 0, a: 0}
   m_BuildTextureStacks: []
