@@ -7249,7 +7249,13 @@ VisualEffect:
         m_Name: Lifetime margins
         m_Overridden: 1
     m_Vector3f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 90, y: 0, z: 0}
+        m_Name: New Arc Circle_circle_transform_angles
+        m_Overridden: 1
+      - m_Value: {x: 90, y: 0, z: 0}
+        m_Name: Spawn circle_circle_transform_angles
+        m_Overridden: 1
     m_Vector4f:
       m_Array: []
     m_Uint:
@@ -30002,6 +30008,129 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1259784322}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1261618937
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1261618940}
+  - component: {fileID: 1261618939}
+  - component: {fileID: 1261618938}
+  m_Layer: 0
+  m_Name: VFX_Smoke
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!73398921 &1261618938
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261618937}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!2083052967 &1261618939
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261618937}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: 285aaadf286bb7d42accf9dbbd3764df, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_AllowInstancing: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 6.28
+        m_Name: New Arc Circle_arc
+        m_Overridden: 1
+      - m_Value: 0.86
+        m_Name: New Arc Circle_circle_radius
+        m_Overridden: 1
+      - m_Value: 0.12
+        m_Name: Drag
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array: []
+    m_Vector3f:
+      m_Array:
+      - m_Value: {x: 90, y: 0, z: 0}
+        m_Name: New Arc Circle_circle_transform_angles
+        m_Overridden: 1
+    m_Vector4f:
+      m_Array: []
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array: []
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array: []
+    m_Gradient:
+      m_Array: []
+    m_NamedObject:
+      m_Array: []
+    m_Bool:
+      m_Array: []
+--- !u!4 &1261618940
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261618937}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 274.17, y: 4.04, z: 280.67}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1264773324
 GameObject:
   m_ObjectHideFlags: 0
@@ -40560,6 +40689,192 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1667209268}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1668902966
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1668902969}
+  - component: {fileID: 1668902968}
+  - component: {fileID: 1668902967}
+  m_Layer: 0
+  m_Name: VFX_Water rushing in (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!73398921 &1668902967
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668902966}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!2083052967 &1668902968
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668902966}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: bc965c441f3020440a05a60a4062f847, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_AllowInstancing: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 43.8
+        m_Name: FlipbookSpeed
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Radius
+        m_Overridden: 1
+      - m_Value: 1.35
+        m_Name: Friction 1
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Lifetime Loss (0-1) 1
+        m_Overridden: 1
+      - m_Value: 1.94
+        m_Name: Bounce 1
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array: []
+    m_Vector3f:
+      m_Array:
+      - m_Value: {x: 0, y: -9.81, z: 0}
+        m_Name: Gravity
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0, z: -7}
+        m_Name: Velocity
+        m_Overridden: 1
+      - m_Value: {x: -10.32, y: -4.64, z: -4.156433}
+        m_Name: New Oriented Box_center
+        m_Overridden: 1
+      - m_Value: {x: 6.83, y: 21.27, z: 21.6}
+        m_Name: New Oriented Box_size
+        m_Overridden: 1
+      - m_Value: {x: 3, y: 19.6, z: 3}
+        m_Name: Rozmiar
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0.48, z: -8.99}
+        m_Name: Pozycja
+        m_Overridden: 1
+      - m_Value: {x: 0, y: -9.36, z: 0}
+        m_Name: Pozycja 1
+        m_Overridden: 1
+      - m_Value: {x: 20, y: 1, z: 20}
+        m_Name: Rozmiar 1
+        m_Overridden: 1
+    m_Vector4f:
+      m_Array: []
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array: []
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array: []
+    m_Gradient:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 0, g: 1.7411011, b: 0.88185656, a: 0}
+          key1: {r: 0.05480614, g: 2.3237805, b: 1.2044724, a: 0.5686275}
+          key2: {r: 0.5, g: 0.5, b: 0.5, a: 0.5686275}
+          key3: {r: 0, g: 0, b: 0, a: 0}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 65535
+          ctime2: 65535
+          ctime3: 0
+          ctime4: 0
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 6554
+          atime2: 52428
+          atime3: 65535
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_ColorSpace: 1
+          m_NumColorKeys: 2
+          m_NumAlphaKeys: 4
+        m_Name: New Gradient
+        m_Overridden: 1
+    m_NamedObject:
+      m_Array:
+      - m_Value: {fileID: -2519473635315226807, guid: e8481759bc812d54e92b2951443e3b3b,
+          type: 3}
+        m_Name: New Mesh
+        m_Overridden: 1
+    m_Bool:
+      m_Array: []
+--- !u!4 &1668902969
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668902966}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 274.3281, y: 22.3, z: 309.54}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1682718483
 GameObject:
   m_ObjectHideFlags: 0
@@ -46077,8 +46392,11 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 10.5
+      - m_Value: 43.8
         m_Name: FlipbookSpeed
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Radius
         m_Overridden: 1
     m_Vector2f:
       m_Array: []
@@ -46087,8 +46405,20 @@ VisualEffect:
       - m_Value: {x: 0, y: -9.81, z: 0}
         m_Name: Gravity
         m_Overridden: 1
-      - m_Value: {x: 0, y: 0, z: -7.7}
+      - m_Value: {x: 0, y: 0, z: -7}
         m_Name: Velocity
+        m_Overridden: 1
+      - m_Value: {x: -10.32, y: -4.64, z: -4.156433}
+        m_Name: New Oriented Box_center
+        m_Overridden: 1
+      - m_Value: {x: 6.83, y: 21.27, z: 21.6}
+        m_Name: New Oriented Box_size
+        m_Overridden: 1
+      - m_Value: {x: 3, y: 10.58, z: 3}
+        m_Name: Rozmiar
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0.48, z: -4.95}
+        m_Name: Pozycja
         m_Overridden: 1
     m_Vector4f:
       m_Array: []
@@ -46101,9 +46431,45 @@ VisualEffect:
     m_AnimationCurve:
       m_Array: []
     m_Gradient:
-      m_Array: []
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 0, g: 1.7411011, b: 0.88185656, a: 0}
+          key1: {r: 0.05480614, g: 2.3237805, b: 1.2044724, a: 0.5686275}
+          key2: {r: 0.5, g: 0.5, b: 0.5, a: 0.5686275}
+          key3: {r: 0, g: 0, b: 0, a: 0}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 65535
+          ctime2: 65535
+          ctime3: 0
+          ctime4: 0
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 6554
+          atime2: 52428
+          atime3: 65535
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_ColorSpace: 1
+          m_NumColorKeys: 2
+          m_NumAlphaKeys: 4
+        m_Name: New Gradient
+        m_Overridden: 1
     m_NamedObject:
-      m_Array: []
+      m_Array:
+      - m_Value: {fileID: -2519473635315226807, guid: e8481759bc812d54e92b2951443e3b3b,
+          type: 3}
+        m_Name: New Mesh
+        m_Overridden: 1
     m_Bool:
       m_Array: []
 --- !u!4 &2054305827
@@ -46115,7 +46481,7 @@ Transform:
   m_GameObject: {fileID: 2054305824}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 274.3281, y: 16.85, z: 292.90524}
+  m_LocalPosition: {x: 274.3281, y: 27.08, z: 292.90524}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -48969,3 +49335,5 @@ SceneRoots:
   - {fileID: 938437223}
   - {fileID: 265964496}
   - {fileID: 2054305827}
+  - {fileID: 1668902969}
+  - {fileID: 1261618940}
