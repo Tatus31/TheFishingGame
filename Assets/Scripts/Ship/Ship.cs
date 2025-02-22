@@ -31,6 +31,11 @@ public class Ship : ObjectInventory
         fogController = GetComponent<FogController>();
         UpdateFogEnd();
 
+        foreach (var attribute in objectAttributes)
+        {
+            attribute.SetPermamentAttributeModified();
+        }
+
         ElectricalDevice.OnDegradation += HandleDeviceDegradation;
     }
 
@@ -76,7 +81,7 @@ public class Ship : ObjectInventory
                     for (int j = 0; j < objectAttributes.Length; j++)
                     {
                         if (objectAttributes[j].type == slot.item.stats[i].stats)
-                            objectAttributes[j].value.RemoveModifier(slot.item.stats[i]);
+                            objectAttributes[j].Value.RemoveModifier(slot.item.stats[i]);
 
                     }
                 }
@@ -148,7 +153,7 @@ public class Ship : ObjectInventory
                     for (int j = 0; j < objectAttributes.Length; j++)
                     {
                         if (objectAttributes[j].type == slot.item.stats[i].stats)
-                            objectAttributes[j].value.AddModifier(slot.item.stats[i]);
+                            objectAttributes[j].Value.AddModifier(slot.item.stats[i]);
                     }
                 }
 
@@ -230,6 +235,55 @@ public class Ship : ObjectInventory
         }
 
         return Mathf.Max(0, baseValue);
+    }
+
+    public int GetSavedModifiedStatValue(Stats statType)
+    {
+        foreach (var attribute in objectAttributes)
+        {
+            if (attribute.type == statType)
+            {
+                return attribute.GetSavedModifiedValue();
+            }
+        }
+
+        return 0;
+    }
+
+    public int GetSavedBaseStatValue(Stats statType)
+    {
+        foreach (var attribute in objectAttributes)
+        {
+            if (attribute.type == statType)
+            {
+                return attribute.GetSavedBaseValue();
+            }
+        }
+        return 0;
+    }
+
+    public int GetPermanentSavedModifiedStatValue(Stats statType)
+    {
+        foreach (var attribute in objectAttributes)
+        {
+            if (attribute.type == statType)
+            {
+                return attribute.GetPermanentModifiedValue();
+            }
+        }
+        return 0;
+    }
+
+    public int GetPermanentSavedBaseStatValue(Stats statType)
+    {
+        foreach (var attribute in objectAttributes)
+        {
+            if (attribute.type == statType)
+            {
+                return attribute.GetPermanentBaseValue();
+            }
+        }
+        return 0;
     }
 
     public void AttributeModified(ShipAttributes attribute)

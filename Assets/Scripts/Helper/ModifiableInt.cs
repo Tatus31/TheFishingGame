@@ -8,23 +8,29 @@ public delegate void ModifiedEvent();
 [Serializable]
 public class ModifiableInt
 {
-    private int baseValue;
+
+    int permanentBaseValue;
+    public int PermanentBaseValue { get { return permanentBaseValue; } set {  permanentBaseValue = value; } }
+
+    int permanentModifiedValue;
+    public int PermanentModifiedValue { get { return permanentModifiedValue; } set { permanentModifiedValue = value; } }
+
+    int baseValue;
     public int BaseValue
     {
         get { return baseValue; }
         set { baseValue = value; UpdateModifiedValue(); }
     }
 
-    private int modifiedValue;
+    int modifiedValue;
     public int ModifiedValue
     {
         get { return modifiedValue; }
         private set { modifiedValue = value; }
     }
 
-    // List of modifiers should not be serialized since they're recreated during runtime
     [NonSerialized]
-    private List<IModifier> modifiers = new List<IModifier>();
+    List<IModifier> modifiers = new List<IModifier>();
 
     public event ModifiedEvent ValueModified;
 
@@ -37,7 +43,6 @@ public class ModifiableInt
         }
     }
 
-    // Method to set both values without triggering updates
     public void SetValues(int baseVal, int modifiedVal)
     {
         this.baseValue = baseVal;
@@ -88,5 +93,11 @@ public class ModifiableInt
         modifiedValue = newValue;
         baseValue = newValue; 
         ValueModified?.Invoke();
+    }
+
+    public void SetPermamentAttributeModified()
+    {
+        permanentBaseValue = baseValue;
+        permanentModifiedValue = modifiedValue;
     }
 }

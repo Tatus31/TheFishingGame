@@ -38,7 +38,7 @@ public abstract class ObjectInventory : MonoBehaviour
                     for (int j = 0; j < objectAttributes.Length; j++)
                     {
                         if (objectAttributes[j].type == slot.item.stats[i].stats)
-                            objectAttributes[j].value.RemoveModifier(slot.item.stats[i]);
+                            objectAttributes[j].Value.RemoveModifier(slot.item.stats[i]);
                     }
                 }
                 break;
@@ -62,7 +62,7 @@ public abstract class ObjectInventory : MonoBehaviour
                     for (int j = 0; j < objectAttributes.Length; j++)
                     {
                         if (objectAttributes[j].type == slot.item.stats[i].stats)
-                            objectAttributes[j].value.AddModifier(slot.item.stats[i]);
+                            objectAttributes[j].Value.AddModifier(slot.item.stats[i]);
                     }
                 }
                 break;
@@ -77,7 +77,20 @@ public abstract class ObjectInventory : MonoBehaviour
         {
             if (attribute.type == statType)
             {
-                return attribute.value.ModifiedValue;
+                return attribute.Value.ModifiedValue;
+            }
+        }
+
+        return 0;
+    }
+
+    public virtual int GetStatBaseValue(Stats statType)
+    {
+        foreach (var attribute in objectAttributes)
+        {
+            if (attribute.type == statType)
+            {
+                return attribute.Value.BaseValue;
             }
         }
 
@@ -86,6 +99,6 @@ public abstract class ObjectInventory : MonoBehaviour
 
     public void AttributeModified(ObjectAttributes attribute)
     {
-        Debug.Log($"{attribute.type} changed to {attribute.value.ModifiedValue} points");
+        Debug.Log($"{attribute.type} changed to {attribute.Value.ModifiedValue} points");
     }
 }

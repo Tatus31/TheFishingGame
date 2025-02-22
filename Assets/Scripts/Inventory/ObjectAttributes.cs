@@ -8,41 +8,44 @@ public class ObjectAttributes
     public ObjectInventory parent;
     public Stats type;
 
-    // Serialize the ModifiableInt as separate fields
     [SerializeField]
-    private int savedBaseValue;
+    int savedBaseValue;
     [SerializeField]
-    private int savedModifiedValue;
+    int savedModifiedValue;
 
-    // The actual ModifiableInt instance
-    private ModifiableInt _value;
-    public ModifiableInt value
+    ModifiableInt value;
+    public ModifiableInt Value
     {
         get
         {
-            if (_value == null)
+            if (value == null)
             {
-                _value = new ModifiableInt(AttributeModified);
-                // Restore saved values
-                _value.SetValues(savedBaseValue, savedModifiedValue);
+                value = new ModifiableInt(AttributeModified);
+                value.SetValues(savedBaseValue, savedModifiedValue);
             }
-            return _value;
+            return value;
         }
     }
 
     public void SetParent(ObjectInventory parent)
     {
         this.parent = parent;
-        // Initialize with saved values
-        _value = new ModifiableInt(AttributeModified);
-        _value.SetValues(savedBaseValue, savedModifiedValue);
+        value = new ModifiableInt(AttributeModified);
+        value.SetValues(savedBaseValue, savedModifiedValue);
     }
 
     public void AttributeModified()
     {
-        // Save current values when modified
-        savedBaseValue = value.BaseValue;
-        savedModifiedValue = value.ModifiedValue;
+        savedBaseValue = Value.BaseValue;
+        savedModifiedValue = Value.ModifiedValue;
+
         parent?.AttributeModified(this);
     }
+
+    public void SetPermamentAttributeModified() => Value.SetPermamentAttributeModified();
+
+    public int GetSavedModifiedValue() => savedModifiedValue;
+    public int GetSavedBaseValue() => savedBaseValue;
+    public int GetPermanentBaseValue() => Value.PermanentBaseValue;
+    public int GetPermanentModifiedValue() => Value.PermanentModifiedValue;
 }

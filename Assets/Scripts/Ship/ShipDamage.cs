@@ -86,7 +86,7 @@ public class ShipDamage : MonoBehaviour
         {
             if (attribute.type == Stats.Health)
             {
-                attribute.value.SetModifiedValueDirectly(currentHealth);
+                attribute.Value.SetModifiedValueDirectly(currentHealth);
                 if(currentHealth == 0)
                 {
                     OnSinkingShipByDamage?.Invoke(this, EventArgs.Empty);
@@ -108,4 +108,12 @@ public class ShipDamage : MonoBehaviour
             shipMovement.OnShipSpeedChange -= ShipMovement_OnShipSpeedChange;
         }
     }
+
+    public int GetModifiedStatValue(Stats stats) => ship.GetModifiedStatValue(stats);
+
+    public int GetSavedModifiedValue(Stats stats) => ship.GetSavedModifiedStatValue(stats);
+
+    public int GetPermanentModifiedStatValue(Stats stats) => ship.GetPermanentSavedModifiedStatValue(stats);
+
+    public int GetPermanentSavedStatValue(Stats stats) => ship.GetPermanentSavedBaseStatValue(stats);
 }
