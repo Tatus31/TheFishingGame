@@ -10,7 +10,7 @@ public abstract class ObjectInventory : MonoBehaviour
 
     public ObjectAttributes[] objectAttributes;
 
-    private void Start()
+    protected virtual void Start()
     {
         for (int i = 0; i < objectAttributes.Length; i++)
         {

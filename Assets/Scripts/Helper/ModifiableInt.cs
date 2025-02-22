@@ -6,60 +6,87 @@ using UnityEngine;
 public delegate void ModifiedEvent();
 
 [Serializable]
-public class ModifiableInt 
+public class ModifiableInt
 {
-    [SerializeField]
-    int baseValue;
-    public int BaseValue { get { return baseValue; } set {  baseValue = value; UpdateModifiedValue(); } }
-    [SerializeField]
-    int modifiedValue;
-    public int ModifiedValue { get { return modifiedValue; } set {  modifiedValue = value; } }
+    private int baseValue;
+    public int BaseValue
+    {
+        get { return baseValue; }
+        set { baseValue = value; UpdateModifiedValue(); }
+    }
 
-    public List<IModifier> modifiers = new List<IModifier>();
+    private int modifiedValue;
+    public int ModifiedValue
+    {
+        get { return modifiedValue; }
+        private set { modifiedValue = value; }
+    }
+
+    // List of modifiers should not be serialized since they're recreated during runtime
+    [NonSerialized]
+    private List<IModifier> modifiers = new List<IModifier>();
 
     public event ModifiedEvent ValueModified;
+
     public ModifiableInt(ModifiedEvent modifiedEvent = null)
     {
-        modifiedValue = baseValue;
+        modifiers = new List<IModifier>();
         if (modifiedEvent != null)
         {
             ValueModified += modifiedEvent;
         }
     }
 
-    public void RegisterModEvent(ModifiedEvent modifiedEvent)
+    // Method to set both values without triggering updates
+    public void SetValues(int baseVal, int modifiedVal)
     {
-        ValueModified += modifiedEvent;
-    }
-
-    public void UnregisterModEvent(ModifiedEvent modifiedEvent)
-    {
-        ValueModified += modifiedEvent;
+        this.baseValue = baseVal;
+        this.modifiedValue = modifiedVal;
     }
 
     public void UpdateModifiedValue()
     {
+        if (modifiers == null)
+            modifiers = new List<IModifier>();
+
         var valueToAdd = 0;
-        for (int i = 0; i < modifiers.Count; i++)
+        foreach (var modifier in modifiers)
         {
-            modifiers[i].AddValue(ref valueToAdd);
+            modifier.AddValue(ref valueToAdd);
         }
+
         modifiedValue = baseValue + valueToAdd;
-        if(ValueModified != null)
-        {
-            ValueModified.Invoke();
-        }
+        ValueModified?.Invoke();
     }
 
     public void AddModifier(IModifier modifier)
     {
-        modifiers.Add(modifier);
-        UpdateModifiedValue();
+        if (modifiers == null)
+            modifiers = new List<IModifier>();
+
+        if (!modifiers.Contains(modifier))
+        {
+            modifiers.Add(modifier);
+            UpdateModifiedValue();
+        }
     }
 
     public void RemoveModifier(IModifier modifier)
     {
-        modifiers.Remove(modifier);
-        UpdateModifiedValue();
+        if (modifiers == null)
+            modifiers = new List<IModifier>();
+
+        if (modifiers.Contains(modifier))
+        {
+            modifiers.Remove(modifier);
+            UpdateModifiedValue();
+        }
+    }
+
+    public void SetModifiedValueDirectly(int newValue)
+    {
+        modifiedValue = newValue;
+        baseValue = newValue; 
+        ValueModified?.Invoke();
     }
 }

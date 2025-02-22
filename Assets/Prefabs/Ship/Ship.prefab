@@ -466,7 +466,6 @@ GameObject:
   - component: {fileID: 5610278367939050165}
   - component: {fileID: 5378735300259853316}
   - component: {fileID: 1166417199851845601}
-  - component: {fileID: 832689336633048171}
   m_Layer: 0
   m_Name: Klapa
   m_TagString: Untagged
@@ -562,22 +561,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.1013746, y: 0.5983985, z: 1.1028415}
   m_Center: {x: -0.7129556, y: 2.2875216, z: -4.465239}
---- !u!114 &832689336633048171
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5693106608406982530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dde7bdb4aa33e8349a87205437b0aa71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enterPoint: {fileID: 0}
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 512
 --- !u!1 &6419578946761418230
 GameObject:
   m_ObjectHideFlags: 0
@@ -1014,6 +997,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c6ab38b941b8a0499ec1c513f9de44c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseDamage: 100
 --- !u!1 &8441645725600497452
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,157 +9,55 @@ public class Testing : MonoBehaviour
 {
     public static Testing Instance;
 
-    //public event EventHandler<bool> OnLookingBehind;
-
-    [SerializeField] Transform testingSphere;
-    [SerializeField] Transform orientation;
-    [SerializeField] Transform fishObject;
     [SerializeField] LayerMask Interactable;
+    [SerializeField] LayerMask InteractableElectronic;
     [SerializeField] GameObject repairBarObject;
 
     FishingStateManager fishingStateManager;
 
-    //bool onFleeing;
-    //bool onReeledIn;
-    //bool directionsSet;
-    //bool isLookingRight;
+    public bool isRepairing = false;
 
-    //Vector3 lineDirectionLeft;
-    //Vector3 lineDirectionRight;
-
-    //float behindAngleThreshold = 30f;
-    //float gizmoLineLength = 2f;
+    private Camera mainCamera;
+    [SerializeField] GameObject backgroundObject; // Reference to the background object
 
     private void Awake()
     {
         Instance = this;
+        mainCamera = Camera.main; // Cache the main camera
     }
 
     private void Start()
     {
-        fishingStateManager = FindObjectOfType<FishingStateManager>();
-
-        //fishingStateManager.fleeState.OnFleeingFish += fishingStateManager_OnFleeingFish;
-        //fishingStateManager.reelState.OnReeledIn += fishingStateManager_OnReeledIn;
     }
 
     void Update()
     {
-        testingSphere.position = MouseWorldPosition.GetMouseWorldPosition(10, Interactable);
+        if (Input.GetKeyDown(KeyCode.E) && MouseWorldPosition.GetInteractable(InteractableElectronic))
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            isRepairing = true;
+        }
+
+        if (isRepairing && MouseWorldPosition.GetObjectOverMouse("Blue_Pipe") && InputManager.Instance.IsLeftMouseButtonHeld())
+        {
+            GameObject obj = MouseWorldPosition.GetObjectOverMouse("Blue_Pipe");
+
+            if (obj != null)
+            {
+                // Convert mouse position to world space
+                Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                mouseWorldPosition.z = 0; // Ensure the z position is correct (assuming 2D)
+
+                // Adjust the position relative to the background
+                Vector3 relativePosition = backgroundObject.transform.InverseTransformPoint(mouseWorldPosition);
+                obj.transform.position = backgroundObject.transform.TransformPoint(relativePosition);
+            }
+        }
 
         if (MouseWorldPosition.GetInteractable(Interactable) && InputManager.Instance.IsLeftMouseButtonPressed())
         {
             repairBarObject.SetActive(true);
         }
-
-        //if (Input.GetKey(KeyCode.Space))
-        //{
-
-        //}
-
-        //if (Input.GetKey(KeyCode.L))
-        //{
-        //    fishingStateManager.GetCinemachineVirtualCamera().LookAt = fishObject;
-        //}
-
-        //if (Input.GetKey(KeyCode.U))
-        //{
-        //    fishingStateManager.GetCinemachineVirtualCamera().LookAt = null;
-        //}
-
-        //if (onFleeing)
-        //{
-        //    CheckIfLookingBehind();
-        //}
     }
-
-    //private void fishingStateManager_OnFleeingFish(object sender, bool e)
-    //{
-    //    onFleeing = e;
-
-    //    if (onFleeing && !directionsSet)
-    //    {
-    //        lineDirectionLeft = -orientation.right;
-    //        lineDirectionRight = orientation.right;
-
-    //        directionsSet = true;
-    //    }
-    //}
-
-    //private void fishingStateManager_OnReeledIn(object sender, bool e)
-    //{
-    //    onReeledIn = e;
-
-    //    if (onReeledIn)
-    //    {
-    //        directionsSet = false;
-    //    }
-    //}
-
-    //void CheckIfLookingBehind()
-    //{
-    //    float angleToLeft = Vector3.SignedAngle(-orientation.forward, lineDirectionLeft, Vector3.up);
-    //    float angleToRight = Vector3.SignedAngle(-orientation.forward, lineDirectionRight, Vector3.up);
-
-    //    if (angleToLeft <= 5f && angleToLeft >= -behindAngleThreshold)
-    //    {
-    //        if(fishingStateManager.fleeState.CurrentFleeDirection == Flee.FleeDirection.Left)
-    //        {
-    //            isLookingRight = true;
-
-    //            OnLookingBehind?.Invoke(this, isLookingRight);
-    //            Debug.Log("looking behind the right line");
-    //        }
-    //    }
-    //    else if (angleToRight >= -5f && angleToRight <= behindAngleThreshold)
-    //    {
-    //        if (fishingStateManager.fleeState.CurrentFleeDirection == Flee.FleeDirection.Right)
-    //        {
-    //            isLookingRight = true;
-
-    //            OnLookingBehind?.Invoke(this, isLookingRight);
-    //            Debug.Log("looking behind the left line");
-    //        }
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("not looking directly behind either line");
-    //    }
-
-    //}
-
-    //private void OnDrawGizmos()
-    //{
-    //    if (!onFleeing) return;
-
-    //    Gizmos.color = Color.yellow;
-
-    //    Vector3 startPosition = orientation.position + Vector3.up * 0.5f;
-
-    //    if (fishingStateManager.fleeState.CurrentFleeDirection == Flee.FleeDirection.Right)
-    //    {
-    //        Vector3 leftEndPosition = startPosition + lineDirectionLeft * gizmoLineLength;
-    //        Gizmos.DrawLine(startPosition, leftEndPosition);
-
-    //        Vector3 leftThresholdDirection = Quaternion.Euler(0, -behindAngleThreshold, 0) * lineDirectionLeft;
-
-    //        Gizmos.DrawLine(startPosition, startPosition + leftThresholdDirection * gizmoLineLength);
-    //        Gizmos.DrawLine(startPosition + leftThresholdDirection * gizmoLineLength, startPosition + lineDirectionLeft * gizmoLineLength);
-
-    //        Gizmos.color = Color.red;
-    //    }
-    //    else
-    //    {
-    //        Vector3 rightEndPosition = startPosition + lineDirectionRight * gizmoLineLength;
-    //        Gizmos.DrawLine(startPosition, rightEndPosition);
-
-    //        Vector3 rightThresholdDirection = Quaternion.Euler(0, behindAngleThreshold, 0) * lineDirectionRight;
-
-    //        Gizmos.DrawLine(startPosition, startPosition + rightThresholdDirection * gizmoLineLength);
-    //        Gizmos.DrawLine(startPosition + rightThresholdDirection * gizmoLineLength, startPosition + lineDirectionRight * gizmoLineLength);
-
-    //        Gizmos.color = Color.blue;
-    //    }
-
-    //}
 }

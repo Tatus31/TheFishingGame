@@ -1,3 +1,4 @@
+using PSX;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,18 +20,42 @@ public class Ship : ObjectInventory
     GameObject currentDetectionDisplay;
     GameObject currentNavigationDisplay;
 
-    //private void Start()
-    //{
-    //    for (int i = 0; i < shipAttributes.Length; i++)
-    //    {
-    //        shipAttributes[i].SetParent(this);
-    //    }
-    //    for (int i = 0; i < equipment.GetSlots.Length; i++)
-    //    {
-    //        equipment.GetSlots[i].OnBeforeUpdate += OnRemoveItem;
-    //        equipment.GetSlots[i].OnAfterUpdate += OnAddItem;
-    //    }
-    //}
+    FogController fogController;
+
+    protected override void Start()
+    {
+        base.Start();
+
+        fogController = GetComponent<FogController>();
+        UpdateFogEnd();
+
+        ElectricalDevice.OnDegradation += HandleDeviceDegradation;
+    }
+
+    private void OnDestroy()
+    {
+        ElectricalDevice.OnDegradation -= HandleDeviceDegradation;
+    }
+
+    private void HandleDeviceDegradation(object sender, System.EventArgs e)
+    {
+        if (sender is ElectricalDevice device && device.DeviceStats.deviceStats == Stats.DetectionRange)
+        {
+            UpdateFogEnd();
+        }
+    }
+
+    public int GetDegradationModifier(ElectricalDevice.DegradationCondition condition, int statDegradation)
+    {
+        return condition switch
+        {
+            ElectricalDevice.DegradationCondition.Perfect => statDegradation,
+            ElectricalDevice.DegradationCondition.Ok => -statDegradation,
+            ElectricalDevice.DegradationCondition.Average => -statDegradation * 2,
+            ElectricalDevice.DegradationCondition.Bad => -statDegradation * 3,
+            _ => 0
+        };
+    }
 
     public override void OnRemoveItem(InventorySlot slot)
     {
@@ -42,13 +67,21 @@ public class Ship : ObjectInventory
             case InterfaceType.Inventory:
                 break;
             case InterfaceType.Equipment:
+                bool isDetectionItem = slot.AllowedItems[0] == ItemType.Detection;
+
                 for (int i = 0; i < slot.item.stats.Length; i++)
                 {
                     for (int j = 0; j < objectAttributes.Length; j++)
                     {
                         if (objectAttributes[j].type == slot.item.stats[i].stats)
                             objectAttributes[j].value.RemoveModifier(slot.item.stats[i]);
+
                     }
+                }
+
+                if (isDetectionItem)
+                {
+                    UpdateFogEnd();
                 }
 
                 switch (slot.AllowedItems[0])
@@ -85,14 +118,6 @@ public class Ship : ObjectInventory
                             //basicDetection.SetActive(true);
                         }
                         break;
-                    case ItemType.Navigation:
-                        if (currentNavigationDisplay != null)
-                        {
-                            Destroy(currentNavigationDisplay);
-                            currentNavigationDisplay = null;
-                            //basicNavigation.SetActive(true);
-                        }
-                        break;
                     default:
                         break;
                 }
@@ -113,6 +138,8 @@ public class Ship : ObjectInventory
             case InterfaceType.Inventory:
                 break;
             case InterfaceType.Equipment:
+                bool isDetectionItem = slot.AllowedItems[0] == ItemType.Detection;
+
                 for (int i = 0; i < slot.item.stats.Length; i++)
                 {
                     for (int j = 0; j < objectAttributes.Length; j++)
@@ -120,6 +147,11 @@ public class Ship : ObjectInventory
                         if (objectAttributes[j].type == slot.item.stats[i].stats)
                             objectAttributes[j].value.AddModifier(slot.item.stats[i]);
                     }
+                }
+
+                if (isDetectionItem)
+                {
+                    UpdateFogEnd();
                 }
 
                 if (slot.ItemObject.physicalDisplay != null)
@@ -147,11 +179,6 @@ public class Ship : ObjectInventory
                                 Destroy(currentDetectionDisplay);
                             currentDetectionDisplay = Instantiate(slot.ItemObject.physicalDisplay, transform);
                             break;
-                        case ItemType.Navigation:
-                            if (currentNavigationDisplay != null)
-                                Destroy(currentNavigationDisplay);
-                            currentNavigationDisplay = Instantiate(slot.ItemObject.physicalDisplay, transform);
-                            break;
                         default:
                             break;
                     }
@@ -163,9 +190,34 @@ public class Ship : ObjectInventory
         }
     }
 
+    public void UpdateFogEnd()
+    {
+        if (fogController != null)
+        {
+            int detectionRange = GetModifiedStatValue(Stats.DetectionRange);
+            fogController.SetFogEnd(detectionRange);
+            Debug.Log($"changed fog to {detectionRange + fogController.defaultFogEnd}");
+        }
+    }
+
     public override int GetModifiedStatValue(Stats statType)
     {
-       return base.GetModifiedStatValue(statType);
+        int baseValue = base.GetModifiedStatValue(statType);
+
+        if (statType == Stats.DetectionRange)
+        {
+            ElectricalDevice[] detectionDevices = FindObjectsOfType<ElectricalDevice>();
+            foreach (var device in detectionDevices)
+            {
+                if (device.DeviceStats.deviceStats == Stats.DetectionRange)
+                {
+                    baseValue += GetDegradationModifier(device.CurrentDegradation, device.DeviceStats.statDegradation);
+                    Debug.Log($"current deg modifier {baseValue}");
+                }
+            }
+        }
+
+        return Mathf.Max(0, baseValue);
     }
 
     public void AttributeModified(ShipAttributes attribute)
@@ -177,4 +229,5 @@ public class Ship : ObjectInventory
     {
         inventory.inventoryContainer.Slots = new InventorySlot[24];
     }
+
 }

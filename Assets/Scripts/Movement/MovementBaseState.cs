@@ -7,7 +7,7 @@ public abstract class MovementBaseState
     {
         PlayAnimation(player);
 
-        Debug.Log($"Entered state {player.CurrentState}");
+        //Debug.Log($"Entered state {player.CurrentState}");
     }
     public abstract void ExitState();
     public abstract void UpdateState();

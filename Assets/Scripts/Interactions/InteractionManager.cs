@@ -7,8 +7,10 @@ public class InteractionManager : MonoBehaviour
     public enum EquipedTool
     {
         Harpoon,
-        DivingSuit,
+        EmptyHands,
         Empty,
+        FireExtinguisher,
+        Wrench
     }
 
     [System.Serializable]
@@ -21,13 +23,17 @@ public class InteractionManager : MonoBehaviour
     [Header("Tool Configurations")]
     [SerializeField] ToolConfiguration fishingConfig;
     [SerializeField] ToolConfiguration harpoonConfig;
-    [SerializeField] ToolConfiguration divingSuitConfig;
+    [SerializeField] ToolConfiguration emptyHandsConfig;
+    [SerializeField] ToolConfiguration fireExtinguisherConfig;
+    [SerializeField] ToolConfiguration WrenchConfig;
 
     EquipedTool currentTool = EquipedTool.Empty;
 
     public EquipedTool CurrentTool => currentTool;
     public bool HasHarpoon => currentTool == EquipedTool.Harpoon;
-    public bool IsInDivingSuit => currentTool == EquipedTool.DivingSuit;
+    public bool AreHandsEmpty => currentTool == EquipedTool.EmptyHands;
+    public bool hasFireExtinguisher => currentTool == EquipedTool.FireExtinguisher;
+    public bool hasWrench => currentTool == EquipedTool.Wrench;
 
     private void Awake()
     {
@@ -39,7 +45,7 @@ public class InteractionManager : MonoBehaviour
 
     private void Start()
     {
-        EquipTool(EquipedTool.DivingSuit);
+        EquipTool(EquipedTool.EmptyHands);
     }
 
     private void Update()
@@ -50,9 +56,17 @@ public class InteractionManager : MonoBehaviour
         {
             EquipTool(EquipedTool.Harpoon);
         }
-        else if (MouseWorldPosition.GetInteractable(divingSuitConfig.interactionMask))
+        else if (MouseWorldPosition.GetInteractable(emptyHandsConfig.interactionMask))
         {
-            EquipTool(EquipedTool.DivingSuit);
+            EquipTool(EquipedTool.EmptyHands);
+        }
+        else if (MouseWorldPosition.GetInteractable(fireExtinguisherConfig.interactionMask))
+        {
+            EquipTool(EquipedTool.FireExtinguisher);
+        }
+        else if (MouseWorldPosition.GetInteractable(WrenchConfig.interactionMask))
+        {
+            EquipTool(EquipedTool.Wrench);
         }
     }
 
@@ -60,7 +74,8 @@ public class InteractionManager : MonoBehaviour
     {
         fishingConfig.handObject.SetActive(false);
         harpoonConfig.handObject.SetActive(false);
-        divingSuitConfig.handObject.SetActive(false);
+        emptyHandsConfig.handObject.SetActive(false);
+        fireExtinguisherConfig.handObject.SetActive(false);
 
         switch (newTool)
         {
@@ -68,8 +83,16 @@ public class InteractionManager : MonoBehaviour
                 harpoonConfig.handObject.SetActive(true);
                 break;
 
-            case EquipedTool.DivingSuit:
-                divingSuitConfig.handObject.SetActive(true);
+            case EquipedTool.EmptyHands:
+                emptyHandsConfig.handObject.SetActive(true);
+                break;
+
+            case EquipedTool.FireExtinguisher:
+                fireExtinguisherConfig.handObject.SetActive(true);
+                break;
+
+            case EquipedTool.Wrench:
+                WrenchConfig.handObject.SetActive(true);
                 break;
 
             case EquipedTool.Empty:

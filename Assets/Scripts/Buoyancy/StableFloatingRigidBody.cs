@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class StableFloatingRigidBody : MonoBehaviour
 {
-
     [SerializeField]
     bool floatToSleep = false;
 
@@ -36,6 +35,10 @@ public class StableFloatingRigidBody : MonoBehaviour
     float[] submergence;
 
     Vector3 gravity;
+
+    public bool FloatToSleep {  get { return floatToSleep; } set {  floatToSleep = value; } }
+    public bool SafeFloating { get {  return safeFloating; } set {  safeFloating = value; } }
+    public float Buoyancy {  get { return buoyancy; } set {  buoyancy = value; } }
 
     void Awake()
     {
