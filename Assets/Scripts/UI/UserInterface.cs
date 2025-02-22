@@ -128,14 +128,14 @@ public abstract class UserInterface : MonoBehaviour
         {
             InventorySlot mouseHoverSlotData = MouseData.interfaceMouseIsOver.slotsOnInterface[MouseData.slotHoveredOver];
 
-            if (mouseHoverSlotData.CanPlaceInSlot(slotsOnInterface[obj].ItemObject))
+            if (mouseHoverSlotData.CanPlaceInSlot(slotsOnInterface[obj].ItemObject) &&
+                slotsOnInterface[obj].CanPlaceInSlot(mouseHoverSlotData.ItemObject))
             {
-                inventory.SwapItems(slotsOnInterface[obj], mouseHoverSlotData);
+                Item tempItem = mouseHoverSlotData.item;
+                int tempAmount = mouseHoverSlotData.amount;
 
-                if (slotsOnInterface[obj].item.id >= 0)
-                {
-                    slotsOnInterface[obj].RemoveItem();
-                }
+                mouseHoverSlotData.UpdateSlot(slotsOnInterface[obj].item, slotsOnInterface[obj].amount);
+                slotsOnInterface[obj].UpdateSlot(tempItem, tempAmount);
             }
         }
     }

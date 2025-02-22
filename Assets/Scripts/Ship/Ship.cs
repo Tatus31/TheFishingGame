@@ -1,10 +1,12 @@
 using PSX;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Ship : ObjectInventory
 {
+    public static event EventHandler<ItemType> OnEquipmentChange;
     //public ShipAttributes[] shipAttributes;
 
     [Header("Basic Ship Parts")]
@@ -138,7 +140,8 @@ public class Ship : ObjectInventory
             case InterfaceType.Inventory:
                 break;
             case InterfaceType.Equipment:
-                bool isDetectionItem = slot.AllowedItems[0] == ItemType.Detection;
+
+                ItemType itemType = slot.AllowedItems[0];
 
                 for (int i = 0; i < slot.item.stats.Length; i++)
                 {
@@ -149,9 +152,18 @@ public class Ship : ObjectInventory
                     }
                 }
 
-                if (isDetectionItem)
+                switch (itemType)
                 {
-                    UpdateFogEnd();
+                    case ItemType.Detection:
+                        UpdateFogEnd();
+                        OnEquipmentChange?.Invoke(this, itemType);
+                        break;
+
+                    case ItemType.Hull:
+                    case ItemType.Propeller:
+                    case ItemType.Storage:
+                        OnEquipmentChange?.Invoke(this, itemType);
+                        break;
                 }
 
                 if (slot.ItemObject.physicalDisplay != null)

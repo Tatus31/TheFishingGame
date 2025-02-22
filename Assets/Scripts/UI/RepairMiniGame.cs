@@ -23,7 +23,9 @@ public class RepairMiniGame : MonoBehaviour
     [SerializeField] LayerMask repairPointLayerMask;
     [SerializeField] float maxPointDistance;
 
-    bool isInsideTrigger = false;
+    public bool isInsideTrigger = false;
+    public bool isHittingRepairPoint = false;
+
     string repairPointTag = "RepairPoint";
     Collider currentRepairPoint;
 
@@ -32,6 +34,11 @@ public class RepairMiniGame : MonoBehaviour
     float pointerTimer = 0f;
     float cooldownTimer = 0f;
 
+    [SerializeField] float triggerExitDelay = 0.1f;
+    float triggerExitTimer = 0f;
+
+    AnimationController animator;
+    Animator repairMiniGameAnimator;
     enum GameState
     {
         Playing,
@@ -46,12 +53,26 @@ public class RepairMiniGame : MonoBehaviour
 
     private void Start()
     {
+        animator = AnimationController.Instance;
+        repairMiniGameAnimator = animator.GetAnimator(AnimationController.Animators.RepairMiniGameAnimator);
+
         currentPointerSpeed = pointerSpeed;
         StartGame();
     }
 
     private void Update()
     {
+        if (InputManager.Instance.IsLeftMouseButtonPressed())
+        {
+            animator.PlayAnimation(repairMiniGameAnimator, AnimationController.ON_HIT, true);
+            StartCoroutine(StopAnimationAfterDelay());
+        }
+        if (isInsideTrigger)
+        {
+            StartCoroutine(CheckHitAfterDelay());
+        }
+
+
         switch (currentState)
         {
             case GameState.Playing:
@@ -77,35 +98,27 @@ public class RepairMiniGame : MonoBehaviour
 
     void HandleInput()
     {
-        if (InputManager.Instance.IsLeftMouseButtonPressed())
-        {
-            if (isInsideTrigger)
-            {
-                repairHealth++;
-                GetComponentInChildren<TextMeshProUGUI>().text = repairHealth.ToString();
+        //if (InputManager.Instance.IsLeftMouseButtonPressed())
+        //{
+        //    //Debug.Log($"Click detected - isInsideTrigger: {isInsideTrigger}, currentRepairPoint: {(currentRepairPoint != null ? currentRepairPoint.name : "null")}");
 
-                if (currentRepairPoint != null)
-                {
-                    activeRepairPoints.Remove(currentRepairPoint.gameObject);
-                    IncreasePointerSpeed();
-                    Destroy(currentRepairPoint.gameObject);
-                    currentRepairPoint = null;
-                    isInsideTrigger = false;
-                }
+        //    animator.PlayAnimation(repairMiniGameAnimator, AnimationController.ON_HIT, true);
 
-                if (activeRepairPoints.Count == 0)
-                {
-                    SpawnRepairPoints();
-                }
-            }
-            else
-            {
-                repairHealth--;
-                GetComponentInChildren<TextMeshProUGUI>().text = repairHealth.ToString();
-            }
-        }
+        //    if (isInsideTrigger)
+        //    {
+        //        StartCoroutine(CheckHitAfterDelay());
+        //    }
+        //    else
+        //    {
+        //        //Debug.Log("Miss - decreasing repair health");
+        //        repairHealth--;
+        //        GetComponentInChildren<TextMeshProUGUI>().text = repairHealth.ToString();
+        //    }
 
-        if (repairHealth < 0)
+        //    StartCoroutine(StopAnimationAfterDelay());
+        //}
+
+        if (repairHealth < -99)
         {
             //Debug.Log("lose");
             currentState = GameState.Lost;
@@ -130,6 +143,34 @@ public class RepairMiniGame : MonoBehaviour
                 }
             }
         }
+    }
+
+    IEnumerator CheckHitAfterDelay()
+    {
+        yield return new WaitForSeconds(0.05f);
+
+        if (isInsideTrigger && currentRepairPoint != null)
+        {
+            repairHealth++;
+            GetComponentInChildren<TextMeshProUGUI>().text = repairHealth.ToString();
+
+            activeRepairPoints.Remove(currentRepairPoint.gameObject);
+            IncreasePointerSpeed();
+            Destroy(currentRepairPoint.gameObject);
+            currentRepairPoint = null;
+            isInsideTrigger = false;
+
+            if (activeRepairPoints.Count == 0)
+            {
+                SpawnRepairPoints();
+            }
+        }
+    }
+
+    IEnumerator StopAnimationAfterDelay()
+    {
+        yield return new WaitForSeconds(0.7f);
+        animator.PlayAnimation(repairMiniGameAnimator, AnimationController.ON_HIT, false);
     }
 
     void HandleCooldown()
@@ -174,8 +215,10 @@ public class RepairMiniGame : MonoBehaviour
     {
         if (other.CompareTag(repairPointTag))
         {
+            //Debug.Log($"Entered trigger with object: {other.name}");
             isInsideTrigger = true;
             currentRepairPoint = other;
+            triggerExitTimer = triggerExitDelay;
         }
     }
 
