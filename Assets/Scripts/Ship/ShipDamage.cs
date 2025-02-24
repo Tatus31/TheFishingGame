@@ -12,8 +12,8 @@ public class ShipDamage : MonoBehaviour
     ShipMovement shipMovement;
     Vector3 flatVel;
 
-    int currentHealth;
-    int maxHealth;
+    public int currentHealth;
+    public int maxHealth;
 
     [SerializeField] int baseDamage = 100;
 
@@ -28,10 +28,21 @@ public class ShipDamage : MonoBehaviour
     {
         ship = GetComponent<Ship>();
         shipMovement = GetComponent<ShipMovement>();
+
         shipMovement.OnShipSpeedChange += ShipMovement_OnShipSpeedChange;
+        Ship.OnStatsChange += Ship_OnStatsChange;
 
         currentHealth = ship.GetModifiedStatValue(Stats.Health);
         maxHealth = ship.GetModifiedStatValue(Stats.Health);
+    }
+
+    private void Ship_OnStatsChange(object sender, EventArgs e)
+    {
+        currentHealth = ship.GetModifiedStatValue(Stats.Health);
+        maxHealth = ship.GetModifiedStatValue(Stats.Health);
+
+        SetPermanentSavedBaseStatValue(Stats.Health);
+        SetPermanentSavedModifiedStatValue(Stats.Health);
     }
 
     public void RestoreHealth(int amount)
@@ -116,4 +127,8 @@ public class ShipDamage : MonoBehaviour
     public int GetPermanentModifiedStatValue(Stats stats) => ship.GetPermanentSavedModifiedStatValue(stats);
 
     public int GetPermanentSavedStatValue(Stats stats) => ship.GetPermanentSavedBaseStatValue(stats);
+
+    public void SetPermanentSavedModifiedStatValue(Stats stats) => ship.SetPermanentSavedModifiedStatValue(stats);
+
+    public void SetPermanentSavedBaseStatValue(Stats stats) => ship.SetPermanentSavedBaseStatValue(stats);
 }

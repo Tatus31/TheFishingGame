@@ -48,4 +48,12 @@ public class ObjectAttributes
     public int GetSavedBaseValue() => savedBaseValue;
     public int GetPermanentBaseValue() => Value.PermanentBaseValue;
     public int GetPermanentModifiedValue() => Value.PermanentModifiedValue;
+    public void SetPermanentBaseValue()
+    {
+        Value.PermanentBaseValue = savedBaseValue;
+    }
+    public void SetPermanentModifiedValue()
+    {
+        Value.PermanentModifiedValue = savedModifiedValue;
+    }
 }
