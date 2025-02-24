@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 
 public class ElectronicRepairMiniGame : MonoBehaviour
 {
+    public static event EventHandler OnWin;
+
     [Serializable]
     public class ElectricalWire
     {
@@ -157,6 +159,7 @@ public class ElectronicRepairMiniGame : MonoBehaviour
             {
                 device.RepairDevice();
             }
+            OnWin?.Invoke(this, EventArgs.Empty);
         }
     }
 

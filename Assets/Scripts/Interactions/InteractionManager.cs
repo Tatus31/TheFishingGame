@@ -76,6 +76,7 @@ public class InteractionManager : MonoBehaviour
         harpoonConfig.handObject.SetActive(false);
         emptyHandsConfig.handObject.SetActive(false);
         fireExtinguisherConfig.handObject.SetActive(false);
+        WrenchConfig.handObject.SetActive(false);
 
         switch (newTool)
         {

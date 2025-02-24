@@ -12,31 +12,42 @@ public class Testing : MonoBehaviour
     [SerializeField] LayerMask Interactable;
     [SerializeField] LayerMask InteractableElectronic;
     [SerializeField] GameObject repairBarObject;
+    [SerializeField] CameraLook cameraLook;
 
     FishingStateManager fishingStateManager;
 
     public bool isRepairing = false;
 
     private Camera mainCamera;
-    [SerializeField] GameObject backgroundObject; // Reference to the background object
+    [SerializeField] GameObject backgroundObject;
 
     private void Awake()
     {
         Instance = this;
-        mainCamera = Camera.main; // Cache the main camera
+        mainCamera = Camera.main; 
     }
 
     private void Start()
     {
+
     }
+
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && MouseWorldPosition.GetInteractable(InteractableElectronic))
+        if (Input.GetKeyDown(KeyCode.E) && MouseWorldPosition.GetInteractable(InteractableElectronic) && !isRepairing)
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             isRepairing = true;
+            cameraLook.Sensitivity = 0f;
+        }
+        else if (Input.GetKeyDown(KeyCode.E) && isRepairing) 
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            isRepairing = false;
+            cameraLook.Sensitivity = 1f;
         }
 
         if (isRepairing && MouseWorldPosition.GetObjectOverMouse("Blue_Pipe") && InputManager.Instance.IsLeftMouseButtonHeld())
@@ -45,17 +56,15 @@ public class Testing : MonoBehaviour
 
             if (obj != null)
             {
-                // Convert mouse position to world space
                 Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-                mouseWorldPosition.z = 0; // Ensure the z position is correct (assuming 2D)
+                mouseWorldPosition.z = 0;
 
-                // Adjust the position relative to the background
                 Vector3 relativePosition = backgroundObject.transform.InverseTransformPoint(mouseWorldPosition);
                 obj.transform.position = backgroundObject.transform.TransformPoint(relativePosition);
             }
         }
 
-        if (MouseWorldPosition.GetInteractable(Interactable) && InputManager.Instance.IsLeftMouseButtonPressed())
+        if (MouseWorldPosition.GetInteractable(Interactable) && Input.GetKeyDown(KeyCode.E))
         {
             repairBarObject.SetActive(true);
         }
