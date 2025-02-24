@@ -1,48 +1,36 @@
 using System.Collections;
 using UnityEngine;
 
-public class DissolveController : MonoBehaviour
+public static class DissolveController
 {
-    Material[] materials;
-    const string dissolveProperty = "_Dissolve";
-
-    private void Awake()
+    public static void StartDissolveEffect(GameObject target, float dissolveStart, float dissolveDuration)
     {
-        Renderer renderer = GetComponent<Renderer>();
-        if (renderer != null)
+        if (target == null)
         {
-            materials = renderer.materials;
+            return;
         }
+
+        Renderer renderer = target.GetComponent<Renderer>();
+        if (renderer == null || renderer.material == null)
+        {
+            return;
+        }
+
+        Material material = renderer.material;
+        target.SetActive(true);
+
+        target.GetComponent<MonoBehaviour>().StartCoroutine(DissolveRoutine(material, dissolveStart, dissolveDuration));
     }
 
-    public void StartDissolveEffect(float targetValue, float duration)
+    private static IEnumerator DissolveRoutine(Material material, float dissolveStart, float dissolveDuration)
     {
-        if (materials == null) return;
-        StopAllCoroutines();
-        StartCoroutine(DissolveEffect(targetValue, duration));
-    }
-
-    IEnumerator DissolveEffect(float targetValue, float duration)
-    {
-        if (materials == null) yield break;
-
-        float startValue = materials[0].GetFloat(dissolveProperty);
         float elapsedTime = 0f;
-
-        while (elapsedTime < duration)
+        while (elapsedTime < dissolveDuration)
         {
-            float newValue = Mathf.Lerp(startValue, targetValue, elapsedTime / duration);
-            foreach (var mat in materials)
-            {
-                mat.SetFloat(dissolveProperty, newValue);
-            }
             elapsedTime += Time.deltaTime;
+            float dissolveAmount = Mathf.Lerp(dissolveStart, 1f, elapsedTime / dissolveDuration);
+            material.SetFloat("_DissolveAmount", dissolveAmount);
             yield return null;
-        }
-
-        foreach (var mat in materials)
-        {
-            mat.SetFloat(dissolveProperty, targetValue);
         }
     }
 }

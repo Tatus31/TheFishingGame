@@ -7,6 +7,7 @@ using UnityEngine;
 public class Ship : ObjectInventory
 {
     public static event EventHandler<ItemType> OnEquipmentChange;
+    public static event EventHandler OnStatsChange;
     //public ShipAttributes[] shipAttributes;
 
     [Header("Basic Ship Parts")]
@@ -29,12 +30,14 @@ public class Ship : ObjectInventory
         base.Start();
 
         fogController = GetComponent<FogController>();
+
         UpdateFogEnd();
 
         foreach (var attribute in objectAttributes)
         {
             attribute.SetPermamentAttributeModified();
         }
+
 
         ElectricalDevice.OnDegradation += HandleDeviceDegradation;
     }
@@ -86,13 +89,15 @@ public class Ship : ObjectInventory
                     }
                 }
 
+                OnStatsChange?.Invoke(this, EventArgs.Empty);
+
                 if (isDetectionItem)
                 {
                     UpdateFogEnd();
                 }
 
                 switch (slot.AllowedItems[0])
-                {
+                {   
                     case ItemType.Hull:
                         if (currentHullDisplay != null)
                         {
@@ -156,6 +161,8 @@ public class Ship : ObjectInventory
                             objectAttributes[j].Value.AddModifier(slot.item.stats[i]);
                     }
                 }
+
+                OnStatsChange?.Invoke(this, EventArgs.Empty);
 
                 switch (itemType)
                 {
@@ -284,6 +291,28 @@ public class Ship : ObjectInventory
             }
         }
         return 0;
+    }
+
+    public void SetPermanentSavedModifiedStatValue(Stats statType)
+    {
+        foreach (var attribute in objectAttributes)
+        {
+            if (attribute.type == statType)
+            {
+                attribute.SetPermanentModifiedValue();
+            }
+        }
+    }
+
+    public void SetPermanentSavedBaseStatValue(Stats statType)
+    {
+        foreach (var attribute in objectAttributes)
+        {
+            if (attribute.type == statType)
+            {
+                attribute.SetPermanentBaseValue();
+            }
+        }
     }
 
     public void AttributeModified(ShipAttributes attribute)
