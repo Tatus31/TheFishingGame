@@ -6,7 +6,9 @@ public class CameraLook : MonoBehaviour
     [SerializeField] Transform cameraHolder;
     [SerializeField] Transform orientation;
     [Header("Sensitivity")]
-    [SerializeField][Range(0.1f,1)] float sensitivity = 1f;
+    [SerializeField][Range(0,1)] float sensitivity = 1f;
+
+    public float Sensitivity {  get { return sensitivity; } set {  sensitivity = value; } }
 
     float sensMultiplier = 5f;
 
