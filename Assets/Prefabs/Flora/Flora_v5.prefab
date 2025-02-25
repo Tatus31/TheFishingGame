@@ -438,11 +438,43 @@ PrefabInstance:
       propertyPath: m_Name
       value: mini coral (4)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1352201990747827292, guid: e74980ad7929c7b438110abbe8800b10, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6676071926876751862, guid: e74980ad7929c7b438110abbe8800b10,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3380834630945625485}
   m_SourcePrefab: {fileID: 100100000, guid: e74980ad7929c7b438110abbe8800b10, type: 3}
+--- !u!1 &431339516143341634 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6676071926876751862, guid: e74980ad7929c7b438110abbe8800b10,
+    type: 3}
+  m_PrefabInstance: {fileID: 6438530132731910068}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &3380834630945625485
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431339516143341634}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.8061955, y: 1.1012479, z: 2.1436884}
+  m_Center: {x: -0.053456992, y: -0.009092629, z: 1.0358804}
 --- !u!4 &1060524791080962808 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6335998046224129356, guid: e74980ad7929c7b438110abbe8800b10,
