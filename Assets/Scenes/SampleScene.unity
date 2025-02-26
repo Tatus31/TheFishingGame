@@ -13066,12 +13066,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 996964499}
   m_Mesh: {fileID: -1112771414664863558, guid: 5130626ec3e98d145b8cc45e6c5127ee, type: 3}
---- !u!1 &1038817097 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7136511237220754709, guid: 310d3b37ef148b642b4b87e87339b0a8,
-    type: 3}
-  m_PrefabInstance: {fileID: 4900556960662021058}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1051454065 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8997153161354224050, guid: ee204cb6cb0fb01429f492652e8d07ac,
@@ -21633,6 +21627,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 5631495007040068026, guid: c210973bf8883cb44abb751811857419,
+        type: 3}
+      propertyPath: m_Depth
+      value: 99
+      objectReference: {fileID: 0}
     - target: {fileID: 6693603761100366414, guid: c210973bf8883cb44abb751811857419,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -21968,7 +21967,7 @@ PrefabInstance:
         type: 3}
       propertyPath: volume
       value: 
-      objectReference: {fileID: 1038817097}
+      objectReference: {fileID: 832575517}
     - target: {fileID: 2657799276318675944, guid: 40902f13d663667438a3341b0421e4c0,
         type: 3}
       propertyPath: inputManager
