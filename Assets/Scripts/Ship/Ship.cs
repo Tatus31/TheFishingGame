@@ -13,7 +13,7 @@ public class Ship : ObjectInventory
     [Header("Basic Ship Parts")]
     [SerializeField] GameObject basicHull;
     //[SerializeField] GameObject basicPropeller;
-    //[SerializeField] GameObject basicStorage;
+    [SerializeField] GameObject basicStorage;
     //[SerializeField] GameObject basicDetection;
     //[SerializeField] GameObject basicNavigation;
 
@@ -119,7 +119,7 @@ public class Ship : ObjectInventory
                         {
                             Destroy(currentStorageDisplay);
                             currentStorageDisplay = null;
-                            //basicStorage.SetActive(true);
+                            basicStorage.SetActive(true);
                         }
                         break;
                     case ItemType.Detection:
