@@ -37,6 +37,7 @@ public class AnimationController: MonoBehaviour
     [HideInInspector] public static string LURE_CATCH = "lureCatch";
     [HideInInspector] public static string HARPOON_AIM = "harpoonAim";
     [HideInInspector] public static string ON_HIT = "onHit";
+    [HideInInspector] public static string SPEED_MULTIPLIER = "speedMultiplier";
 
     void Awake()
     {
