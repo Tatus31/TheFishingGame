@@ -53,10 +53,10 @@ public class DangerLamp : MonoBehaviour
             if (dangerFound)
             {
                 float speedFactor = 1 - (closestDanger / dangerDetectionRadius);
+                float lerpedAnimSpeed = Mathf.Lerp(minAnimationSpeed, maxAnimationSpeed, speedFactor);
 
-                float mappedSpeed = Mathf.Lerp(minAnimationSpeed, maxAnimationSpeed, speedFactor);
-
-                AnimationController.Instance.PlayAnimation(animator, AnimationController.SPEED_MULTIPLIER, mappedSpeed);
+                AnimationController.Instance.PlayAnimation(animator, AnimationController.SPEED_MULTIPLIER, lerpedAnimSpeed);
+                lt.range = lightRange;
             }
             else
             {
