@@ -37,10 +37,6 @@ public class ToolBoxState : MovementBaseState
         
     }
 
-    public override void UpdateState()
-    {
-       
-    }
 
     public override void FixedUpdateState()
     {
@@ -56,5 +52,10 @@ public class ToolBoxState : MovementBaseState
     public override void ApplyFriction(PlayerMovement player, float frictionAmount)
     {
         base.ApplyFriction(player, frictionAmount);
+    }
+
+    public override void UpdateState()
+    {
+
     }
 }    

@@ -9,6 +9,8 @@ public class WalkState : MovementBaseState
     float accelAmount;
     float frictionAmount;
 
+    Vector3 lastContactNormal;
+
     public WalkState(PlayerMovement player, float maxSpeed, float accelAmount, float frictionAmount)
     {
         this.player = player;
@@ -24,23 +26,20 @@ public class WalkState : MovementBaseState
 
     public override void ExitState() 
     {
+        lastContactNormal = contactNormal;
     }
 
-    public override void UpdateState() { }
-
-    public override void FixedUpdateState()
+    public override void UpdateState()
     {
-        //if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.DivingSuit))
-        //{
-        //    player.SwitchState(player.SuitWalkState);
-        //}
-
         if (player.inputManager.IsHoldingSprintKey())
         {
             player.SwitchState(player.SprintState);
-
         }
+    }
 
+    public override void FixedUpdateState()
+    {
+        UpdateState(player);
         Move(player, player.maxSpeedTime, maxSpeed, accelAmount);
         ApplyFriction(player, frictionAmount);
     }
@@ -55,11 +54,18 @@ public class WalkState : MovementBaseState
         base.Move(player, maxSpeedTime, maxSpeed, accelAmount);
     }
 
+    protected override void CheckGroundContacts(PlayerMovement player)
+    {
+        base.CheckGroundContacts(player);
+    }
+
     public override void PlayAnimation(PlayerMovement player)
     {
-        //if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.Empty))
-        //    player.GetAnimationController().PlayAnimation(player.GetFreeHandAnimator(), AnimationController.ON_RUN, false);
-        //else if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.FishingRod))
-        //    player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, false);
+
+    }
+
+    public override void DrawGizmos(PlayerMovement player)
+    {
+        base.DrawGizmos(player);
     }
 }

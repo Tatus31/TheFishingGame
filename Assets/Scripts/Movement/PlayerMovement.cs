@@ -117,10 +117,8 @@ public class PlayerMovement : MonoBehaviour
         SprintState = new SprintState(this, sprintMaxSpeed, sprintAccelAmount, sprintFrictionAmount);
         SuitWalkState = new SuitWalkState(this, suitMaxSpeed, suitAccelAmount, suitFrictionAmount);
         SuitSprintState = new SuitSprintState(this, suitSprintMaxSpeed, suitSprintAccelAmount, suitSprintFrictionAmount);
-        FlippersState = new FlippersState(this, swimMaxSpeed, flipperAccelAmount);
         WalkOnShipState = new WalkOnShipState(this, maxSpeedOnShip, accelAmountOnShip, frictionAmountOnShip);
         SwimmingState = new SwimmingState(this, swimMaxSpeed, swimAccelAmount);
-        ToolBoxState = new ToolBoxState(this, maxSpeed, accelAmount);
     }
 
     void Update()
@@ -138,19 +136,9 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        //Think of a better way
-
-        //if (inputManager.IsHoldingSprintKey() && currentState != SprintState && currentState != SuitSprintState)
-        //{
-        //    SwitchState(SprintState);
-
-        //}
-        //else if (!inputManager.IsHoldingSprintKey() && currentState != WalkState && currentState != SuitWalkState)
-        //{
-        //    SwitchState(WalkState);
-        //}
-
         OnPlayerSpeedChange?.Invoke(this, FlatVel);
+
+        currentState.UpdateState(this);
         currentState.UpdateState();
     }
 
@@ -197,6 +185,22 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (currentState != null)
+        {
+            currentState.EvaluateCollision(collision);
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (currentState != null)
+        {
+            currentState.EvaluateCollision(collision);
+        }
+    }
+
     public Vector3 GetMoveDirection()
     {
         Vector3 forward = orientation.forward;
@@ -222,4 +226,12 @@ public class PlayerMovement : MonoBehaviour
     public Animator GetFishingAnimator() => fishingAnimator;
 
     public Animator GetFreeHandAnimator() => freeHandAnimator;
+
+    private void OnDrawGizmos()
+    {
+        if (CurrentState != null)
+        {
+            CurrentState.DrawGizmos(this);
+        }
+    }
 }
