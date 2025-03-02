@@ -1,10 +1,17 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
 public class ShipMovement : MonoBehaviour
 {
     public event EventHandler<Vector3> OnShipSpeedChange;
+
+    [Serializable]
+    public enum CurrentSpeedLevel
+    {
+        reverse,
+        neutral,
+        forward
+    }
 
     [Header("Movement Settings")]
     [SerializeField] float turnSpeed = 10f;
@@ -15,6 +22,8 @@ public class ShipMovement : MonoBehaviour
     [Header("Water Physics Settings")]
     [SerializeField] float waterDeceleration = 0.2f;
     [SerializeField] float waterDragMultiplier = 1.2f;
+
+    [SerializeField] CurrentSpeedLevel currentSpeedLevel;
 
     Rigidbody shipRigidbody;
     StableFloatingRigidBody buoyancySystem;
@@ -31,19 +40,57 @@ public class ShipMovement : MonoBehaviour
     public Vector3 ShipFlatVel { get { return shipFlatVel; } set { shipFlatVel = value; } }
     public float MaxSpeed { get { return maxSpeed; } set { maxSpeed = value; } }
     public bool IsControllingShip { get { return isControllingShip; } set { isControllingShip = value; } }
-
     void Awake()
     {
         shipRigidbody = GetComponent<Rigidbody>();
-
         ShipFlatVel = new Vector3(shipRigidbody.velocity.x, 0f, shipRigidbody.velocity.z);
     }
-
     private void Start()
     {
+        currentSpeedLevel = CurrentSpeedLevel.neutral;
         if (buoyancySystem != null)
         {
             buoyancySystem.Buoyancy = shipRigidbody.mass * 1.1f;
+        }
+    }
+    private void Update()
+    {
+        if (isControllingShip)
+        {
+            HandleSpeedLevelInput();
+        }
+    }
+
+    void HandleSpeedLevelInput()
+    {
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            switch (currentSpeedLevel)
+            {
+                case CurrentSpeedLevel.reverse:
+                    currentSpeedLevel = CurrentSpeedLevel.neutral;
+                    break;
+                case CurrentSpeedLevel.neutral:
+                    currentSpeedLevel = CurrentSpeedLevel.forward;
+                    break;
+                case CurrentSpeedLevel.forward:
+                    break;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            switch (currentSpeedLevel)
+            {
+                case CurrentSpeedLevel.forward:
+                    currentSpeedLevel = CurrentSpeedLevel.neutral;
+                    break;
+                case CurrentSpeedLevel.neutral:
+                    currentSpeedLevel = CurrentSpeedLevel.reverse;
+                    break;
+                case CurrentSpeedLevel.reverse:
+                    break;
+            }
         }
     }
 
@@ -51,21 +98,29 @@ public class ShipMovement : MonoBehaviour
     {
         if (!isControllingShip)
             return;
-
         HandleMovement();
         HandleRotation();
         UpdateShipState();
-
         OnShipSpeedChange?.Invoke(this, ShipFlatVel);
     }
-
     void HandleMovement()
     {
-        Vector2 movementInput = InputManager.Instance.GetShipMovement();
-        float moveInput = movementInput.y;
+        //Vector2 movementInput = InputManager.Instance.GetShipMovement();
+        float moveInput = 0;
+        switch (currentSpeedLevel)
+        {
+            case CurrentSpeedLevel.neutral:
+                moveInput = 0;
+                break;
+            case CurrentSpeedLevel.forward:
+                moveInput = 1f;
+                break;
+            case CurrentSpeedLevel.reverse:
+                moveInput = -0.5f;
+                break;
+        }
         float targetMoveSpeed = moveInput * maxSpeed;
-
-        if (Mathf.Abs(moveInput) > 0.01f)
+        if (moveInput != 0)
             currentSpeed = Mathf.SmoothDamp(currentSpeed, targetMoveSpeed, ref speedSmoothVelocity, speedSmoothTime);
         else
             currentSpeed = Mathf.Lerp(currentSpeed, 0, waterDeceleration * Time.fixedDeltaTime);
@@ -75,12 +130,13 @@ public class ShipMovement : MonoBehaviour
 
         float speedSquared = shipRigidbody.velocity.sqrMagnitude;
         Vector3 waterResistance = -shipRigidbody.velocity.normalized * speedSquared * waterDragMultiplier * 0.01f;
+
         shipRigidbody.AddForce(waterResistance, ForceMode.Acceleration);
     }
-
     void HandleRotation()
     {
         Vector2 movementInput = InputManager.Instance.GetShipMovement();
+
         float turnInput = movementInput.x;
         float targetTurnSpeed = turnInput * turnSpeed;
 
@@ -92,7 +148,6 @@ public class ShipMovement : MonoBehaviour
             shipRigidbody.MoveRotation(shipRigidbody.rotation * turnRotation);
         }
     }
-
     void UpdateShipState()
     {
         ShipFlatVel = new Vector3(shipRigidbody.velocity.x, 0f, shipRigidbody.velocity.z);
