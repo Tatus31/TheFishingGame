@@ -127,14 +127,7 @@ public class PlayerMovement : MonoBehaviour
             GetPlayerInput();
 
         if (isSwimming)
-        {
             return;
-        }
-
-        if (StickToShip.Instance.IsOnShip)
-        {
-            return;
-        }
 
         OnPlayerSpeedChange?.Invoke(this, FlatVel);
 
