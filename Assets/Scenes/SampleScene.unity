@@ -12622,7 +12622,12 @@ PrefabInstance:
     - target: {fileID: 1734530913765566119, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
       propertyPath: maxSpeed
-      value: 5
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1734530913765566119, guid: 0315f51cdf4e66941835fa6432487b4a,
+        type: 3}
+      propertyPath: turnSpeed
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1734530913765566119, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
@@ -12631,8 +12636,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1734530913765566119, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
+      propertyPath: wheelReturnSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1734530913765566119, guid: 0315f51cdf4e66941835fa6432487b4a,
+        type: 3}
       propertyPath: waterDeceleration
-      value: 4
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1734530913765566119, guid: 0315f51cdf4e66941835fa6432487b4a,
+        type: 3}
+      propertyPath: rotationSmoothTime
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 1734530913765566119, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
