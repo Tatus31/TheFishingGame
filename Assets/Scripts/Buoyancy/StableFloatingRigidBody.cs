@@ -28,6 +28,10 @@ public class StableFloatingRigidBody : MonoBehaviour
     [SerializeField]
     LayerMask waterMask = 0;
 
+    [SerializeField] float waveHeight = 0.5f;
+    [SerializeField] float waveFrequency = 1f;
+    [SerializeField] float waveSpeed = 1f;
+
     Rigidbody body;
 
     float floatDelay;
@@ -116,15 +120,23 @@ public class StableFloatingRigidBody : MonoBehaviour
     {
         Vector3 down = gravity.normalized;
         Vector3 offset = down * -submergenceOffset;
+        float time = Time.time * waveSpeed;
+
         for (int i = 0; i < buoyancyOffsets.Length; i++)
         {
-            Vector3 p = offset + transform.TransformPoint(buoyancyOffsets[i]);
+            Vector3 worldPoint = transform.TransformPoint(buoyancyOffsets[i]);
+
+            float waveOffset = CalculateWaveHeight(worldPoint.x, worldPoint.z, time);
+
+            Vector3 p = offset + worldPoint + down * waveOffset;
+
             if (Physics.Raycast(
                 p, down, out RaycastHit hit, submergenceRange + 1f,
                 waterMask, QueryTriggerInteraction.Collide
             ))
             {
-                submergence[i] = 1f - hit.distance / submergenceRange;
+                float adjustedDistance = hit.distance - waveOffset;
+                submergence[i] = 1f - adjustedDistance / submergenceRange;
             }
             else if (
                 !safeFloating || Physics.CheckSphere(
@@ -135,5 +147,16 @@ public class StableFloatingRigidBody : MonoBehaviour
                 submergence[i] = 1f;
             }
         }
+    }
+    float CalculateWaveHeight(float x, float z, float time)
+    {
+        return waveHeight * Mathf.Sin(x * waveFrequency + time)
+               * Mathf.Sin(z * waveFrequency + time);
+
+        // return waveHeight * (
+        //     Mathf.Sin(x * waveFrequency + time) * 0.5f + 
+        //     Mathf.Sin(x * waveFrequency * 2.7f + time * 0.8f) * 0.25f +
+        //     Mathf.Sin(z * waveFrequency * 0.6f + time * 1.3f) * 0.25f
+        // );
     }
 }
