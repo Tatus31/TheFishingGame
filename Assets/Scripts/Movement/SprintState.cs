@@ -26,20 +26,17 @@ public class SprintState : MovementBaseState
     {
     }
 
-    public override void UpdateState() { }
-
-    public override void FixedUpdateState()
+    public override void UpdateState()
     {
-        //if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.DivingSuit))
-        //{
-        //    player.SwitchState(player.SuitSprintState);
-        //}
-
         if (!player.inputManager.IsHoldingSprintKey())
         {
             player.SwitchState(player.WalkState);
         }
+    }
 
+    public override void FixedUpdateState()
+    {
+        UpdateState(player);
         Move(player, player.maxSpeedTime, maxSpeed, accelAmount);
         ApplyFriction(player, frictionAmount);
     }
@@ -54,12 +51,19 @@ public class SprintState : MovementBaseState
         base.Move(player, maxSpeedTime, maxSpeed, accelAmount);
     }
 
+    protected override void CheckGroundContacts(PlayerMovement player)
+    {
+        base.CheckGroundContacts(player);
+    }
+
     public override void PlayAnimation(PlayerMovement player)
     {
-        //if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.Empty))
-        //    player.GetAnimationController().PlayAnimation(player.GetFreeHandAnimator(), AnimationController.ON_RUN, true);
-        //if (InteractionManager.Instance.IsToolEquipped(InteractionManager.EquipedTool.FishingRod))
-        //    player.GetAnimationController().PlayAnimation(player.GetFishingAnimator(), AnimationController.ON_RUN, true);
+
+    }
+
+    public override void DrawGizmos(PlayerMovement player)
+    {
+        base.DrawGizmos(player);
     }
 }
 

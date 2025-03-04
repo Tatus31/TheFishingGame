@@ -30,10 +30,6 @@ public class FlippersState : MovementBaseState
 
     }
 
-    public override void UpdateState()
-    {
-
-    }
 
     public override void FixedUpdateState()
     {
@@ -46,6 +42,11 @@ public class FlippersState : MovementBaseState
     }
 
     public override void PlayAnimation(PlayerMovement player)
+    {
+
+    }
+
+    public override void UpdateState()
     {
 
     }
