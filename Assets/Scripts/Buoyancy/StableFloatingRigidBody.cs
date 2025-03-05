@@ -28,8 +28,6 @@ public class StableFloatingRigidBody : MonoBehaviour
     [SerializeField]
     LayerMask waterMask = 0;
 
-    [SerializeField] float waveHeight = 0.5f;
-    [SerializeField] float waveFrequency = 1f;
     [SerializeField] float waveSpeed = 1f;
 
     Rigidbody body;
@@ -43,6 +41,50 @@ public class StableFloatingRigidBody : MonoBehaviour
     public bool FloatToSleep { get { return floatToSleep; } set { floatToSleep = value; } }
     public bool SafeFloating { get { return safeFloating; } set { safeFloating = value; } }
     public float Buoyancy { get { return buoyancy; } set { buoyancy = value; } }
+
+    [System.Serializable]
+    public struct GerstnerWaveParams
+    {
+        [Tooltip("Direction of wave propagation")]
+        public Vector2 direction;
+
+        [Tooltip("Length of the wave (distance between crests)")]
+        [Min(0.1f)]
+        public float wavelength;
+
+        [Tooltip("Height of the wave")]
+        [Min(0f)]
+        public float amplitude;
+
+        [Tooltip("Speed of wave movement")]
+        public float speed;
+
+        [Tooltip("Steepness of the wave (controls pointiness)")]
+        [Range(0f, 1f)]
+        public float steepness;
+    }
+
+    [Header("Gerstner Wave Settings")]
+    [SerializeField]
+    private GerstnerWaveParams[] waves = new GerstnerWaveParams[]
+    {
+        new GerstnerWaveParams
+        {
+            direction = new Vector2(1f, 0f),
+            wavelength = 10f,
+            amplitude = 0.5f,
+            speed = 1f,
+            steepness = 0.5f
+        },
+        new GerstnerWaveParams
+        {
+            direction = new Vector2(0.5f, 0.5f),
+            wavelength = 5f,
+            amplitude = 0.25f,
+            speed = 1.5f,
+            steepness = 0.3f
+        }
+    };
 
     void Awake()
     {
@@ -150,13 +192,16 @@ public class StableFloatingRigidBody : MonoBehaviour
     }
     float CalculateWaveHeight(float x, float z, float time)
     {
-        return waveHeight * Mathf.Sin(x * waveFrequency + time)
-               * Mathf.Sin(z * waveFrequency + time);
+        float height = 0f;
 
-        // return waveHeight * (
-        //     Mathf.Sin(x * waveFrequency + time) * 0.5f + 
-        //     Mathf.Sin(x * waveFrequency * 2.7f + time * 0.8f) * 0.25f +
-        //     Mathf.Sin(z * waveFrequency * 0.6f + time * 1.3f) * 0.25f
-        // );
+        foreach (var wave in waves)
+        {
+            float frequency = 2f * Mathf.PI / wave.wavelength;
+            float wavePhase = frequency * Vector2.Dot(wave.direction, new Vector2(x, z)) - (time * wave.speed);
+
+            height += wave.amplitude * Mathf.Sin(wavePhase) * (1f - wave.steepness);
+        }
+
+        return height;
     }
 }
