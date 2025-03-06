@@ -5,4 +5,5 @@ using UnityEngine;
 public static class TagHolder
 {
     public static string danger = "Danger";
+    public static string toxicDanger = "ToxicDanger";
 }

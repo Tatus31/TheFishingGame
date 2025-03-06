@@ -54,7 +54,7 @@ public class StartFire : MonoBehaviour
     {
         while (isOnFire)
         {
-            shipDamage.TakeFireDamage();
+            shipDamage.TakeTickDamage(shipDamage.BaseFireDamage);
             yield return new WaitForSeconds(fireTickInterval);
         }
 

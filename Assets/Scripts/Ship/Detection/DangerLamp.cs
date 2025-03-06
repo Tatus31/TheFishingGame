@@ -49,7 +49,7 @@ public class DangerLamp : MonoBehaviour
                     Vector3 collisionPoint = collisions[i].ClosestPoint(transform.position);
                     float distanceToDanger = Vector3.Distance(transform.position, collisionPoint);
 
-                    Debug.Log($"Closest point is {Mathf.Floor(distanceToDanger)} away from danger");
+                    //Debug.Log($"Closest point is {Mathf.Floor(distanceToDanger)} away from danger");
 
                     if (distanceToDanger < closestDanger)
                     {
@@ -58,7 +58,7 @@ public class DangerLamp : MonoBehaviour
                         closestCollisionPoint = collisionPoint;
                         dangerFound = true;
 
-                        Debug.Log($"Nearest danger point is {Mathf.Floor(closestDanger)} away");
+                        //Debug.Log($"Nearest danger point is {Mathf.Floor(closestDanger)} away");
                     }
                 }
             }

@@ -7,15 +7,24 @@ public class ShipDamage : MonoBehaviour
 
     public event EventHandler OnSinkingShipByDamage;
     public event EventHandler<int> OnDamageTaken;
-    public int PreviousHealth { get; private set; }
+
     Ship ship;
     ShipMovement shipMovement;
     Vector3 flatVel;
 
-    public int currentHealth;
-    public int maxHealth;
+    int currentHealth;
+    int maxHealth;
 
-    [SerializeField] int baseDamage = 100;
+    [Header("Damage values")]
+    [Tooltip("Damage done when the ship collides with dangers")]
+    [SerializeField] int baseCollisionDamage = 100;
+    [Tooltip("Damage done when the ship enters a toxic area")]
+    [SerializeField] int baseToxicDamage = 2;
+    [Tooltip("Damage done when the ship is on fire (TickRate)")]
+    [SerializeField] int baseFireDamage = 5;
+
+    public int PreviousHealth { get; private set; }
+    public int BaseFireDamage { get { return baseFireDamage; } private set { baseFireDamage = value; } }
 
     private void Awake()
     {
@@ -54,9 +63,19 @@ public class ShipDamage : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag("Danger"))
+        if (collision.collider.CompareTag(TagHolder.danger))
         {
-            TakeCollisionDamage(baseDamage);
+            TakeCollisionDamage(baseCollisionDamage);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+
+        if (other.CompareTag(TagHolder.toxicDanger))
+        {
+            Debug.Log("in toxic water");
+            TakeTickDamage(baseToxicDamage);
         }
     }
 
@@ -80,10 +99,10 @@ public class ShipDamage : MonoBehaviour
         UpdateAttributes();
     }
 
-    public void TakeFireDamage()
+    public void TakeTickDamage(int baseDamage)
     {
         PreviousHealth = currentHealth;
-        int actualDamage = 5;
+        int actualDamage = baseDamage;
 
         currentHealth -= actualDamage;
         currentHealth = Mathf.Max(0, currentHealth);
