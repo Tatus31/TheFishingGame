@@ -46,10 +46,7 @@ public class StartFire : MonoBehaviour
     {
         if (electricalDevice.CurrentDegradation == ElectricalDevice.DegradationCondition.Bad)
         {
-            Debug.Log("start fire");
-            fireVFX.SetActive(true);
-            isOnFire = true;
-            StartCoroutine(FireTickDamage());
+            FireAction();
         }
     }
 
@@ -62,5 +59,13 @@ public class StartFire : MonoBehaviour
         }
 
         fireVFX.SetActive(false);
+    }
+
+    void FireAction()
+    {
+        Debug.Log("start fire");
+        fireVFX.SetActive(true);
+        isOnFire = true;
+        StartCoroutine(FireTickDamage());
     }
 }

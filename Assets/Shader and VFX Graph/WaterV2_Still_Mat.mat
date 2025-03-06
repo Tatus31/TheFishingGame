@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WaterV2_Mat
+  m_Name: WaterV2_Still_Mat
   m_Shader: {fileID: -6465566751694194690, guid: d8bfe3e4509ce0a45bf18efd555fb770,
     type: 3}
   m_Parent: {fileID: 0}
@@ -63,11 +63,11 @@ Material:
     - _Fog_Exponential_On_Linear_Off: 0
     - _Fresnel_Si_a: 0.09
     - _Fresnel_Togle: 1
-    - _Hight1: 0.08
-    - _Hight2: 0.06
+    - _Hight1: 0.01
+    - _Hight2: 0.01
     - _Hight3: 0.0001
-    - _Lenght1: 9.6
-    - _Lenght2: 1.21
+    - _Lenght1: 0.01
+    - _Lenght2: 0.01
     - _Lenght3: 0.1
     - _Light_Refs: 5.07
     - _Light_Refs_Slimnes: 3.71
@@ -88,15 +88,15 @@ Material:
     - _Retain_Color_Lerp: 0.26
     - _Shape_A: 0
     - _Shape_B: 1
-    - _Sharpnes1: 0.16
-    - _Sharpnes2: 0.2
+    - _Sharpnes1: 0.01
+    - _Sharpnes2: 0.01
     - _Sharpnes3: 0.1
     - _Sin_Amp: 1.6
     - _Speed: 3.48
     - _SpeedB: 0.01
-    - _SpeedM1: 0.11
-    - _SpeedM2: 0.18
-    - _SpeedM3: 0.16
+    - _SpeedM1: 0.01
+    - _SpeedM2: 0.01
+    - _SpeedM3: 0.01
     - _Speed_Main: 2
     - _SppedA: 0
     - _Use_Waves: 0
@@ -114,8 +114,8 @@ Material:
     - _Vector3: {r: 0.1, g: 0.2, b: 0.1, a: 0}
     - _Vector3_1: {r: 0.3, g: 0.2, b: 0.21, a: 0}
     - _Vector3_2: {r: 0.2, g: 0.2, b: 0.6, a: 0}
-    - _Wave1_Dir: {r: 1, g: 0, b: 0, a: 0}
-    - _Wave2_Dir: {r: 1, g: 0, b: 0, a: 0}
+    - _Wave1_Dir: {r: 0.01, g: 0, b: 0, a: 0}
+    - _Wave2_Dir: {r: 0.01, g: 0, b: 0, a: 0}
     - _Wave3_Dir: {r: 1, g: 1, b: 0, a: 0}
     - _light_ref_dir: {r: 1, g: 4, b: 0, a: 0}
   m_BuildTextureStacks: []
