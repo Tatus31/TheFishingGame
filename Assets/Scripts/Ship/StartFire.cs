@@ -14,6 +14,7 @@ public class StartFire : MonoBehaviour
     bool isSparking;
 
     bool isOnFire;
+    bool isWaterUnderDeck;
     public bool IsOnFire {  get { return isOnFire; } set {  isOnFire = value; } }
 
     private void Start()
@@ -27,6 +28,13 @@ public class StartFire : MonoBehaviour
         shipDamage = ShipDamage.Instance;
 
         ElectricalDevice.OnDegradation += ElectricalDevice_OnDegradation;
+        ChangeWaterLevelUnderDeck.Instance.OnShipCatchingWater += ChangeWaterLevelUnderDeck_OnShipCatchingWater;
+    }
+
+    private void ChangeWaterLevelUnderDeck_OnShipCatchingWater(object sender, bool e)
+    {
+        Debug.Log("there is water underdeck");
+        FireActionStop();
     }
 
     private void Update()
@@ -46,7 +54,7 @@ public class StartFire : MonoBehaviour
     {
         if (electricalDevice.CurrentDegradation == ElectricalDevice.DegradationCondition.Bad)
         {
-            FireAction();
+            FireActionStart();
         }
     }
 
@@ -61,11 +69,17 @@ public class StartFire : MonoBehaviour
         fireVFX.SetActive(false);
     }
 
-    void FireAction()
+    void FireActionStart()
     {
         Debug.Log("start fire");
         fireVFX.SetActive(true);
         isOnFire = true;
         StartCoroutine(FireTickDamage());
+    }
+
+    void FireActionStop()
+    {
+        fireVFX.SetActive(false);
+        isOnFire = false;
     }
 }

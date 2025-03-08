@@ -10169,7 +10169,7 @@ GameObject:
   - component: {fileID: 1497772957}
   m_Layer: 0
   m_Name: ToxicWater
-  m_TagString: Untagged
+  m_TagString: ToxicDanger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11479,7 +11479,7 @@ GameObject:
   - component: {fileID: 1991180807}
   - component: {fileID: 1991180806}
   - component: {fileID: 1991180805}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: WaterPlane
   m_TagString: ToxicDanger
   m_Icon: {fileID: 0}
@@ -11520,8 +11520,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 10, y: 1.0058197, z: 10}
-  m_Center: {x: 0, y: 0.2340133, z: 0}
+  m_Size: {x: 10, y: 3.7078977, z: 10}
+  m_Center: {x: 0, y: 1.5850525, z: 0}
 --- !u!23 &1991180806
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13638,6 +13638,11 @@ PrefabInstance:
         type: 3}
       propertyPath: baseToxicDamage
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3041340655423699789, guid: 0315f51cdf4e66941835fa6432487b4a,
+        type: 3}
+      propertyPath: toxicMask.m_Bits
+      value: 2097152
       objectReference: {fileID: 0}
     - target: {fileID: 3327322189657895767, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}

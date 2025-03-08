@@ -9,6 +9,7 @@ public class ChangeWaterLevelUnderDeck : MonoBehaviour
     public static ChangeWaterLevelUnderDeck Instance;
 
     public event EventHandler<bool> OnSinkingShip;
+    public event EventHandler<bool> OnShipCatchingWater;
 
     [Header("Water Positions")]
     [SerializeField] Vector3 maxWaterLevel;
@@ -27,7 +28,9 @@ public class ChangeWaterLevelUnderDeck : MonoBehaviour
     Vector3 localMinWaterLevel;
 
     bool shipSank = false;
+    bool isWaterUnderDeck = false;
     public bool ShipSank {  get { return shipSank; } set {  shipSank = value; } }
+    public bool IsWaterUnderDeck { get {  return isWaterUnderDeck; } set {  isWaterUnderDeck = value; } }
 
     private void Awake()
     {
@@ -65,6 +68,9 @@ public class ChangeWaterLevelUnderDeck : MonoBehaviour
         Vector3 currentWaterLevelPos = transform.position;
 
         currentWaterLevelPos.y = Mathf.MoveTowards(currentWaterLevelPos.y, localMaxWaterLevel.y, currentRiseSpeed * Time.fixedDeltaTime);
+
+        isWaterUnderDeck = true;
+        OnShipCatchingWater?.Invoke(this, isWaterUnderDeck);
 
         if (Vector3.Distance(transform.position, localMaxWaterLevel) <= 0.01f)
         {
