@@ -6,37 +6,31 @@ public class IdleState : BaseMonsterState
 {
     float idleMovementRadius = 10f;
     float obstacleAvoidanceDistance = 1f;
-    float obstacleAvoidanceForce = 3f;
     float swimSpeed = 2f;
     float timeAtTarget = 0f;
     float minTimeAtTarget = 1f;
     float allowedDistanceFromTarget = 0.1f;
-    float rotationSpeed = 5f;
 
     Transform monsterTransform;
 
     Rigidbody rb;
 
     LayerMask waterLayer;
-    LayerMask obstacleLayer;
 
     Vector3 targetDirection;
     Vector3 currentTarget;
 
     bool hasTarget;
 
-    public IdleState(float idleMovementRadius, float obstacleAvoidanceDistance, float obstacleAvoidanceForce,
-        float swimSpeed, float minTimeAtTarget, float allowedDistanceFromTarget, float rotationSpeed, LayerMask waterLayer, LayerMask obstacleLayer, Rigidbody rb, Transform monsterHead)
+    public IdleState(float idleMovementRadius, float obstacleAvoidanceDistance,
+        float swimSpeed, float minTimeAtTarget, float allowedDistanceFromTarget, LayerMask waterLayer, Rigidbody rb, Transform monsterHead)
     {
         this.idleMovementRadius = idleMovementRadius;
         this.obstacleAvoidanceDistance = obstacleAvoidanceDistance;
-        this.obstacleAvoidanceForce = obstacleAvoidanceForce;
         this.swimSpeed = swimSpeed;
         this.minTimeAtTarget = minTimeAtTarget;
         this.allowedDistanceFromTarget = allowedDistanceFromTarget;
-        this.rotationSpeed = rotationSpeed;
         this.waterLayer = waterLayer;
-        this.obstacleLayer = obstacleLayer;
         this.rb = rb;
         monsterTransform = monsterHead;
     }
@@ -56,7 +50,7 @@ public class IdleState : BaseMonsterState
         if (rb.velocity.magnitude > 0.1f)
         {
             targetDirection = rb.velocity.normalized;
-            LookAt(targetDirection);
+            monsterState.LookAt(targetDirection);
         }
 
         if (hasTarget)
@@ -74,7 +68,7 @@ public class IdleState : BaseMonsterState
         }
     }
 
-    public override void FixedUpdateState()
+    public override void FixedUpdateState(MonsterStateMachine monsterState)
     {
         if (!hasTarget)
         {
@@ -88,7 +82,7 @@ public class IdleState : BaseMonsterState
         else
         {
             Vector3 directionToTarget = (currentTarget - monsterTransform.position).normalized;
-            Vector3 obstacleAvoidance = GetObstacleAvoidanceDirection();
+            Vector3 obstacleAvoidance = monsterState.GetObstacleAvoidanceDirection();
             Vector3 combinedDirection = (directionToTarget + obstacleAvoidance).normalized;
 
             rb.AddForce(combinedDirection * swimSpeed, ForceMode.Acceleration);
@@ -117,42 +111,13 @@ public class IdleState : BaseMonsterState
         return monsterTransform.position;
     }
 
-    Vector3 GetObstacleAvoidanceDirection()
-    {
-        Vector3 avoidanceDirection = Vector3.zero;
-
-        RaycastHit hit;
-        if (Physics.Raycast(monsterTransform.position, monsterTransform.forward, out hit, obstacleAvoidanceDistance, obstacleLayer))
-        {
-            avoidanceDirection = Vector3.Reflect(monsterTransform.forward, hit.normal).normalized;
-            avoidanceDirection = Quaternion.Euler(0, Random.Range(-45f, 45f), 0) * avoidanceDirection;
-        }
-
-        return avoidanceDirection * obstacleAvoidanceForce;
-    }
-
-    void LookAt(Vector3 lookAtDirection)
-    {
-        if (lookAtDirection != Vector3.zero)
-        {
-            Quaternion targetLookRotation = Quaternion.LookRotation(lookAtDirection);
-            monsterTransform.rotation = Quaternion.Slerp(monsterTransform.rotation, targetLookRotation, rotationSpeed * Time.deltaTime);
-        }
-    }
-
     public override void OnTriggerEnter(Collider other)
     {
-        if ((waterLayer.value & (1 << other.gameObject.layer)) != 0)
-        {
-            rb.useGravity = false;
-        }
+
     }
 
     public override void OnTriggerExit(Collider other)
     {
-        if ((waterLayer.value & (1 << other.gameObject.layer)) != 0)
-        {
-            rb.useGravity = true;
-        }
+
     }
 }

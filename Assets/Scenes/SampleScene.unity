@@ -11626,7 +11626,7 @@ GameObject:
   - component: {fileID: 1618540815}
   m_Layer: 0
   m_Name: Monster
-  m_TagString: Untagged
+  m_TagString: Danger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11644,19 +11644,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterHead: {fileID: 1766891136}
-  idleMovementRadius: 10
+  shipTransform: {fileID: 7157433146232501158}
   obstacleAvoidanceDistance: 5
   obstacleAvoidanceForce: 0.5
-  swimSpeed: 1
-  minTimeAtTarget: 0.03
-  allowedDistanceFromTarget: 5
-  rotationSpeed: 5
+  swimSpeed: 2
+  rotationSpeed: 8
+  maxVelocity: 8
   waterLayer:
     serializedVersion: 2
     m_Bits: 128
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 1024
+  idleMovementRadius: 10
+  minTimeAtTarget: 0.03
+  allowedDistanceFromTarget: 5
+  stalkingDistance: 25
+  minStalkingDistance: 8
+  swimStalkingSpeed: 12
 --- !u!4 &1618540813
 Transform:
   m_ObjectHideFlags: 0
@@ -12304,7 +12309,7 @@ GameObject:
   - component: {fileID: 1766891137}
   m_Layer: 0
   m_Name: Head
-  m_TagString: Untagged
+  m_TagString: Danger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15002,7 +15007,7 @@ PrefabInstance:
     - target: {fileID: 3327322189657895767, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 41.96
       objectReference: {fileID: 0}
     - target: {fileID: 3327322189657895767, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
@@ -15012,7 +15017,7 @@ PrefabInstance:
     - target: {fileID: 3327322189657895767, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 15
+      value: 75.89
       objectReference: {fileID: 0}
     - target: {fileID: 3327322189657895767, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
