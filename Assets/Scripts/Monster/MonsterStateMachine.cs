@@ -24,6 +24,9 @@ public class MonsterStateMachine : MonoBehaviour
     [SerializeField] float stalkingDistance = 15f;
     [SerializeField] float minStalkingDistance = 8f;
     [SerializeField] float swimStalkingSpeed = 12f;
+    [Header("Attacking Monster Controls")]
+    [SerializeField] float swimAttackSpeed = 20f;
+    [SerializeField] float monsterEscapeTime = 2f;
 
     BaseMonsterState currentState;
 
@@ -31,7 +34,7 @@ public class MonsterStateMachine : MonoBehaviour
 
     public IdleState IdleState { get; private set; }
     public StalkingState StalkingState {  get; private set; }
-    public AttackingState attackingState = new AttackingState();
+    public AttackingState AttackingState {  get; private set; }
 
     public Transform ShipTransform { get { return shipTransform; } set { shipTransform = value; } }
 
@@ -44,14 +47,16 @@ public class MonsterStateMachine : MonoBehaviour
     {
         IdleState = new IdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, waterLayer, rb, monsterHead);
         StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance);
+        AttackingState = new AttackingState(shipTransform, monsterHead, swimAttackSpeed, rb, monsterEscapeTime);
 
-        SwitchState(IdleState);
+        SwitchState(AttackingState);
     }
 
     private void OnValidate()
     {
         IdleState = new IdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, waterLayer, rb, monsterHead);
         StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance);
+        AttackingState = new AttackingState(shipTransform, monsterHead, swimAttackSpeed, rb, monsterEscapeTime);
     }
 
     private void Update()

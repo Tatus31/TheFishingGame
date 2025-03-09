@@ -22,9 +22,19 @@ public class ShipDamage : MonoBehaviour
     [SerializeField] int baseToxicDamage = 2;
     [Tooltip("Damage done when the ship is on fire (TickRate)")]
     [SerializeField] int baseFireDamage = 5;
+    [Tooltip("Damage done when the ship is hit by monster")]
+    [SerializeField] int baseMonsterDamage = 25;
+
+    [Header("Damage Cooldown")]
+    [Tooltip("Time the ship is invulnerable after taking damage")]
+    [SerializeField] float damageCooldownDuration = 0.5f;
+
+    bool isInDamageCooldown = false;
+    float cooldownTimeRemaining = 0f;
 
     public int PreviousHealth { get; private set; }
     public int BaseFireDamage { get { return baseFireDamage; } private set { baseFireDamage = value; } }
+    public bool IsInvulnerable { get { return isInDamageCooldown; } }
 
     private void Awake()
     {
@@ -45,6 +55,18 @@ public class ShipDamage : MonoBehaviour
         maxHealth = ship.GetModifiedStatValue(Stats.Health);
     }
 
+    private void Update()
+    {
+        if (isInDamageCooldown)
+        {
+            cooldownTimeRemaining -= Time.deltaTime;
+            if (cooldownTimeRemaining <= 0f)
+            {
+                EndDamageCooldown();
+            }
+        }
+    }
+
     private void Ship_OnStatsChange(object sender, EventArgs e)
     {
         currentHealth = ship.GetModifiedStatValue(Stats.Health);
@@ -63,24 +85,37 @@ public class ShipDamage : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (isInDamageCooldown)
+            return;
+
         if (collision.collider.CompareTag(TagHolder.danger))
         {
             TakeCollisionDamage(baseCollisionDamage);
+        }
+
+        if (collision.collider.CompareTag(TagHolder.monsterDanger))
+        {
+            Debug.Log("monster");
+            TakeDamage(baseMonsterDamage);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (isInDamageCooldown)
+            return;
 
         if (other.CompareTag(TagHolder.toxicDanger))
         {
-            Debug.Log("in toxic water");
-            TakeTickDamage(baseToxicDamage);
+            TakeDamage(baseToxicDamage);
         }
     }
 
     void TakeCollisionDamage(int baseDamage)
     {
+        if (isInDamageCooldown)
+            return;
+
         PreviousHealth = currentHealth;
         float maxSpeed = shipMovement.MaxSpeed;
         float speedRatio = Mathf.Floor(flatVel.magnitude) / maxSpeed;
@@ -97,10 +132,15 @@ public class ShipDamage : MonoBehaviour
         currentHealth = Mathf.Max(0, currentHealth);
         OnDamageTaken?.Invoke(this, actualDamage);
         UpdateAttributes();
+
+        StartDamageCooldown();
     }
 
-    public void TakeTickDamage(int baseDamage)
+    public void TakeDamage(int baseDamage)
     {
+        if (isInDamageCooldown)
+            return;
+
         PreviousHealth = currentHealth;
         int actualDamage = baseDamage;
 
@@ -108,6 +148,22 @@ public class ShipDamage : MonoBehaviour
         currentHealth = Mathf.Max(0, currentHealth);
         OnDamageTaken?.Invoke(this, actualDamage);
         UpdateAttributes();
+
+        StartDamageCooldown();
+    }
+
+    void StartDamageCooldown()
+    {
+        isInDamageCooldown = true;
+        cooldownTimeRemaining = damageCooldownDuration;
+
+        Debug.Log($"Ship entered damage cooldown for {damageCooldownDuration} seconds");
+    }
+
+    void EndDamageCooldown()
+    {
+        isInDamageCooldown = false;
+        Debug.Log("Ship is vulnerable again");
     }
 
     void UpdateAttributes()
@@ -117,7 +173,7 @@ public class ShipDamage : MonoBehaviour
             if (attribute.type == Stats.Health)
             {
                 attribute.Value.SetModifiedValueDirectly(currentHealth);
-                if(currentHealth == 0)
+                if (currentHealth == 0)
                 {
                     OnSinkingShipByDamage?.Invoke(this, EventArgs.Empty);
                 }
