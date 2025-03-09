@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
 
 public class StartFire : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class StartFire : MonoBehaviour
 
     ElectricalDevice electricalDevice;
     ShipDamage shipDamage;
+    StartFireWhenInCloud StartFireWhenInCloud;
 
     bool isSparking;
 
@@ -25,10 +28,12 @@ public class StartFire : MonoBehaviour
         isOnFire = false;
 
         electricalDevice = GetComponent<ElectricalDevice>();
+        StartFireWhenInCloud StartFireWhenInCloud = FindObjectOfType<StartFireWhenInCloud>();
         shipDamage = ShipDamage.Instance;
 
         ElectricalDevice.OnDegradation += ElectricalDevice_OnDegradation;
         ChangeWaterLevelUnderDeck.Instance.OnShipCatchingWater += ChangeWaterLevelUnderDeck_OnShipCatchingWater;
+        StartFireWhenInCloud.OnShipInCloud += OnShipInCloudFire;
     }
 
     private void ChangeWaterLevelUnderDeck_OnShipCatchingWater(object sender, bool e)
@@ -57,6 +62,20 @@ public class StartFire : MonoBehaviour
             FireActionStart();
         }
     }
+
+    private void OnShipInCloudFire()
+    {
+        Debug.Log("Statek jest w chmurze");
+        
+        if (Random.Range(-10,10) == 5)
+        {   
+            Debug.Log("Styrta sie Poli!");
+            FireActionStart(); 
+        }
+
+         
+    }
+
 
     IEnumerator FireTickDamage()
     {
