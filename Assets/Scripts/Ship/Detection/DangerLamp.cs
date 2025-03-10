@@ -44,21 +44,24 @@ public class DangerLamp : MonoBehaviour
         {
             for (int i = 0; i < collisions.Length; i++)
             {
-                if (collisions[i].CompareTag(TagHolder.danger))
+                for (int j = 0; j < TagHolder.dangers.Length; j++)
                 {
-                    Vector3 collisionPoint = collisions[i].ClosestPoint(transform.position);
-                    float distanceToDanger = Vector3.Distance(transform.position, collisionPoint);
-
-                    //Debug.Log($"Closest point is {Mathf.Floor(distanceToDanger)} away from danger");
-
-                    if (distanceToDanger < closestDanger)
+                    if (collisions[i].CompareTag(TagHolder.dangers[j]))
                     {
-                        closestDanger = distanceToDanger;
-                        closestDangerDirection = (collisionPoint - transform.position).normalized;
-                        closestCollisionPoint = collisionPoint;
-                        dangerFound = true;
+                        Vector3 collisionPoint = collisions[i].ClosestPoint(transform.position);
+                        float distanceToDanger = Vector3.Distance(transform.position, collisionPoint);
 
-                        //Debug.Log($"Nearest danger point is {Mathf.Floor(closestDanger)} away");
+                        //Debug.Log($"Closest point is {Mathf.Floor(distanceToDanger)} away from danger");
+
+                        if (distanceToDanger < closestDanger)
+                        {
+                            closestDanger = distanceToDanger;
+                            closestDangerDirection = (collisionPoint - transform.position).normalized;
+                            closestCollisionPoint = collisionPoint;
+                            dangerFound = true;
+
+                            //Debug.Log($"Nearest danger point is {Mathf.Floor(closestDanger)} away");
+                        }
                     }
                 }
             }
@@ -89,13 +92,16 @@ public class DangerLamp : MonoBehaviour
 
         foreach (Collider collision in collisions)
         {
-            if (collision.CompareTag(TagHolder.danger))
+            for (int i = 0; i < TagHolder.dangers.Length; i++)
             {
-                Vector3 collisionPoint = collision.ClosestPoint(transform.position);
+                if (collision.CompareTag(TagHolder.dangers[i]))
+                {
+                    Vector3 collisionPoint = collision.ClosestPoint(transform.position);
 
-                Gizmos.color = Color.red;
-                Gizmos.DrawRay(transform.position, collisionPoint - transform.position);
-                Gizmos.DrawSphere(collisionPoint, 0.2f);
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawRay(transform.position, collisionPoint - transform.position);
+                    Gizmos.DrawSphere(collisionPoint, 0.2f);
+                }
             }
         }
     }
