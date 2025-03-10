@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class MonsterStateMachine : MonoBehaviour
 {
+    public static MonsterStateMachine Instance;
+
     [Header("Refrences")]
     [SerializeField] Transform monsterHead;
     [SerializeField] Transform shipTransform;
@@ -40,6 +42,11 @@ public class MonsterStateMachine : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null)
+            Debug.LogWarning($"there exists a {Instance.name} in the scene already");
+
+        Instance = this;
+
         rb = GetComponent<Rigidbody>();
     }
 
@@ -49,7 +56,7 @@ public class MonsterStateMachine : MonoBehaviour
         StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance);
         AttackingState = new AttackingState(shipTransform, monsterHead, swimAttackSpeed, rb, monsterEscapeTime);
 
-        SwitchState(AttackingState);
+        SwitchState(IdleState);
     }
 
     private void OnValidate()

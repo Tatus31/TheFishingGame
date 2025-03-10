@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class StalkingState : BaseMonsterState
 {
-    float stalkingDistance = 15f;      
-    float minStalkingDistance = 8f;            
+    float stalkingDistance = 15f;
+    float minStalkingDistance = 8f;
     float swimStalkingSpeed = 12f;
 
     float shipVelPrediction = 1.0f;
     float velDamping = 0.95f;
 
-    float approachSpeedFactor = 0.8f;
+    float approachSpeedFactor = 0.1f;
     float slowdownDistance = 4f;
     float stayPutTreshold = 1.2f;
     float stacionaryShipVel = 0.3f;
@@ -19,10 +19,10 @@ public class StalkingState : BaseMonsterState
     Transform shipTransform;
     Transform monsterTransform;
 
-    ShipMovement shipMovement;        
-       
-    Rigidbody rb;   
-    
+    ShipMovement shipMovement;
+
+    Rigidbody rb;
+
     Vector3 targetDirection;
     Vector3 shipVel;
 
@@ -48,9 +48,6 @@ public class StalkingState : BaseMonsterState
         shipVel = Vector3.zero;
 
         shipMovement.OnShipSpeedChange += OnShipSpeedChanged;
-
-        if (rb != null)
-            rb.velocity = Vector3.zero;
     }
 
     public override void ExitState()
@@ -76,8 +73,6 @@ public class StalkingState : BaseMonsterState
 
     public override void FixedUpdateState(MonsterStateMachine monsterState)
     {
-        rb.velocity *= velDamping;
-
         bool isShipStationary = shipVel.magnitude < stacionaryShipVel;
 
         float predictionFactor = isShipStationary ? 0f : shipVelPrediction;
@@ -101,7 +96,7 @@ public class StalkingState : BaseMonsterState
         {
             moveForce = -normalizedDirectionToShip * swimStalkingSpeed * 2.0f;
         }
-        else if (distanceToTarget > stayPutTreshold) 
+        else if (distanceToTarget > stayPutTreshold)
         {
             float approachSpeed = swimStalkingSpeed;
 
