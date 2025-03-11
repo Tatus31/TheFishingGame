@@ -22,6 +22,34 @@ MonoBehaviour:
   gain:
     m_OverrideState: 1
     m_Value: {x: 0.90362567, y: 1, z: 0.7131556, w: 0}
+--- !u!114 &-5776917630983890879
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c87ff93a90145e495f4ea994d8f730d, type: 3}
+  m_Name: AVLVolumeComponent
+  m_EditorClassIdentifier: 
+  active: 1
+  airDensity:
+    m_OverrideState: 1
+    m_Value: 0.1
+  fogDensityGlobal:
+    m_OverrideState: 0
+    m_Value: 0.033
+  fogDensityPerLightModifier:
+    m_OverrideState: 0
+    m_Value: 0.385
+  fogScattering:
+    m_OverrideState: 0
+    m_Value: 0.299
+  fogColor:
+    m_OverrideState: 0
+    m_Value: {r: 0.04905659, g: 0.04905659, b: 0.04905659, a: 1}
 --- !u!114 &-5694066590133792872
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -142,6 +170,7 @@ MonoBehaviour:
   - {fileID: -6424784915876738741}
   - {fileID: -2552276339683207665}
   - {fileID: 5775919455671081420}
+  - {fileID: -5776917630983890879}
 --- !u!114 &5775919455671081420
 MonoBehaviour:
   m_ObjectHideFlags: 3

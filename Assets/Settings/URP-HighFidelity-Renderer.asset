@@ -55,6 +55,33 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 3302065f671a8450b82c9ddf07426f3a, type: 3}
   - {fileID: 2800000, guid: 56a77a3e8d64f47b6afe9e3c95cb57d5, type: 3}
   m_Shader: {fileID: 4800000, guid: 0849e84e3d62649e8882e9d6f056a017, type: 3}
+--- !u!114 &-659214492512941909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bac1b73383ae410d8e277450af64d970, type: 3}
+  m_Name: Analytical Volumetric Lighting
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  _settings:
+    ClusteringShader: {fileID: 7200000, guid: 9c1586f774fa47c7a62565dafa7c1cbf, type: 3}
+    RenderingShader: {fileID: 4800000, guid: 2d7019988494484596b679d293a0dfeb, type: 3}
+    DebugShader: {fileID: 4800000, guid: e2a515e7e7c24926abfaa53800afd988, type: 3}
+    renderingQuality: 0.5
+    enableHDR: 1
+    maxLights: 4096
+    maxMasks: 128
+    enableUpscaling: 1
+    enableDepthCulling: 1
+    cullingClusterSizeX: 16
+    cullingClusterSizeY: 9
+    debugMode: 0
+    debugOpacity: 0.04
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,7 +102,8 @@ MonoBehaviour:
   - {fileID: -1878332245247344467}
   - {fileID: -7513082878506580944}
   - {fileID: 9121054213006937044}
-  m_RendererFeatureMap: adc0de57c6d2eee530c48b92ed2abc97d4cb5b377b7e947e
+  - {fileID: -659214492512941909}
+  m_RendererFeatureMap: adc0de57c6d2eee530c48b92ed2abc97d4cb5b377b7e947eab08fa66e9ffd9f6
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
