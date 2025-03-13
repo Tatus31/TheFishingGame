@@ -18,6 +18,8 @@ public class DangerLamp : MonoBehaviour
     [SerializeField][Range(0.1f, 1)] float minAnimationSpeed;
     [SerializeField][Range(0.1f, 1)] float lightRange;
 
+    float stopAnimation = 0f;
+
     Animator animator;
     Light lt;
 
@@ -79,6 +81,7 @@ public class DangerLamp : MonoBehaviour
             else
             {
                 lt.range = 0;
+                AnimationController.Instance.PlayAnimation(animator, AnimationController.SPEED_MULTIPLIER, stopAnimation);
             }
         }
     }
