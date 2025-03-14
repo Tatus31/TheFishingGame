@@ -30,16 +30,23 @@ public class ShipDamage : MonoBehaviour
     [SerializeField] float damageCooldownDuration = 0.5f;
 
     bool isInDamageCooldown = false;
+    bool isInvincible;
     float cooldownTimeRemaining = 0f;
 
     public int PreviousHealth { get; private set; }
     public int BaseFireDamage { get { return baseFireDamage; } private set { baseFireDamage = value; } }
     public bool IsInvulnerable { get { return isInDamageCooldown; } }
+    public bool IsInvincible {  get { return isInvincible; } set { isInvincible = value; } } 
 
     private void Awake()
     {
         if (Instance != null)
+        {
+#if UNITY_EDITOR
             Debug.LogWarning($"there exists a {Instance.name} in the scene already");
+#endif
+        }
+
         Instance = this;
     }
 
@@ -57,6 +64,9 @@ public class ShipDamage : MonoBehaviour
 
     private void Update()
     {
+        if (isInvincible)
+            return;
+
         if (isInDamageCooldown)
         {
             cooldownTimeRemaining -= Time.deltaTime;
@@ -79,12 +89,17 @@ public class ShipDamage : MonoBehaviour
     public void RestoreHealth(int amount)
     {
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+#if UNITY_EDITOR
         Debug.Log($"restored {amount} health");
+#endif
         UpdateAttributes();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (isInvincible)
+            return;
+
         if (isInDamageCooldown)
             return;
 
@@ -95,13 +110,15 @@ public class ShipDamage : MonoBehaviour
 
         if (collision.collider.CompareTag(TagHolder.monsterDanger))
         {
-            Debug.Log("monster");
             TakeDamage(baseMonsterDamage);
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
+        if (isInvincible)
+            return;
+
         if (other.CompareTag(TagHolder.toxicDanger))
         {
             TakeDamage(baseToxicDamage);
@@ -110,6 +127,9 @@ public class ShipDamage : MonoBehaviour
 
     void TakeCollisionDamage(int baseDamage)
     {
+        if (isInvincible)
+            return;
+
         if (isInDamageCooldown)
             return;
 
@@ -123,8 +143,9 @@ public class ShipDamage : MonoBehaviour
             float damageMultiplier = 0.5f + (speedRatio * 1.5f);
             actualDamage = Mathf.RoundToInt(baseDamage * damageMultiplier);
         }
-
+#if UNITY_EDITOR
         Debug.Log($"ship took {actualDamage} damage");
+#endif
         currentHealth -= actualDamage;
         currentHealth = Mathf.Max(0, currentHealth);
         OnDamageTaken?.Invoke(this, actualDamage);
@@ -135,6 +156,9 @@ public class ShipDamage : MonoBehaviour
 
     public void TakeDamage(int baseDamage)
     {
+        if (isInvincible)
+            return;
+
         if (isInDamageCooldown)
             return;
 
@@ -153,14 +177,14 @@ public class ShipDamage : MonoBehaviour
     {
         isInDamageCooldown = true;
         cooldownTimeRemaining = damageCooldownDuration;
-
-        Debug.Log($"Ship entered damage cooldown for {damageCooldownDuration} seconds");
     }
 
     void EndDamageCooldown()
     {
         isInDamageCooldown = false;
+#if UNITY_EDITOR
         Debug.Log("Ship is vulnerable again");
+#endif
     }
 
     void UpdateAttributes()

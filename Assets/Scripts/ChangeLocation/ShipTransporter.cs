@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ShipTransporter : MonoBehaviour
 {
-    [SerializeField] Transform targetPoint;
+    [SerializeField] public Transform targetPoint;
     [SerializeField] LayerMask collisionLayerMask;
     [SerializeField] GameObject player;
 
@@ -23,7 +23,6 @@ public class ShipTransporter : MonoBehaviour
         }
 
         player.transform.position = targetPoint.position;
-
         if (playerRigidbody != null)
         {
             playerRigidbody.isKinematic = false;

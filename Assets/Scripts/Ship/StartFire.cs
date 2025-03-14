@@ -39,12 +39,16 @@ public class StartFire : MonoBehaviour
 
         ElectricalDevice.OnDegradation += ElectricalDevice_OnDegradation;
         ChangeWaterLevelUnderDeck.Instance.OnShipCatchingWater += ChangeWaterLevelUnderDeck_OnShipCatchingWater;
-        StartFireWhenInCloud.OnShipInCloud += OnShipInCloudFire;
+
+        if(StartFireWhenInCloud != null)
+            StartFireWhenInCloud.OnShipInCloud += OnShipInCloudFire;
     }
 
     private void ChangeWaterLevelUnderDeck_OnShipCatchingWater(object sender, bool e)
     {
+#if UNITY_EDITOR
         Debug.Log("there is water underdeck");
+#endif
         FireActionStop();
     }
 
@@ -79,8 +83,9 @@ public class StartFire : MonoBehaviour
             FireActionStart();
             PosFireStart(30);
         }
+#if UNITY_EDITOR
         Debug.Log(FireProbability);
-
+#endif
     }
 
 
@@ -97,7 +102,9 @@ public class StartFire : MonoBehaviour
 
     void FireActionStart()
     {
+#if UNITY_EDITOR
         Debug.Log("start fire");
+#endif
         fireVFX.SetActive(true);
         isOnFire = true;
         StartCoroutine(FireTickDamage());
@@ -118,7 +125,9 @@ public class StartFire : MonoBehaviour
             Quaternion worldRotation = transform.rotation * Quaternion.Euler(unusedPoint.rotation);
             Instantiate(fireVFX, worldPoint, worldRotation, transform);
             unusedPoint.damageValue = damagePerFirepoint;
+#if UNITY_EDITOR
             Debug.Log($"Zadaje {unusedPoint.damageValue}");
+#endif
             unusedPoint.isUsed = true;
            
         }
