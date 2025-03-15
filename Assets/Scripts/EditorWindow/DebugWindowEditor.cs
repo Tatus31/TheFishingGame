@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -6,6 +8,10 @@ using UnityEngine.UIElements;
 
 public class DebugWindowEditor : EditorWindow
 {
+    TextField statValueField;
+    Label currentStatValueLabel;
+    string selectedStat;
+
     [MenuItem("Window/UI Toolkit/DebugWindowEditor")]
     public static void ShowExample()
     {
@@ -79,11 +85,11 @@ public class DebugWindowEditor : EditorWindow
         shipHeaderContainer.style.flexDirection = FlexDirection.Row;
         shipHeaderContainer.style.justifyContent = Justify.Center;
         shipHeaderContainer.style.marginBottom = 10;
-        
+
         Label shipSectionHeader = new Label("Ship");
         shipSectionHeader.style.unityFontStyleAndWeight = FontStyle.Bold;
         shipSectionHeader.style.fontSize = 14;
-        
+
         shipHeaderContainer.Add(shipSectionHeader);
         shipSectionContainer.Add(shipHeaderContainer);
 
@@ -91,7 +97,7 @@ public class DebugWindowEditor : EditorWindow
         invincibleShipToggle.name = "TurnShipInvincible";
         invincibleShipToggle.label = "Turn Invincible";
         invincibleShipToggle.style.marginTop = 5;
-        invincibleShipToggle.style.marginBottom = 5;
+        invincibleShipToggle.style.marginBottom = 15;
         invincibleShipToggle.RegisterValueChangedCallback(evt => ToggleShipInvincibility(evt.newValue));
 
         shipSectionContainer.Add(invincibleShipToggle);
@@ -125,6 +131,65 @@ public class DebugWindowEditor : EditorWindow
         openHolesButton.style.marginTop = 5;
         openHolesButton.style.marginBottom = 10;
         shipSectionContainer.Add(openHolesButton);
+
+        VisualElement statsContainer = new VisualElement();
+        statsContainer.style.flexDirection = FlexDirection.Row;
+        statsContainer.style.marginTop = 15;
+        statsContainer.style.marginBottom = 2;
+
+        DropdownField statsDropdown = new DropdownField();
+        statsDropdown.name = "SelectStatDropdown";
+        statsDropdown.label = "Select Stat:";
+        statsDropdown.style.marginTop = 2;
+        statsDropdown.style.marginBottom = 2;
+        statsDropdown.style.marginLeft = 1;
+        statsDropdown.style.unityTextAlign = TextAnchor.MiddleCenter;
+
+        List<string> statOptions = Enum.GetNames(typeof(Stats)).ToList();
+        statsDropdown.choices = statOptions;
+        statsDropdown.index = 0;
+        selectedStat = statsDropdown.choices[0];
+
+        statsDropdown.RegisterValueChangedCallback(evt =>
+        {
+            selectedStat = evt.newValue;
+            DisplayStatValue(evt.newValue);
+        });
+        statsContainer.Add(statsDropdown);
+
+        VisualElement newValueContainer = new VisualElement();
+        newValueContainer.style.flexDirection = FlexDirection.Row;
+        newValueContainer.style.marginTop = 2;
+        newValueContainer.style.marginBottom = 2;
+
+        statValueField = new TextField("New Value:");
+        statValueField.style.flexGrow = 1;
+        statValueField.style.width = 200;
+        statValueField.style.minWidth = 150;
+        statValueField.style.marginLeft = 1;
+        statValueField.style.unityTextAlign = TextAnchor.MiddleCenter;
+        newValueContainer.Add(statValueField);
+
+        statsContainer.Add(newValueContainer);
+
+        Button applyStatButton = new Button(() => SetStatValue(selectedStat, statValueField.value));
+        applyStatButton.name = "ApplyStatButton";
+        applyStatButton.text = "Apply";
+        applyStatButton.style.marginTop = 2;
+        applyStatButton.style.marginBottom = 2;
+        applyStatButton.style.marginLeft = 1;
+        applyStatButton.style.width = 50;
+        applyStatButton.style.minWidth = 25;
+        statsContainer.Add(applyStatButton);
+
+        shipSectionContainer.Add(statsContainer);
+
+        Button shipRespawnButton = new Button(RespawnShip);
+        shipRespawnButton.name = "RespawnShip";
+        shipRespawnButton.text = "Respawn Ship";
+        shipRespawnButton.style.marginTop = 15;
+        shipRespawnButton.style.marginBottom = 5;
+        shipSectionContainer.Add(shipRespawnButton);
 
         root.Add(shipSectionContainer);
     }
@@ -231,7 +296,7 @@ public class DebugWindowEditor : EditorWindow
     {
         ShipRepairPoints shipRepairPoints = ShipRepairPoints.Instance;
 
-        if(shipRepairPoints != null)
+        if (shipRepairPoints != null)
         {
             List<string> choices = new List<string>();
             for (int i = 1; i <= shipRepairPoints.RepairPoints.Count; i++)
@@ -250,6 +315,77 @@ public class DebugWindowEditor : EditorWindow
         {
 #if UNITY_EDITOR
             Debug.LogWarning($"{shipRepairPoints} instance not found in the scene. (Are you in playmode?)");
+#endif
+        }
+    }
+
+    void DisplayStatValue(string stat)
+    {
+        Ship ship = Ship.Instance;
+        if (ship != null)
+        {
+            Stats selectedStat = (Stats)Enum.Parse(typeof(Stats), stat);
+            int statValue = ship.GetModifiedStatValue(selectedStat);
+        }
+    }
+
+    void SetStatValue(string stat, string valueText)
+    {
+        if (string.IsNullOrEmpty(valueText))
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning("enter a value for the stat");
+#endif
+            return;
+        }
+
+        if (!int.TryParse(valueText, out int newValue))
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning("enter a valid value type");
+#endif
+            return;
+        }
+
+        if (int.Parse(valueText) < 0)
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning("enter a positive value");
+#endif
+            return;
+        }
+
+        Ship ship = Ship.Instance;
+        if (ship != null)
+        {
+            Stats selectedStat = (Stats)Enum.Parse(typeof(Stats), stat);
+
+            ship.UpdateAttribute(selectedStat, newValue);
+            DisplayStatValue(stat);
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"{ship} instance not found in the scene. (Are you in playmode?)");
+#endif
+        }
+    }
+
+    void RespawnShip()
+    {
+        RespawnShip respawnShip = global::RespawnShip.Instance;
+
+        if (respawnShip != null)
+        {
+            respawnShip.RespawnShipManually();
+#if UNITY_EDITOR
+            Debug.Log($"teleported to {respawnShip.targetPoint}.");
+#endif
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"{respawnShip} instance not found in the scene. (Are you in playmode?)");
 #endif
         }
     }

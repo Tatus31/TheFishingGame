@@ -6,7 +6,7 @@ public class ShipTransporter : MonoBehaviour
 {
     [SerializeField] public Transform targetPoint;
     [SerializeField] LayerMask collisionLayerMask;
-    [SerializeField] GameObject player;
+    [SerializeField] GameObject transportedObject;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -16,16 +16,37 @@ public class ShipTransporter : MonoBehaviour
 
     protected void MovePlayer()
     {
-        Rigidbody playerRigidbody = player.GetComponent<Rigidbody>();
+        Rigidbody playerRigidbody = transportedObject.GetComponent<Rigidbody>();
         if (playerRigidbody != null)
         {
             playerRigidbody.isKinematic = true;
         }
 
-        player.transform.position = targetPoint.position;
+        transportedObject.transform.position = targetPoint.position;
         if (playerRigidbody != null)
         {
             playerRigidbody.isKinematic = false;
+        }
+    }
+
+    protected void RespawnShip()
+    {
+        GameObject obj = transportedObject;
+        Rigidbody shipRigidbody = obj.GetComponent<Rigidbody>();
+
+        if (shipRigidbody != null)
+        {
+            shipRigidbody.isKinematic = true;
+        }
+
+        obj.transform.position = targetPoint.position;
+        obj.transform.rotation = targetPoint.rotation;
+
+        if (shipRigidbody != null)
+        {
+            shipRigidbody.isKinematic = false;
+            shipRigidbody.velocity = Vector3.zero;
+            shipRigidbody.angularVelocity = Vector3.zero;
         }
     }
 
@@ -37,5 +58,9 @@ public class ShipTransporter : MonoBehaviour
     public virtual void MovePlayerManually()
     {
         MovePlayer();
+    }
+    public virtual void RespawnShipManually()
+    {
+        RespawnShip();
     }
 }

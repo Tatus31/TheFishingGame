@@ -9,21 +9,26 @@ public class StartFire : MonoBehaviour
 {
     [SerializeField] GameObject fireVFX;
     [SerializeField] GameObject sparksVFX;
-    [SerializeField] private float fireTickInterval = 1.0f;
+
+    [SerializeField] float fireTickInterval = 1.0f;
+    [SerializeField] int FireProbability;
+
+    [SerializeField] Vector3 position;
+    [SerializeField] Vector3 rotation;
+
     [SerializeField] List<StartFire> FirePointsList = new List<StartFire>();
-    [SerializeField] private Vector3 position;
-    [SerializeField] private Vector3 rotation;
-    private int damageValue = default;
-    [SerializeField] private int FireProbability;
-    
+
     ElectricalDevice electricalDevice;
     ShipDamage shipDamage;
     StartFireWhenInCloud StartFireWhenInCloud;
+
+    int damageValue = default;
 
     bool isSparking;
     bool isUsed;
     bool isOnFire;
     bool isWaterUnderDeck;
+
     public bool IsOnFire {  get { return isOnFire; } set {  isOnFire = value; } }
 
     private void Start()
