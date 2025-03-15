@@ -34,7 +34,7 @@ public class StartFire : MonoBehaviour
         isOnFire = false;
 
         electricalDevice = GetComponent<ElectricalDevice>();
-        StartFireWhenInCloud StartFireWhenInCloud = FindObjectOfType<StartFireWhenInCloud>();
+        StartFireWhenInCloud = FindObjectOfType<StartFireWhenInCloud>();
         shipDamage = ShipDamage.Instance;
 
         ElectricalDevice.OnDegradation += ElectricalDevice_OnDegradation;
