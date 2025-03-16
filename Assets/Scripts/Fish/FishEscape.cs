@@ -77,10 +77,12 @@ public class FishEscape : MonoBehaviour
         if (colliderPlayer.Length >= 1 && fleeTimer < maxFleeTimer)
         {
             fleeing = true;
+
             Vector3 playerPosition = colliderPlayer[0].transform.position;
             Vector3 fleeDirection = (transform.position - playerPosition).normalized;
             Vector3 obstacleAvoidance = GetObstacleAvoidanceDirection();
             Vector3 combinedDirection = (fleeDirection + obstacleAvoidance).normalized;
+
             rb.AddForce(combinedDirection * fleeSpeed, ForceMode.Acceleration);
             targetDirection = combinedDirection;
         }
@@ -100,6 +102,7 @@ public class FishEscape : MonoBehaviour
                 Vector3 directionToTarget = (currentTarget - transform.position).normalized;
                 Vector3 obstacleAvoidance = GetObstacleAvoidanceDirection();
                 Vector3 combinedDirection = (directionToTarget + obstacleAvoidance).normalized;
+
                 rb.AddForce(combinedDirection * swimSpeed, ForceMode.Acceleration);
             }
         }
