@@ -229,7 +229,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (CurrentState != null)
+        if (currentState != null)
         {
             CurrentState.DrawGizmos(this);
         }
