@@ -1591,57 +1591,6 @@ Transform:
   - {fileID: 1465898868}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &219435240
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 219435241}
-  - component: {fileID: 219435242}
-  m_Layer: 0
-  m_Name: F2
-  m_TagString: Untagged
-  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &219435241
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 219435240}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.84, y: -0.8, z: -3.1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 976337409}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &219435242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 219435240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16be960df6a536442bcbba693d7ea87e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireVFX: {fileID: 74436292}
-  sparksVFX: {fileID: 15943838}
-  fireTickInterval: 1
-  FirePointsList: []
-  position: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0}
-  FireProbability: 0
 --- !u!1 &237841492 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1850709270360146657, guid: d29f4484566269d409a996bef1dd24e1,
@@ -3153,57 +3102,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a28dbb5e5e6973f4db50d82e5e857138, type: 3}
---- !u!1 &370525174
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 370525175}
-  - component: {fileID: 370525176}
-  m_Layer: 0
-  m_Name: F2
-  m_TagString: Untagged
-  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &370525175
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 370525174}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.84, y: -0.8, z: -3.1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 506974685}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &370525176
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 370525174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16be960df6a536442bcbba693d7ea87e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireVFX: {fileID: 74436292}
-  sparksVFX: {fileID: 15943838}
-  fireTickInterval: 1
-  FirePointsList: []
-  position: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0}
-  FireProbability: 0
 --- !u!43 &385911999
 Mesh:
   m_ObjectHideFlags: 0
@@ -5064,64 +4962,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1682103581}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &506974684
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 506974685}
-  - component: {fileID: 506974686}
-  m_Layer: 0
-  m_Name: UpperDeckF
-  m_TagString: Untagged
-  m_Icon: {fileID: -5397416234189338067, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &506974685
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 506974684}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.07, z: 1.12}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1523061740}
-  - {fileID: 370525175}
-  - {fileID: 2110511514}
-  - {fileID: 976337409}
-  m_Father: {fileID: 7157433146232501158}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &506974686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 506974684}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16be960df6a536442bcbba693d7ea87e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireVFX: {fileID: 74436292}
-  sparksVFX: {fileID: 15943838}
-  fireTickInterval: 1
-  FirePointsList:
-  - {fileID: 1523061741}
-  - {fileID: 370525176}
-  - {fileID: 2110511515}
-  position: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0}
-  FireProbability: 0
 --- !u!4 &525977278 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5341809626760804418, guid: 9229a321e58b31e47b154ae1d814cefe,
@@ -5958,57 +5798,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5697022866825482968}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &870414651
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 870414652}
-  - component: {fileID: 870414653}
-  m_Layer: 0
-  m_Name: F1
-  m_TagString: Untagged
-  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &870414652
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 870414651}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.64, y: -0.96, z: -1.2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 976337409}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &870414653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 870414651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16be960df6a536442bcbba693d7ea87e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireVFX: {fileID: 74436292}
-  sparksVFX: {fileID: 15943838}
-  fireTickInterval: 1
-  FirePointsList: []
-  position: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0}
-  FireProbability: 0
 --- !u!1 &875846715
 GameObject:
   m_ObjectHideFlags: 0
@@ -6505,7 +6294,7 @@ Transform:
   - {fileID: 927337100}
   m_Father: {fileID: 7157433146232501158}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &976337408
+--- !u!1 &1028890042
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6513,94 +6302,37 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 976337409}
-  - component: {fileID: 976337410}
+  - component: {fileID: 1028890043}
+  - component: {fileID: 1028890044}
   m_Layer: 0
-  m_Name: UpperDeckF2
+  m_Name: FireSpawner
   m_TagString: Untagged
-  m_Icon: {fileID: -5397416234189338067, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &976337409
+--- !u!4 &1028890043
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 976337408}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.9600003, z: -5.819999}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 870414652}
-  - {fileID: 219435241}
-  - {fileID: 1000958278}
-  m_Father: {fileID: 506974685}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &976337410
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 976337408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16be960df6a536442bcbba693d7ea87e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireVFX: {fileID: 74436292}
-  sparksVFX: {fileID: 15943838}
-  fireTickInterval: 1
-  FirePointsList:
-  - {fileID: 870414653}
-  - {fileID: 219435242}
-  - {fileID: 1000958279}
-  position: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0}
-  FireProbability: 0
---- !u!1 &1000958277
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1000958278}
-  - component: {fileID: 1000958279}
-  m_Layer: 0
-  m_Name: F3
-  m_TagString: Untagged
-  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1000958278
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000958277}
+  m_GameObject: {fileID: 1028890042}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.17, y: -0.86, z: 4.34}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 976337409}
+  m_Father: {fileID: 7157433146232501158}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1000958279
+--- !u!114 &1028890044
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000958277}
+  m_GameObject: {fileID: 1028890042}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 16be960df6a536442bcbba693d7ea87e, type: 3}
@@ -6609,10 +6341,11 @@ MonoBehaviour:
   fireVFX: {fileID: 74436292}
   sparksVFX: {fileID: 15943838}
   fireTickInterval: 1
-  FirePointsList: []
   position: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 0, z: 0}
   FireProbability: 0
+  radius: 0.25
+  shipTransform: {fileID: 7157433146232501158}
 --- !u!114 &1051454065 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8997153161354224050, guid: ee204cb6cb0fb01429f492652e8d07ac,
@@ -10532,57 +10265,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1334719821}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1523061739
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1523061740}
-  - component: {fileID: 1523061741}
-  m_Layer: 0
-  m_Name: F1
-  m_TagString: Untagged
-  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1523061740
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1523061739}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.64, y: -0.96, z: -1.2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 506974685}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1523061741
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1523061739}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16be960df6a536442bcbba693d7ea87e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireVFX: {fileID: 74436292}
-  sparksVFX: {fileID: 15943838}
-  fireTickInterval: 1
-  FirePointsList: []
-  position: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0}
-  FireProbability: 0
 --- !u!1 &1598728993
 GameObject:
   m_ObjectHideFlags: 0
@@ -11353,6 +11035,7 @@ GameObject:
   - component: {fileID: 1786833330}
   - component: {fileID: 1786833332}
   - component: {fileID: 1786833331}
+  - component: {fileID: 1786833333}
   m_Layer: 0
   m_Name: Cloud
   m_TagString: Untagged
@@ -11375,10 +11058,11 @@ MonoBehaviour:
   fireVFX: {fileID: 74436292}
   sparksVFX: {fileID: 15943838}
   fireTickInterval: 1
-  FirePointsList: []
   position: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 0, z: 0}
   FireProbability: 0
+  radius: 0.25
+  shipTransform: {fileID: 7157433146232501158}
 --- !u!65 &1786833328
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11409,7 +11093,7 @@ Transform:
   m_GameObject: {fileID: 1786833326}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.8348887, y: 0.64959836, z: 31.246994}
+  m_LocalPosition: {x: 0.32, y: 0.64959836, z: 15.19}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11476,7 +11160,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1786833326}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 80b43ce65143a8240bcdc7cc368e7261, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: 311efe2379816e5479ab1dee463308fc, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -11506,6 +11190,18 @@ VisualEffect:
       m_Array: []
     m_Bool:
       m_Array: []
+--- !u!114 &1786833333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1786833326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 335b992c5d11c4f6d85ac88473e0dda9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1809329054 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2503541441285576983, guid: 116c090f5489a754090f66a9ab6e29c2,
@@ -11909,57 +11605,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2095499650}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &2110511513
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2110511514}
-  - component: {fileID: 2110511515}
-  m_Layer: 0
-  m_Name: F3
-  m_TagString: Untagged
-  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2110511514
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2110511513}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.17, y: -0.86, z: 4.34}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 506974685}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2110511515
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2110511513}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16be960df6a536442bcbba693d7ea87e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireVFX: {fileID: 74436292}
-  sparksVFX: {fileID: 15943838}
-  fireTickInterval: 1
-  FirePointsList: []
-  position: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0}
-  FireProbability: 0
 --- !u!43 &2132769038
 Mesh:
   m_ObjectHideFlags: 0
@@ -12473,6 +12118,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: UnderDeck
       objectReference: {fileID: 0}
+    - target: {fileID: 2779157711532826773, guid: 4c85dc26b19aea146bae3c9dbcef179a,
+        type: 3}
+      propertyPath: radius
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2779157711532826773, guid: 4c85dc26b19aea146bae3c9dbcef179a,
+        type: 3}
+      propertyPath: shipTransform
+      value: 
+      objectReference: {fileID: 7157433146232501158}
     - target: {fileID: 3407726907466856634, guid: 4c85dc26b19aea146bae3c9dbcef179a,
         type: 3}
       propertyPath: deviceStats.statDegradation
@@ -13941,7 +13596,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3327322189657895767, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 506974685}
+      addedObject: {fileID: 1028890043}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 86132675218856515, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}

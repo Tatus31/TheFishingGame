@@ -8,7 +8,7 @@ public class CloudSpawner : MonoBehaviour
     [SerializeField] private GameObject CloudToMove;
     void Start()
     {
-        CreateCloudToMove(20);
+        CreateCloudToMove(1);
     }
 
     

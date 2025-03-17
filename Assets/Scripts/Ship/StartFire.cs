@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using Random = UnityEngine.Random;
 using System.Collections.Generic;
+using Unity.Mathematics;
+using Random = UnityEngine.Random;
 
 
 public class StartFire : MonoBehaviour
@@ -10,15 +11,17 @@ public class StartFire : MonoBehaviour
     [SerializeField] GameObject fireVFX;
     [SerializeField] GameObject sparksVFX;
     [SerializeField] private float fireTickInterval = 1.0f;
-    [SerializeField] List<StartFire> FirePointsList = new List<StartFire>();
     [SerializeField] private Vector3 position;
     [SerializeField] private Vector3 rotation;
-    private int damageValue = default;
-    [SerializeField] private int FireProbability;
+    [SerializeField] private float FireProbability;
+    [SerializeField] private float FireProbabilityMaxValue;
+    [SerializeField] private float radius = 0.5f;
+    [SerializeField] private Transform shipTransform;
+    
     
     ElectricalDevice electricalDevice;
     ShipDamage shipDamage;
-    StartFireWhenInCloud StartFireWhenInCloud;
+    StartFireWhenInCloud startfirewhenincloud;
 
     bool isSparking;
     bool isUsed;
@@ -34,12 +37,12 @@ public class StartFire : MonoBehaviour
         isOnFire = false;
 
         electricalDevice = GetComponent<ElectricalDevice>();
-        StartFireWhenInCloud = FindObjectOfType<StartFireWhenInCloud>();
+        startfirewhenincloud = (StartFireWhenInCloud)FindAnyObjectByType(typeof(StartFireWhenInCloud));
         shipDamage = ShipDamage.Instance;
 
         ElectricalDevice.OnDegradation += ElectricalDevice_OnDegradation;
         ChangeWaterLevelUnderDeck.Instance.OnShipCatchingWater += ChangeWaterLevelUnderDeck_OnShipCatchingWater;
-        StartFireWhenInCloud.OnShipInCloud += OnShipInCloudFire;
+        startfirewhenincloud.OnShipInCloud += OnShipInCloudFire;
     }
 
     private void ChangeWaterLevelUnderDeck_OnShipCatchingWater(object sender, bool e)
@@ -74,10 +77,10 @@ public class StartFire : MonoBehaviour
     private void OnShipInCloudFire()
     {       
         FireProbability++;
-        if (FireProbability >= 1000)
+        if (FireProbability >= FireProbabilityMaxValue)
         {
             FireActionStart();
-            PosFireStart(30);
+            RandomPosFireStart();
         }
         Debug.Log(FireProbability);
 
@@ -109,18 +112,19 @@ public class StartFire : MonoBehaviour
         isOnFire = false;
     }
 
-    void PosFireStart(int damagePerFirepoint)
+    void RandomPosFireStart()
     {
-        StartFire unusedPoint = FirePointsList.Find(point => !point.isUsed);
-        if (unusedPoint != null)
+        Vector3 randomPoint = Random.insideUnitCircle * radius;
+        Vector3 _randomFirePos = new Vector3(randomPoint.x, shipTransform.position.y, randomPoint.y) + shipTransform.position;
+        for (int i = 0; i <= 2; i++) 
         {
-            Vector3 worldPoint = transform.TransformPoint(unusedPoint.position);
-            Quaternion worldRotation = transform.rotation * Quaternion.Euler(unusedPoint.rotation);
-            Instantiate(fireVFX, worldPoint, worldRotation, transform);
-            unusedPoint.damageValue = damagePerFirepoint;
-            Debug.Log($"Zadaje {unusedPoint.damageValue}");
-            unusedPoint.isUsed = true;
-           
+            
+                Instantiate(fireVFX, _randomFirePos, quaternion.identity);    
+            
+            
+
         }
+
+       
     }
 }

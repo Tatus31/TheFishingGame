@@ -13,7 +13,7 @@ public class MoveClouds : MonoBehaviour
     
     private void Update()
     {
-        MoveCloud(0.10f);
+        MoveCloud(0f);
     }
     
     void MoveCloud(float moveamount)
