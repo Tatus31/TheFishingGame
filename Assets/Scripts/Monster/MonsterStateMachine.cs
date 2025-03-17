@@ -115,6 +115,8 @@ public class MonsterStateMachine : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        Gizmos.DrawRay(monsterHead.position, Vector3.forward);
+
         if (currentState != null)
         {
             currentState.DrawGizmos(this);

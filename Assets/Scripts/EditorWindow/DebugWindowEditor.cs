@@ -12,7 +12,7 @@ public class DebugWindowEditor : EditorWindow
     Label currentStatValueLabel;
     string selectedStat;
 
-    [MenuItem("Window/UI Toolkit/DebugWindowEditor")]
+    [MenuItem("Window/UI Toolkit/DebugWindow")]
     public static void ShowExample()
     {
         DebugWindowEditor wnd = GetWindow<DebugWindowEditor>();
@@ -95,7 +95,7 @@ public class DebugWindowEditor : EditorWindow
 
         Toggle invincibleShipToggle = new Toggle();
         invincibleShipToggle.name = "TurnShipInvincible";
-        invincibleShipToggle.label = "Turn Invincible";
+        invincibleShipToggle.label = "God Mode: ";
         invincibleShipToggle.style.marginTop = 5;
         invincibleShipToggle.style.marginBottom = 15;
         invincibleShipToggle.RegisterValueChangedCallback(evt => ToggleShipInvincibility(evt.newValue));
@@ -192,6 +192,46 @@ public class DebugWindowEditor : EditorWindow
         shipSectionContainer.Add(shipRespawnButton);
 
         root.Add(shipSectionContainer);
+        VisualElement toolSectionContainer = new VisualElement();
+        toolSectionContainer.style.marginTop = 10;
+        toolSectionContainer.style.marginBottom = 10;
+        toolSectionContainer.style.paddingTop = 5;
+        toolSectionContainer.style.paddingBottom = 5;
+        toolSectionContainer.style.paddingLeft = 5;
+        toolSectionContainer.style.paddingRight = 5;
+
+        VisualElement divider2 = new VisualElement();
+        divider2.style.height = 2;
+        divider2.style.marginTop = 10;
+        divider2.style.marginBottom = 10;
+        divider2.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f, 0.7f);
+        root.Add(divider2);
+
+        VisualElement toolHeaderContainer = new VisualElement();
+        toolHeaderContainer.style.flexDirection = FlexDirection.Row;
+        toolHeaderContainer.style.justifyContent = Justify.Center;
+        toolHeaderContainer.style.marginBottom = 10;
+
+        Label toolSectionHeader = new Label("Tool Selection");
+        toolSectionHeader.style.unityFontStyleAndWeight = FontStyle.Bold;
+        toolSectionHeader.style.fontSize = 14;
+
+        toolHeaderContainer.Add(toolSectionHeader);
+        toolSectionContainer.Add(toolHeaderContainer);
+
+        VisualElement toolGridContainer = new VisualElement();
+        toolGridContainer.style.flexDirection = FlexDirection.Row;
+        toolGridContainer.style.flexWrap = Wrap.Wrap;
+        toolGridContainer.style.justifyContent = Justify.Center;
+
+        CreateToolButton(toolGridContainer, "EmptyHands", "Empty Hands");
+        CreateToolButton(toolGridContainer, "Harpoon", "Harpoon");
+        CreateToolButton(toolGridContainer, "FireExtinguisher", "Fire Extinguisher");
+        CreateToolButton(toolGridContainer, "Wrench", "Wrench");
+
+        toolSectionContainer.Add(toolGridContainer);
+
+        root.Add(toolSectionContainer);
     }
 
     void TeleportToShip()
@@ -254,10 +294,13 @@ public class DebugWindowEditor : EditorWindow
     void ToggleShipInvincibility(bool isInvincible)
     {
         ShipDamage shipDamage = ShipDamage.Instance;
+        ChangeWaterLevelUnderDeck waterLevelUnderDeck = ChangeWaterLevelUnderDeck.Instance;
 
         if (shipDamage != null)
         {
             shipDamage.IsInvincible = isInvincible;
+            waterLevelUnderDeck.IsInvincible = isInvincible;
+
 #if UNITY_EDITOR
             Debug.Log($"Ship is invincible");
 #endif
@@ -386,6 +429,101 @@ public class DebugWindowEditor : EditorWindow
         {
 #if UNITY_EDITOR
             Debug.LogWarning($"{respawnShip} instance not found in the scene. (Are you in playmode?)");
+#endif
+        }
+    }
+
+    void CreateToolButton(VisualElement container, string toolName, string displayName)
+    {
+        VisualElement toolButtonContainer = new VisualElement();
+        toolButtonContainer.style.width = 80;
+        toolButtonContainer.style.height = 100;
+        toolButtonContainer.style.marginLeft = 5;
+        toolButtonContainer.style.marginRight = 5;
+        toolButtonContainer.style.marginTop = 5;
+        toolButtonContainer.style.marginBottom = 5;
+        toolButtonContainer.style.alignItems = Align.Center;
+
+        Button toolButton = new Button(() => EquipSelectedTool(toolName));
+        toolButton.name = $"{toolName}Button";
+
+        Image toolImage = new Image();
+        toolImage.style.width = 64;
+        toolImage.style.height = 64;
+        toolImage.style.marginBottom = 5;
+
+        Texture2D spriteTexture = LoadToolSprite(toolName);
+        if (spriteTexture != null)
+        {
+            toolImage.image = spriteTexture;
+        }
+        else
+        {
+            toolImage.style.backgroundColor = GetToolColor(toolName);
+        }
+
+        toolButton.Add(toolImage);
+        toolButtonContainer.Add(toolButton);
+
+        Label toolLabel = new Label(displayName);
+        toolLabel.style.fontSize = 10;
+        toolLabel.style.unityTextAlign = TextAnchor.MiddleCenter;
+        toolButtonContainer.Add(toolLabel);
+
+        container.Add(toolButtonContainer);
+    }
+
+    private Texture2D LoadToolSprite(string toolName)
+    {
+        string path = $"Assets/Textures/Sprites/WIP/{toolName}.png";
+        Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+
+        if (texture == null)
+        {
+            Debug.LogWarning($"Failed to load sprite for tool: {toolName} from path: {path}");
+        }
+
+        return texture;
+    }
+
+    Color GetToolColor(string toolName)
+    {
+        switch (toolName)
+        {
+            case "Harpoon": return new Color(0.8f, 0.2f, 0.2f);
+            case "EmptyHands": return new Color(0.8f, 0.8f, 0.8f); 
+            case "FireExtinguisher": return new Color(0.2f, 0.2f, 0.8f); 
+            case "Wrench": return new Color(0.8f, 0.8f, 0.2f); 
+            default: return Color.gray;
+        }
+    }
+
+    void EquipSelectedTool(string toolName)
+    {
+        InteractionManager interactionManager = InteractionManager.Instance;
+
+        if (interactionManager != null)
+        {
+            InteractionManager.EquipedTool selectedTool = (InteractionManager.EquipedTool)Enum.Parse(
+                typeof(InteractionManager.EquipedTool), toolName);
+
+            interactionManager.EquipTool(selectedTool);
+
+            //VisualElement root = rootVisualElement;
+            //Label currentToolValue = root.Q<Label>("CurrentToolValue");
+            //if (currentToolValue != null)
+            //{
+            //    currentToolValue.text = toolName;
+            //}
+
+#if UNITY_EDITOR
+            Debug.Log($"Equipped tool: {toolName}");
+#endif
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"{interactionManager} instance not found in the scene. (Are you in playmode?)");
 #endif
         }
     }

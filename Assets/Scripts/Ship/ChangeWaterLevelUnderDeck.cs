@@ -29,8 +29,11 @@ public class ChangeWaterLevelUnderDeck : MonoBehaviour
 
     bool shipSank = false;
     bool isWaterUnderDeck = false;
+    bool isInvincible;
+
     public bool ShipSank {  get { return shipSank; } set {  shipSank = value; } }
     public bool IsWaterUnderDeck { get {  return isWaterUnderDeck; } set {  isWaterUnderDeck = value; } }
+    public bool IsInvincible { get { return isInvincible; } set { isInvincible = value; } }
 
     private void Awake()
     {
@@ -52,6 +55,9 @@ public class ChangeWaterLevelUnderDeck : MonoBehaviour
 
     private void Update()
     {
+        if (isInvincible)
+            return;
+
         if(currentRepairPoints > 0 && !shipSank)
             LinearlyIncreaseWaterLevel();
     }
@@ -75,8 +81,12 @@ public class ChangeWaterLevelUnderDeck : MonoBehaviour
         if (Vector3.Distance(transform.position, localMaxWaterLevel) <= 0.01f)
         {
             LeaveUnderDeck.Instance.MovePlayerManually();
-            shipSank = true;
-            OnSinkingShip?.Invoke(this, shipSank);
+
+            if (!isInvincible)
+            {
+                shipSank = true;
+                OnSinkingShip?.Invoke(this, shipSank);
+            }
         }
 
         transform.position = currentWaterLevelPos;
