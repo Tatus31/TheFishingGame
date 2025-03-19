@@ -6,9 +6,12 @@ public class CloudSpawner : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] private GameObject CloudToMove;
+    private MoveClouds _MoveClouds;
     void Start()
     {
-        CreateCloudToMove(1);
+        _MoveClouds = GetComponent<MoveClouds>();
+        
+        CreateCloudToMove(4);
     }
 
     
@@ -26,7 +29,8 @@ public class CloudSpawner : MonoBehaviour
 
             // Instancjonowanie obiektu w losowo wybranym miejscu
             GameObject CloudClone = Instantiate(CloudToMove, spawnPosition, Quaternion.identity);
-            
+            _MoveClouds.GetCloudTransformsList.Add(CloudClone.transform);
+
         }
         
     }

@@ -8,21 +8,24 @@ using Random = UnityEngine.Random;
 public class MoveClouds : MonoBehaviour
 {
     [SerializeField] private Transform Cloud;
-    
-    
+    [SerializeField] private GameObject CloudGameObject;
+    [SerializeField] private GameObject CloudTowardsPoint;
+    [SerializeField] private List<Transform> CloudTransforms = new List<Transform>();
+
+    public List<Transform> GetCloudTransformsList
+    {
+        get { return CloudTransforms; }
+        set { CloudTransforms = value; }
+    }
     
     private void Update()
     {
-        MoveCloud(0f);
+        MoveCloud(0.05f);
     }
     
     void MoveCloud(float moveamount)
     {
-        if (Random.value == 5f)
-        {
-            Cloud.Translate(moveamount * Time.deltaTime,0,0);    
-        }
-        else{Cloud.Translate(-(moveamount * Time.deltaTime),0,0);}
+        CloudGameObject.gameObject.transform.position = Vector3.MoveTowards(CloudGameObject.gameObject.transform.position,CloudTowardsPoint.gameObject.transform.position, moveamount);
         
     }
 

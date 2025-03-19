@@ -1450,6 +1450,7 @@ GameObject:
   m_Component:
   - component: {fileID: 160015927}
   - component: {fileID: 160015928}
+  - component: {fileID: 160015929}
   m_Layer: 0
   m_Name: CloudManager
   m_TagString: Untagged
@@ -1485,6 +1486,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CloudToMove: {fileID: 1786833326}
+--- !u!114 &160015929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160015925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 658643999d6e340619c8236cd9d745b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Cloud: {fileID: 1786833329}
+  CloudGameObject: {fileID: 1786833326}
+  CloudTowardsPoint: {fileID: 1312431479}
+  CloudTransforms: []
 --- !u!1 &178065159
 GameObject:
   m_ObjectHideFlags: 0
@@ -6566,7 +6583,6 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 0, z: 0}
   FireProbability: 0
-  FireProbabilityMaxValue: 0
   FirePointList: []
   radius: 0.25
   shipTransform: {fileID: 7157433146232501158}
@@ -7089,6 +7105,37 @@ Transform:
   m_Children:
   - {fileID: 1495332631}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1312431479
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1312431480}
+  m_Layer: 0
+  m_Name: CloudTowardsPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1312431480
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312431479}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.1, y: 4.4, z: -0.6}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7157433146232501158}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1334719820
 GameObject:
@@ -11485,7 +11532,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cloud
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -11507,7 +11554,6 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 0, z: 0}
   FireProbability: 0
-  FireProbabilityMaxValue: 0
   FirePointList:
   - {fileID: 1063083981}
   - {fileID: 969847957}
@@ -11534,8 +11580,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 15.634853, y: 4.7479496, z: 16.953465}
+  m_Center: {x: 1.5170269, y: -1.8739748, z: -0.7820115}
 --- !u!4 &1786833329
 Transform:
   m_ObjectHideFlags: 0
@@ -11545,7 +11591,7 @@ Transform:
   m_GameObject: {fileID: 1786833326}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.32, y: 0.64959836, z: 15.19}
+  m_LocalPosition: {x: 0.32, y: 4.75, z: 15.19}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11564,6 +11610,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cloud: {fileID: 1786833329}
+  CloudGameObject: {fileID: 1786833326}
+  CloudTowardsPoint: {fileID: 1312431479}
+  CloudTransforms:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!73398921 &1786833331
 VFXRenderer:
   serializedVersion: 1
@@ -14090,6 +14143,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 649827433}
+    - targetCorrespondingSourceObject: {fileID: 3327322189657895767, guid: 0315f51cdf4e66941835fa6432487b4a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1312431480}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 86132675218856515, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
