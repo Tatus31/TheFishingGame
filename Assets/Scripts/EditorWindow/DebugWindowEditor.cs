@@ -9,10 +9,9 @@ using UnityEngine.UIElements;
 public class DebugWindowEditor : EditorWindow
 {
     TextField statValueField;
-    Label currentStatValueLabel;
     string selectedStat;
 
-    [MenuItem("Window/UI Toolkit/DebugWindow")]
+    [MenuItem("Window/DebugWindow")]
     public static void ShowExample()
     {
         DebugWindowEditor wnd = GetWindow<DebugWindowEditor>();
@@ -190,6 +189,13 @@ public class DebugWindowEditor : EditorWindow
         shipRespawnButton.style.marginTop = 15;
         shipRespawnButton.style.marginBottom = 5;
         shipSectionContainer.Add(shipRespawnButton);
+
+        Button shipTransportButton = new Button(MoveShipToPosition);
+        shipTransportButton.name = "shipTransportButton";
+        shipTransportButton.text = "Move Ship To Water";
+        shipTransportButton.style.marginTop = 15;
+        shipTransportButton.style.marginBottom = 5;
+        shipSectionContainer.Add(shipTransportButton);
 
         root.Add(shipSectionContainer);
         VisualElement toolSectionContainer = new VisualElement();
@@ -433,6 +439,25 @@ public class DebugWindowEditor : EditorWindow
         }
     }
 
+    void MoveShipToPosition()
+    {
+        MoveShipToLocation moveShipToLocation = MoveShipToLocation.Instance;
+
+        if (moveShipToLocation != null)
+        {
+            moveShipToLocation.RespawnShipManually();
+#if UNITY_EDITOR
+            Debug.Log($"teleported to {moveShipToLocation.targetPoint}.");
+#endif
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"{moveShipToLocation} instance not found in the scene. (Are you in playmode?)");
+#endif
+        }
+    }
+
     void CreateToolButton(VisualElement container, string toolName, string displayName)
     {
         VisualElement toolButtonContainer = new VisualElement();
@@ -480,7 +505,9 @@ public class DebugWindowEditor : EditorWindow
 
         if (texture == null)
         {
-            Debug.LogWarning($"Failed to load sprite for tool: {toolName} from path: {path}");
+#if UNITY_EDITOR
+            Debug.LogWarning($"no sprite {toolName} at {path}");
+#endif
         }
 
         return texture;
