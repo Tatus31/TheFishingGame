@@ -9,21 +9,26 @@ public class StartFire : MonoBehaviour
 {
     [SerializeField] GameObject fireVFX;
     [SerializeField] GameObject sparksVFX;
-    [SerializeField] private float fireTickInterval = 1.0f;
+
+    [SerializeField] float fireTickInterval = 1.0f;
+    [SerializeField] int FireProbability;
+
+    [SerializeField] Vector3 position;
+    [SerializeField] Vector3 rotation;
+
     [SerializeField] List<StartFire> FirePointsList = new List<StartFire>();
-    [SerializeField] private Vector3 position;
-    [SerializeField] private Vector3 rotation;
-    private int damageValue = default;
-    [SerializeField] private int FireProbability;
-    
+
     ElectricalDevice electricalDevice;
     ShipDamage shipDamage;
     StartFireWhenInCloud StartFireWhenInCloud;
+
+    int damageValue = default;
 
     bool isSparking;
     bool isUsed;
     bool isOnFire;
     bool isWaterUnderDeck;
+
     public bool IsOnFire {  get { return isOnFire; } set {  isOnFire = value; } }
 
     private void Start()
@@ -39,12 +44,16 @@ public class StartFire : MonoBehaviour
 
         ElectricalDevice.OnDegradation += ElectricalDevice_OnDegradation;
         ChangeWaterLevelUnderDeck.Instance.OnShipCatchingWater += ChangeWaterLevelUnderDeck_OnShipCatchingWater;
-        StartFireWhenInCloud.OnShipInCloud += OnShipInCloudFire;
+
+        if(StartFireWhenInCloud != null)
+            StartFireWhenInCloud.OnShipInCloud += OnShipInCloudFire;
     }
 
     private void ChangeWaterLevelUnderDeck_OnShipCatchingWater(object sender, bool e)
     {
+#if UNITY_EDITOR
         Debug.Log("there is water underdeck");
+#endif
         FireActionStop();
     }
 
@@ -79,8 +88,9 @@ public class StartFire : MonoBehaviour
             FireActionStart();
             PosFireStart(30);
         }
+#if UNITY_EDITOR
         Debug.Log(FireProbability);
-
+#endif
     }
 
 
@@ -97,7 +107,9 @@ public class StartFire : MonoBehaviour
 
     void FireActionStart()
     {
+#if UNITY_EDITOR
         Debug.Log("start fire");
+#endif
         fireVFX.SetActive(true);
         isOnFire = true;
         StartCoroutine(FireTickDamage());
@@ -118,7 +130,9 @@ public class StartFire : MonoBehaviour
             Quaternion worldRotation = transform.rotation * Quaternion.Euler(unusedPoint.rotation);
             Instantiate(fireVFX, worldPoint, worldRotation, transform);
             unusedPoint.damageValue = damagePerFirepoint;
+#if UNITY_EDITOR
             Debug.Log($"Zadaje {unusedPoint.damageValue}");
+#endif
             unusedPoint.isUsed = true;
            
         }

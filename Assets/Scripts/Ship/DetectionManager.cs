@@ -39,6 +39,9 @@ public class DetectionManager : MonoBehaviour
 
         //Testing
 
+        if (MonsterStateMachine.Instance == null)
+            return;
+
         if(currentState == DangerState.Medium)
         {
             MonsterStateMachine.Instance.SwitchState(MonsterStateMachine.Instance.StalkingState);

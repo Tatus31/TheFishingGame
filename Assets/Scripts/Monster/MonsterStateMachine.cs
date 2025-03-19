@@ -43,7 +43,11 @@ public class MonsterStateMachine : MonoBehaviour
     private void Awake()
     {
         if (Instance != null)
+        {
+#if UNITY_EDITOR
             Debug.LogWarning($"there exists a {Instance.name} in the scene already");
+#endif
+        }
 
         Instance = this;
 
@@ -83,6 +87,11 @@ public class MonsterStateMachine : MonoBehaviour
 
     public void SwitchState(BaseMonsterState newState)
     {
+        ShipDamage shipDamage = ShipDamage.Instance;
+
+        if (shipDamage != null && shipDamage.IsInvincible)
+            return;
+
         currentState?.ExitState();
         currentState = newState;
         currentState.EnterState(this);
@@ -106,6 +115,9 @@ public class MonsterStateMachine : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if(monsterHead != null)
+            Gizmos.DrawRay(monsterHead.position, Vector3.forward);
+
         if (currentState != null)
         {
             currentState.DrawGizmos(this);

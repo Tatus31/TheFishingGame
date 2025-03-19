@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class Ship : ObjectInventory
 {
+    public static Ship Instance;
+
     public static event EventHandler<ItemType> OnEquipmentChange;
     public static event EventHandler OnStatsChange;
     //public ShipAttributes[] shipAttributes;
@@ -24,6 +26,18 @@ public class Ship : ObjectInventory
     GameObject currentNavigationDisplay;
 
     FogController fogController;
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"there exists a {Instance.name} in the scene already");
+#endif
+        }
+
+        Instance = this;
+    }
 
     protected override void Start()
     {
@@ -311,6 +325,39 @@ public class Ship : ObjectInventory
             if (attribute.type == statType)
             {
                 attribute.SetPermanentBaseValue();
+            }
+        }
+    }
+
+    public void SetPermanentSavedModifiedStatValue(Stats statType, int value)
+    {
+        foreach (var attribute in objectAttributes)
+        {
+            if (attribute.type == statType)
+            {
+                attribute.SetPermanentModifiedValue();
+            }
+        }
+    }
+
+    public void SetPermanentSavedBaseStatValue(Stats statType, int value)
+    {
+        foreach (var attribute in objectAttributes)
+        {
+            if (attribute.type == statType)
+            {
+                attribute.SetPermanentBaseValue();
+            }
+        }
+    }
+
+    public void UpdateAttribute(Stats stat, int value)
+    {
+        foreach (var attribute in objectAttributes)
+        {
+            if (attribute.type == stat)
+            {
+                attribute.Value.SetModifiedValueDirectly(value);
             }
         }
     }

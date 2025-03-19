@@ -37,7 +37,6 @@ public class IdleState : BaseMonsterState
 
     public override void EnterState(MonsterStateMachine monsterState)
     {
-
     }
 
     public override void ExitState()

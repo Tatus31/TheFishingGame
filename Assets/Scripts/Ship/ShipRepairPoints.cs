@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class ShipRepairPoints : MonoBehaviour
 {
+    public static ShipRepairPoints Instance;
+
+    public static event EventHandler OnHoleCreate;
+
     public event Action<int> OnRepairPointsChanged;
 
     [System.Serializable]
@@ -18,7 +22,21 @@ public class ShipRepairPoints : MonoBehaviour
     [SerializeField] List<RepairPoint> repairPoints = new List<RepairPoint>();
     [SerializeField] GameObject obj;
     [SerializeField] int damageThreshold = 20;
-    private int totalHoleDamage = 0; 
+
+    int totalHoleDamage = 0;
+    public List<RepairPoint> RepairPoints {  get { return repairPoints; } }
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"there exists a {Instance.name} in the scene already");
+#endif
+        }
+
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -37,7 +55,7 @@ public class ShipRepairPoints : MonoBehaviour
         }
     }
 
-    void SpawnHole(int damagePerHole = 0)
+    public void SpawnHole(int damagePerHole = 0)
     {
         RepairPoint unusedPoint = repairPoints.Find(point => !point.isUsed);
         if (unusedPoint != null)
@@ -48,6 +66,7 @@ public class ShipRepairPoints : MonoBehaviour
             unusedPoint.isUsed = true;
             unusedPoint.damageValue = damagePerHole;
             OnRepairPointsChanged?.Invoke(GetUsedRepairPoints());
+            OnHoleCreate?.Invoke(this, EventArgs.Empty);
         }
     }
 
