@@ -24,8 +24,10 @@ namespace AkiDevCat.AVL.Examples
         private void Update()
         {
             QualitySettings.vSyncCount = 0;
+#pragma warning disable CS0618 // Typ lub sk³adowa jest przestarza³a
             Application.targetFrameRate = Application.isMobilePlatform ? Screen.currentResolution.refreshRate : -1;
-            
+#pragma warning restore CS0618 // Typ lub sk³adowa jest przestarza³a
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 if (_volume.sharedProfile.TryGet<AVLVolumeComponent>(out var cmp))

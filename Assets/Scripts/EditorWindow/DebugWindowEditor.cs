@@ -235,9 +235,58 @@ public class DebugWindowEditor : EditorWindow
         CreateToolButton(toolGridContainer, "FireExtinguisher", "Fire Extinguisher");
         CreateToolButton(toolGridContainer, "Wrench", "Wrench");
 
+        root.Add(toolSectionContainer);
         toolSectionContainer.Add(toolGridContainer);
 
-        root.Add(toolSectionContainer);
+        VisualElement divider3 = new VisualElement();
+        divider3.style.height = 2;
+        divider3.style.marginTop = 10;
+        divider3.style.marginBottom = 10;
+        divider3.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f, 0.7f);
+        root.Add(divider3);
+
+        VisualElement monsterSectionContainer = new VisualElement();
+        monsterSectionContainer.style.marginTop = 10;
+        monsterSectionContainer.style.marginBottom = 10;
+        monsterSectionContainer.style.paddingTop = 5;
+        monsterSectionContainer.style.paddingBottom = 5;
+        monsterSectionContainer.style.paddingLeft = 5;
+        monsterSectionContainer.style.paddingRight = 5;
+
+        VisualElement monsterHeaderContainer = new VisualElement();
+        monsterHeaderContainer.style.flexDirection = FlexDirection.Row;
+        monsterHeaderContainer.style.justifyContent = Justify.Center;
+        monsterHeaderContainer.style.marginBottom = 10;
+
+        Label monsterSectionHeader = new Label("Monster Controls");
+        monsterSectionHeader.style.unityFontStyleAndWeight = FontStyle.Bold;
+        monsterSectionHeader.style.fontSize = 14;
+
+        monsterHeaderContainer.Add(monsterSectionHeader);
+        monsterSectionContainer.Add(monsterHeaderContainer);
+
+        Button idleStateButton = new Button(() => SetMonsterState("Idle"));
+        idleStateButton.name = "IdleStateButton";
+        idleStateButton.text = "Idle State";
+        idleStateButton.style.marginTop = 5;
+        idleStateButton.style.marginBottom = 5;
+        monsterSectionContainer.Add(idleStateButton);
+
+        Button stalkingStateButton = new Button(() => SetMonsterState("Stalking"));
+        stalkingStateButton.name = "StalkingStateButton";
+        stalkingStateButton.text = "Stalking State";
+        stalkingStateButton.style.marginTop = 5;
+        stalkingStateButton.style.marginBottom = 5;
+        monsterSectionContainer.Add(stalkingStateButton);
+
+        Button attackingStateButton = new Button(() => SetMonsterState("Attacking"));
+        attackingStateButton.name = "AttackingStateButton";
+        attackingStateButton.text = "Attacking State";
+        attackingStateButton.style.marginTop = 5;
+        attackingStateButton.style.marginBottom = 5;
+        monsterSectionContainer.Add(attackingStateButton);
+
+        root.Add(monsterSectionContainer);
     }
 
     void TeleportToShip()
@@ -498,7 +547,7 @@ public class DebugWindowEditor : EditorWindow
         container.Add(toolButtonContainer);
     }
 
-    private Texture2D LoadToolSprite(string toolName)
+    Texture2D LoadToolSprite(string toolName)
     {
         string path = $"Assets/Textures/Sprites/WIP/{toolName}.png";
         Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
@@ -551,6 +600,40 @@ public class DebugWindowEditor : EditorWindow
         {
 #if UNITY_EDITOR
             Debug.LogWarning($"{interactionManager} instance not found in the scene. (Are you in playmode?)");
+#endif
+        }
+    }
+
+    void SetMonsterState(string stateName)
+    {
+        MonsterStateMachine monsterStateMachine = MonsterStateMachine.Instance;
+
+        if (monsterStateMachine != null)
+        {
+            switch (stateName)
+            {
+                case "Idle":
+                    monsterStateMachine.SwitchState(monsterStateMachine.IdleState);
+                    break;
+                case "Stalking":
+                    monsterStateMachine.SwitchState(monsterStateMachine.StalkingState);
+                    break;
+                case "Attacking":
+                    monsterStateMachine.SwitchState(monsterStateMachine.AttackingState);
+                    break;
+                default:
+                    Debug.LogWarning($"no state with name: {stateName}");
+                    return;
+            }
+
+#if UNITY_EDITOR
+            Debug.Log($"Monster state changed to: {stateName}");
+#endif
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"{monsterStateMachine} instance not found in the scene. (Are you in playmode?)");
 #endif
         }
     }

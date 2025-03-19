@@ -126,8 +126,10 @@ namespace AkiDevCat.AVL.Rendering
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
             base.Configure(cmd, cameraTextureDescriptor);
-            
+
+#pragma warning disable CS0618 // Typ lub składowa jest przestarzała
             ConfigureTarget(RenderingContext.CameraColorTarget, RenderingContext.CameraDepthTarget);
+#pragma warning restore CS0618 // Typ lub składowa jest przestarzała
         }
         
         private void SetupDepthAlignmentKernel(CameraData cameraData)

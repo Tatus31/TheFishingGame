@@ -11,9 +11,13 @@ namespace AkiDevCat.AVL.Rendering
 
         public AVLFeatureSettings Settings { get; internal set; }
 
+#pragma warning disable CS0618 // Typ lub składowa jest przestarzała
         public RenderTargetIdentifier CameraColorTarget => Renderer.cameraColorTarget;
+#pragma warning restore CS0618 // Typ lub składowa jest przestarzała
 
+#pragma warning disable CS0618 // Typ lub składowa jest przestarzała
         public RenderTargetIdentifier CameraDepthTarget => Renderer.cameraDepthTarget;
+#pragma warning restore CS0618 // Typ lub składowa jest przestarzała
 
         public GraphicsBuffer GlobalLightBuffer { get;  set; }
         
