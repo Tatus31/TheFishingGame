@@ -1,59 +1,55 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using Random = UnityEngine.Random;
 using System.Collections.Generic;
+using Unity.Mathematics;
+
 
 
 public class StartFire : MonoBehaviour
 {
     [SerializeField] GameObject fireVFX;
     [SerializeField] GameObject sparksVFX;
-
-    [SerializeField] float fireTickInterval = 1.0f;
-    [SerializeField] int FireProbability;
-
-    [SerializeField] Vector3 position;
-    [SerializeField] Vector3 rotation;
-
-    [SerializeField] List<StartFire> FirePointsList = new List<StartFire>();
-
+    [SerializeField] private float fireTickInterval = 1.0f;
+    [SerializeField] private Vector3 position;
+    [SerializeField] private Vector3 rotation;
+    [SerializeField] private float FireProbability;
+    private float FireProbabilityMaxValue = 500f;
+    //private Random random = new Random();
+    [SerializeField] private List<GameObject> FirePointList = new List<GameObject>();
+   
+    
+    
     ElectricalDevice electricalDevice;
     ShipDamage shipDamage;
-    StartFireWhenInCloud StartFireWhenInCloud;
-
-    int damageValue = default;
+    StartFireWhenInCloud startfirewhenincloud;
 
     bool isSparking;
     bool isUsed;
     bool isOnFire;
     bool isWaterUnderDeck;
-
     public bool IsOnFire {  get { return isOnFire; } set {  isOnFire = value; } }
 
     private void Start()
     {
         fireVFX.SetActive(false);
         sparksVFX.SetActive(false);
-
+       
         isOnFire = false;
 
         electricalDevice = GetComponent<ElectricalDevice>();
-        StartFireWhenInCloud StartFireWhenInCloud = FindObjectOfType<StartFireWhenInCloud>();
+        startfirewhenincloud = (StartFireWhenInCloud)FindAnyObjectByType(typeof(StartFireWhenInCloud));
         shipDamage = ShipDamage.Instance;
+        
 
         ElectricalDevice.OnDegradation += ElectricalDevice_OnDegradation;
         ChangeWaterLevelUnderDeck.Instance.OnShipCatchingWater += ChangeWaterLevelUnderDeck_OnShipCatchingWater;
-
-        if(StartFireWhenInCloud != null)
-            StartFireWhenInCloud.OnShipInCloud += OnShipInCloudFire;
+        startfirewhenincloud.OnShipInCloud += OnShipInCloudFire;
     }
 
     private void ChangeWaterLevelUnderDeck_OnShipCatchingWater(object sender, bool e)
     {
-#if UNITY_EDITOR
         Debug.Log("there is water underdeck");
-#endif
         FireActionStop();
     }
 
@@ -83,14 +79,16 @@ public class StartFire : MonoBehaviour
     private void OnShipInCloudFire()
     {       
         FireProbability++;
-        if (FireProbability >= 1000)
+
+        if (FireProbability >= FireProbabilityMaxValue)
         {
-            FireActionStart();
-            PosFireStart(30);
+            FireActionStart();  
+            RandomPosFireStart();
+            FireProbability = 0; // Resetujemy licznik po nowym ogniu
         }
-#if UNITY_EDITOR
-        Debug.Log(FireProbability);
-#endif
+
+        Debug.Log($"🔥 Aktualne ryzyko pożaru: {FireProbability}");
+
     }
 
 
@@ -106,35 +104,46 @@ public class StartFire : MonoBehaviour
     }
 
     void FireActionStart()
-    {
-#if UNITY_EDITOR
+    {   
+        if (isOnFire) return;
+        
         Debug.Log("start fire");
-#endif
         fireVFX.SetActive(true);
         isOnFire = true;
-        StartCoroutine(FireTickDamage());
+        RandomPosFireStart();
+        //StartCoroutine(FireTickDamage());
     }
 
     void FireActionStop()
     {
         fireVFX.SetActive(false);
         isOnFire = false;
+        
+        foreach (GameObject obj in FirePointList)
+        {
+            obj.SetActive(false);
+        }
     }
 
-    void PosFireStart(int damagePerFirepoint)
+    void RandomPosFireStart()
     {
-        StartFire unusedPoint = FirePointsList.Find(point => !point.isUsed);
-        if (unusedPoint != null)
+        if (FirePointList.Count == 0) return;  // Sprawdzenie, czy lista nie jest pusta
+
+        // Filtrowanie listy: znajdź punkty, które jeszcze się nie palą
+        List<GameObject> wolnePunkty = FirePointList.FindAll(p => !p.activeSelf);
+
+        if (wolnePunkty.Count == 0)
         {
-            Vector3 worldPoint = transform.TransformPoint(unusedPoint.position);
-            Quaternion worldRotation = transform.rotation * Quaternion.Euler(unusedPoint.rotation);
-            Instantiate(fireVFX, worldPoint, worldRotation, transform);
-            unusedPoint.damageValue = damagePerFirepoint;
-#if UNITY_EDITOR
-            Debug.Log($"Zadaje {unusedPoint.damageValue}");
-#endif
-            unusedPoint.isUsed = true;
-           
+            Debug.Log("Wszystkie punkty ognia są już aktywne!");
+            return; // Jeśli nie ma dostępnych miejsc, kończymy
         }
+
+        // Wybieramy losowy punkt spośród dostępnych
+        int losowyIndeks = UnityEngine.Random.Range(0, wolnePunkty.Count);
+    
+        Debug.Log($"Nowy pożar w miejscu: {wolnePunkty[losowyIndeks].name}");
+    
+        wolnePunkty[losowyIndeks].SetActive(true);
+
     }
 }
