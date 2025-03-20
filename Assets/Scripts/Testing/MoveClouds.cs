@@ -11,6 +11,7 @@ public class MoveClouds : MonoBehaviour
     [SerializeField] private GameObject CloudGameObject;
     [SerializeField] private GameObject CloudTowardsPoint;
     [SerializeField] private List<Transform> CloudTransforms = new List<Transform>();
+    
 
     public List<Transform> GetCloudTransformsList
     {
@@ -20,7 +21,7 @@ public class MoveClouds : MonoBehaviour
     
     private void Update()
     {
-        MoveCloud(0.05f);
+        MoveCloud(0.15f);
     }
     
     void MoveCloud(float moveamount)

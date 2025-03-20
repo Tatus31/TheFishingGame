@@ -17,8 +17,7 @@ public class StartFire : MonoBehaviour
     private float FireProbabilityMaxValue = 500f;
     //private Random random = new Random();
     [SerializeField] private List<GameObject> FirePointList = new List<GameObject>();
-    [SerializeField] private float radius = 0.5f;
-    [SerializeField] private Transform shipTransform;
+   
     
     
     ElectricalDevice electricalDevice;

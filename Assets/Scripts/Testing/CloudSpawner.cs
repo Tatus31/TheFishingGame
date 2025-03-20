@@ -30,6 +30,7 @@ public class CloudSpawner : MonoBehaviour
             // Instancjonowanie obiektu w losowo wybranym miejscu
             GameObject CloudClone = Instantiate(CloudToMove, spawnPosition, Quaternion.identity);
             _MoveClouds.GetCloudTransformsList.Add(CloudClone.transform);
+            
 
         }
         
