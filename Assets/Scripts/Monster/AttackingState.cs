@@ -62,7 +62,6 @@ public class AttackingState : BaseMonsterState
         }
         else
         {
-            Debug.Log("Retreating");
             rb.AddForce(-directionToShip * swimAttackSpeed * 0.5f, ForceMode.Acceleration);
             monsterState.StartCoroutine(SwimAwayFromShip(monsterState));
         }

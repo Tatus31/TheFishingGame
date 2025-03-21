@@ -15161,7 +15161,7 @@ Transform:
   m_GameObject: {fileID: 1991180803}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1208003, y: -1.28, z: 0}
+  m_LocalPosition: {x: -1.1208003, y: -0.36, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -16436,8 +16436,33 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: c3a09b2c1f235d8479ba5dedb2ae743f, type: 2}
     - target: {fileID: 6091880103657503439, guid: 4c85dc26b19aea146bae3c9dbcef179a,
         type: 3}
+      propertyPath: repairPoints.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091880103657503439, guid: 4c85dc26b19aea146bae3c9dbcef179a,
+        type: 3}
       propertyPath: repairPoints.Array.data[0].isUsed
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091880103657503439, guid: 4c85dc26b19aea146bae3c9dbcef179a,
+        type: 3}
+      propertyPath: repairPoints.Array.data[3].position.x
+      value: 3.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091880103657503439, guid: 4c85dc26b19aea146bae3c9dbcef179a,
+        type: 3}
+      propertyPath: repairPoints.Array.data[3].position.y
+      value: 0.82
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091880103657503439, guid: 4c85dc26b19aea146bae3c9dbcef179a,
+        type: 3}
+      propertyPath: repairPoints.Array.data[3].position.z
+      value: 2.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091880103657503439, guid: 4c85dc26b19aea146bae3c9dbcef179a,
+        type: 3}
+      propertyPath: repairPoints.Array.data[3].rotation.y
+      value: 32.63
       objectReference: {fileID: 0}
     - target: {fileID: 7495349710223507180, guid: 4c85dc26b19aea146bae3c9dbcef179a,
         type: 3}

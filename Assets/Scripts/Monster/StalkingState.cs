@@ -13,7 +13,7 @@ public class StalkingState : BaseMonsterState
 
     float approachSpeedFactor = 0.1f;
     float slowdownDistance = 4f;
-    float stayPutTreshold = 1.2f;
+    float stayPutTreshold = 5f;
     float stacionaryShipVel = 0.3f;
 
     Transform shipTransform;

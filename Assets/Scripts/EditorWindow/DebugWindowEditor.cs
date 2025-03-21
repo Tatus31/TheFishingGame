@@ -584,16 +584,8 @@ public class DebugWindowEditor : EditorWindow
                 typeof(InteractionManager.EquipedTool), toolName);
 
             interactionManager.EquipTool(selectedTool);
-
-            //VisualElement root = rootVisualElement;
-            //Label currentToolValue = root.Q<Label>("CurrentToolValue");
-            //if (currentToolValue != null)
-            //{
-            //    currentToolValue.text = toolName;
-            //}
-
 #if UNITY_EDITOR
-            Debug.Log($"Equipped tool: {toolName}");
+            Debug.Log($"equipped {toolName}");
 #endif
         }
         else
@@ -622,12 +614,12 @@ public class DebugWindowEditor : EditorWindow
                     monsterStateMachine.SwitchState(monsterStateMachine.AttackingState);
                     break;
                 default:
-                    Debug.LogWarning($"no state with name: {stateName}");
+                    Debug.LogWarning($"no state with name {stateName}");
                     return;
             }
 
 #if UNITY_EDITOR
-            Debug.Log($"Monster state changed to: {stateName}");
+            Debug.Log($"monster state changed to {stateName}");
 #endif
         }
         else
