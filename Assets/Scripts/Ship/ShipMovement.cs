@@ -52,6 +52,7 @@ public class ShipMovement : MonoBehaviour
     public float MaxSpeed { get { return maxSpeed; } set { maxSpeed = value; } }
     public bool IsControllingShip { get { return isControllingShip; } set { isControllingShip = value; } }
     public float CurrentWheelRotation { get { return currentWheelRotation; } }
+    public SpeedLevel CurrentSpeedLevel { get { return currentSpeedLevel; } }
 
     void Awake()
     {
@@ -88,7 +89,7 @@ public class ShipMovement : MonoBehaviour
         }
     }
 
-    void IncreaseSpeedLevel()
+    public void IncreaseSpeedLevel()
     {
         switch (currentSpeedLevel)
         {
@@ -111,7 +112,7 @@ public class ShipMovement : MonoBehaviour
         OnDetectionChange?.Invoke(this, currentSpeedLevel);
     }
 
-    void DecreaseSpeedLevel()
+    public void DecreaseSpeedLevel()
     {
         switch (currentSpeedLevel)
         {
@@ -138,6 +139,7 @@ public class ShipMovement : MonoBehaviour
     {
         if (!isControllingShip)
             return;
+
         HandleMovement();
         HandleRotation();
         UpdateShipState();

@@ -16,6 +16,8 @@ public class StalkingState : BaseMonsterState
     float stayPutTreshold = 5f;
     float stacionaryShipVel = 0.3f;
 
+    float obstacleAvoidanceDistance = 1f;
+
     Transform shipTransform;
     Transform monsterTransform;
 
@@ -26,7 +28,7 @@ public class StalkingState : BaseMonsterState
     Vector3 targetDirection;
     Vector3 shipVel;
 
-    public StalkingState(Transform shipTransform, Transform monsterTransform, Rigidbody rb, float minStalkingDistance, float swimStalkingSpeed, float stalkingDistance)
+    public StalkingState(Transform shipTransform, Transform monsterTransform, Rigidbody rb, float minStalkingDistance, float swimStalkingSpeed, float stalkingDistance, float obstacleAvoidanceDistance)
     {
         this.shipTransform = shipTransform;
         this.monsterTransform = monsterTransform;
@@ -34,6 +36,7 @@ public class StalkingState : BaseMonsterState
         this.stalkingDistance = stalkingDistance;
         this.minStalkingDistance = minStalkingDistance;
         this.swimStalkingSpeed = swimStalkingSpeed;
+        this.obstacleAvoidanceDistance = obstacleAvoidanceDistance;
 
         if (shipTransform != null)
         {
@@ -125,7 +128,7 @@ public class StalkingState : BaseMonsterState
             rb.velocity *= velDamping;
         }
 
-        Vector3 obstacleAvoidance = monsterState.GetObstacleAvoidanceDirection();
+        Vector3 obstacleAvoidance = monsterState.GetObstacleAvoidanceDirection(obstacleAvoidanceDistance);
         Vector3 combinedDirection = (moveForce + obstacleAvoidance).normalized;
 
         if (moveForce.magnitude > 0.01f)

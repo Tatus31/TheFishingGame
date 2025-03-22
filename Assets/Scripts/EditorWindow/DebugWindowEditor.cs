@@ -9,7 +9,10 @@ using UnityEngine.UIElements;
 public class DebugWindowEditor : EditorWindow
 {
     TextField statValueField;
+    TextField detectionValueField;
     string selectedStat;
+
+    float detectionValue;
 
     [MenuItem("Window/DebugWindow")]
     public static void ShowExample()
@@ -152,7 +155,7 @@ public class DebugWindowEditor : EditorWindow
         statsDropdown.RegisterValueChangedCallback(evt =>
         {
             selectedStat = evt.newValue;
-            DisplayStatValue(evt.newValue);
+            GetStatValue(evt.newValue);
         });
         statsContainer.Add(statsDropdown);
 
@@ -286,7 +289,69 @@ public class DebugWindowEditor : EditorWindow
         attackingStateButton.style.marginBottom = 5;
         monsterSectionContainer.Add(attackingStateButton);
 
+        VisualElement detectionContainer = new VisualElement();
+        detectionContainer.style.flexDirection = FlexDirection.Row;
+        detectionContainer.style.marginTop = 2;
+        detectionContainer.style.marginBottom = 2;
+
+        detectionValueField = new TextField("New Detection Value:");
+        detectionValueField.style.flexGrow = 1;
+        detectionValueField.style.width = 100;
+        detectionValueField.style.minWidth = 75;
+        detectionValueField.style.marginLeft = 1;
+        detectionValueField.style.unityTextAlign = TextAnchor.MiddleCenter;
+        detectionContainer.Add(detectionValueField);
+
+        Button changeDetectionValue = new Button(SetDetectionValue);
+        changeDetectionValue.name = "ChangeDetectionValue";
+        changeDetectionValue.text = "Change";
+        changeDetectionValue.style.marginTop = 2;
+        changeDetectionValue.style.marginBottom = 2;
+        changeDetectionValue.style.marginLeft = 1;
+        changeDetectionValue.style.width = 100;
+        changeDetectionValue.style.minWidth = 75;
+        detectionContainer.Add(changeDetectionValue);
+
+        VisualElement speedContainer = new VisualElement();
+        speedContainer.style.flexDirection = FlexDirection.Row;
+        speedContainer.style.marginTop = 10;
+        speedContainer.style.marginBottom = 2;
+        speedContainer.style.alignSelf = Align.Center;
+
+        TextField moveValueField = new TextField("Move:");
+        moveValueField.style.flexGrow = 1;
+        moveValueField.style.width = 40;
+        moveValueField.style.minWidth = 35;
+        moveValueField.style.unityTextAlign = TextAnchor.MiddleLeft;
+        speedContainer.Add(moveValueField);
+
+        Button increaseSpeedLevel = new Button(IncreaseSpeedLevel);
+        increaseSpeedLevel.name = "IncreaseSpeedLevel";
+        increaseSpeedLevel.text = "Increase";
+        increaseSpeedLevel.style.marginTop = 2;
+        increaseSpeedLevel.style.marginLeft = 1;
+        increaseSpeedLevel.style.width = 100;
+        increaseSpeedLevel.style.minWidth = 75;
+        increaseSpeedLevel.style.unityTextAlign = TextAnchor.MiddleCenter;
+        speedContainer.Add(increaseSpeedLevel);
+
+        Button decreaseSpeedLevel = new Button(DecreaseSpeedLevel);
+        decreaseSpeedLevel.name = "DecreaseSpeedLevel";
+        decreaseSpeedLevel.text = "Decrease";
+        decreaseSpeedLevel.style.marginTop = 2;
+        decreaseSpeedLevel.style.marginBottom = 2;
+        decreaseSpeedLevel.style.marginLeft = 1;
+        decreaseSpeedLevel.style.width = 100;
+        decreaseSpeedLevel.style.minWidth = 75;
+        decreaseSpeedLevel.style.unityTextAlign = TextAnchor.MiddleCenter;
+        speedContainer.Add(decreaseSpeedLevel);
+
+        monsterSectionContainer.Add(detectionContainer);
+        monsterSectionContainer.Add(speedContainer);
+
         root.Add(monsterSectionContainer);
+        root.Add(detectionContainer);
+        root.Add(speedContainer);
     }
 
     void TeleportToShip()
@@ -417,13 +482,47 @@ public class DebugWindowEditor : EditorWindow
         }
     }
 
-    void DisplayStatValue(string stat)
+    void GetStatValue(string stat)
     {
         Ship ship = Ship.Instance;
         if (ship != null)
         {
             Stats selectedStat = (Stats)Enum.Parse(typeof(Stats), stat);
             int statValue = ship.GetModifiedStatValue(selectedStat);
+        }
+    }
+
+    void SetDetectionValue()
+    {
+        if (string.IsNullOrEmpty(detectionValueField.value))
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning("Enter a value for detection");
+#endif
+            return;
+        }
+
+        if (!float.TryParse(detectionValueField.value, out float newValue))
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning("Enter a valid numeric value");
+#endif
+            return;
+        }
+
+        DetectionManager detectionManager = DetectionManager.Instance;
+        if (detectionManager != null)
+        {
+            detectionManager.CurrentDetectionMultiplier = newValue;
+#if UNITY_EDITOR
+            Debug.Log($"Detection value set to {newValue}");
+#endif
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"DetectionManager instance not found in the scene. (Are you in playmode?)");
+#endif
         }
     }
 
@@ -459,7 +558,7 @@ public class DebugWindowEditor : EditorWindow
             Stats selectedStat = (Stats)Enum.Parse(typeof(Stats), stat);
 
             ship.UpdateAttribute(selectedStat, newValue);
-            DisplayStatValue(stat);
+            GetStatValue(stat);
         }
         else
         {
@@ -626,6 +725,46 @@ public class DebugWindowEditor : EditorWindow
         {
 #if UNITY_EDITOR
             Debug.LogWarning($"{monsterStateMachine} instance not found in the scene. (Are you in playmode?)");
+#endif
+        }
+    }
+
+    void IncreaseSpeedLevel()
+    {
+        ShipMovement shipMovement = FindObjectOfType<ShipMovement>();
+
+        if (shipMovement != null)
+        {
+            shipMovement.IncreaseSpeedLevel();
+            shipMovement.IsControllingShip = true;
+#if UNITY_EDITOR
+            Debug.Log($"Ship speed level increased to {shipMovement.CurrentSpeedLevel}");
+#endif
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"{shipMovement} component not found in the scene. (Are you in playmode?)");
+#endif
+        }
+    }
+
+    void DecreaseSpeedLevel()
+    {
+        ShipMovement shipMovement = FindObjectOfType<ShipMovement>();
+
+        if (shipMovement != null)
+        {
+            shipMovement.DecreaseSpeedLevel();
+            shipMovement.IsControllingShip = true;
+#if UNITY_EDITOR
+            Debug.Log($"Ship speed level decreased to {shipMovement.CurrentSpeedLevel}");
+#endif
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"{shipMovement} component not found in the scene. (Are you in playmode?)");
 #endif
         }
     }

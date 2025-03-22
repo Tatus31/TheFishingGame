@@ -6,6 +6,7 @@ using static ShipMovement;
 
 public class DetectionManager : MonoBehaviour
 {
+    public static DetectionManager Instance;
 
     [Serializable]
     public enum DangerState
@@ -20,9 +21,27 @@ public class DetectionManager : MonoBehaviour
     [SerializeField] float detectionMultiplierValue;
     [SerializeField]
     [Tooltip("time to interpolate between current detection and the target one")] float lerpTime = 1f;
+    [SerializeField] float timer = 5f;
 
+    float time;
     float currentDetectionMultiplier;
     SpeedLevel speedLevel;
+
+    bool isSearching = false;
+
+    public float CurrentDetectionMultiplier { get { return currentDetectionMultiplier; } set { currentDetectionMultiplier = value; } }
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"there exists a {Instance.name} in the scene already");
+#endif
+        }
+
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -62,23 +81,30 @@ public class DetectionManager : MonoBehaviour
                 break;
         }
 
-        if(currentDetectionMultiplier >= 1.9f)
+        if (currentDetectionMultiplier >= 1.9f)
         {
             if (MonsterStateMachine.Instance == null)
                 return;
 
-            MonsterStateMachine.Instance.SwitchState(MonsterStateMachine.Instance.StalkingState);
+            time += Time.deltaTime;
+
+            if (time >= timer)
+            {
+                isSearching = false;
+                time = 0;
+            }
+
+            if (!isSearching)
+            {
+                MonsterStateMachine.Instance.InvestigatingState.SetInvestigationRadius(currentDetectionMultiplier);
+                MonsterStateMachine.Instance.SwitchState(MonsterStateMachine.Instance.InvestigatingState);
+                isSearching = true;
+            }
         }
 
         //if (shipIsNotMoving)
         //{
-        //    time += Time.deltaTime;
-        //    currentDetectionMultiplier--;
 
-        //    if (time >= timer)
-        //    {
-        //        time = 0;
-        //    }
         //}
 
         //Testing
@@ -99,7 +125,7 @@ public class DetectionManager : MonoBehaviour
         float previousDetectionMultiplier = currentDetectionMultiplier;
 
         currentDetectionMultiplier = Mathf.Lerp(currentDetectionMultiplier, targetDetectionValue, Time.deltaTime * lerpTime);
-        currentDetectionMultiplier = Mathf.Round(currentDetectionMultiplier * 10000f) / 10000f;
+        currentDetectionMultiplier = Mathf.Round(currentDetectionMultiplier * 1000f) / 1000f;
 
 #if UNITY_EDITOR
         Debug.Log($"current detection: {currentDetectionMultiplier} current speed level: {speedLevel}");

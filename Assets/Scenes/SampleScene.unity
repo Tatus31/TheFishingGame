@@ -7762,8 +7762,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2017ece79b016f4986cfeb52d2fbe2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 0
-  timer: 50
+  detectionMultiplierValue: 1
+  lerpTime: 2
+  timer: 20
 --- !u!1 &1077416420
 GameObject:
   m_ObjectHideFlags: 0
@@ -12634,7 +12635,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1497772957
 Transform:
   m_ObjectHideFlags: 0
@@ -13047,7 +13048,7 @@ Transform:
   m_GameObject: {fileID: 1533963481}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 65.75, y: -21.219604, z: 80.183716}
+  m_LocalPosition: {x: 108.75, y: -21.219604, z: 80.183716}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13106,8 +13107,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsterHead: {fileID: 1472332561}
   shipTransform: {fileID: 7157433146232501158}
-  obstacleAvoidanceDistance: 5
-  obstacleAvoidanceForce: 0.5
+  obstacleAvoidanceDistance: 10
+  obstacleAvoidanceForce: 0.1
   swimSpeed: 1
   rotationSpeed: 5
   maxVelocity: 4
@@ -13125,6 +13126,8 @@ MonoBehaviour:
   swimStalkingSpeed: 5
   swimAttackSpeed: 16
   monsterEscapeTime: 4
+  investigationRadius: 50
+  investigationSwimSpeed: 1
 --- !u!54 &1533963487
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -13486,6 +13489,8 @@ MonoBehaviour:
   swimStalkingSpeed: 10
   swimAttackSpeed: 10
   monsterEscapeTime: 4
+  investigationRadius: 10
+  investigationSwimSpeed: 10
 --- !u!4 &1618540813
 Transform:
   m_ObjectHideFlags: 0
@@ -18446,7 +18451,7 @@ PrefabInstance:
     - target: {fileID: 3327322189657895767, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.45999908
+      value: 53.29
       objectReference: {fileID: 0}
     - target: {fileID: 3327322189657895767, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
@@ -18456,7 +18461,7 @@ PrefabInstance:
     - target: {fileID: 3327322189657895767, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 15.669998
+      value: 28.04
       objectReference: {fileID: 0}
     - target: {fileID: 3327322189657895767, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
