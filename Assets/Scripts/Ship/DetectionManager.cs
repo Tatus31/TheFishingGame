@@ -88,7 +88,10 @@ public class DetectionManager : MonoBehaviour
 
             time += Time.deltaTime;
 
-            if (time >= timer)
+            float changedTimer = timer - (currentDetectionMultiplier * 2);
+            Debug.Log($"changed timer: {changedTimer}");
+
+            if (time >= changedTimer)
             {
                 isSearching = false;
                 time = 0;
@@ -128,7 +131,7 @@ public class DetectionManager : MonoBehaviour
         currentDetectionMultiplier = Mathf.Round(currentDetectionMultiplier * 1000f) / 1000f;
 
 #if UNITY_EDITOR
-        Debug.Log($"current detection: {currentDetectionMultiplier} current speed level: {speedLevel}");
+        //Debug.Log($"current detection: {currentDetectionMultiplier} current speed level: {speedLevel}");
 #endif
     }
 }

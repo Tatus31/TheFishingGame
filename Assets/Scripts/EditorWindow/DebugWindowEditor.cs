@@ -318,7 +318,7 @@ public class DebugWindowEditor : EditorWindow
         speedContainer.style.marginBottom = 2;
         speedContainer.style.alignSelf = Align.Center;
 
-        TextField moveValueField = new TextField("Move:");
+        TextField moveValueField = new TextField("Speed:");
         moveValueField.style.flexGrow = 1;
         moveValueField.style.width = 40;
         moveValueField.style.minWidth = 35;
