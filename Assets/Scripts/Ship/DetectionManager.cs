@@ -81,15 +81,19 @@ public class DetectionManager : MonoBehaviour
                 break;
         }
 
-        if (currentDetectionMultiplier >= 1.9f)
-        {
-            if (MonsterStateMachine.Instance == null)
-                return;
+        if (MonsterStateMachine.Instance == null)
+            return;
 
+        float distanceToShip = MonsterStateMachine.Instance.GetDistanceToShip();
+
+        //Debug.Log($"distance to ship: {distanceToShip}");
+
+        if (currentDetectionMultiplier >= 0.4f && distanceToShip <= 50f)
+        {
             time += Time.deltaTime;
 
             float changedTimer = timer - (currentDetectionMultiplier * 2);
-            Debug.Log($"changed timer: {changedTimer}");
+            //Debug.Log($"changed timer: {changedTimer}");
 
             if (time >= changedTimer)
             {
@@ -131,7 +135,7 @@ public class DetectionManager : MonoBehaviour
         currentDetectionMultiplier = Mathf.Round(currentDetectionMultiplier * 1000f) / 1000f;
 
 #if UNITY_EDITOR
-        //Debug.Log($"current detection: {currentDetectionMultiplier} current speed level: {speedLevel}");
+        Debug.Log($"current detection: {currentDetectionMultiplier} current speed level: {speedLevel}");
 #endif
     }
 }

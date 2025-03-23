@@ -58,7 +58,7 @@ public class InvestigatingState : BaseMonsterState
             float stalkingThreshold = detectShipValue + (DetectionManager.Instance.CurrentDetectionMultiplier * detectionMultiplier);
             stalkingThreshold = Mathf.Max(stalkingThreshold, 5f);
 
-            Debug.Log($"{monsterDetectionDistance} <= {stalkingThreshold}");
+            //Debug.Log($"{monsterDetectionDistance} <= {stalkingThreshold}");
 
             if (monsterDetectionDistance <= stalkingThreshold)
             {
