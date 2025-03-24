@@ -9,27 +9,37 @@ public class DetectionManager : MonoBehaviour
     public static DetectionManager Instance;
 
     [Serializable]
-    public enum DangerState
+    public class DetectionValues
     {
-        Low,
-        Medium,
-        High,
-        Extreme
+        public float collisionDetection = 1f;
+        public float reverseSpeedDetection = 0.5f;
+        public float neutralSpeedDetection = 0f;
+        public float forward1SpeedDetection = 1f;
+        public float forward2SpeedDetection = 2f;
+        public float forward3SpeedDetection = 3f;
     }
 
-    [Header("Detection Values")]
+    [Header("Detection Setup")]
+    [Space(10)]
     [SerializeField] float detectionMultiplierValue;
     [SerializeField]
     [Tooltip("time to interpolate between current detection and the target one")] float lerpTime = 1f;
     [SerializeField] float timer = 5f;
+    [SerializeField] float staticValueTimer = 10f;
+    [Space(10)]
+    [SerializeField] DetectionValues detectionValues;
 
     float time;
     float currentDetectionMultiplier;
     SpeedLevel speedLevel;
 
+    float additionalDetection = 0f;
+    float collisionDetectionTimer = 0f;
+
     bool isSearching = false;
 
     public float CurrentDetectionMultiplier { get { return currentDetectionMultiplier; } set { currentDetectionMultiplier = value; } }
+    public DetectionValues GetDetectionValues => detectionValues;
 
     private void Awake()
     {
@@ -49,6 +59,25 @@ public class DetectionManager : MonoBehaviour
         speedLevel = SpeedLevel.neutral;
 
         OnDetectionChange += ShipMovement_OnDetectionChange;
+        ShipDamage.Instance.OnDetectionChange += ShipDamage_OnDetectionChange;
+    }
+
+    private void OnValidate()
+    {
+        //Debug.Log($"detection values: \n{detectionValues.collisionDetection} \n {detectionValues.reverseSpeedDetection}\n {detectionValues.neutralSpeedDetection}" +
+        //    $"\n {detectionValues.forward1SpeedDetection}\n {detectionValues.forward2SpeedDetection}\n {detectionValues.forward3SpeedDetection}");
+    }
+
+    private void ShipDamage_OnDetectionChange(object sender, float detectionValue)
+    {
+        additionalDetection = detectionValue;
+        currentDetectionMultiplier += additionalDetection;
+
+        collisionDetectionTimer = staticValueTimer;
+
+#if UNITY_EDITOR
+        Debug.Log($"added {detectionValue} to detection new value: {currentDetectionMultiplier}");
+#endif
     }
 
     private void ShipMovement_OnDetectionChange(object sender, ShipMovement.SpeedLevel e)
@@ -60,25 +89,46 @@ public class DetectionManager : MonoBehaviour
 
     private void Update()
     {
+        if (collisionDetectionTimer > 0)
+        {
+            collisionDetectionTimer -= Time.deltaTime;
+
+            if (collisionDetectionTimer <= 0)
+            {
+                currentDetectionMultiplier -= additionalDetection;
+                additionalDetection = 0f;
+
+#if UNITY_EDITOR
+                Debug.Log("collision detection bonus expired");
+#endif
+            }
+        }
+
+        float targetValue = 0f;
         switch (speedLevel)
         {
             case SpeedLevel.reverse:
-                LerpDetectionValue(0.5f);
+                targetValue = detectionValues.reverseSpeedDetection;
                 break;
             case SpeedLevel.neutral:
-                LerpDetectionValue(0);
+                targetValue = detectionValues.neutralSpeedDetection;
                 break;
             case SpeedLevel.forward1:
-                LerpDetectionValue(1);
+                targetValue = detectionValues.forward1SpeedDetection;
                 break;
             case SpeedLevel.forward2:
-                LerpDetectionValue(2);
+                targetValue = detectionValues.forward2SpeedDetection;
                 break;
             case SpeedLevel.forward3:
-                LerpDetectionValue(3);
+                targetValue = detectionValues.forward3SpeedDetection;
                 break;
             default:
                 break;
+        }
+
+        if (additionalDetection == 0)
+        {
+            LerpDetectionValue(targetValue);
         }
 
         if (MonsterStateMachine.Instance == null)
@@ -108,23 +158,6 @@ public class DetectionManager : MonoBehaviour
                 isSearching = true;
             }
         }
-
-        //if (shipIsNotMoving)
-        //{
-
-        //}
-
-        //Testing
-
-        //if (MonsterStateMachine.Instance == null)
-        //    return;
-
-
-        //if (currentState == DangerState.Extreme)
-        //{
-        //    MonsterStateMachine.Instance.SwitchState(MonsterStateMachine.Instance.AttackingState);
-        //    currentState = DangerState.Low;
-        //}
     }
 
     void LerpDetectionValue(float targetDetectionValue)
