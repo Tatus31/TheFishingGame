@@ -22,7 +22,7 @@ public class StalkingState : BaseMonsterState
     float lowDetectionTimer = 0f;  
 
     float detectionThresholdTime = 15f;
-    float highDetectionThreshold = 2f;
+    float highDetectionThreshold = 1.9f;
     float lowDetectionThreshold = 0.5f;
 
     bool isTransitioning = false;
@@ -105,6 +105,7 @@ public class StalkingState : BaseMonsterState
                 highDetectionTimer = 0f;
 
                 monsterState.SwitchState(monsterState.AttackingState);
+                return;
             }
         }
         else
@@ -122,6 +123,7 @@ public class StalkingState : BaseMonsterState
                 lowDetectionTimer = 0f;
 
                 monsterState.SwitchState(monsterState.InvestigatingState);
+                return;
             }
         }
         else

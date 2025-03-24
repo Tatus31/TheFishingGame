@@ -141,6 +141,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 1333368363357371274, guid: f5cb404c3358f2f488c6101cfe5a2c77,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2082256135472030551, guid: f5cb404c3358f2f488c6101cfe5a2c77,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -13252,7 +13257,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
