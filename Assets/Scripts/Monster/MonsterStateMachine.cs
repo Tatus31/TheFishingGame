@@ -41,6 +41,7 @@ public class MonsterStateMachine : MonoBehaviour
     public StalkingState StalkingState {  get; private set; }
     public AttackingState AttackingState {  get; private set; }
     public InvestigatingState InvestigatingState { get; private set; }
+    public BaseMonsterState PreviousState { get; private set; }
 
     public Transform ShipTransform { get { return shipTransform; } set { shipTransform = value; } }
 
@@ -99,8 +100,10 @@ public class MonsterStateMachine : MonoBehaviour
             return;
 
         currentState?.ExitState();
+        PreviousState = currentState;
         currentState = newState;
         currentState.EnterState(this);
+
     }
 
     public void OnTriggerEnter(Collider other)

@@ -23,7 +23,8 @@ public class ShipMovement : MonoBehaviour
     [Header("Movement Speed")]
     [SerializeField] float maxSpeed = 5f;
     [SerializeField] float forward1Speed = 1.5f;
-    [SerializeField] float forward2Speed = 3f;
+    [SerializeField] float forward2Speed = 2f;
+    [SerializeField] float forward3Speed = 3f;
 
     [Header("Steering Wheel Settings")]
     [SerializeField] float maxWheelRotation = 90f;
@@ -164,6 +165,7 @@ public class ShipMovement : MonoBehaviour
                 break;
             case SpeedLevel.forward3:
                 moveInput = 1f;
+                maxSpeed = forward3Speed;
                 break;
             case SpeedLevel.reverse:
                 moveInput = -1f;

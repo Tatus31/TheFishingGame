@@ -37,9 +37,11 @@ public class DetectionManager : MonoBehaviour
     float collisionDetectionTimer = 0f;
 
     bool isSearching = false;
+    bool setUsingEditor;
 
     public float CurrentDetectionMultiplier { get { return currentDetectionMultiplier; } set { currentDetectionMultiplier = value; } }
     public DetectionValues GetDetectionValues => detectionValues;
+    public bool SetUsingEditor { get { return setUsingEditor; } set { setUsingEditor = value; } }   
 
     private void Awake()
     {
@@ -126,7 +128,7 @@ public class DetectionManager : MonoBehaviour
                 break;
         }
 
-        if (additionalDetection == 0)
+        if (additionalDetection == 0 && !setUsingEditor)
         {
             LerpDetectionValue(targetValue);
         }
