@@ -11,6 +11,8 @@ public class DetectionManager : MonoBehaviour
     [Serializable]
     public class DetectionValues
     {
+        public float lightsDetection = 1f;
+        public float lightsFlickerDetection = 2f;
         public float collisionDetection = 1f;
         public float reverseSpeedDetection = 0.5f;
         public float neutralSpeedDetection = 0f;
@@ -36,8 +38,14 @@ public class DetectionManager : MonoBehaviour
     float additionalDetection = 0f;
     float collisionDetectionTimer = 0f;
 
+    float monsterMinimalDetectionValue = 0.4f;
+    float monsterMinimalDistanceFromShip = 50f;
+
     bool isSearching = false;
     bool setUsingEditor;
+
+    bool areLightsOn;
+    bool areLightsFlickering;
 
     public float CurrentDetectionMultiplier { get { return currentDetectionMultiplier; } set { currentDetectionMultiplier = value; } }
     public DetectionValues GetDetectionValues => detectionValues;
@@ -62,6 +70,18 @@ public class DetectionManager : MonoBehaviour
 
         OnDetectionChange += ShipMovement_OnDetectionChange;
         ShipDamage.Instance.OnDetectionChange += ShipDamage_OnDetectionChange;
+        LightsManager.OnLightsToggled += LightsManager_OnLightsToggled;
+        LightsManager.OnLightsFlicker += LightsManager_OnLightsFlicker;
+    }
+
+    private void LightsManager_OnLightsFlicker(object sender, bool e)
+    {
+        areLightsFlickering = e;
+    }
+
+    private void LightsManager_OnLightsToggled(object sender, bool e)
+    {
+        areLightsOn = e;
     }
 
     private void OnValidate()
@@ -94,12 +114,10 @@ public class DetectionManager : MonoBehaviour
         if (collisionDetectionTimer > 0)
         {
             collisionDetectionTimer -= Time.deltaTime;
-
             if (collisionDetectionTimer <= 0)
             {
                 currentDetectionMultiplier -= additionalDetection;
                 additionalDetection = 0f;
-
 #if UNITY_EDITOR
                 Debug.Log("collision detection bonus expired");
 #endif
@@ -107,6 +125,17 @@ public class DetectionManager : MonoBehaviour
         }
 
         float targetValue = 0f;
+        float lightDetectionBonus = 0f;
+
+        if (areLightsOn)
+        {
+            lightDetectionBonus = detectionValues.lightsDetection;
+        }
+        else if (areLightsFlickering)
+        {
+            lightDetectionBonus = detectionValues.lightsFlickerDetection;
+        }
+
         switch (speedLevel)
         {
             case SpeedLevel.reverse:
@@ -128,6 +157,8 @@ public class DetectionManager : MonoBehaviour
                 break;
         }
 
+        targetValue += lightDetectionBonus;
+
         if (additionalDetection == 0 && !setUsingEditor)
         {
             LerpDetectionValue(targetValue);
@@ -138,14 +169,10 @@ public class DetectionManager : MonoBehaviour
 
         float distanceToShip = MonsterStateMachine.Instance.GetDistanceToShip();
 
-        //Debug.Log($"distance to ship: {distanceToShip}");
-
-        if (currentDetectionMultiplier >= 0.4f && distanceToShip <= 50f)
+        if (currentDetectionMultiplier >= monsterMinimalDetectionValue && distanceToShip <= monsterMinimalDistanceFromShip)
         {
             time += Time.deltaTime;
-
             float changedTimer = timer - (currentDetectionMultiplier * 2);
-            //Debug.Log($"changed timer: {changedTimer}");
 
             if (time >= changedTimer)
             {
@@ -167,6 +194,7 @@ public class DetectionManager : MonoBehaviour
         float previousDetectionMultiplier = currentDetectionMultiplier;
 
         currentDetectionMultiplier = Mathf.Lerp(currentDetectionMultiplier, targetDetectionValue, Time.deltaTime * lerpTime);
+        currentDetectionMultiplier = Mathf.Clamp(currentDetectionMultiplier, currentDetectionMultiplier, targetDetectionValue);
         currentDetectionMultiplier = Mathf.Round(currentDetectionMultiplier * 1000f) / 1000f;
 
 #if UNITY_EDITOR

@@ -92,8 +92,8 @@ public class InvestigatingState : BaseMonsterState
 
         Vector3 directionToTarget = (currentTarget - monsterTransform.position).normalized;
         targetDirection = directionToTarget;
-        Vector3 obstacleAvoidance = monsterState.GetObstacleAvoidanceDirection(obstacleAvoidanceDistance);
-        Vector3 combinedDirection = (directionToTarget + obstacleAvoidance).normalized;
+        //Vector3 obstacleAvoidance = monsterState.GetObstacleAvoidanceDirection(obstacleAvoidanceDistance);
+        //Vector3 combinedDirection = (directionToTarget + obstacleAvoidance).normalized;
         rb.AddForce(directionToTarget * (swimSpeed * DetectionManager.Instance.CurrentDetectionMultiplier), ForceMode.Acceleration);
     }
 

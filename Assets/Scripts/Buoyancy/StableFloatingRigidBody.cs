@@ -168,16 +168,16 @@ public class StableFloatingRigidBody : MonoBehaviour
         {
             Vector3 worldPoint = transform.TransformPoint(buoyancyOffsets[i]);
 
-            float waveOffset = CalculateWaveHeight(worldPoint.x, worldPoint.z, time);
+            Vector3 waveOffset = CalculateWaveDisplacement(worldPoint.x, worldPoint.z, time);
 
-            Vector3 p = offset + worldPoint + down * waveOffset;
+            Vector3 p = offset + worldPoint + waveOffset;
 
             if (Physics.Raycast(
                 p, down, out RaycastHit hit, submergenceRange + 1f,
                 waterMask, QueryTriggerInteraction.Collide
             ))
             {
-                float adjustedDistance = hit.distance - waveOffset;
+                float adjustedDistance = hit.distance - waveOffset.y;
                 submergence[i] = 1f - adjustedDistance / submergenceRange;
             }
             else if (
@@ -190,18 +190,30 @@ public class StableFloatingRigidBody : MonoBehaviour
             }
         }
     }
-    float CalculateWaveHeight(float x, float z, float time)
+
+    Vector3 CalculateWaveDisplacement(float x, float z, float time)
     {
-        float height = 0f;
+        Vector3 displacement = Vector3.zero;
 
         foreach (var wave in waves)
         {
-            float frequency = 2f * Mathf.PI / wave.wavelength;
-            float wavePhase = frequency * Vector2.Dot(wave.direction, new Vector2(x, z)) - (time * wave.speed);
+            Vector2 dir = wave.direction.normalized;
 
-            height += wave.amplitude * Mathf.Sin(wavePhase) * (1f - wave.steepness);
+            float frequency = 2f * Mathf.PI / wave.wavelength;
+            float wavePeriod = wave.speed * frequency;
+            float wavePhase = frequency * Vector2.Dot(dir, new Vector2(x, z)) - (time * wavePeriod);
+
+            float steepness = wave.steepness;
+            float amplitude = wave.amplitude;
+
+            float xDisp = dir.x * steepness * amplitude * Mathf.Cos(wavePhase);
+            float zDisp = dir.y * steepness * amplitude * Mathf.Cos(wavePhase);
+
+            float yDisp = amplitude * Mathf.Sin(wavePhase);
+
+            displacement += new Vector3(xDisp, yDisp, zDisp);
         }
 
-        return height;
+        return displacement;
     }
 }
