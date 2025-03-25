@@ -92,6 +92,8 @@ public class StalkingState : BaseMonsterState
         if (isTransitioning)
             return;
 
+        UpdateDetectionThreshold();
+
         float currentDetectionMultiplier = DetectionManager.Instance.CurrentDetectionMultiplier;
 
         if (currentDetectionMultiplier > highDetectionThreshold)
@@ -230,6 +232,11 @@ public class StalkingState : BaseMonsterState
 
 #if UNITY_EDITOR
                 UnityEditor.Handles.Label(endPos, $"{Mathf.Round(progress * 100)}%");
+                float closeRange = 10f;
+                float mediumRange = 30f;
+                float distanceToShip = Vector3.Distance(monsterTransform.position, shipTransform.position);
+                float t = (distanceToShip - closeRange) / (mediumRange - closeRange);
+                UnityEditor.Handles.Label(endPos + Vector3.up * 1.5f, $"{Mathf.Round(t * 100) / 100}");
 #endif
             }
 
@@ -245,6 +252,26 @@ public class StalkingState : BaseMonsterState
                 UnityEditor.Handles.Label(endPos, $"{Mathf.Round(progress * 100)}%");
 #endif
             }
+        }
+    }
+
+    void UpdateDetectionThreshold()
+    {
+        float distanceToShip = Vector3.Distance(monsterTransform.position, shipTransform.position);
+
+        float maxThreshold = 1.9f;
+
+        float closeRange = 10f;    
+        float mediumRange = 30f;   
+
+        if (distanceToShip <= mediumRange)
+        {
+            float t = (distanceToShip - closeRange) / (mediumRange - closeRange);
+            highDetectionThreshold = t;
+        }
+        else
+        {
+            highDetectionThreshold = maxThreshold;
         }
     }
 

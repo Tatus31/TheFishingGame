@@ -45,14 +45,14 @@ public class ShipRepairPoints : MonoBehaviour
 
     private void Update()
     {
-        foreach (var pair in repairPoints)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                if (pair.isUsed == false)
-                    SpawnHole();
-            }
-        }
+        //foreach (var pair in repairPoints)
+        //{
+        //    if (Input.GetKeyDown(KeyCode.Space))
+        //    {
+        //        if (pair.isUsed == false)
+        //            SpawnHole();
+        //    }
+        //}
     }
 
     public void SpawnHole(int damagePerHole = 0)

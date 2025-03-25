@@ -11,6 +11,7 @@ public class DetectionManager : MonoBehaviour
     [Serializable]
     public class DetectionValues
     {
+        public float decoyDetection = 6f;
         public float lightsDetection = 1f;
         public float lightsFlickerDetection = 2f;
         public float collisionDetection = 1f;
@@ -72,6 +73,15 @@ public class DetectionManager : MonoBehaviour
         ShipDamage.Instance.OnDetectionChange += ShipDamage_OnDetectionChange;
         LightsManager.OnLightsToggled += LightsManager_OnLightsToggled;
         LightsManager.OnLightsFlicker += LightsManager_OnLightsFlicker;
+        Decoy.OnDecoyActivated += Decoy_OnDecoyActivated;
+    }
+
+    private void Decoy_OnDecoyActivated(object sender, Transform e)
+    {
+        //MonsterStateMachine.Instance.InvestigatingState.SetInvestigationRadius(detectionValues.decoyDetection);
+        //MonsterStateMachine.Instance.SwitchState(MonsterStateMachine.Instance.InvestigatingState);
+        //Debug.Log("decoy deployed");
+        //isSearching = true;
     }
 
     private void LightsManager_OnLightsFlicker(object sender, bool e)
@@ -119,7 +129,7 @@ public class DetectionManager : MonoBehaviour
                 currentDetectionMultiplier -= additionalDetection;
                 additionalDetection = 0f;
 #if UNITY_EDITOR
-                Debug.Log("collision detection bonus expired");
+                Debug.Log("collision detection over");
 #endif
             }
         }
@@ -168,7 +178,6 @@ public class DetectionManager : MonoBehaviour
             return;
 
         float distanceToShip = MonsterStateMachine.Instance.GetDistanceToShip();
-
         if (currentDetectionMultiplier >= monsterMinimalDetectionValue && distanceToShip <= monsterMinimalDistanceFromShip)
         {
             time += Time.deltaTime;

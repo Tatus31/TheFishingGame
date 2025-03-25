@@ -6,19 +6,25 @@ public class InvestigatingState : BaseMonsterState
 {
     Transform shipTransform;
     Transform monsterTransform;
+
     float detectShipValue = 10f;
     float detectionMultiplier = 5f;
     float baseInvestigationRadius = 50f;
     float investigationRadius = 50f;
     float swimSpeed = 2f;
     float obstacleAvoidanceDistance = 1f;
+
     Vector3 currentTarget;
     Vector3 targetDirection;
+    Transform decoyPosition;
+
     bool hasTarget;
+    bool isDecoyActive;
+
     Rigidbody rb;
 
     float investigationTimer = 0f;
-    float maxInvestigationTime = 30f; 
+    float maxInvestigationTime = 30f;
 
     public InvestigatingState(Transform shipTransform, Transform monsterTransform, float investigationRadius, float swimSpeed, float obstacleAvoidanceDistance, Rigidbody rb)
     {
@@ -68,7 +74,7 @@ public class InvestigatingState : BaseMonsterState
             float stalkingThreshold = detectShipValue + (DetectionManager.Instance.CurrentDetectionMultiplier * detectionMultiplier);
             stalkingThreshold = Mathf.Max(stalkingThreshold, 5f);
 
-            //Debug.Log($"{monsterDetectionDistance} <= {stalkingThreshold}");
+            Debug.Log($"{monsterDetectionDistance} <= {stalkingThreshold}");
             if (monsterDetectionDistance <= stalkingThreshold)
             {
                 monsterState.SwitchState(monsterState.StalkingState);
@@ -125,9 +131,21 @@ public class InvestigatingState : BaseMonsterState
             Gizmos.DrawLine(startPos, endPos);
 
             UnityEditor.Handles.Label(startPos + Vector3.up * 0.3f,
-                $"investigation: {investigationTimer:F1}s / {maxInvestigationTime}s");
+                $"investigating: {investigationTimer:F1}s / {maxInvestigationTime}s");
         }
 #endif
+
+        if (isDecoyActive)
+        {
+            Gizmos.color = Color.yellow;
+            float maxBar = 2.0f;
+            Vector3 startPos = decoyPosition.position + Vector3.up * 2.0f;
+            Vector3 endPos = startPos + Vector3.right * maxBar;
+            Gizmos.DrawLine(startPos, endPos);
+
+            UnityEditor.Handles.Label(startPos + Vector3.up * 0.3f,
+                "decoy");
+        }
     }
 
     public void SetInvestigationRadius(float radius)
