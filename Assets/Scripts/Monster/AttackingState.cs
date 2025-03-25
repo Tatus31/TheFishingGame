@@ -53,8 +53,7 @@ public class AttackingState : BaseMonsterState
 
     public override void FixedUpdateState(MonsterStateMachine monsterState)
     {
-        directionToShip = shipTransform.position - monsterTransform.position;
-        directionToShip = shipTransform.position - monsterTransform.position;
+        directionToShip = (shipTransform.position - monsterTransform.position).normalized;
 
         if (!isMonsterRetreating)
         {
@@ -62,7 +61,7 @@ public class AttackingState : BaseMonsterState
         }
         else
         {
-            rb.AddForce(-directionToShip * swimAttackSpeed * 0.5f, ForceMode.Acceleration);
+            rb.AddForce(-directionToShip * swimAttackSpeed, ForceMode.Acceleration);
             monsterState.StartCoroutine(SwimAwayFromShip(monsterState));
         }
     }
