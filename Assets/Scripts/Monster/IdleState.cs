@@ -37,6 +37,8 @@ public class IdleState : BaseMonsterState
 
     public override void EnterState(MonsterStateMachine monsterState)
     {
+        hasTarget = false;
+        timeAtTarget = 0f;
     }
 
     public override void ExitState()
@@ -46,11 +48,7 @@ public class IdleState : BaseMonsterState
 
     public override void UpdateState(MonsterStateMachine monsterState)
     {
-        if (rb.velocity.magnitude > 0.1f)
-        {
-            targetDirection = rb.velocity.normalized;
-            monsterState.LookAt(targetDirection);
-        }
+        monsterState.LookAtTarget(targetDirection);
 
         if (hasTarget)
         {
@@ -71,21 +69,15 @@ public class IdleState : BaseMonsterState
     {
         if (!hasTarget)
         {
-            Vector3 newTarget = GetRandomValidTarget();
-            if (newTarget != Vector3.zero)
-            {
-                currentTarget = newTarget;
-                hasTarget = true;
-            }
+            currentTarget = monsterState.GetRandomValidTarget(monsterTransform, idleMovementRadius);
+            hasTarget = true;
         }
-        else
-        {
-            Vector3 directionToTarget = (currentTarget - monsterTransform.position).normalized;
-            Vector3 obstacleAvoidance = monsterState.GetObstacleAvoidanceDirection();
-            Vector3 combinedDirection = (directionToTarget + obstacleAvoidance).normalized;
 
-            rb.AddForce(combinedDirection * swimSpeed, ForceMode.Acceleration);
-        }
+        Vector3 directionToTarget = (currentTarget - monsterTransform.position).normalized;
+        Vector3 obstacleAvoidance = monsterState.GetObstacleAvoidanceDirection(obstacleAvoidanceDistance);
+        Vector3 combinedDirection = (directionToTarget + obstacleAvoidance).normalized;
+
+        rb.AddForce(combinedDirection * swimSpeed, ForceMode.Acceleration);
     }
 
     public override void DrawGizmos(MonsterStateMachine monsterState)
@@ -93,21 +85,6 @@ public class IdleState : BaseMonsterState
         Gizmos.DrawWireSphere(monsterTransform.position, idleMovementRadius);
         Gizmos.DrawSphere(currentTarget, 0.2f);
         Gizmos.DrawLine(monsterTransform.position, monsterTransform.position + monsterTransform.forward * obstacleAvoidanceDistance);
-    }
-
-    Vector3 GetRandomValidTarget()
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            Vector3 randomPoint = monsterTransform.position + Random.insideUnitSphere * idleMovementRadius;
-
-            if (Physics.CheckSphere(randomPoint, 0.1f, waterLayer))
-            {
-                return randomPoint;
-            }
-        }
-
-        return monsterTransform.position;
     }
 
     public override void OnTriggerEnter(Collider other)

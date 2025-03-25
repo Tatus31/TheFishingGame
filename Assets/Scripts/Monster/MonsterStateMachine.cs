@@ -29,6 +29,9 @@ public class MonsterStateMachine : MonoBehaviour
     [Header("Attacking Monster Controls")]
     [SerializeField] float swimAttackSpeed = 20f;
     [SerializeField] float monsterEscapeTime = 2f;
+    [Header("Investigating Monster Controls")]
+    [SerializeField] float investigationRadius = 10f;
+    [SerializeField] float investigationSwimSpeed = 10f;
 
     BaseMonsterState currentState;
 
@@ -37,6 +40,8 @@ public class MonsterStateMachine : MonoBehaviour
     public IdleState IdleState { get; private set; }
     public StalkingState StalkingState {  get; private set; }
     public AttackingState AttackingState {  get; private set; }
+    public InvestigatingState InvestigatingState { get; private set; }
+    public BaseMonsterState PreviousState { get; private set; }
 
     public Transform ShipTransform { get { return shipTransform; } set { shipTransform = value; } }
 
@@ -57,8 +62,9 @@ public class MonsterStateMachine : MonoBehaviour
     private void Start()
     {
         IdleState = new IdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, waterLayer, rb, monsterHead);
-        StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance);
+        StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance, obstacleAvoidanceDistance);
         AttackingState = new AttackingState(shipTransform, monsterHead, swimAttackSpeed, rb, monsterEscapeTime);
+        InvestigatingState = new InvestigatingState(shipTransform, monsterHead, investigationRadius, investigationSwimSpeed, obstacleAvoidanceDistance, rb);
 
         SwitchState(IdleState);
     }
@@ -66,8 +72,9 @@ public class MonsterStateMachine : MonoBehaviour
     private void OnValidate()
     {
         IdleState = new IdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, waterLayer, rb, monsterHead);
-        StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance);
+        StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance, obstacleAvoidanceDistance);
         AttackingState = new AttackingState(shipTransform, monsterHead, swimAttackSpeed, rb, monsterEscapeTime);
+        InvestigatingState = new InvestigatingState(shipTransform, monsterHead, investigationRadius, investigationSwimSpeed, obstacleAvoidanceDistance, rb);
     }
 
     private void Update()
@@ -93,8 +100,10 @@ public class MonsterStateMachine : MonoBehaviour
             return;
 
         currentState?.ExitState();
+        PreviousState = currentState;
         currentState = newState;
         currentState.EnterState(this);
+
     }
 
     public void OnTriggerEnter(Collider other)
@@ -124,7 +133,7 @@ public class MonsterStateMachine : MonoBehaviour
         }
     }
 
-    public Vector3 GetObstacleAvoidanceDirection()
+    public Vector3 GetObstacleAvoidanceDirection(float obstacleAvoidanceDistance)
     {
         Vector3 avoidanceDirection = Vector3.zero;
 
@@ -145,5 +154,33 @@ public class MonsterStateMachine : MonoBehaviour
             Quaternion targetLookRotation = Quaternion.LookRotation(lookAtDirection);
             monsterHead.rotation = Quaternion.Slerp(monsterHead.rotation, targetLookRotation, rotationSpeed * Time.deltaTime);
         }
+    }
+    public Vector3 GetRandomValidTarget(Transform transform, float radius)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            Vector3 randomPoint = transform.position + Random.insideUnitSphere * radius;
+
+            if (Physics.CheckSphere(randomPoint, 0.1f, waterLayer))
+            {
+                return randomPoint;
+            }
+        }
+
+        return transform.position;
+    }
+
+    public void LookAtTarget(Vector3 targetDirection)
+    {
+        if (rb.velocity.magnitude > 0.1f)
+        {
+            targetDirection = rb.velocity.normalized;
+            LookAt(targetDirection);
+        }
+    }
+
+    public float GetDistanceToShip()
+    {
+        return Vector3.Distance(monsterHead.position, shipTransform.position);
     }
 }

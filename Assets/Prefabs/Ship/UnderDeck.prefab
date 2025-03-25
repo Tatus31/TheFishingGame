@@ -400,6 +400,10 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     isUsed: 0
     damageValue: 0
+  - position: {x: 3.07, y: 0.82, z: 2.05}
+    rotation: {x: 0, y: 32.63, z: 0}
+    isUsed: 0
+    damageValue: 0
   obj: {fileID: 668976637991110793, guid: 7a720429c3d28544a859c4619f5dd86d, type: 3}
   damageThreshold: 40
 --- !u!1 &1508462168402090797
@@ -1569,7 +1573,7 @@ MonoBehaviour:
   collisionLayerMask:
     serializedVersion: 2
     m_Bits: 512
-  player: {fileID: 0}
+  transportedObject: {fileID: 0}
 --- !u!1 &3463282892661211153
 GameObject:
   m_ObjectHideFlags: 0
@@ -2686,8 +2690,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5339933636133910624}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.96, y: 0, z: -0.357}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.96, y: 0, z: -0.35699987}
   m_LocalScale: {x: 0.45, y: 1, z: 0.75}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2721,7 +2725,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2bbb4cd111961cc488630d6da6b86b17, type: 2}
+  - {fileID: 2100000, guid: c3a09b2c1f235d8479ba5dedb2ae743f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

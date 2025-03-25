@@ -13,8 +13,19 @@ public class StalkingState : BaseMonsterState
 
     float approachSpeedFactor = 0.1f;
     float slowdownDistance = 4f;
-    float stayPutTreshold = 1.2f;
+    float stayPutTreshold = 5f;
     float stacionaryShipVel = 0.3f;
+
+    float obstacleAvoidanceDistance = 1f;
+
+    float highDetectionTimer = 0f; 
+    float lowDetectionTimer = 0f;  
+
+    float detectionThresholdTime = 15f;
+    float highDetectionThreshold = 1.9f;
+    float lowDetectionThreshold = 0.5f;
+
+    bool isTransitioning = false;
 
     Transform shipTransform;
     Transform monsterTransform;
@@ -26,7 +37,7 @@ public class StalkingState : BaseMonsterState
     Vector3 targetDirection;
     Vector3 shipVel;
 
-    public StalkingState(Transform shipTransform, Transform monsterTransform, Rigidbody rb, float minStalkingDistance, float swimStalkingSpeed, float stalkingDistance)
+    public StalkingState(Transform shipTransform, Transform monsterTransform, Rigidbody rb, float minStalkingDistance, float swimStalkingSpeed, float stalkingDistance, float obstacleAvoidanceDistance)
     {
         this.shipTransform = shipTransform;
         this.monsterTransform = monsterTransform;
@@ -34,6 +45,7 @@ public class StalkingState : BaseMonsterState
         this.stalkingDistance = stalkingDistance;
         this.minStalkingDistance = minStalkingDistance;
         this.swimStalkingSpeed = swimStalkingSpeed;
+        this.obstacleAvoidanceDistance = obstacleAvoidanceDistance;
 
         if (shipTransform != null)
         {
@@ -46,13 +58,17 @@ public class StalkingState : BaseMonsterState
     public override void EnterState(MonsterStateMachine monsterState)
     {
         shipVel = Vector3.zero;
+        isTransitioning = false;
 
         shipMovement.OnShipSpeedChange += OnShipSpeedChanged;
     }
 
     public override void ExitState()
     {
-        shipMovement.OnShipSpeedChange -= OnShipSpeedChanged;
+        if (shipMovement != null)
+        {
+            shipMovement.OnShipSpeedChange -= OnShipSpeedChanged;
+        }
     }
 
     private void OnShipSpeedChanged(object sender, Vector3 velocity)
@@ -68,11 +84,59 @@ public class StalkingState : BaseMonsterState
             monsterState.LookAt(targetDirection);
         }
 
-        shipVel = shipMovement.ShipFlatVel;
+        if (shipMovement != null)
+        {
+            shipVel = shipMovement.ShipFlatVel;
+        }
+
+        if (isTransitioning)
+            return;
+
+        float currentDetectionMultiplier = DetectionManager.Instance.CurrentDetectionMultiplier;
+
+        if (currentDetectionMultiplier > highDetectionThreshold)
+        {
+            highDetectionTimer += Time.deltaTime;
+            lowDetectionTimer = 0f;
+
+            if (highDetectionTimer >= detectionThresholdTime && !isTransitioning)
+            {
+                isTransitioning = true;
+                highDetectionTimer = 0f;
+
+                monsterState.SwitchState(monsterState.AttackingState);
+                return;
+            }
+        }
+        else
+        {
+            highDetectionTimer = Mathf.Max(0, highDetectionTimer - (Time.deltaTime * 0.5f));
+        }
+
+        if (currentDetectionMultiplier < lowDetectionThreshold)
+        {
+            lowDetectionTimer += Time.deltaTime;
+
+            if (lowDetectionTimer >= detectionThresholdTime && !isTransitioning)
+            {
+                isTransitioning = true;
+                lowDetectionTimer = 0f;
+
+                monsterState.SwitchState(monsterState.InvestigatingState);
+                return;
+            }
+        }
+        else
+        {
+            lowDetectionTimer = Mathf.Max(0, lowDetectionTimer - (Time.deltaTime * 0.5f));
+        }
     }
 
     public override void FixedUpdateState(MonsterStateMachine monsterState)
     {
+        if (shipTransform == null || monsterTransform == null)
+            return;
+
         bool isShipStationary = shipVel.magnitude < stacionaryShipVel;
 
         float predictionFactor = isShipStationary ? 0f : shipVelPrediction;
@@ -125,7 +189,7 @@ public class StalkingState : BaseMonsterState
             rb.velocity *= velDamping;
         }
 
-        Vector3 obstacleAvoidance = monsterState.GetObstacleAvoidanceDirection();
+        Vector3 obstacleAvoidance = monsterState.GetObstacleAvoidanceDirection(obstacleAvoidanceDistance);
         Vector3 combinedDirection = (moveForce + obstacleAvoidance).normalized;
 
         if (moveForce.magnitude > 0.01f)
@@ -136,7 +200,7 @@ public class StalkingState : BaseMonsterState
 
     public override void DrawGizmos(MonsterStateMachine monsterState)
     {
-        if (shipTransform != null)
+        if (shipTransform != null && monsterTransform != null)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(shipTransform.position, stalkingDistance);
@@ -155,6 +219,32 @@ public class StalkingState : BaseMonsterState
 
             Gizmos.color = Color.cyan;
             Gizmos.DrawSphere(targetPos, 0.5f);
+
+            if (highDetectionTimer > 0)
+            {
+                Gizmos.color = Color.red;
+                float progress = highDetectionTimer / detectionThresholdTime;
+                float barLength = 2.0f;
+                Vector3 startPos = monsterTransform.position + Vector3.up * 1.5f;
+                Vector3 endPos = startPos + Vector3.right * (progress * barLength);
+
+#if UNITY_EDITOR
+                UnityEditor.Handles.Label(endPos, $"{Mathf.Round(progress * 100)}%");
+#endif
+            }
+
+            if (lowDetectionTimer > 0)
+            {
+                Gizmos.color = Color.blue;
+                float progress = lowDetectionTimer / detectionThresholdTime;
+                float barLength = 2.0f;
+                Vector3 startPos = monsterTransform.position + Vector3.up * 1.2f;
+                Vector3 endPos = startPos + Vector3.right * (progress * barLength);
+
+#if UNITY_EDITOR
+                UnityEditor.Handles.Label(endPos, $"{Mathf.Round(progress * 100)}%");
+#endif
+            }
         }
     }
 

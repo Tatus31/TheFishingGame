@@ -14,12 +14,14 @@ public class Testing : MonoBehaviour
     [SerializeField] GameObject repairBarObject;
     [SerializeField] CameraLook cameraLook;
 
+
     FishingStateManager fishingStateManager;
 
     public bool isRepairing = false;
 
     private Camera mainCamera;
     [SerializeField] GameObject backgroundObject;
+
 
     private void Awake()
     {

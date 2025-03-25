@@ -7,6 +7,7 @@ public class ShipDamage : MonoBehaviour
 
     public event EventHandler OnSinkingShipByDamage;
     public event EventHandler<int> OnDamageTaken;
+    public event EventHandler<float> OnDetectionChange;
 
     Ship ship;
     ShipMovement shipMovement;
@@ -137,6 +138,9 @@ public class ShipDamage : MonoBehaviour
         float maxSpeed = shipMovement.MaxSpeed;
         float speedRatio = Mathf.Floor(flatVel.magnitude) / maxSpeed;
         int actualDamage = 0;
+
+        float detectionValue = DetectionManager.Instance.GetDetectionValues.collisionDetection + speedRatio;
+        OnDetectionChange?.Invoke(this, detectionValue);
 
         if (speedRatio > 0)
         {

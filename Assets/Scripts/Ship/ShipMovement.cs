@@ -4,20 +4,27 @@ using UnityEngine.EventSystems;
 public class ShipMovement : MonoBehaviour
 {
     public event EventHandler<Vector3> OnShipSpeedChange;
+    public static event EventHandler<SpeedLevel> OnDetectionChange;
 
     [Serializable]
-    public enum CurrentSpeedLevel
+    public enum SpeedLevel
     {
         reverse,
         neutral,
-        forward
+        forward1,
+        forward2,
+        forward3
     }
 
     [Header("Movement Settings")]
     [SerializeField] float turnSpeed = 10f;
-    [SerializeField] float maxSpeed = 5f;
     [SerializeField] float speedSmoothTime = 0.5f;
     [SerializeField] float rotationSmoothTime = 0.5f;
+    [Header("Movement Speed")]
+    [SerializeField] float maxSpeed = 5f;
+    [SerializeField] float forward1Speed = 1.5f;
+    [SerializeField] float forward2Speed = 2f;
+    [SerializeField] float forward3Speed = 3f;
 
     [Header("Steering Wheel Settings")]
     [SerializeField] float maxWheelRotation = 90f;
@@ -27,7 +34,7 @@ public class ShipMovement : MonoBehaviour
     [SerializeField] float waterDeceleration = 0.2f;
     [SerializeField] float waterDragMultiplier = 1.2f;
 
-    [SerializeField] CurrentSpeedLevel currentSpeedLevel;
+    [SerializeField] SpeedLevel currentSpeedLevel;
 
     Rigidbody shipRigidbody;
     StableFloatingRigidBody buoyancySystem;
@@ -46,6 +53,7 @@ public class ShipMovement : MonoBehaviour
     public float MaxSpeed { get { return maxSpeed; } set { maxSpeed = value; } }
     public bool IsControllingShip { get { return isControllingShip; } set { isControllingShip = value; } }
     public float CurrentWheelRotation { get { return currentWheelRotation; } }
+    public SpeedLevel CurrentSpeedLevel { get { return currentSpeedLevel; } }
 
     void Awake()
     {
@@ -55,7 +63,7 @@ public class ShipMovement : MonoBehaviour
 
     private void Start()
     {
-        currentSpeedLevel = CurrentSpeedLevel.neutral;
+        currentSpeedLevel = SpeedLevel.neutral;
         if (buoyancySystem != null)
         {
             buoyancySystem.Buoyancy = shipRigidbody.mass * 1.1f;
@@ -73,39 +81,66 @@ public class ShipMovement : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            switch (currentSpeedLevel)
-            {
-                case CurrentSpeedLevel.reverse:
-                    currentSpeedLevel = CurrentSpeedLevel.neutral;
-                    break;
-                case CurrentSpeedLevel.neutral:
-                    currentSpeedLevel = CurrentSpeedLevel.forward;
-                    break;
-                case CurrentSpeedLevel.forward:
-                    break;
-            }
+            IncreaseSpeedLevel();
         }
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-            switch (currentSpeedLevel)
-            {
-                case CurrentSpeedLevel.forward:
-                    currentSpeedLevel = CurrentSpeedLevel.neutral;
-                    break;
-                case CurrentSpeedLevel.neutral:
-                    currentSpeedLevel = CurrentSpeedLevel.reverse;
-                    break;
-                case CurrentSpeedLevel.reverse:
-                    break;
-            }
+            DecreaseSpeedLevel();
         }
+    }
+
+    public void IncreaseSpeedLevel()
+    {
+        switch (currentSpeedLevel)
+        {
+            case SpeedLevel.reverse:
+                currentSpeedLevel = SpeedLevel.neutral;
+                break;
+            case SpeedLevel.neutral:
+                currentSpeedLevel = SpeedLevel.forward1;
+                break;
+            case SpeedLevel.forward1:
+                currentSpeedLevel = SpeedLevel.forward2;
+                break;
+            case SpeedLevel.forward2:
+                currentSpeedLevel = SpeedLevel.forward3;
+                break;
+            case SpeedLevel.forward3:
+                break;
+        }
+
+        OnDetectionChange?.Invoke(this, currentSpeedLevel);
+    }
+
+    public void DecreaseSpeedLevel()
+    {
+        switch (currentSpeedLevel)
+        {
+            case SpeedLevel.forward3:
+                currentSpeedLevel = SpeedLevel.forward2;
+                break;
+            case SpeedLevel.forward2:
+                currentSpeedLevel = SpeedLevel.forward1;
+                break;
+            case SpeedLevel.forward1:
+                currentSpeedLevel = SpeedLevel.neutral;
+                break;
+            case SpeedLevel.neutral:
+                currentSpeedLevel = SpeedLevel.reverse;
+                break;
+            case SpeedLevel.reverse:
+                break;
+        }
+
+        OnDetectionChange?.Invoke(this, currentSpeedLevel);
     }
 
     void FixedUpdate()
     {
         if (!isControllingShip)
             return;
+
         HandleMovement();
         HandleRotation();
         UpdateShipState();
@@ -117,14 +152,23 @@ public class ShipMovement : MonoBehaviour
         float moveInput = 0;
         switch (currentSpeedLevel)
         {
-            case CurrentSpeedLevel.neutral:
+            case SpeedLevel.neutral:
                 moveInput = 0;
                 break;
-            case CurrentSpeedLevel.forward:
+            case SpeedLevel.forward1:
                 moveInput = 1f;
+                maxSpeed = forward1Speed;
                 break;
-            case CurrentSpeedLevel.reverse:
-                moveInput = -0.5f;
+            case SpeedLevel.forward2:
+                moveInput = 1f;
+                maxSpeed = forward2Speed;
+                break;
+            case SpeedLevel.forward3:
+                moveInput = 1f;
+                maxSpeed = forward3Speed;
+                break;
+            case SpeedLevel.reverse:
+                moveInput = -1f;
                 break;
         }
 
@@ -170,7 +214,7 @@ public class ShipMovement : MonoBehaviour
             shipRigidbody.MoveRotation(shipRigidbody.rotation * turnRotation);
         }
 
-        Debug.Log(MathF.Floor(currentWheelRotation));
+        //Debug.Log(MathF.Floor(currentWheelRotation));
     }
 
     void UpdateShipState()

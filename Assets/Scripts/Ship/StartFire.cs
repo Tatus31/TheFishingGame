@@ -44,12 +44,15 @@ public class StartFire : MonoBehaviour
 
         ElectricalDevice.OnDegradation += ElectricalDevice_OnDegradation;
         ChangeWaterLevelUnderDeck.Instance.OnShipCatchingWater += ChangeWaterLevelUnderDeck_OnShipCatchingWater;
-        startfirewhenincloud.OnShipInCloud += OnShipInCloudFire;
+        if(startfirewhenincloud != null)
+            startfirewhenincloud.OnShipInCloud += OnShipInCloudFire;
     }
 
     private void ChangeWaterLevelUnderDeck_OnShipCatchingWater(object sender, bool e)
     {
+#if UNITY_EDITOR
         Debug.Log("there is water underdeck");
+#endif
         FireActionStop();
     }
 

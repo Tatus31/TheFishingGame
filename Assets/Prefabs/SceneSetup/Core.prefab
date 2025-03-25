@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2251196559885108575}
   - component: {fileID: 3264011705679843235}
   - component: {fileID: 8546437076675036140}
+  - component: {fileID: 1749270837177424874}
   m_Layer: 0
   m_Name: Core
   m_TagString: Untagged
@@ -195,3 +196,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0f25a7512c2452489da5885bc0f4ba1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1749270837177424874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6457795096094294152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2017ece79b016f4986cfeb52d2fbe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectionMultiplierValue: 1
+  lerpTime: 2
+  timer: 15
+  staticValueTimer: 7
+  detectionValues:
+    lightsDetection: 1
+    collisionDetection: 1
+    reverseSpeedDetection: 0.5
+    neutralSpeedDetection: 0
+    forward1SpeedDetection: 1
+    forward2SpeedDetection: 2
+    forward3SpeedDetection: 3
