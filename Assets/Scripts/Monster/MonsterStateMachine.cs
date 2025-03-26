@@ -71,6 +71,11 @@ public class MonsterStateMachine : MonoBehaviour
 
     private void OnValidate()
     {
+        if(rb == null)
+        {
+            rb = GetComponent<Rigidbody>();
+        }
+
         IdleState = new IdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, waterLayer, rb, monsterHead);
         StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance, obstacleAvoidanceDistance);
         AttackingState = new AttackingState(shipTransform, monsterHead, swimAttackSpeed, rb, monsterEscapeTime);

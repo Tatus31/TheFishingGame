@@ -9,6 +9,7 @@ public class SinkShip : MonoBehaviour
     StableFloatingRigidBody stableFloatingRB;
     ChangeWaterLevelUnderDeck waterLevel;
     ShipDamage shipDamage;
+    ShipMovement shipMovement;
 
     float sinkingBuoyancy = 0.98f;
     [SerializeField] float sinkingDelay = 3f;
@@ -21,6 +22,14 @@ public class SinkShip : MonoBehaviour
 
     private void Start()
     {
+        if (shipDamage == null)
+            return;
+
+        if (waterLevel == null)
+        {
+            return;
+        }
+
         shipDamage = ShipDamage.Instance;
         waterLevel = ChangeWaterLevelUnderDeck.Instance;
 
@@ -45,5 +54,11 @@ public class SinkShip : MonoBehaviour
         stableFloatingRB.SafeFloating = false;
         stableFloatingRB.FloatToSleep = false;
         stableFloatingRB.Buoyancy = sinkingBuoyancy;
+
+        if (TryGetComponent<ShipMovement>(out shipMovement))
+        {
+            shipMovement.SetNeutralSpeed();
+        }
+
     }
 }
