@@ -6,6 +6,8 @@ using static ShipMovement;
 
 public class DetectionManager : MonoBehaviour
 {
+    public static event EventHandler<float> OnDetectionValueChange;
+
     public static DetectionManager Instance;
 
     [Serializable]
@@ -47,10 +49,12 @@ public class DetectionManager : MonoBehaviour
 
     bool areLightsOn;
     bool areLightsFlickering;
+    public bool isInvestigating;
 
     public float CurrentDetectionMultiplier { get { return currentDetectionMultiplier; } set { currentDetectionMultiplier = value; } }
     public DetectionValues GetDetectionValues => detectionValues;
     public bool SetUsingEditor { get { return setUsingEditor; } set { setUsingEditor = value; } }   
+    public bool IsInvestigating { get { return isInvestigating; } set { isInvestigating = value; } }
 
     private void Awake()
     {
@@ -107,9 +111,9 @@ public class DetectionManager : MonoBehaviour
 
         collisionDetectionTimer = staticValueTimer;
 
-#if UNITY_EDITOR
-        Debug.Log($"added {detectionValue} to detection new value: {currentDetectionMultiplier}");
-#endif
+//#if UNITY_EDITOR
+//        Debug.Log($"added {detectionValue} to detection new value: {currentDetectionMultiplier}");
+//#endif
     }
 
     private void ShipMovement_OnDetectionChange(object sender, ShipMovement.SpeedLevel e)
@@ -128,9 +132,9 @@ public class DetectionManager : MonoBehaviour
             {
                 currentDetectionMultiplier -= additionalDetection;
                 additionalDetection = 0f;
-#if UNITY_EDITOR
-                Debug.Log("collision detection over");
-#endif
+//#if UNITY_EDITOR
+//                Debug.Log("collision detection over");
+//#endif
             }
         }
 
@@ -169,6 +173,9 @@ public class DetectionManager : MonoBehaviour
 
         targetValue += lightDetectionBonus;
 
+        if (targetValue != currentDetectionMultiplier)
+            OnDetectionValueChange?.Invoke(this, targetValue);
+
         if (additionalDetection == 0 && !setUsingEditor)
         {
             LerpDetectionValue(targetValue);
@@ -189,11 +196,12 @@ public class DetectionManager : MonoBehaviour
                 time = 0;
             }
 
-            if (!isSearching)
+            if (!isSearching && !isInvestigating)
             {
-                MonsterStateMachine.Instance.InvestigatingState.SetInvestigationRadius(currentDetectionMultiplier);
+                Debug.Log("monster is investigating");
                 MonsterStateMachine.Instance.SwitchState(MonsterStateMachine.Instance.InvestigatingState);
                 isSearching = true;
+                isInvestigating = true;
             }
         }
     }
@@ -206,8 +214,8 @@ public class DetectionManager : MonoBehaviour
         currentDetectionMultiplier = Mathf.Clamp(currentDetectionMultiplier, currentDetectionMultiplier, targetDetectionValue);
         currentDetectionMultiplier = Mathf.Round(currentDetectionMultiplier * 1000f) / 1000f;
 
-#if UNITY_EDITOR
-        Debug.Log($"current detection: {currentDetectionMultiplier} current speed level: {speedLevel}");
-#endif
+//#if UNITY_EDITOR
+//        Debug.Log($"current detection: {currentDetectionMultiplier} current speed level: {speedLevel}");
+//#endif
     }
 }

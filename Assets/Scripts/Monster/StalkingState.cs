@@ -70,6 +70,8 @@ public class StalkingState : BaseMonsterState
         {
             shipMovement.OnShipSpeedChange -= OnShipSpeedChanged;
         }
+
+        Debug.Log("Exiting Stalking State");
     }
 
     private void OnShipSpeedChanged(object sender, Vector3 velocity)
@@ -116,7 +118,7 @@ public class StalkingState : BaseMonsterState
             highDetectionTimer = Mathf.Max(0, highDetectionTimer - (Time.deltaTime * 0.5f));
         }
 
-        if (currentDetectionMultiplier < lowDetectionThreshold)
+        if (currentDetectionMultiplier <= lowDetectionThreshold)
         {
             lowDetectionTimer += Time.deltaTime;
 
@@ -125,7 +127,8 @@ public class StalkingState : BaseMonsterState
                 isTransitioning = true;
                 lowDetectionTimer = 0f;
 
-                monsterState.SwitchState(monsterState.InvestigatingState);
+                monsterState.SwitchState(monsterState.IdleState);
+                DetectionManager.Instance.IsInvestigating = false;
                 return;
             }
         }

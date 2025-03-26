@@ -47,7 +47,14 @@ public class InvestigatingState : BaseMonsterState
             investigationTimer = 0f;
         }
 
+        DetectionManager.OnDetectionValueChange += DetectionManager_OnDetectionValueChange;
+
         AudioManager.PlaySound(AudioManager.HeartBeatSound);
+    }
+
+    private void DetectionManager_OnDetectionValueChange(object sender, float e)
+    {
+        SetInvestigationRadius(e);
     }
 
     public override void ExitState()
@@ -65,6 +72,7 @@ public class InvestigatingState : BaseMonsterState
         if (timeoutOccurred)
         {
             monsterState.SwitchState(monsterState.IdleState);
+            DetectionManager.Instance.IsInvestigating = false;
             return;
         }
 
@@ -153,6 +161,7 @@ public class InvestigatingState : BaseMonsterState
     public void SetInvestigationRadius(float radius)
     {
         investigationRadius = baseInvestigationRadius;
+        radius *= 0.3f;
         investigationRadius = investigationRadius / radius;
         investigationRadius = Mathf.Round(investigationRadius * 10f) / 10f;
     } 
