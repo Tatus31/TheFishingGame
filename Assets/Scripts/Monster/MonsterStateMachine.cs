@@ -42,6 +42,7 @@ public class MonsterStateMachine : MonoBehaviour
     public AttackingState AttackingState {  get; private set; }
     public InvestigatingState InvestigatingState { get; private set; }
     public BaseMonsterState PreviousState { get; private set; }
+    public BaseMonsterState CurrentState { get; private set; }
 
     public Transform ShipTransform { get { return shipTransform; } set { shipTransform = value; } }
 
