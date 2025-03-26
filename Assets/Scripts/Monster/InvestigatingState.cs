@@ -46,6 +46,8 @@ public class InvestigatingState : BaseMonsterState
         {
             investigationTimer = 0f;
         }
+
+        AudioManager.PlaySound(AudioManager.HeartBeatSound);
     }
 
     public override void ExitState()
@@ -153,11 +155,5 @@ public class InvestigatingState : BaseMonsterState
         investigationRadius = baseInvestigationRadius;
         investigationRadius = investigationRadius / radius;
         investigationRadius = Mathf.Round(investigationRadius * 10f) / 10f;
-    }
-
-    public void SetRandomValidTarget(Transform target)
-    {
-        decoyPosition = target;
-        isDecoyActive = true;
-    }  
+    } 
 }

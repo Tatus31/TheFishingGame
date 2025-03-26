@@ -30,6 +30,9 @@ public class StableFloatingRigidBody : MonoBehaviour
 
     [SerializeField] float waveSpeed = 1f;
 
+    [SerializeField, Range(0f, 1f)]
+    float stabilityDamping = 0.1f;
+
     Rigidbody body;
 
     float floatDelay;
@@ -37,6 +40,7 @@ public class StableFloatingRigidBody : MonoBehaviour
     float[] submergence;
 
     Vector3 gravity;
+    Vector3 previousVelocity;
 
     public bool FloatToSleep { get { return floatToSleep; } set { floatToSleep = value; } }
     public bool SafeFloating { get { return safeFloating; } set { safeFloating = value; } }
@@ -120,14 +124,18 @@ public class StableFloatingRigidBody : MonoBehaviour
         gravity = CustomGravity.GetGravity(body.position);
         float dragFactor = waterDrag * Time.deltaTime / buoyancyOffsets.Length;
         float buoyancyFactor = -buoyancy / buoyancyOffsets.Length;
+
+        Vector3 velocityDamping = (body.velocity - previousVelocity) * stabilityDamping;
+
         for (int i = 0; i < buoyancyOffsets.Length; i++)
         {
             if (submergence[i] > 0f)
             {
-                float drag =
-                    Mathf.Max(0f, 1f - dragFactor * submergence[i]);
-                body.velocity *= drag;
-                body.angularVelocity *= drag;
+                float drag = Mathf.Max(0f, 1f - dragFactor * submergence[i]);
+
+                body.velocity = Vector3.Lerp(body.velocity, Vector3.zero, stabilityDamping);
+                body.angularVelocity = Vector3.Lerp(body.angularVelocity, Vector3.zero, stabilityDamping);
+
                 body.AddForceAtPosition(
                     gravity * (buoyancyFactor * submergence[i]),
                     transform.TransformPoint(buoyancyOffsets[i]),
@@ -136,7 +144,10 @@ public class StableFloatingRigidBody : MonoBehaviour
                 submergence[i] = 0f;
             }
         }
+
         body.AddForce(gravity, ForceMode.Acceleration);
+
+        previousVelocity = body.velocity;
     }
 
     void OnTriggerEnter(Collider other)

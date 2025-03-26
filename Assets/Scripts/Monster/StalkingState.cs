@@ -60,6 +60,7 @@ public class StalkingState : BaseMonsterState
         shipVel = Vector3.zero;
         isTransitioning = false;
 
+        AudioManager.MuteSound(AudioManager.HeartBeatSound);
         shipMovement.OnShipSpeedChange += OnShipSpeedChanged;
     }
 

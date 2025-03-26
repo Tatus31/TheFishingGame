@@ -186,6 +186,11 @@ public class MonsterStateMachine : MonoBehaviour
 
     public float GetDistanceToShip()
     {
+        if(shipTransform == null)
+        {
+            return 0f;
+        }
+
         return Vector3.Distance(monsterHead.position, shipTransform.position);
     }
 }
