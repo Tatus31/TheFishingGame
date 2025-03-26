@@ -221,4 +221,9 @@ public class ShipMovement : MonoBehaviour
     {
         ShipFlatVel = new Vector3(shipRigidbody.velocity.x, 0f, shipRigidbody.velocity.z);
     }
+
+    public void SetNeutralSpeed()
+    {
+        currentSpeedLevel = SpeedLevel.neutral;
+    }
 }

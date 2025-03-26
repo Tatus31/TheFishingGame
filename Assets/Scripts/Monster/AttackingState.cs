@@ -8,7 +8,7 @@ public class AttackingState : BaseMonsterState
     Transform shipTransform;
     Transform monsterTransform;
 
-    float swimAttackSpeed = 20f;
+    float swimAttackSpeed = 200f;
     float monsterEscapeTime = 2f;
 
     Rigidbody rb;
@@ -39,7 +39,7 @@ public class AttackingState : BaseMonsterState
 
     public override void ExitState()
     {
-
+        ShipDamage.Instance.OnDamageTaken -= ShipDamage_OnDamageTaken;
     }
 
     public override void UpdateState(MonsterStateMachine monsterState)

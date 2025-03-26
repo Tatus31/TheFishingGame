@@ -74,7 +74,7 @@ public class InvestigatingState : BaseMonsterState
             float stalkingThreshold = detectShipValue + (DetectionManager.Instance.CurrentDetectionMultiplier * detectionMultiplier);
             stalkingThreshold = Mathf.Max(stalkingThreshold, 5f);
 
-            Debug.Log($"{monsterDetectionDistance} <= {stalkingThreshold}");
+            //Debug.Log($"{monsterDetectionDistance} <= {stalkingThreshold}");
             if (monsterDetectionDistance <= stalkingThreshold)
             {
                 monsterState.SwitchState(monsterState.StalkingState);
@@ -154,4 +154,10 @@ public class InvestigatingState : BaseMonsterState
         investigationRadius = investigationRadius / radius;
         investigationRadius = Mathf.Round(investigationRadius * 10f) / 10f;
     }
+
+    public void SetRandomValidTarget(Transform target)
+    {
+        decoyPosition = target;
+        isDecoyActive = true;
+    }  
 }
