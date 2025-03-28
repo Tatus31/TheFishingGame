@@ -176,6 +176,9 @@ public class DetectionManager : MonoBehaviour
         if (targetValue != currentDetectionMultiplier)
             OnDetectionValueChange?.Invoke(this, targetValue);
 
+        if (setUsingEditor)
+            OnDetectionValueChange?.Invoke(this, currentDetectionMultiplier);
+
         if (additionalDetection == 0 && !setUsingEditor)
         {
             LerpDetectionValue(targetValue);
@@ -198,7 +201,7 @@ public class DetectionManager : MonoBehaviour
 
             if (!isSearching && !isInvestigating)
             {
-                Debug.Log("monster is investigating");
+                //Debug.Log("monster is investigating");
                 MonsterStateMachine.Instance.SwitchState(MonsterStateMachine.Instance.InvestigatingState);
                 isSearching = true;
                 isInvestigating = true;
@@ -214,8 +217,8 @@ public class DetectionManager : MonoBehaviour
         currentDetectionMultiplier = Mathf.Clamp(currentDetectionMultiplier, currentDetectionMultiplier, targetDetectionValue);
         currentDetectionMultiplier = Mathf.Round(currentDetectionMultiplier * 1000f) / 1000f;
 
-//#if UNITY_EDITOR
-//        Debug.Log($"current detection: {currentDetectionMultiplier} current speed level: {speedLevel}");
-//#endif
+#if UNITY_EDITOR
+        Debug.Log($"current detection: {currentDetectionMultiplier} current speed level: {speedLevel}");
+#endif
     }
 }

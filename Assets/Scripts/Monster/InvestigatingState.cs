@@ -24,7 +24,7 @@ public class InvestigatingState : BaseMonsterState
     Rigidbody rb;
 
     float investigationTimer = 0f;
-    float maxInvestigationTime = 30f;
+    float maxInvestigationTime = 15f;
 
     public InvestigatingState(Transform shipTransform, Transform monsterTransform, float investigationRadius, float swimSpeed, float obstacleAvoidanceDistance, Rigidbody rb)
     {
@@ -48,7 +48,8 @@ public class InvestigatingState : BaseMonsterState
         }
         DetectionManager.OnDetectionValueChange += DetectionManager_OnDetectionValueChange;
 
-        AudioManager.PlaySound(AudioManager.HeartBeatSound);
+        AudioManager.PlaySound(AudioManager.HeartBeatSlowSound);
+        AudioManager.MuteSound(AudioManager.HeartBeatSound);
     }
 
     private void DetectionManager_OnDetectionValueChange(object sender, float e)

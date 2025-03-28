@@ -61,6 +61,9 @@ public class StalkingState : BaseMonsterState
         isTransitioning = false;
 
         shipMovement.OnShipSpeedChange += OnShipSpeedChanged;
+
+        AudioManager.PlaySound(AudioManager.HeartBeatSound);
+        AudioManager.MuteSound(AudioManager.HeartBeatSlowSound);
     }
 
     public override void ExitState()

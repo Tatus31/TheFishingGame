@@ -12,8 +12,8 @@ public class StickToShip : MonoBehaviour
 
     [Header("Ship Controls")]
     [SerializeField] float additionalDownForce = 20f;
-    [SerializeField] float velocityMatchDuration = 1.5f; 
-    [SerializeField] float velocityBlendTime = 0.5f;      
+    [SerializeField] float velocityMatchDuration = 1.5f;
+    [SerializeField] float velocityBlendTime = 0.5f;
 
     bool isOnShip;
     public bool IsOnShip { get { return isOnShip; } }
