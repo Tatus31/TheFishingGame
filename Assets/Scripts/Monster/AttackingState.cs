@@ -71,7 +71,6 @@ public class AttackingState : BaseMonsterState
         yield return new WaitForSeconds(monsterEscapeTime);
         monsterState.SwitchState(monsterState.IdleState);
         isMonsterRetreating = false;
-        DetectionManager.Instance.IsInvestigating = false;
     }
 
     public override void DrawGizmos(MonsterStateMachine monsterState)

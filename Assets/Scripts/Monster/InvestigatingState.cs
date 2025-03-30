@@ -1,174 +1,81 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InvestigatingState : BaseMonsterState
 {
     Transform shipTransform;
-    Transform monsterTransform;
-
-    float detectShipValue = 10f;
-    float detectionMultiplier = 5f;
-    float baseInvestigationRadius = 50f;
-    float investigationRadius = 50f;
-    float swimSpeed = 2f;
-    float obstacleAvoidanceDistance = 1f;
-
-    Vector3 currentTarget;
-    Vector3 targetDirection;
-    Transform decoyPosition;
-
-    bool hasTarget;
-    bool isDecoyActive;
-
+    Transform monsterHead;
     Rigidbody rb;
+    float investigationSwimSpeed = 10f;
+    float investigationStopDistance = 15f;
 
-    float investigationTimer = 0f;
-    float maxInvestigationTime = 15f;
-
-    public InvestigatingState(Transform shipTransform, Transform monsterTransform, float investigationRadius, float swimSpeed, float obstacleAvoidanceDistance, Rigidbody rb)
+    public InvestigatingState(Transform shipTransform, Transform monsterHead, Rigidbody rb, float investigationSwimSpeed)
     {
-        baseInvestigationRadius = investigationRadius;
         this.shipTransform = shipTransform;
-        this.monsterTransform = monsterTransform;
-        this.investigationRadius = investigationRadius;
-        this.swimSpeed = swimSpeed;
-        this.obstacleAvoidanceDistance = obstacleAvoidanceDistance;
+        this.monsterHead = monsterHead;
         this.rb = rb;
+        this.investigationSwimSpeed = investigationSwimSpeed;
     }
 
     public override void EnterState(MonsterStateMachine monsterState)
     {
-        //Debug.Log($"Investigating in a radius of {investigationRadius}");
-        hasTarget = false;
-
-        if (monsterState.PreviousState == monsterState.IdleState)
-        {
-            investigationTimer = 0f;
-        }
-        DetectionManager.OnDetectionValueChange += DetectionManager_OnDetectionValueChange;
-
-        AudioManager.PlaySound(AudioManager.HeartBeatSlowSound);
-        AudioManager.MuteSound(AudioManager.HeartBeatSound);
-    }
-
-    private void DetectionManager_OnDetectionValueChange(object sender, float e)
-    {
-        SetInvestigationRadius(e);
+        rb = monsterState.GetComponent<Rigidbody>();
+        DetectionManager.Instance.StartInvestigation(shipTransform);
     }
 
     public override void ExitState()
     {
+
     }
 
     public override void UpdateState(MonsterStateMachine monsterState)
     {
-        monsterState.LookAtTarget(targetDirection);
-
-        investigationTimer += Time.deltaTime;
-
-        bool timeoutOccurred = investigationTimer >= maxInvestigationTime;
-
-        if (timeoutOccurred)
-        {
-            monsterState.SwitchState(monsterState.IdleState);
-            DetectionManager.Instance.IsInvestigating = false;
-            return;
-        }
-
-        if (hasTarget)
-        {
-            float distanceToShip = Vector3.Distance(monsterTransform.position, shipTransform.position);
-            float monsterDetectionDistance = distanceToShip;
-
-            float stalkingThreshold = detectShipValue + (DetectionManager.Instance.CurrentDetectionMultiplier * detectionMultiplier);
-            stalkingThreshold = Mathf.Max(stalkingThreshold, 5f);
-
-            //Debug.Log($"{monsterDetectionDistance} <= {stalkingThreshold}");
-            if (monsterDetectionDistance <= stalkingThreshold)
-            {
-                monsterState.SwitchState(monsterState.StalkingState);
-            }
-        }
+        DetectionManager.Instance.UpdateInvestigationPoint(shipTransform);
+        DetectionManager.Instance.DecreaseDetectionTimer();
     }
 
     public override void FixedUpdateState(MonsterStateMachine monsterState)
     {
-        if (!hasTarget)
+        Vector3 investigationPoint = DetectionManager.Instance.GetInvestigationPoint();
+        Vector3 directionToTarget = (investigationPoint - monsterHead.position).normalized;
+        float distanceToTarget = Vector3.Distance(monsterHead.position, investigationPoint);
+        Vector3 movement = directionToTarget * investigationSwimSpeed;
+        Vector3 obstacleAvoidance = monsterState.GetObstacleAvoidanceDirection(1f);
+        movement += obstacleAvoidance;
+        rb.AddForce(movement, ForceMode.Acceleration);
+        monsterState.LookAtTarget(directionToTarget);
+
+        if (distanceToTarget <= investigationStopDistance)
         {
-            currentTarget = monsterState.GetRandomValidTarget(shipTransform, investigationRadius);
-            hasTarget = true;
+            monsterState.SwitchState(monsterState.StalkingState);
         }
-
-        float distanceToTarget = Vector3.Distance(monsterTransform.position, currentTarget);
-        if (distanceToTarget < 1.5f)
+        else if (!DetectionManager.Instance.ShouldContinueInvestigation())
         {
-            currentTarget = monsterState.GetRandomValidTarget(shipTransform, investigationRadius);
+            DetectionManager.Instance.StartCooldown();
+            monsterState.SwitchState(monsterState.IdleState);
+            DetectionManager.Instance.IsInvestigating = false;
         }
-
-        Vector3 directionToTarget = (currentTarget - monsterTransform.position).normalized;
-        targetDirection = directionToTarget;
-        //Vector3 obstacleAvoidance = monsterState.GetObstacleAvoidanceDirection(obstacleAvoidanceDistance);
-        //Vector3 combinedDirection = (directionToTarget + obstacleAvoidance).normalized;
-        rb.AddForce(directionToTarget * (swimSpeed * DetectionManager.Instance.CurrentDetectionMultiplier), ForceMode.Acceleration);
-    }
-
-    public override void OnTriggerEnter(Collider other)
-    {
-    }
-
-    public override void OnTriggerExit(Collider other)
-    {
     }
 
     public override void DrawGizmos(MonsterStateMachine monsterState)
     {
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(shipTransform.position, investigationRadius);
-        Gizmos.DrawSphere(currentTarget, 0.2f);
-        Gizmos.DrawLine(monsterTransform.position, monsterTransform.position + monsterTransform.forward * obstacleAvoidanceDistance);
-        if (hasTarget)
-            Gizmos.DrawLine(monsterTransform.position, shipTransform.position);
+        Vector3 investigationPoint = DetectionManager.Instance.GetInvestigationPoint();
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(investigationPoint, 1f);
+        Gizmos.DrawLine(monsterHead.position, investigationPoint);
+        Vector3 labelPosition = monsterHead.position + (investigationPoint - monsterHead.position) * 0.5f;
 
-#if UNITY_EDITOR
-        if (investigationTimer > 0)
-        {
-            Gizmos.color = Color.yellow;
-            float maxBar = 2.0f;
-            float ratio = investigationTimer / maxInvestigationTime;
-            Vector3 startPos = monsterTransform.position + Vector3.up * 2.0f;
-            Vector3 endPos = startPos + Vector3.right * (ratio * maxBar);
-            Gizmos.DrawLine(startPos, endPos);
+        string transitionLabel = $"Transition to Stalking:\nDistance to Target: {Vector3.Distance(monsterHead.position, investigationPoint):F2}\n" + $"Threshold: {investigationStopDistance:F2}";
 
-            UnityEditor.Handles.Label(startPos + Vector3.up * 0.3f,
-                $"investigating: {investigationTimer:F1}s / {maxInvestigationTime}s");
-        }
-#endif
-
-        if (isDecoyActive)
-        {
-            Gizmos.color = Color.yellow;
-            float maxBar = 2.0f;
-            Vector3 startPos = decoyPosition.position + Vector3.up * 2.0f;
-            Vector3 endPos = startPos + Vector3.right * maxBar;
-            Gizmos.DrawLine(startPos, endPos);
-
-            UnityEditor.Handles.Label(startPos + Vector3.up * 0.3f,
-                "decoy");
-        }
+        UnityEditor.Handles.Label(labelPosition, transitionLabel);
     }
 
-    public void SetInvestigationRadius(float radius)
+    public override void OnTriggerEnter(Collider other)
     {
-        investigationRadius = baseInvestigationRadius;
-        radius *= 0.3f;
-        investigationRadius = investigationRadius / radius;
-        investigationRadius = Mathf.Round(investigationRadius * 10f) / 10f;
+
     }
 
-    public void SetRandomValidTarget(Transform target)
+    public override void OnTriggerExit(Collider other)
     {
-        decoyPosition = target;
-        isDecoyActive = true;
-    }  
+
+    }
 }

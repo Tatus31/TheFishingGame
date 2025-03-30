@@ -18,12 +18,8 @@ public class StalkingState : BaseMonsterState
 
     float obstacleAvoidanceDistance = 1f;
 
-    float highDetectionTimer = 0f; 
-    float lowDetectionTimer = 0f;  
-
-    float detectionThresholdTime = 15f;
-    float highDetectionThreshold = 1.9f;
-    float lowDetectionThreshold = 0.5f;
+    float attackTimer = 0f;
+    float attackTimerThreshold = 10f; 
 
     bool isTransitioning = false;
 
@@ -60,7 +56,12 @@ public class StalkingState : BaseMonsterState
         shipVel = Vector3.zero;
         isTransitioning = false;
 
-        shipMovement.OnShipSpeedChange += OnShipSpeedChanged;
+        attackTimer = 0f;
+
+        if (shipMovement != null)
+        {
+            shipMovement.OnShipSpeedChange += OnShipSpeedChanged;
+        }
 
         AudioManager.PlaySound(AudioManager.HeartBeatSound);
         AudioManager.MuteSound(AudioManager.HeartBeatSlowSound);
@@ -97,46 +98,11 @@ public class StalkingState : BaseMonsterState
         if (isTransitioning)
             return;
 
-        UpdateDetectionThreshold();
-
-        float currentDetectionMultiplier = DetectionManager.Instance.CurrentDetectionMultiplier;
-
-        if (currentDetectionMultiplier > highDetectionThreshold)
+        attackTimer += Time.deltaTime;
+        if (attackTimer >= attackTimerThreshold)
         {
-            highDetectionTimer += Time.deltaTime;
-            lowDetectionTimer = 0f;
-
-            if (highDetectionTimer >= detectionThresholdTime && !isTransitioning)
-            {
-                isTransitioning = true;
-                highDetectionTimer = 0f;
-
-                monsterState.SwitchState(monsterState.AttackingState);
-                return;
-            }
-        }
-        else
-        {
-            highDetectionTimer = Mathf.Max(0, highDetectionTimer - (Time.deltaTime * 0.5f));
-        }
-
-        if (currentDetectionMultiplier <= lowDetectionThreshold)
-        {
-            lowDetectionTimer += Time.deltaTime;
-
-            if (lowDetectionTimer >= detectionThresholdTime && !isTransitioning)
-            {
-                isTransitioning = true;
-                lowDetectionTimer = 0f;
-
-                monsterState.SwitchState(monsterState.IdleState);
-                DetectionManager.Instance.IsInvestigating = false;
-                return;
-            }
-        }
-        else
-        {
-            lowDetectionTimer = Mathf.Max(0, lowDetectionTimer - (Time.deltaTime * 0.5f));
+            monsterState.SwitchState(monsterState.AttackingState);
+            return;
         }
     }
 
@@ -228,56 +194,9 @@ public class StalkingState : BaseMonsterState
             Gizmos.color = Color.cyan;
             Gizmos.DrawSphere(targetPos, 0.5f);
 
-            if (highDetectionTimer > 0)
-            {
-                Gizmos.color = Color.red;
-                float progress = highDetectionTimer / detectionThresholdTime;
-                float barLength = 2.0f;
-                Vector3 startPos = monsterTransform.position + Vector3.up * 1.5f;
-                Vector3 endPos = startPos + Vector3.right * (progress * barLength);
-
-#if UNITY_EDITOR
-                UnityEditor.Handles.Label(endPos, $"{Mathf.Round(progress * 100)}%");
-                float closeRange = 10f;
-                float mediumRange = 30f;
-                float distanceToShip = Vector3.Distance(monsterTransform.position, shipTransform.position);
-                float t = (distanceToShip - closeRange) / (mediumRange - closeRange);
-                UnityEditor.Handles.Label(endPos + Vector3.up * 1.5f, $"{Mathf.Round(t * 100) / 100}");
-#endif
-            }
-
-            if (lowDetectionTimer > 0)
-            {
-                Gizmos.color = Color.blue;
-                float progress = lowDetectionTimer / detectionThresholdTime;
-                float barLength = 2.0f;
-                Vector3 startPos = monsterTransform.position + Vector3.up * 1.2f;
-                Vector3 endPos = startPos + Vector3.right * (progress * barLength);
-
-#if UNITY_EDITOR
-                UnityEditor.Handles.Label(endPos, $"{Mathf.Round(progress * 100)}%");
-#endif
-            }
-        }
-    }
-
-    void UpdateDetectionThreshold()
-    {
-        float distanceToShip = Vector3.Distance(monsterTransform.position, shipTransform.position);
-
-        float maxThreshold = 1.9f;
-
-        float closeRange = 10f;    
-        float mediumRange = 30f;   
-
-        if (distanceToShip <= mediumRange)
-        {
-            float t = (distanceToShip - closeRange) / (mediumRange - closeRange);
-            highDetectionThreshold = t;
-        }
-        else
-        {
-            highDetectionThreshold = maxThreshold;
+            Vector3 timerLabelPos = monsterTransform.position + Vector3.up * 2f;
+            string timerLabel = $"Attack Timer: {attackTimer:F1}/{attackTimerThreshold:F1}";
+            UnityEditor.Handles.Label(timerLabelPos, timerLabel);
         }
     }
 

@@ -1,14 +1,33 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static ShipMovement;
 
 public class DetectionManager : MonoBehaviour
 {
-    public static event EventHandler<float> OnDetectionValueChange;
+    public static DetectionManager Instance { get; private set; }
+    [SerializeField] Transform shipTransform;
+    [SerializeField] Transform monsterHead;
+    [SerializeField] float initialDetectionTimer = 200f;
+    [SerializeField] float detectionTimerDecreaseRate = 1f;
+    [SerializeField] float baseInvestigationPointUpdateInterval = 2f;
+    [SerializeField] float minDistanceToShip = 10f;
+    [SerializeField] float investigationCooldown = 10f;
 
-    public static DetectionManager Instance;
+    float currentDetectionTimer;
+    float investigationPointUpdateTimer;
+    float currentInvestigationPointUpdateInterval;
+    float currentCooldownTimer = 0f;
+
+    Vector3 investigationTargetPoint;
+
+    bool isInvestigating = false;
+    bool isDecoyActive = false;
+    bool isLightsActive = false;
+    bool isLightsFlickerActive = false;
+    bool isCollisionActive = false;
+    SpeedLevel speedLevel;
+
+    public bool IsInvestigating { get { return isInvestigating; } set { isInvestigating = value; } }
 
     [Serializable]
     public class DetectionValues
@@ -24,57 +43,21 @@ public class DetectionManager : MonoBehaviour
         public float forward3SpeedDetection = 3f;
     }
 
-    [Header("Detection Setup")]
-    [Space(10)]
-    [SerializeField] float detectionMultiplierValue;
-    [SerializeField]
-    [Tooltip("time to interpolate between current detection and the target one")] float lerpTime = 1f;
-    [SerializeField] float timer = 5f;
-    [SerializeField] float staticValueTimer = 10f;
-    [Space(10)]
     [SerializeField] DetectionValues detectionValues;
-
-    float time;
-    float currentDetectionMultiplier;
-    SpeedLevel speedLevel;
-
-    float additionalDetection = 0f;
-    float collisionDetectionTimer = 0f;
-
-    float monsterMinimalDetectionValue = 0.4f;
-    float monsterMinimalDistanceFromShip = 50f;
-
-    bool isSearching = false;
-    bool setUsingEditor;
-
-    bool areLightsOn;
-    bool areLightsFlickering;
-    public bool isInvestigating;
-
-    public float CurrentDetectionMultiplier { get { return currentDetectionMultiplier; } set { currentDetectionMultiplier = value; } }
-    public DetectionValues GetDetectionValues => detectionValues;
-    public bool SetUsingEditor { get { return setUsingEditor; } set { setUsingEditor = value; } }   
-    public bool IsInvestigating { get { return isInvestigating; } set { isInvestigating = value; } }
 
     private void Awake()
     {
         if (Instance != null)
         {
-#if UNITY_EDITOR
-            Debug.LogWarning($"there exists a {Instance.name} in the scene already");
-#endif
+            Destroy(gameObject);
+            return;
         }
-
         Instance = this;
     }
 
     private void Start()
     {
-        currentDetectionMultiplier = 0;
-        speedLevel = SpeedLevel.neutral;
-
         OnDetectionChange += ShipMovement_OnDetectionChange;
-        ShipDamage.Instance.OnDetectionChange += ShipDamage_OnDetectionChange;
         LightsManager.OnLightsToggled += LightsManager_OnLightsToggled;
         LightsManager.OnLightsFlicker += LightsManager_OnLightsFlicker;
         Decoy.OnDecoyActivated += Decoy_OnDecoyActivated;
@@ -90,30 +73,18 @@ public class DetectionManager : MonoBehaviour
 
     private void LightsManager_OnLightsFlicker(object sender, bool e)
     {
-        areLightsFlickering = e;
+        isLightsFlickerActive = e;
     }
 
     private void LightsManager_OnLightsToggled(object sender, bool e)
     {
-        areLightsOn = e;
+        isLightsActive = e;
     }
 
     private void OnValidate()
     {
         //Debug.Log($"detection values: \n{detectionValues.collisionDetection} \n {detectionValues.reverseSpeedDetection}\n {detectionValues.neutralSpeedDetection}" +
         //    $"\n {detectionValues.forward1SpeedDetection}\n {detectionValues.forward2SpeedDetection}\n {detectionValues.forward3SpeedDetection}");
-    }
-
-    private void ShipDamage_OnDetectionChange(object sender, float detectionValue)
-    {
-        additionalDetection = detectionValue;
-        currentDetectionMultiplier += additionalDetection;
-
-        collisionDetectionTimer = staticValueTimer;
-
-//#if UNITY_EDITOR
-//        Debug.Log($"added {detectionValue} to detection new value: {currentDetectionMultiplier}");
-//#endif
     }
 
     private void ShipMovement_OnDetectionChange(object sender, ShipMovement.SpeedLevel e)
@@ -125,100 +96,118 @@ public class DetectionManager : MonoBehaviour
 
     private void Update()
     {
-        if (collisionDetectionTimer > 0)
+
+        if (currentCooldownTimer > 0f)
         {
-            collisionDetectionTimer -= Time.deltaTime;
-            if (collisionDetectionTimer <= 0)
+            currentCooldownTimer -= Time.deltaTime;
+            return; 
+        }
+
+        float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
+        if (distance <= minDistanceToShip && !isInvestigating)
+        {
+            if (MonsterStateMachine.Instance != null)
             {
-                currentDetectionMultiplier -= additionalDetection;
-                additionalDetection = 0f;
-//#if UNITY_EDITOR
-//                Debug.Log("collision detection over");
-//#endif
-            }
-        }
-
-        float targetValue = 0f;
-        float lightDetectionBonus = 0f;
-
-        if (areLightsOn)
-        {
-            lightDetectionBonus = detectionValues.lightsDetection;
-        }
-        else if (areLightsFlickering)
-        {
-            lightDetectionBonus = detectionValues.lightsFlickerDetection;
-        }
-
-        switch (speedLevel)
-        {
-            case SpeedLevel.reverse:
-                targetValue = detectionValues.reverseSpeedDetection;
-                break;
-            case SpeedLevel.neutral:
-                targetValue = detectionValues.neutralSpeedDetection;
-                break;
-            case SpeedLevel.forward1:
-                targetValue = detectionValues.forward1SpeedDetection;
-                break;
-            case SpeedLevel.forward2:
-                targetValue = detectionValues.forward2SpeedDetection;
-                break;
-            case SpeedLevel.forward3:
-                targetValue = detectionValues.forward3SpeedDetection;
-                break;
-            default:
-                break;
-        }
-
-        targetValue += lightDetectionBonus;
-
-        if (targetValue != currentDetectionMultiplier)
-            OnDetectionValueChange?.Invoke(this, targetValue);
-
-        if (setUsingEditor)
-            OnDetectionValueChange?.Invoke(this, currentDetectionMultiplier);
-
-        if (additionalDetection == 0 && !setUsingEditor)
-        {
-            LerpDetectionValue(targetValue);
-        }
-
-        if (MonsterStateMachine.Instance == null)
-            return;
-
-        float distanceToShip = MonsterStateMachine.Instance.GetDistanceToShip();
-        if (currentDetectionMultiplier >= monsterMinimalDetectionValue && distanceToShip <= monsterMinimalDistanceFromShip)
-        {
-            time += Time.deltaTime;
-            float changedTimer = timer - (currentDetectionMultiplier * 2);
-
-            if (time >= changedTimer)
-            {
-                isSearching = false;
-                time = 0;
-            }
-
-            if (!isSearching && !isInvestigating)
-            {
-                //Debug.Log("monster is investigating");
                 MonsterStateMachine.Instance.SwitchState(MonsterStateMachine.Instance.InvestigatingState);
-                isSearching = true;
                 isInvestigating = true;
             }
         }
     }
 
-    void LerpDetectionValue(float targetDetectionValue)
+    public void StartInvestigation(Transform shipTransform)
     {
-        float previousDetectionMultiplier = currentDetectionMultiplier;
+        currentDetectionTimer = initialDetectionTimer;
+        investigationTargetPoint = shipTransform.position;
+        UpdateInvestigationInterval();
+        investigationPointUpdateTimer = currentInvestigationPointUpdateInterval;
+    }
 
-        currentDetectionMultiplier = Mathf.Lerp(currentDetectionMultiplier, targetDetectionValue, Time.deltaTime * lerpTime);
-        currentDetectionMultiplier = Mathf.Clamp(currentDetectionMultiplier, currentDetectionMultiplier, targetDetectionValue);
-        currentDetectionMultiplier = Mathf.Round(currentDetectionMultiplier * 1000f) / 1000f;
+    public void UpdateInvestigationPoint(Transform shipTransform)
+    {
+        investigationPointUpdateTimer -= Time.deltaTime;
+        if (investigationPointUpdateTimer <= 0)
+        {
+            investigationTargetPoint = shipTransform.position;
+            UpdateInvestigationInterval();
+            investigationPointUpdateTimer = currentInvestigationPointUpdateInterval;
+        }
+    }
+
+    void UpdateInvestigationInterval()
+    {
+        float interval = baseInvestigationPointUpdateInterval;
+        float totalReductionPercent = 0f;
+
+        if (isDecoyActive)
+            totalReductionPercent += detectionValues.decoyDetection;
+
+        if (isLightsActive)
+            totalReductionPercent += detectionValues.lightsDetection;
+
+        if (isLightsFlickerActive)
+            totalReductionPercent += detectionValues.lightsFlickerDetection;
+
+        if (isCollisionActive)
+            totalReductionPercent += detectionValues.collisionDetection;
+
+        switch (speedLevel)
+        {
+            case SpeedLevel.reverse:
+                totalReductionPercent += detectionValues.reverseSpeedDetection;
+                break;
+            case SpeedLevel.neutral:
+                totalReductionPercent += detectionValues.neutralSpeedDetection;
+                break;
+            case SpeedLevel.forward1:
+                totalReductionPercent += detectionValues.forward1SpeedDetection;
+                break;
+            case SpeedLevel.forward2:
+                totalReductionPercent += detectionValues.forward2SpeedDetection;
+                break;
+            case SpeedLevel.forward3:
+                totalReductionPercent += detectionValues.forward3SpeedDetection;
+                break;
+        }
+
+        currentInvestigationPointUpdateInterval = interval * (1f - (totalReductionPercent / 10f));
+        currentInvestigationPointUpdateInterval = Mathf.Max(0.1f, currentInvestigationPointUpdateInterval);
+    }
+
+    public void DecreaseDetectionTimer()
+    {
+        currentDetectionTimer -= detectionTimerDecreaseRate * Time.deltaTime;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (shipTransform == null || monsterHead == null) return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(shipTransform.position, monsterHead.position);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(investigationTargetPoint, 1f);
 
 #if UNITY_EDITOR
-        Debug.Log($"current detection: {currentDetectionMultiplier} current speed level: {speedLevel}");
+        UnityEditor.Handles.color = Color.white;
+        string timerLabel = $"Detection Timer: {currentDetectionTimer:F2}" + $"\nInvestigation point interval {currentInvestigationPointUpdateInterval:F2}";
+        Vector3 labelPosition = (monsterHead.position);
+        UnityEditor.Handles.Label(labelPosition + Vector3.down, timerLabel);
 #endif
     }
+
+    public void StartCooldown()
+    {
+        currentCooldownTimer = investigationCooldown;
+    }
+
+    public bool ShouldContinueInvestigation() => currentDetectionTimer > 0;
+    public Vector3 GetInvestigationPoint() => investigationTargetPoint;
+    public bool IsInCooldown => currentCooldownTimer > 0f;
+    public void SetDecoyActive(bool active) => isDecoyActive = active;
+    public void SetLightsActive(bool active) => isLightsActive = active;
+    public void SetLightsFlickerActive(bool active) => isLightsFlickerActive = active;
+    public void SetCollisionActive(bool active) => isCollisionActive = active;
+    public void SetSpeedState(SpeedLevel state) => speedLevel = state;
+
 }

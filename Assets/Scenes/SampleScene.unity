@@ -144,7 +144,7 @@ PrefabInstance:
     - target: {fileID: 1333368363357371274, guid: f5cb404c3358f2f488c6101cfe5a2c77,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2082256135472030551, guid: f5cb404c3358f2f488c6101cfe5a2c77,
         type: 3}
@@ -3783,6 +3783,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9229a321e58b31e47b154ae1d814cefe, type: 3}
+--- !u!4 &356985764 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3416824208474553907, guid: 8f05c85c9f7126140ada90df6480d426,
+    type: 3}
+  m_PrefabInstance: {fileID: 8395598621710614127}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &385911999
 Mesh:
   m_ObjectHideFlags: 0
@@ -10357,6 +10363,36 @@ PrefabInstance:
       propertyPath: timer
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 1749270837177424874, guid: ee204cb6cb0fb01429f492652e8d07ac,
+        type: 3}
+      propertyPath: monsterHead
+      value: 
+      objectReference: {fileID: 356985764}
+    - target: {fileID: 1749270837177424874, guid: ee204cb6cb0fb01429f492652e8d07ac,
+        type: 3}
+      propertyPath: shipTransform
+      value: 
+      objectReference: {fileID: 7157433146232501158}
+    - target: {fileID: 1749270837177424874, guid: ee204cb6cb0fb01429f492652e8d07ac,
+        type: 3}
+      propertyPath: minDistanceToShip
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 1749270837177424874, guid: ee204cb6cb0fb01429f492652e8d07ac,
+        type: 3}
+      propertyPath: initialDetectionTimer
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 1749270837177424874, guid: ee204cb6cb0fb01429f492652e8d07ac,
+        type: 3}
+      propertyPath: investigationPointUpdateInterval
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1749270837177424874, guid: ee204cb6cb0fb01429f492652e8d07ac,
+        type: 3}
+      propertyPath: baseInvestigationPointUpdateInterval
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2251196559885108575, guid: ee204cb6cb0fb01429f492652e8d07ac,
         type: 3}
       propertyPath: player
@@ -12928,7 +12964,6 @@ MonoBehaviour:
   swimStalkingSpeed: 10
   swimAttackSpeed: 10
   monsterEscapeTime: 4
-  investigationRadius: 10
   investigationSwimSpeed: 10
 --- !u!4 &1618540813
 Transform:
@@ -17421,7 +17456,7 @@ PrefabInstance:
     - target: {fileID: 608074315323639799, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
       propertyPath: swimSpeed
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 608074315323639799, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
@@ -17435,8 +17470,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 608074315323639799, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
+      propertyPath: investigationSwimSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 608074315323639799, guid: 8f05c85c9f7126140ada90df6480d426,
+        type: 3}
       propertyPath: obstacleAvoidanceDistance
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 636126021333776368, guid: 8f05c85c9f7126140ada90df6480d426,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 677049559617618707, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
@@ -17513,6 +17558,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: MonsterWithModel
       objectReference: {fileID: 0}
+    - target: {fileID: 5781530319976135822, guid: 8f05c85c9f7126140ada90df6480d426,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6484817234330914108, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -17526,7 +17576,7 @@ PrefabInstance:
     - target: {fileID: 6484817234330914108, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 85.7
+      value: 150.1
       objectReference: {fileID: 0}
     - target: {fileID: 6484817234330914108, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
