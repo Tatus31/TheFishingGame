@@ -51,14 +51,14 @@ public class Whirlpool : MonoBehaviour
         {
             Debug.DrawRay(EndPoint.transform.position,EndPoint.transform.forward * 20,Color.green);
             Debug.Log("Hit Something!");
-            pullForce = 1000f;
+            pullForce = 350f;
             rotationSpeed = 200f;
         }
         else
         {
             Debug.DrawRay(EndPoint.transform.position,EndPoint.transform.forward * 20,Color.red);
             Debug.Log("Not hitting anything!");
-            pullForce = 2200f;
+            pullForce = 700f;
             rotationSpeed = 677f;
         }
     }
