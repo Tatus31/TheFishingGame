@@ -522,7 +522,6 @@ public class DebugWindowEditor : EditorWindow
         DetectionManager detectionManager = DetectionManager.Instance;
         if (detectionManager != null)
         {
-            detectionManager.CurrentDetectionMultiplier = newValue;
 #if UNITY_EDITOR
             Debug.Log($"Detection value set to {newValue}");
 #endif
@@ -540,7 +539,6 @@ public class DebugWindowEditor : EditorWindow
         DetectionManager detectionManager = DetectionManager.Instance;
         if (detectionManager != null)
         {
-            detectionManager.SetUsingEditor = isStatic;
         }
         else
         {

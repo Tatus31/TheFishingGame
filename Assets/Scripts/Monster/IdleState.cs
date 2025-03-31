@@ -39,6 +39,9 @@ public class IdleState : BaseMonsterState
     {
         hasTarget = false;
         timeAtTarget = 0f;
+
+        AudioManager.MuteSound(AudioManager.HeartBeatSound);
+        AudioManager.MuteSound(AudioManager.HeartBeatSlowSound);
     }
 
     public override void ExitState()
