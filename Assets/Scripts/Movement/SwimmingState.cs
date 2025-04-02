@@ -98,8 +98,8 @@ public class SwimmingState : MovementBaseState
     {
         player.rb.useGravity = false;
 
-        Vector3 horizontalVelocity = new Vector3(player.rb.velocity.x, 0, player.rb.velocity.z);
-        player.rb.velocity = horizontalVelocity;
+        //Vector3 horizontalVelocity = new Vector3(player.rb.velocity.x, 0, player.rb.velocity.z);
+        //player.rb.velocity = horizontalVelocity;
     }
 
     public override void PlayAnimation(PlayerMovement player)
