@@ -8,41 +8,64 @@ using UnityEngine.UI;
 public class BasicInkExample : MonoBehaviour
 {
     public static event Action<Story> OnCreateStory;
-    bool test;
+    bool isInteracting;
 
     [SerializeField] Player player;
-
-    [SerializeField] int requiredItemId = 0;
+    [SerializeField] LayerMask interactableMask;
+    [SerializeField] ItemObject requiredItem;
+    CameraLook cameraLook;
 
     void Awake()
     {
         // Remove the default message
         RemoveChildren();
         StartStory();
+
+        cameraLook = FindObjectOfType<CameraLook>();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (InputManager.Instance.IsLeftMouseButtonPressed() && MouseWorldPosition.GetInteractable(interactableMask))
         {
+
+            Debug.Log("Clicked on interactable object");
+
             if (story.variablesState.GlobalVariableExistsWithName("startJump"))
             {
-                test = (bool)story.variablesState["startJump"];
-            }
+                isInteracting = (bool)story.variablesState["startJump"];
+                isInteracting = true;
 
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                cameraLook.enabled = false;
+            }
             if (player != null && HasRequiredItem())
             {
-                test = true;
-                if (story.variablesState.GlobalVariableExistsWithName("startJump"))
+                Debug.Log("Has required item");
+
+                if (story.variablesState.GlobalVariableExistsWithName("hasItem"))
                 {
-                    story.variablesState["startJump"] = true;
+                    story.variablesState["hasItem"] = true;
+                    TakeRequiredItem();
                 }
             }
         }
+        if (InputManager.Instance.IsRightMouseButtonPressed())
+        {
+            isInteracting = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            cameraLook.enabled = true;
+        }
 
-        if (test)
+        if (isInteracting)
         {
             canvas.gameObject.SetActive(true);
+        }
+        else
+        {
+            canvas.gameObject.SetActive(false);
         }
     }
 
@@ -54,7 +77,7 @@ public class BasicInkExample : MonoBehaviour
         for (int i = 0; i < player.inventory.GetSlots.Length; i++)
         {
             InventorySlot slot = player.inventory.GetSlots[i];
-            if (slot.item.id == requiredItemId)
+            if (slot.item.id == requiredItem.data.id)
             {
                 return true;
             }
@@ -63,11 +86,32 @@ public class BasicInkExample : MonoBehaviour
         return false;
     }
 
+    void TakeRequiredItem()
+    {
+        if (player != null && player.inventory != null)
+        {
+            for (int i = 0; i < player.inventory.GetSlots.Length; i++)
+            {
+                InventorySlot slot = player.inventory.GetSlots[i];
+                if (slot.item.id == requiredItem.data.id)
+                {
+                    player.inventory.GetSlots[i].RemoveItem();
+                    break;
+                }
+            }
+        }
+    }
+
     // Creates a new Story object with the compiled story which we can then play!
     void StartStory()
     {
         story = new Story(inkJSONAsset.text);
-        if (OnCreateStory != null) OnCreateStory(story);
+        if (OnCreateStory != null)
+        {
+            OnCreateStory(story);
+            OnCreateStory?.Invoke(story);
+        }
+
         RefreshView();
     }
 
@@ -105,8 +149,14 @@ public class BasicInkExample : MonoBehaviour
         // If we've read all the content and there's no choices, the story is finished!
         else
         {
-            Button choice = CreateChoiceView("End of story.\nRestart?");
-            choice.onClick.AddListener(delegate {
+            Button choice = CreateChoiceView("Leave...");
+            choice.onClick.AddListener(delegate
+            {
+                canvas.gameObject.SetActive(false);
+                isInteracting = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                cameraLook.enabled = true;
                 StartStory();
             });
         }

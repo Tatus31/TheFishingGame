@@ -1,4 +1,5 @@
 ﻿VAR startJump = false
+VAR hasItem = false
 
 -> check_loop
 
@@ -13,8 +14,14 @@ I await you down below. Come to me.
 + ...
     nikon noises. 
     -> astonished
-+ [oeeoeoeoe] -> nod
-
++ [I have the item] 
+    {hasItem:
+        Ah, I see you have what I seek. Very well...
+        -> ending
+    - else:
+        No you dont
+        -> jump1
+    }
 
 === astonished ===
 Limbo, Lust, all gone... With Gluttony soon to follow. 
