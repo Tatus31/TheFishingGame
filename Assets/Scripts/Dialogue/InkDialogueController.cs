@@ -10,11 +10,9 @@ public class InkDialogueController : MonoBehaviour
 {
     public static event Action<Story> OnCreateStory;
 
-    [SerializeField][Tooltip("the JSON file of the story that is going to play")] TextAsset inkJSONAsset;
     [SerializeField] Canvas canvas;
     [SerializeField] Button buttonPrefab;
     [SerializeField] TextMeshProUGUI textPrefab;
-    [SerializeField] ItemObject requiredItem;
     [SerializeField] LayerMask interactableMask;
 
     [Header("Transforms")]
@@ -22,15 +20,23 @@ public class InkDialogueController : MonoBehaviour
     [SerializeField] RectTransform textContainer;
     [SerializeField] RectTransform choicesContainer;
 
+    [Header("Quest Data")]
+    [SerializeField] TextAsset inkJSONAsset;
+    [SerializeField] ItemObject requiredItem;
+
+    bool isQuestCompleted = false;
+    QuestManager questManager;
+
     Story story;
     CameraLook cameraLook;
 
     bool isInteracting;
 
+
     private void Awake()
     {
         RemoveChildren();
-        StartStory();
+        questManager = FindObjectOfType<QuestManager>();
 
         if (canvas == null)
         {
@@ -41,7 +47,15 @@ public class InkDialogueController : MonoBehaviour
         {
             cameraLook = FindObjectOfType<CameraLook>();
         }
-    }   
+    }
+
+    private void Start()
+    {
+        if (inkJSONAsset != null)
+        {
+            StartStory();
+        }
+    }
 
     private void Update()
     {
@@ -49,7 +63,7 @@ public class InkDialogueController : MonoBehaviour
         {
             Debug.Log("Clicked on interactable object");
 
-            if (story.variablesState.GlobalVariableExistsWithName("startJump"))
+            if (story != null && story.variablesState.GlobalVariableExistsWithName("startJump"))
             {
                 isInteracting = (bool)story.variablesState["startJump"];
                 isInteracting = true;
@@ -60,10 +74,9 @@ public class InkDialogueController : MonoBehaviour
             {
                 Debug.Log("Has required item");
 
-                if (story.variablesState.GlobalVariableExistsWithName("hasItem"))
+                if (story != null && story.variablesState.GlobalVariableExistsWithName("hasItem"))
                 {
                     story.variablesState["hasItem"] = true;
-                    TakeRequiredItem();
                 }
             }
         }
@@ -84,6 +97,11 @@ public class InkDialogueController : MonoBehaviour
 
     public bool HasRequiredItem()
     {
+        if (requiredItem == null)
+        {
+            return false;
+        }
+
         var player = FindObjectOfType<Player>();
 
         if (player == null || player.inventory == null)
@@ -94,7 +112,7 @@ public class InkDialogueController : MonoBehaviour
         for (int i = 0; i < player.inventory.GetSlots.Length; i++)
         {
             InventorySlot slot = player.inventory.GetSlots[i];
-            if (slot.item.id == requiredItem.data.id)
+            if (slot.item != null && slot.item.id == requiredItem.data.id)
             {
                 return true;
             }
@@ -105,14 +123,15 @@ public class InkDialogueController : MonoBehaviour
 
     public void TakeRequiredItem()
     {
-        var player = FindObjectOfType<Player>();
+        if (requiredItem == null) return;
 
+        var player = FindObjectOfType<Player>();
         if (player != null && player.inventory != null)
         {
             for (int i = 0; i < player.inventory.GetSlots.Length; i++)
             {
                 InventorySlot slot = player.inventory.GetSlots[i];
-                if (slot.item.id == requiredItem.data.id)
+                if (slot.item != null && slot.item.id == requiredItem.data.id)
                 {
                     player.inventory.GetSlots[i].RemoveItem();
                     break;
@@ -121,8 +140,31 @@ public class InkDialogueController : MonoBehaviour
         }
     }
 
+    public void UpdateQuestData(TextAsset newInkJSON, ItemObject newRequiredItem)
+    {
+        inkJSONAsset = newInkJSON;
+        requiredItem = newRequiredItem;
+        isQuestCompleted = false;
+
+        if (inkJSONAsset != null)
+        {
+            StartStory();
+        }
+    }
+
+    public bool IsQuestCompleted()
+    {
+        return isQuestCompleted;
+    }
+
     void StartStory()
     {
+        if (inkJSONAsset == null)
+        {
+            Debug.LogWarning("No ink JSON asset assigned to the dialogue controller!");
+            return;
+        }
+
         story = new Story(inkJSONAsset.text);
         if (OnCreateStory != null)
         {
@@ -162,10 +204,17 @@ public class InkDialogueController : MonoBehaviour
             Button choice = CreateChoiceView("Leave...");
             choice.onClick.AddListener(delegate
             {
-                Debug.Log("Clicked leave button");
                 TurnCanvasElementsOff();
                 UnlockCamera();
-                StartStory();
+
+                if (isQuestCompleted)
+                {
+                    StartCoroutine(LoadNextQuestAfterDelay(0.5f));
+                }
+                else
+                {
+                    StartStory();
+                }
             });
         }
     }
@@ -173,7 +222,17 @@ public class InkDialogueController : MonoBehaviour
     void OnClickChoiceButton(Choice choice)
     {
         story.ChooseChoiceIndex(choice.index);
-        RefreshView();
+        RefreshView(); 
+
+        if (HasRequiredItem() && story.variablesState.GlobalVariableExistsWithName("completeQuest"))
+        {
+            bool shouldComplete = (bool)story.variablesState["completeQuest"];
+            if (shouldComplete)
+            {
+                isQuestCompleted = true;
+                TakeRequiredItem();
+            }
+        }
     }
 
     void CreateContentView(string text)
@@ -196,6 +255,35 @@ public class InkDialogueController : MonoBehaviour
         }
 
         return choice;
+    }
+
+    public void CompleteCurrentQuest()
+    {
+        if (questManager != null)
+        {
+            questManager.CompleteCurrentQuest();
+            if (questManager.GetCurrentQuest() != null)
+            {
+                UpdateQuestData(questManager.GetCurrentQuest().inkJSONAsset, questManager.GetCurrentQuest().requiredItem);
+            }
+        }
+    }
+
+    IEnumerator LoadNextQuestAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (questManager != null)
+        {
+            questManager.CompleteCurrentQuest();
+            var nextQuest = questManager.GetCurrentQuest();
+            if (nextQuest != null)
+            {
+                UpdateQuestData(nextQuest.inkJSONAsset, nextQuest.requiredItem);
+            }
+        }
+
+        isQuestCompleted = false;
     }
 
     void RemoveChildren()
@@ -221,7 +309,7 @@ public class InkDialogueController : MonoBehaviour
 
     void TurnCanvasElementsOn()
     {
-        if(canvas != null)
+        if (canvas != null)
         {
             canvas.gameObject.SetActive(true);
         }
