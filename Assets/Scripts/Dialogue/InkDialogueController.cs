@@ -25,10 +25,11 @@ public class InkDialogueController : MonoBehaviour
     [SerializeField] ItemObject requiredItem;
 
     bool isQuestCompleted = false;
-    QuestManager questManager;
 
+    QuestManager questManager;
     Story story;
     CameraLook cameraLook;
+    Compass compass;
 
     bool isInteracting;
 
@@ -46,6 +47,11 @@ public class InkDialogueController : MonoBehaviour
         if (cameraLook == null)
         {
             cameraLook = FindObjectOfType<CameraLook>();
+        }
+
+        if(compass == null)
+        {
+            compass = FindObjectOfType<Compass>();
         }
     }
 
@@ -134,6 +140,16 @@ public class InkDialogueController : MonoBehaviour
                 if (slot.item != null && slot.item.id == requiredItem.data.id)
                 {
                     player.inventory.GetSlots[i].RemoveItem();
+
+                    if (questManager != null && compass != null)
+                    {
+                        Quest currentQuest = questManager.GetCurrentQuest();
+                        if (currentQuest != null && currentQuest.QuestMarker != null)
+                        {
+                            compass.DeleteMarker(currentQuest.QuestMarker);
+                        }
+                    }
+
                     break;
                 }
             }
@@ -169,6 +185,15 @@ public class InkDialogueController : MonoBehaviour
         if (OnCreateStory != null)
         {
             OnCreateStory(story);
+        }
+
+        if (questManager != null && compass != null)
+        {
+            Quest currentQuest = questManager.GetCurrentQuest();
+            if (currentQuest != null && currentQuest.QuestMarker != null)
+            {
+                compass.AddMarker(currentQuest.QuestMarker);
+            }
         }
 
         RefreshView();
@@ -265,6 +290,7 @@ public class InkDialogueController : MonoBehaviour
             if (questManager.GetCurrentQuest() != null)
             {
                 UpdateQuestData(questManager.GetCurrentQuest().inkJSONAsset, questManager.GetCurrentQuest().requiredItem);
+                compass.DeleteMarker(questManager.GetCurrentQuest().QuestMarker);
             }
         }
     }
@@ -275,11 +301,22 @@ public class InkDialogueController : MonoBehaviour
 
         if (questManager != null)
         {
+            Quest currentQuest = questManager.GetCurrentQuest();
+            if (currentQuest != null && currentQuest.QuestMarker != null && compass != null)
+            {
+                compass.DeleteMarker(currentQuest.QuestMarker);
+            }
+
             questManager.CompleteCurrentQuest();
+
             var nextQuest = questManager.GetCurrentQuest();
             if (nextQuest != null)
             {
                 UpdateQuestData(nextQuest.inkJSONAsset, nextQuest.requiredItem);
+                if (nextQuest.QuestMarker != null && compass != null)
+                {
+                    compass.AddMarker(nextQuest.QuestMarker);
+                }
             }
         }
 

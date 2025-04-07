@@ -13,12 +13,17 @@ public class Quest
 
     [Tooltip("Whether this quest has been completed")]
     public bool isCompleted = false;
+
+    [Tooltip("The marker for the compass for this quest")]
+    public Marker QuestMarker;
 }
 
 public class QuestManager : MonoBehaviour
 {
     [SerializeField] List<Quest> quests = new List<Quest>();
-    [SerializeField] InkDialogueController dialogueController;
+
+    InkDialogueController dialogueController;
+    Compass compass;
 
     int currentQuestIndex = 0;
 
@@ -27,6 +32,10 @@ public class QuestManager : MonoBehaviour
         if (dialogueController == null)
         {
             dialogueController = FindObjectOfType<InkDialogueController>();
+        }
+        if (compass == null)
+        {
+            compass = FindObjectOfType<Compass>();
         }
 
         InitializeFirstQuest();
@@ -37,10 +46,15 @@ public class QuestManager : MonoBehaviour
         if (quests.Count > 0 && dialogueController != null)
         {
             dialogueController.UpdateQuestData(quests[0].inkJSONAsset, quests[0].requiredItem);
+
+            if (compass != null && quests[0].QuestMarker != null)
+            {
+                compass.AddMarker(quests[0].QuestMarker);
+            }
         }
         else
         {
-            Debug.LogWarning("No quests have been added to the QuestManager or dialogueController is missing!");
+            Debug.LogWarning("No quests have been added to the QuestManager or dialogueController is missing");
         }
     }
 
@@ -48,11 +62,19 @@ public class QuestManager : MonoBehaviour
     {
         if (currentQuestIndex < quests.Count)
         {
-            quests[currentQuestIndex].isCompleted = true;
+            if (compass != null && quests[currentQuestIndex].QuestMarker != null)
+            {
+                compass.DeleteMarker(quests[currentQuestIndex].QuestMarker);
+            }
 
+            quests[currentQuestIndex].isCompleted = true;
             if (currentQuestIndex < quests.Count - 1)
             {
                 currentQuestIndex++;
+                if (compass != null && quests[currentQuestIndex].QuestMarker != null)
+                {
+                    compass.AddMarker(quests[currentQuestIndex].QuestMarker);
+                }
             }
         }
     }
