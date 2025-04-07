@@ -43,10 +43,10 @@ public abstract class UserInterface : MonoBehaviour
         }
     }
 
-    //private void Update()
-    //{
-    //    UpdateSlots();
-    //}
+    private void Update()
+    {
+        UpdateSlots();
+    }
 
     public void UpdateSlots()
     {
