@@ -12,8 +12,15 @@ public class Player : MonoBehaviour
 
     public PlayerAttributes[] playerAttributes;
 
+    Compass compass;
+
     private void Start()
     {
+        if(compass == null)
+        {
+            compass = FindObjectOfType<Compass>();
+        }
+
         for (int i = 0; i < playerAttributes.Length; i++)
         {
             playerAttributes[i].SetParent(this);
@@ -81,6 +88,8 @@ public class Player : MonoBehaviour
         {
             Item _item = new Item(item.item);
             inventory.AddItem(_item, 1, _item.weight);
+            var marker = other.GetComponent<Marker>();
+            compass.DeleteMarker(marker);
             Destroy(other.gameObject);
         }
     }
