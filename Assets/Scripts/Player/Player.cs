@@ -9,25 +9,15 @@ using static UnityEditor.Timeline.Actions.MenuPriority;
 
 public class Player : MonoBehaviour
 {
-    public static event EventHandler<bool> OnMonsterHuntingPlayer;
-
     public InventoryObject inventory;
     public InventoryObject equipment;
 
     public PlayerAttributes[] playerAttributes;
 
-    [SerializeField] Transform monsterHeadTransform;
-    [SerializeField] float minDistanceToPlayer = 10f;
-
-    bool isSwimming = false;
-    bool isHuntingPlayer = false;
-
     Compass compass;
 
     private void Start()
     {
-        PlayerMovement.Instance.OnPlayerSwimmingChange += PlayerMovement_OnPlayerSwimmingChange;
-
         if (compass == null)
         {
             compass = FindObjectOfType<Compass>();
@@ -42,30 +32,6 @@ public class Player : MonoBehaviour
             equipment.GetSlots[i].OnBeforeUpdate += OnRemoveItem;
             equipment.GetSlots[i].OnAfterUpdate += OnAddItem;
         }
-    }
-
-    private void Update()
-    {
-        float distance = Vector3.Distance(transform.position, monsterHeadTransform.position);
-        if (isSwimming && distance <= minDistanceToPlayer)
-        {
-            Debug.Log($"Player is swimming and within {minDistanceToPlayer} units of the monster head.");
-
-            isHuntingPlayer = true;
-            OnMonsterHuntingPlayer?.Invoke(this, isHuntingPlayer);
-            MonsterStateMachine.Instance.SwitchState(MonsterStateMachine.Instance.AttackingPlayerState);
-        }
-        else
-        {
-            isHuntingPlayer = false;
-            OnMonsterHuntingPlayer?.Invoke(this, isHuntingPlayer);
-            MonsterStateMachine.Instance.SwitchState(MonsterStateMachine.Instance.IdleState);
-        }
-    }
-
-    private void PlayerMovement_OnPlayerSwimmingChange(object sender, bool e)
-    {
-        isSwimming = e;
     }
 
     public void OnRemoveItem(InventorySlot slot)
@@ -132,12 +98,12 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        var coll = collision.gameObject.GetComponent<MonsterStateMachine>();
+        var monster = collision.gameObject.GetComponent<MonsterStateMachine>();
 
-        if (coll)
+        if (monster)
         {
             Debug.Log("Monster collided with player");
-
+            LeaveUnderDeck.Instance.MovePlayerManually();
         }
     }
 

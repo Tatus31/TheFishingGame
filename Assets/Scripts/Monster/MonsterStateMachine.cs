@@ -32,6 +32,9 @@ public class MonsterStateMachine : MonoBehaviour
     [SerializeField] float monsterEscapeTime = 2f;
     [Header("Investigating Monster Controls")]
     [SerializeField] float investigationSwimSpeed = 10f;
+    [Header("Attacking Player Controls")]
+    [SerializeField] float swimAttackPlayerSpeed = 20f;
+    [SerializeField] float monsterEscapePlayerTime = 6f;
 
     BaseMonsterState currentState;
 
@@ -43,7 +46,7 @@ public class MonsterStateMachine : MonoBehaviour
     public InvestigatingState InvestigatingState { get; private set; }
     public BaseMonsterState PreviousState { get; private set; }
     public BaseMonsterState CurrentState { get; private set; }
-    public BaseMonsterState AttackingPlayerState { get; private set; }
+    public AttackingPlayerState AttackingPlayerState { get; private set; }
 
     public Transform ShipTransform { get { return shipTransform; } set { shipTransform = value; } }
 
@@ -65,9 +68,9 @@ public class MonsterStateMachine : MonoBehaviour
     {
         IdleState = new IdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, waterLayer, rb, monsterHead);
         StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance, obstacleAvoidanceDistance);
-        AttackingState = new AttackingState(shipTransform, monsterHead, swimAttackSpeed, rb, monsterEscapeTime);
+        AttackingState = new AttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime);
         InvestigatingState = new InvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed);
-        AttackingPlayerState = new AttackingPlayerState(playerTransform, monsterHead, swimAttackSpeed, rb, monsterEscapeTime);
+        AttackingPlayerState = new AttackingPlayerState(playerTransform, monsterHead, swimAttackPlayerSpeed, rb, monsterEscapePlayerTime);
 
         SwitchState(IdleState);
     }
@@ -81,9 +84,9 @@ public class MonsterStateMachine : MonoBehaviour
 
         IdleState = new IdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, waterLayer, rb, monsterHead);
         StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance, obstacleAvoidanceDistance);
-        AttackingState = new AttackingState(shipTransform, monsterHead, swimAttackSpeed, rb, monsterEscapeTime);
+        AttackingState = new AttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime);
         InvestigatingState = new InvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed);
-        AttackingPlayerState = new AttackingPlayerState(playerTransform, monsterHead, swimAttackSpeed, rb, monsterEscapeTime);
+        AttackingPlayerState = new AttackingPlayerState(playerTransform, monsterHead, swimAttackPlayerSpeed, rb, monsterEscapePlayerTime);
     }
 
     private void Update()

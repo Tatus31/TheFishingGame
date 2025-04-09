@@ -13,6 +13,11 @@ public class SinkShip : MonoBehaviour
 
     float sinkingBuoyancy = 0.98f;
     [SerializeField] float sinkingDelay = 3f;
+    [SerializeField] float sinkTimer = 5f;
+
+    float timer;
+
+    bool isSinking = false;
 
     private void Awake()
     {
@@ -30,11 +35,27 @@ public class SinkShip : MonoBehaviour
             return;
         }
 
+        timer = sinkTimer;
+
         shipDamage = ShipDamage.Instance;
         waterLevel = ChangeWaterLevelUnderDeck.Instance;
 
         waterLevel.OnSinkingShip += IncreaseWaterLevel_OnSinkingShip;
         shipDamage.OnSinkingShipByDamage += ShipDamage_OnSinkingShipByDamage;
+    }
+
+    private void Update()
+    {
+        if (!isSinking)
+            return;
+
+        timer -= Time.deltaTime;
+
+        if (timer <= 0f)
+        {
+            RespawnShip.Instance.RespawnShipManually();
+            isSinking = false;
+        }
     }
 
     private void ShipDamage_OnSinkingShipByDamage(object sender, EventArgs e)
@@ -60,5 +81,6 @@ public class SinkShip : MonoBehaviour
             shipMovement.SetNeutralSpeed();
         }
 
+        isSinking = true;
     }
 }
