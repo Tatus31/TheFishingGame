@@ -63,12 +63,6 @@ public class DetectionManager : MonoBehaviour
         LightsManager.OnLightsToggled += LightsManager_OnLightsToggled;
         LightsManager.OnLightsFlicker += LightsManager_OnLightsFlicker;
         Decoy.OnDecoyActivated += Decoy_OnDecoyActivated;
-        Player.OnMonsterHuntingPlayer += Player_OnMonsterHuntingPlayer;
-    }
-
-    private void Player_OnMonsterHuntingPlayer(object sender, bool e)
-    {
-        isisHuntingPlayer = e;
     }
 
     private void Decoy_OnDecoyActivated(object sender, Transform e)

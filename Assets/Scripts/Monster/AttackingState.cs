@@ -6,6 +6,7 @@ using UnityEngine;
 public class AttackingState : BaseMonsterState
 {
     Transform shipTransform;
+    Transform playerTransform;
     Transform monsterTransform;
 
     float swimAttackSpeed = 200f;
@@ -17,10 +18,12 @@ public class AttackingState : BaseMonsterState
     Vector3 directionToShip;
 
     bool isMonsterRetreating = false;
+    bool isPlayerSwimming = false;
 
-    public AttackingState(Transform shipTransform, Transform monsterTransform, float swimAttackSpeed, Rigidbody rb, float monsterEscapeTime)
+    public AttackingState(Transform shipTransform, Transform monsterTransform, Transform playerTransform ,float swimAttackSpeed, Rigidbody rb, float monsterEscapeTime)
     {
         this.shipTransform = shipTransform;
+        this.playerTransform = playerTransform;
         this.monsterTransform = monsterTransform;
         this.rb = rb;
         this.swimAttackSpeed = swimAttackSpeed;
@@ -30,6 +33,12 @@ public class AttackingState : BaseMonsterState
     public override void EnterState(MonsterStateMachine monsterState)
     {
         ShipDamage.Instance.OnDamageTaken += ShipDamage_OnDamageTaken;
+        PlayerMovement.Instance.OnPlayerSwimmingChange += PlayerMovement_OnPlayerSwimmingChange;
+    }
+
+    private void PlayerMovement_OnPlayerSwimmingChange(object sender, bool e)
+    {
+        isPlayerSwimming = e;
     }
 
     private void ShipDamage_OnDamageTaken(object sender, int e)
@@ -53,7 +62,18 @@ public class AttackingState : BaseMonsterState
 
     public override void FixedUpdateState(MonsterStateMachine monsterState)
     {
-        directionToShip = (shipTransform.position - monsterTransform.position).normalized;
+        Transform currentTransform;
+
+        if (isPlayerSwimming)
+        {
+            currentTransform = playerTransform;
+        }
+        else
+        {
+            currentTransform = shipTransform;
+        }
+
+        directionToShip = (currentTransform.position - monsterTransform.position).normalized;
 
         if (!isMonsterRetreating)
         {
