@@ -292,8 +292,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8061097966866668338}
-  - component: {fileID: 192512114587399911}
-  - component: {fileID: 1556261370317051250}
   m_Layer: 0
   m_Name: Scene Controller
   m_TagString: Untagged
@@ -318,35 +316,6 @@ Transform:
   - {fileID: 3558934452405307207}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &192512114587399911
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4885842116788036574}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66e957d58a4584a8894329531ec0b096, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inkJSONAsset: {fileID: 4900000, guid: cdb88ec172f66e14ca6e155ec753665d, type: 3}
-  canvas: {fileID: 7449687794165205203}
-  textPrefab: {fileID: 11456674, guid: 1aab6ef84d87c416f8f0b3e1ef3d77d2, type: 3}
-  buttonPrefab: {fileID: 11455116, guid: 37c108a6c38964f79a6621eccb33ddc1, type: 3}
---- !u!114 &1556261370317051250
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4885842116788036574}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ce0d8573e1b2ff42af74cb80f3e5ece, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  key: 27
 --- !u!1 &6204309545319575874
 GameObject:
   m_ObjectHideFlags: 0
