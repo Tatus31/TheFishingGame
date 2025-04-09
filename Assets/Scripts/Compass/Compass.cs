@@ -36,7 +36,7 @@ public class Compass : MonoBehaviour
     {
         if (markers.Contains(marker))
         {
-            Debug.Log("Marker already exists on compass");
+            Debug.Log($"Marker already exists on compass {marker.position}");
             return;
         }
 

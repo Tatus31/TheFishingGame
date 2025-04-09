@@ -1,44 +1,45 @@
-﻿VAR startJump = false
+﻿VAR startQuest = false
 VAR hasItem = false
 VAR completeQuest = false
 
 -> check_loop
 
 === check_loop ===
-~ startJump = true
-BEHOLD! THE POWER OF AN ANGEL!
--> jump1
+~ startQuest = true
+You there—traveler! A relic of old lies hidden in the ruins.
+Will you find it for me?
+-> quest_start
 
-=== jump1 ===
-Machine, I know you're here. I can smell the insolent stench of your bloodstained hands. 
-I await you down below. Come to me.
+=== quest_start ===
+I sense the artifact's presence... dusty, ancient, powerful. 
+Bring it to me. Only then shall your path be clear.
 
 + ...
-    nikon noises. 
-    -> astonished
-+ [Give the required item] 
+    wind rustles the grass.
+    -> ponder
++ [Give the artifact] 
     {hasItem:
         ~ completeQuest = true
-        Ah, I see you have what I seek. Very well...
+        You have it... The relic of the First Flame. Thank you.
         -> ending
     - else:
-        You don't have what I need. Find it and return to me.
-        -> jump1
+        You don’t have it yet. Search the ruins—time fades it fast.
+        -> quest_start
     }
 
-=== astonished ===
-Limbo, Lust, all gone... With Gluttony soon to follow. 
-Your kind know nothing but hunger; purged all life on the upper layers, and yet they remain unsatiated... As do you.
-You've taken everything from me, machine. And now all that remains is PERFECT HATRED.
--> nod
+=== ponder ===
+The old world crumbled under its own weight. Kingdoms lost, gods silenced...
+And yet we cling to echoes.
+You seek purpose in ruins, and I in what remains of faith.
+-> agree
 
-=== nod ===
-get parried bitch.
-+ [3 dollar shrimp special]
+=== agree ===
+Then take this moment—and guard it well.
++ [Nod and hold out the relic]
     -> ending
 
 === ending ===
-Twice!? Beaten by an object... Twice! I've only known the taste of victory, but this taste... 
-Is Is this my blood? Haha I've never known such... Such... relief..?
-I- I need some time to think... We will meet again, machine. May your woes be many... and your days few.
+It is done. The relic is safe once more. 
+Strange... I feel lighter. As if time itself loosened its grip.
+Go now, traveler. Others may yet need your hand.
 -> END
