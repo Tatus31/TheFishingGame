@@ -21,7 +21,8 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: 
+  m_LockedProperties: _Hight1 _Hight2 _Hight3 _Lenght1 _Lenght2 _Lenght3 _Normal
+    _Sharpnes1 _Sharpnes2 _Sharpnes3 _SpeedM1 _SpeedM2 _SpeedM3 _Use_Gestern_3
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -64,12 +65,12 @@ Material:
     - _Fog_Exponential_On_Linear_Off: 0
     - _Fresnel_Si_a: 0.09
     - _Fresnel_Togle: 0
-    - _Hight1: 0.01
-    - _Hight2: 0.01
-    - _Hight3: 0.1
-    - _Lenght1: 2.32
-    - _Lenght2: 0.1
-    - _Lenght3: 2
+    - _Hight1: 0.5
+    - _Hight2: 0.5
+    - _Hight3: 0.5
+    - _Lenght1: 14
+    - _Lenght2: 15
+    - _Lenght3: 20
     - _Light_Refs: 5.07
     - _Light_Refs_Slimnes: 3.71
     - _Light_Refs_thicknes: 2.34
@@ -77,6 +78,7 @@ Material:
     - _Noise_Scale: 5
     - _NormalSpeed2: 1
     - _NormalTile: 0.1
+    - _NormalTwirl: 0
     - _Normal_Si_a: 0.397
     - _Normal_Speed: 1.6
     - _QueueControl: 0
@@ -89,18 +91,19 @@ Material:
     - _Retain_Color_Lerp: 0.26
     - _Shape_A: 0
     - _Shape_B: 1
-    - _Sharpnes1: 0.74
-    - _Sharpnes2: 0.37
-    - _Sharpnes3: 1
+    - _Sharpnes1: 0.02
+    - _Sharpnes2: 0.18
+    - _Sharpnes3: 0.19
     - _Sin_Amp: 1.6
     - _Speed: 3.48
     - _SpeedB: 0.01
-    - _SpeedM1: 0.04
-    - _SpeedM2: 0.03
-    - _SpeedM3: 0.62
+    - _SpeedM1: 2
+    - _SpeedM2: 2
+    - _SpeedM3: 2
     - _Speed_Main: 2
     - _SppedA: 0
-    - _Use_Gestern_3: 0
+    - _Twirl_Color: 0
+    - _Use_Gestern_3: 1
     - _Use_Old_Waves: 0
     - _Use_Waves: 0
     - _light_ref_armount: 0.34
@@ -117,9 +120,9 @@ Material:
     - _Vector3: {r: 0.1, g: 0.2, b: 0.1, a: 0}
     - _Vector3_1: {r: 0.3, g: 0.2, b: 0.21, a: 0}
     - _Vector3_2: {r: 0.2, g: 0.2, b: 0.6, a: 0}
-    - _Wave1_Dir: {r: 1, g: 0, b: 0, a: 0}
-    - _Wave2_Dir: {r: 0.5, g: 0.5, b: 0, a: 0}
-    - _Wave3_Dir: {r: 3, g: 1, b: 2, a: 0}
+    - _Wave1_Dir: {r: 3, g: 0, b: -2, a: 0}
+    - _Wave2_Dir: {r: 0.5, g: 0, b: 1, a: 0}
+    - _Wave3_Dir: {r: -3, g: 0, b: 2, a: 0}
     - _light_ref_dir: {r: 1, g: 4, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &8008965213693374643
