@@ -10,6 +10,7 @@ public class MonsterStateMachine : MonoBehaviour
     [Header("Refrences")]
     [SerializeField] Transform monsterHead;
     [SerializeField] Transform shipTransform;
+    [SerializeField] Transform playerTransform;
     [Header("General Monster Controls")]
     [SerializeField] float obstacleAvoidanceDistance = 1f;
     [SerializeField] float obstacleAvoidanceForce = 3f;
@@ -42,6 +43,7 @@ public class MonsterStateMachine : MonoBehaviour
     public InvestigatingState InvestigatingState { get; private set; }
     public BaseMonsterState PreviousState { get; private set; }
     public BaseMonsterState CurrentState { get; private set; }
+    public BaseMonsterState AttackingPlayerState { get; private set; }
 
     public Transform ShipTransform { get { return shipTransform; } set { shipTransform = value; } }
 
@@ -65,6 +67,7 @@ public class MonsterStateMachine : MonoBehaviour
         StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance, obstacleAvoidanceDistance);
         AttackingState = new AttackingState(shipTransform, monsterHead, swimAttackSpeed, rb, monsterEscapeTime);
         InvestigatingState = new InvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed);
+        AttackingPlayerState = new AttackingPlayerState(playerTransform, monsterHead, swimAttackSpeed, rb, monsterEscapeTime);
 
         SwitchState(IdleState);
     }
@@ -80,6 +83,7 @@ public class MonsterStateMachine : MonoBehaviour
         StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance, obstacleAvoidanceDistance);
         AttackingState = new AttackingState(shipTransform, monsterHead, swimAttackSpeed, rb, monsterEscapeTime);
         InvestigatingState = new InvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed);
+        AttackingPlayerState = new AttackingPlayerState(playerTransform, monsterHead, swimAttackSpeed, rb, monsterEscapeTime);
     }
 
     private void Update()

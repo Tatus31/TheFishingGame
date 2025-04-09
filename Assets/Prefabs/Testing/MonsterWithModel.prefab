@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b37cffab30b939469bac076fdd82c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0.9
   m_Data:
     m_ConstrainedObject: {fileID: 779121966227695038}
     m_Source: {fileID: 3485571754427931632}
@@ -202,7 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b342d8ce5c2fd48b8fa3147d48d1d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0.5
   m_Effectors: []
 --- !u!1 &3690617540091421937
 GameObject:
@@ -280,7 +280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b37cffab30b939469bac076fdd82c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0.6
   m_Data:
     m_ConstrainedObject: {fileID: 2242594296377696819}
     m_Source: {fileID: 7077506422859133001}
@@ -362,7 +362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b37cffab30b939469bac076fdd82c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0.6
   m_Data:
     m_ConstrainedObject: {fileID: 520310064557064337}
     m_Source: {fileID: 2242594296377696819}
@@ -477,7 +477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b37cffab30b939469bac076fdd82c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0.8
   m_Data:
     m_ConstrainedObject: {fileID: 5539837819597122869}
     m_Source: {fileID: 7432235534300673578}
@@ -695,7 +695,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsterHead: {fileID: 3416824208474553907}
   shipTransform: {fileID: 0}
-  obstacleAvoidanceDistance: 10
+  obstacleAvoidanceDistance: 1
   obstacleAvoidanceForce: 0.1
   swimSpeed: 1
   rotationSpeed: 5
@@ -712,10 +712,9 @@ MonoBehaviour:
   stalkingDistance: 25
   minStalkingDistance: 16
   swimStalkingSpeed: 5
-  swimAttackSpeed: 16
+  swimAttackSpeed: 200
   monsterEscapeTime: 4
-  investigationRadius: 50
-  investigationSwimSpeed: 3.5
+  investigationSwimSpeed: 1
 --- !u!1 &6154655928519774853
 GameObject:
   m_ObjectHideFlags: 0
@@ -768,8 +767,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.025674522, y: 0.023981763, z: 0.06929343}
-  m_Center: {x: -0.00027763084, y: 0.0015122783, z: 0.0096466215}
+  m_Size: {x: 0.02567452, y: 0.023981763, z: 0.053691395}
+  m_Center: {x: -0.00027762924, y: 0.0015122793, z: 0.001845578}
 --- !u!1 &6664840941568291884
 GameObject:
   m_ObjectHideFlags: 0
@@ -846,7 +845,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b37cffab30b939469bac076fdd82c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0.5
   m_Data:
     m_ConstrainedObject: {fileID: 7077506422859133001}
     m_Source: {fileID: 3105547818123399699}
@@ -929,7 +928,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b37cffab30b939469bac076fdd82c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0.9
   m_Data:
     m_ConstrainedObject: {fileID: 3485571754427931632}
     m_Source: {fileID: 5539837819597122869}
@@ -980,7 +979,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b37cffab30b939469bac076fdd82c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0.5
   m_Data:
     m_ConstrainedObject: {fileID: 3105547818123399699}
     m_Source: {fileID: 528510269249071819}
@@ -1031,7 +1030,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b37cffab30b939469bac076fdd82c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0.4
   m_Data:
     m_ConstrainedObject: {fileID: 528510269249071819}
     m_Source: {fileID: 6274312349798747040}
@@ -1261,7 +1260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b37cffab30b939469bac076fdd82c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0.8
   m_Data:
     m_ConstrainedObject: {fileID: 7432235534300673578}
     m_Source: {fileID: 520310064557064337}

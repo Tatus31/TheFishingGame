@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public static PlayerMovement Instance;
 
     public event EventHandler<Vector3> OnPlayerSpeedChange;
+    public event EventHandler<bool> OnPlayerSwimmingChange;
 
     [Header("References")]
     public Transform orientation;
@@ -160,6 +161,7 @@ public class PlayerMovement : MonoBehaviour
             SwitchState(SwimmingState);
 
             isSwimming = true;
+            OnPlayerSwimmingChange?.Invoke(this, isSwimming);
 
             if (volume != null)
                 volume.SetActive(false);
