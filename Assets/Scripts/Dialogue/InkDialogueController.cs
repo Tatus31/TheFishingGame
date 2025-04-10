@@ -20,7 +20,7 @@ public class InkDialogueController : MonoBehaviour
     [SerializeField] RectTransform textContainer;
     [SerializeField] RectTransform choicesContainer;
 
-    [Header("Quest Data")]
+    [Header("Current Quest Data")]
     [SerializeField] TextAsset inkJSONAsset;
     [SerializeField] ItemObject requiredItem;
 
@@ -67,19 +67,15 @@ public class InkDialogueController : MonoBehaviour
     {
         if (InputManager.Instance.IsLeftMouseButtonPressed() && MouseWorldPosition.GetInteractable(interactableMask))
         {
-            Debug.Log("Clicked on interactable object");
-
-            if (story != null && story.variablesState.GlobalVariableExistsWithName("startJump"))
+            if (story != null && story.variablesState.GlobalVariableExistsWithName("startQuest"))
             {
-                isInteracting = (bool)story.variablesState["startJump"];
+                isInteracting = (bool)story.variablesState["startQuest"];
                 isInteracting = true;
 
                 LockCamera();
             }
             if (HasRequiredItem())
             {
-                Debug.Log("Has required item");
-
                 if (story != null && story.variablesState.GlobalVariableExistsWithName("hasItem"))
                 {
                     story.variablesState["hasItem"] = true;
@@ -177,7 +173,6 @@ public class InkDialogueController : MonoBehaviour
     {
         if (inkJSONAsset == null)
         {
-            Debug.LogWarning("No ink JSON asset assigned to the dialogue controller!");
             return;
         }
 

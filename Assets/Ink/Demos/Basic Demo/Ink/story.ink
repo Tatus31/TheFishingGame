@@ -1,11 +1,11 @@
-VAR startJump = false
+VAR startQuest = false
 VAR hasItem = false
 VAR completeQuest = false
 
 -> check_loop
 
 === check_loop ===
-~ startJump = true
+~ startQuest = true
 I looked at Monsieur Fogg... and I could contain myself no longer.
 'What is the purpose of our journey, Monsieur?'
 'A wager,' he replied.

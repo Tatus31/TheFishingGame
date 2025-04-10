@@ -90,8 +90,13 @@ public class Player : MonoBehaviour
         {
             Item _item = new Item(item.item);
             inventory.AddItem(_item, 1, _item.weight);
+
             var marker = other.GetComponent<Marker>();
-            compass.DeleteMarker(marker);
+            if (marker != null && compass != null)
+            {
+                compass.DeleteMarker(marker);
+            }
+
             Destroy(other.gameObject);
         }
     }
@@ -102,7 +107,6 @@ public class Player : MonoBehaviour
 
         if (monster)
         {
-            Debug.Log("Monster collided with player");
             LeaveUnderDeck.Instance.MovePlayerManually();
         }
     }

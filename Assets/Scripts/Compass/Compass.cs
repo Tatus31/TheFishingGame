@@ -36,7 +36,6 @@ public class Compass : MonoBehaviour
     {
         if (markers.Contains(marker))
         {
-            Debug.Log($"Marker already exists on compass {marker.position}");
             return;
         }
 
@@ -48,10 +47,10 @@ public class Compass : MonoBehaviour
 
     public void DeleteMarker(Marker marker)
     {
-        if (marker == null || marker.image == null)
+        if (marker == null)
             return;
 
-        if (marker.image.gameObject != null)
+        if (marker.image != null && marker.image.gameObject != null)
             Destroy(marker.image.gameObject);
 
         markers.Remove(marker);
