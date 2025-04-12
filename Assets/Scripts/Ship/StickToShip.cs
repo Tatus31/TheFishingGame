@@ -12,30 +12,22 @@ public class StickToShip : MonoBehaviour
 
     [Header("Ship Controls")]
     [SerializeField] float additionalDownForce = 20f;
-    [SerializeField] float velocityMatchDuration = 1.5f;
-    [SerializeField] float velocityBlendTime = 0.5f;
-    [SerializeField] float platformFriction = 0.9f; 
-    [SerializeField] float platformVelocityTransfer = 0.8f; 
 
     bool isOnShip;
     public bool IsOnShip { get { return isOnShip; } }
 
     bool isControllingShip;
-    bool isMatchingVelocity = false;
 
     Vector3 localPositionOffset;
     Quaternion localRotationOffset;
 
-    float velocityMatchEndTime = 0f;
-    float velocityBlendEndTime = 0f;
-
     ShipMovement shipMovement;
     Rigidbody playerRb;
-    Vector3 lastShipVelocity;
-    Vector3 shipAcceleration;
-    Vector3 lastShipPosition;
-    Quaternion lastShipRotation;
-    Vector3 shipLocalPoint;
+    CharacterController characterController;
+    Transform shipTransform;
+    Vector3 previousShipPosition;
+    Quaternion previousShipRotation;
+    Vector3 moveDirection;
 
     private void Awake()
     {
@@ -45,75 +37,58 @@ public class StickToShip : MonoBehaviour
         Instance = this;
 
         playerRb = GetComponent<Rigidbody>();
+        characterController = GetComponent<CharacterController>();
     }
 
     private void Start()
     {
         if (shipRb != null)
         {
-            lastShipVelocity = shipRb.velocity;
-            lastShipPosition = shipRb.position;
-            lastShipRotation = shipRb.rotation;
+            shipTransform = shipRb.transform;
+            previousShipPosition = shipTransform.position;
+            previousShipRotation = shipTransform.rotation;
         }
     }
 
     private void FixedUpdate()
     {
-        if (shipRb == null)
+        if (shipRb == null || !isOnShip)
             return;
-
-        shipAcceleration = (shipRb.velocity - lastShipVelocity) / Time.fixedDeltaTime;
-        lastShipVelocity = shipRb.velocity;
-
-        if (!isOnShip) return;
 
         if (isControllingShip)
         {
             transform.localPosition = localPositionOffset;
             transform.localRotation = localRotationOffset;
         }
-        else if (isMatchingVelocity)
+        else
         {
-            if (Time.time < velocityMatchEndTime)
+            Vector3 shipMovement = shipTransform.position - previousShipPosition;
+
+            if (characterController != null && characterController.enabled)
             {
-                playerRb.velocity = shipRb.velocity;
+                characterController.Move(shipMovement);
             }
-            else if (Time.time < velocityBlendEndTime)
+            else if (playerRb != null)
             {
-                float blendFactor = (Time.time - velocityMatchEndTime) / (velocityBlendEndTime - velocityMatchEndTime);
-                Vector3 relativeVelocity = playerRb.velocity - shipRb.velocity;
-                playerRb.velocity = Vector3.Lerp(shipRb.velocity, shipRb.velocity + relativeVelocity, blendFactor);
+                playerRb.MovePosition(playerRb.position + shipMovement);
+
+                Quaternion rotationDelta = shipTransform.rotation * Quaternion.Inverse(previousShipRotation);
+                Vector3 playerRelativePosition = transform.position - shipTransform.position;
+                Vector3 rotatedPosition = shipTransform.position + rotationDelta * playerRelativePosition;
+                Vector3 rotationMovement = rotatedPosition - transform.position;
+
+                playerRb.MovePosition(playerRb.position + rotationMovement);
+
+                playerRb.AddForce(-transform.up * additionalDownForce, ForceMode.Force);
             }
             else
             {
-                isMatchingVelocity = false;
-            }
-        }
-        else if (isOnShip && !isControllingShip)
-        {
-
-            Vector3 shipPointVelocity = shipRb.GetPointVelocity(transform.position);
-            Vector3 relativeVelocity = playerRb.velocity - shipPointVelocity;
-
-            relativeVelocity *= platformFriction;
-
-            Vector3 inertialForce = -shipAcceleration * playerRb.mass * 0.2f;
-
-            playerRb.velocity = shipPointVelocity * platformVelocityTransfer + relativeVelocity;
-            playerRb.AddForce(inertialForce, ForceMode.Force);
-
-            if (shipRb.angularVelocity.magnitude > 0.01f)
-            {
-                Vector3 relativePos = transform.position - shipRb.position;
-                Vector3 tangentialVelocity = Vector3.Cross(shipRb.angularVelocity, relativePos);
-                playerRb.velocity += tangentialVelocity * platformVelocityTransfer * 0.5f;
+                transform.position += shipMovement;
             }
         }
 
-        if (!isControllingShip && isOnShip)
-        {
-            playerRb.AddForce(-transform.up * additionalDownForce, ForceMode.Force);
-        }
+        previousShipPosition = shipTransform.position;
+        previousShipRotation = shipTransform.rotation;
     }
 
     private void Update()
@@ -130,7 +105,9 @@ public class StickToShip : MonoBehaviour
         {
             isControllingShip = false;
 
-            playerRb.interpolation = RigidbodyInterpolation.Interpolate;
+            if (playerRb != null)
+                playerRb.interpolation = RigidbodyInterpolation.Interpolate;
+
             PlayerMovement.Instance.IsControllable = true;
 
             if (shipMovement != null)
@@ -140,12 +117,6 @@ public class StickToShip : MonoBehaviour
 
             transform.rotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
             PlayerMovement.Instance.orientation.rotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
-
-            velocityMatchEndTime = Time.time + velocityMatchDuration;
-            velocityBlendEndTime = velocityMatchEndTime + velocityBlendTime;
-
-            isMatchingVelocity = true;
-            playerRb.velocity = shipRb.velocity;
         }
         else
         {
@@ -154,15 +125,15 @@ public class StickToShip : MonoBehaviour
 
             isControllingShip = true;
 
-            playerRb.interpolation = RigidbodyInterpolation.None;
+            if (playerRb != null)
+                playerRb.interpolation = RigidbodyInterpolation.None;
+
             PlayerMovement.Instance.IsControllable = false;
 
             if (shipMovement != null)
             {
                 shipMovement.IsControllingShip = true;
             }
-
-            isMatchingVelocity = false;
         }
     }
 
@@ -174,9 +145,15 @@ public class StickToShip : MonoBehaviour
             transform.SetParent(shipRb.transform);
             PlayerMovement.Instance.orientation.SetParent(null, true);
             shipMovement = collision.gameObject.GetComponent<ShipMovement>();
+            shipTransform = shipRb.transform;
 
-            shipLocalPoint = shipRb.transform.InverseTransformPoint(transform.position);
-            playerRb.velocity = shipRb.GetPointVelocity(transform.position);
+            previousShipPosition = shipTransform.position;
+            previousShipRotation = shipTransform.rotation;
+
+            if (playerRb != null && playerRb.isKinematic == false)
+            {
+                playerRb.velocity = shipRb.GetPointVelocity(transform.position);
+            }
         }
     }
 
@@ -186,18 +163,20 @@ public class StickToShip : MonoBehaviour
         {
             isOnShip = false;
             isControllingShip = false;
-            isMatchingVelocity = false;
             transform.SetParent(null);
 
             PlayerMovement.Instance.orientation.SetParent(transform, true);
             PlayerMovement.Instance.IsControllable = true;
 
-            Vector3 exitVelocity = shipRb.GetPointVelocity(transform.position);
-            playerRb.velocity = new Vector3(
-                playerRb.velocity.x + exitVelocity.x * 0.8f,
-                playerRb.velocity.y,
-                playerRb.velocity.z + exitVelocity.z * 0.8f
-            );
+            if (playerRb != null && playerRb.isKinematic == false)
+            {
+                Vector3 exitVelocity = shipRb.GetPointVelocity(transform.position);
+                playerRb.velocity = new Vector3(
+                    playerRb.velocity.x + exitVelocity.x * 0.8f,
+                    playerRb.velocity.y,
+                    playerRb.velocity.z + exitVelocity.z * 0.8f
+                );
+            }
         }
     }
 }

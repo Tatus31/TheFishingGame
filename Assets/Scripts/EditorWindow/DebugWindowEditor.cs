@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -688,9 +687,9 @@ public class DebugWindowEditor : EditorWindow
         switch (toolName)
         {
             case "Harpoon": return new Color(0.8f, 0.2f, 0.2f);
-            case "EmptyHands": return new Color(0.8f, 0.8f, 0.8f); 
-            case "FireExtinguisher": return new Color(0.2f, 0.2f, 0.8f); 
-            case "Wrench": return new Color(0.8f, 0.8f, 0.2f); 
+            case "EmptyHands": return new Color(0.8f, 0.8f, 0.8f);
+            case "FireExtinguisher": return new Color(0.2f, 0.2f, 0.8f);
+            case "Wrench": return new Color(0.8f, 0.8f, 0.2f);
             default: return Color.gray;
         }
     }

@@ -66,7 +66,7 @@ public class InvestigatingState : BaseMonsterState
 
         string transitionLabel = $"Transition to Stalking:\nDistance to Target: {Vector3.Distance(monsterHead.position, investigationPoint):F2}\n" + $"Threshold: {investigationStopDistance:F2}";
 
-        UnityEditor.Handles.Label(labelPosition, transitionLabel);
+        //UnityEditor.Handles.Label(labelPosition, transitionLabel);
     }
 
     public override void OnTriggerEnter(Collider other)

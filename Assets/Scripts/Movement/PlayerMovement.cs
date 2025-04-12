@@ -1,6 +1,4 @@
 using System;
-using Unity.VisualScripting;
-using UnityEditor.Animations;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -19,11 +17,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float accelAmount = 2f;
     public float maxSpeedTime = 1f;
     [SerializeField] float frictionAmount = 2f;
-
-    [Header("Suit Movement")]
-    [SerializeField] float suitMaxSpeed = 3.25f;
-    [SerializeField] float suitAccelAmount = 1f;
-    [SerializeField] float suitFrictionAmount = 1f;
     [Space(10)]
 
     [Header("Sprint Movement")]
@@ -31,20 +24,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float sprintAccelAmount = 4f;
     [SerializeField] float sprintFrictionAmount = 1f;
 
-    [Header("Suit Sprint Movement")]
-    [SerializeField] float suitSprintMaxSpeed = 5f;
-    [SerializeField] float suitSprintAccelAmount = 2f;
-    [SerializeField] float suitSprintFrictionAmount = .5f;
-
     [Header("Swimming")]
     [SerializeField] float swimMaxSpeed = 5f;
     [SerializeField] float swimAccelAmount = 2f;
-    [SerializeField] float flipperAccelAmount = 4f;
-
-    [Header("Movement On Ship")]
-    [SerializeField] float maxSpeedOnShip = 5f;
-    [SerializeField] float accelAmountOnShip = 2f;
-    [SerializeField] float frictionAmountOnShip = 2f;
 
     [Header("Water Detection")]
     [SerializeField] private LayerMask waterLayer;
@@ -61,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
     public bool IsControllable { get { return isControllable; } set { isControllable = value; } }
 
     AnimationController animator;
+    StickToShip stickToShip;
 
     Animator fishingAnimator;
     Animator freeHandAnimator;
@@ -75,9 +58,7 @@ public class PlayerMovement : MonoBehaviour
     public SuitWalkState SuitWalkState { get; private set; }
     public SuitSprintState SuitSprintState { get; private set; }
     public SwimmingState SwimmingState { get; private set; }
-    public FlippersState FlippersState { get; private set; }
     public WalkOnShipState WalkOnShipState { get; private set; }
-    public ToolBoxState ToolBoxState { get; private set; }
 
     void Awake()
     {
@@ -92,18 +73,14 @@ public class PlayerMovement : MonoBehaviour
 
         WalkState = new WalkState(this, maxSpeed, accelAmount, frictionAmount);
         SprintState = new SprintState(this, sprintMaxSpeed, sprintAccelAmount, sprintFrictionAmount);
-        SuitWalkState = new SuitWalkState(this, suitMaxSpeed, suitAccelAmount, suitFrictionAmount);
-        SuitSprintState = new SuitSprintState(this, suitSprintMaxSpeed, suitSprintAccelAmount, suitSprintFrictionAmount);
         SwimmingState = new SwimmingState(this, swimMaxSpeed, swimAccelAmount);
-        FlippersState = new FlippersState(this, swimMaxSpeed, flipperAccelAmount);
-        WalkOnShipState = new WalkOnShipState(this, maxSpeedOnShip, accelAmountOnShip, frictionAmountOnShip);
-        ToolBoxState = new ToolBoxState(this, maxSpeed, accelAmount);
     }
 
     void Start()
     {
         inputManager = InputManager.Instance;
         animator = AnimationController.Instance;
+        stickToShip = GetComponent<StickToShip>();
 
         fishingAnimator = animator.GetAnimator(AnimationController.Animators.FishingAnimator);
         freeHandAnimator = animator.GetAnimator(AnimationController.Animators.EmptyHandsAnimator);
@@ -116,9 +93,6 @@ public class PlayerMovement : MonoBehaviour
     {
         WalkState = new WalkState(this, maxSpeed, accelAmount, frictionAmount);
         SprintState = new SprintState(this, sprintMaxSpeed, sprintAccelAmount, sprintFrictionAmount);
-        SuitWalkState = new SuitWalkState(this, suitMaxSpeed, suitAccelAmount, suitFrictionAmount);
-        SuitSprintState = new SuitSprintState(this, suitSprintMaxSpeed, suitSprintAccelAmount, suitSprintFrictionAmount);
-        WalkOnShipState = new WalkOnShipState(this, maxSpeedOnShip, accelAmountOnShip, frictionAmountOnShip);
         SwimmingState = new SwimmingState(this, swimMaxSpeed, swimAccelAmount);
     }
 

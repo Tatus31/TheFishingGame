@@ -1,11 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-using TMPro.EditorUtilities;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Timeline.Actions.MenuPriority;
 
 public class Player : MonoBehaviour
 {
@@ -105,17 +98,17 @@ public class Player : MonoBehaviour
     {
         var monster = collision.gameObject.GetComponent<MonsterStateMachine>();
 
-        if (monster)
-        {
-            LeaveUnderDeck.Instance.MovePlayerManually();
-        }
+        //if (monster)
+        //{
+        //    LeaveUnderDeck.Instance.MovePlayerManually();
+        //}
     }
 
     public void AttributeModified(PlayerAttributes attribute)
     {
-#if UNITY_EDITOR
-        Debug.Log($"{attribute.type} changed to {attribute.value.ModifiedValue} points");
-#endif
+//#if UNITY_EDITOR
+//        Debug.Log($"{attribute.type} changed to {attribute.value.ModifiedValue} points");
+//#endif
     }
 
     private void OnApplicationQuit()

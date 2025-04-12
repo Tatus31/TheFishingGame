@@ -196,7 +196,7 @@ public class StalkingState : BaseMonsterState
 
             Vector3 timerLabelPos = monsterTransform.position + Vector3.up * 2f;
             string timerLabel = $"Attack Timer: {attackTimer:F1}/{attackTimerThreshold:F1}";
-            UnityEditor.Handles.Label(timerLabelPos, timerLabel);
+            //UnityEditor.Handles.Label(timerLabelPos, timerLabel);
         }
     }
 
