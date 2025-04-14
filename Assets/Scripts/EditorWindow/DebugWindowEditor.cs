@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+#if UNITY_EDITOR
 public class DebugWindowEditor : EditorWindow
 {
     TextField statValueField;
@@ -16,12 +17,15 @@ public class DebugWindowEditor : EditorWindow
     [MenuItem("Window/DebugWindow")]
     public static void ShowExample()
     {
+#if UNITY_EDITOR
         DebugWindowEditor wnd = GetWindow<DebugWindowEditor>();
         wnd.titleContent = new GUIContent("Debug Window");
+#endif
     }
 
     public void CreateGUI()
     {
+#if UNITY_EDITOR
         VisualElement root = rootVisualElement;
 
         VisualElement teleportSectionContainer = new VisualElement();
@@ -360,6 +364,7 @@ public class DebugWindowEditor : EditorWindow
         monsterSectionContainer.Add(attackingStateButton);
 
         root.Add(monsterSectionContainer);
+#endif
     }
 
     void TeleportToShip()
@@ -790,3 +795,5 @@ public class DebugWindowEditor : EditorWindow
         }
     }
 }
+
+#endif

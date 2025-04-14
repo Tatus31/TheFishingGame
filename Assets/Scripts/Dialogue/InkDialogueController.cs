@@ -136,10 +136,13 @@ public class InkDialogueController : MonoBehaviour
                 if (slot.item != null && slot.item.id == requiredItem.data.id)
                 {
                     player.inventory.GetSlots[i].RemoveItem();
+                    var currentQuest = questManager.GetCurrentQuest();
+
+                    if (currentQuest.rewardItem != null)
+                        player.inventory.GetSlots[i].UpdateSlot(currentQuest.rewardItem.data, currentQuest.rewardAmount);
 
                     if (questManager != null && compass != null)
                     {
-                        Quest currentQuest = questManager.GetCurrentQuest();
                         if (currentQuest != null && currentQuest.QuestMarker != null)
                         {
                             compass.DeleteMarker(currentQuest.QuestMarker);

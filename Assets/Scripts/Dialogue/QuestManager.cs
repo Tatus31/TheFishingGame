@@ -11,6 +11,12 @@ public class Quest
     [Tooltip("The item required to complete this quest")]
     public ItemObject requiredItem;
 
+    [Tooltip("The item reward after completing a quest")]
+    public ItemObject rewardItem;
+
+    [Tooltip("The item reward ammount")]
+    public int rewardAmount = 1;
+
     [Tooltip("Whether this quest has been completed")]
     public bool isCompleted = false;
 
