@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Ink.Runtime;
 using TMPro;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class InkDialogueController : MonoBehaviour
 {
     public static event Action<Story> OnCreateStory;
+    public static event Action<bool> OnStartQuest;
 
     [SerializeField] Canvas canvas;
     [SerializeField] Button buttonPrefab;
@@ -25,6 +27,7 @@ public class InkDialogueController : MonoBehaviour
     [SerializeField] ItemObject requiredItem;
 
     bool isQuestCompleted = false;
+    bool isQuestStarted = false;
 
     QuestManager questManager;
     Story story;
@@ -32,7 +35,6 @@ public class InkDialogueController : MonoBehaviour
     Compass compass;
 
     bool isInteracting;
-
 
     private void Awake()
     {
@@ -49,7 +51,7 @@ public class InkDialogueController : MonoBehaviour
             cameraLook = FindObjectOfType<CameraLook>();
         }
 
-        if(compass == null)
+        if (compass == null)
         {
             compass = FindObjectOfType<Compass>();
         }
@@ -59,7 +61,7 @@ public class InkDialogueController : MonoBehaviour
     {
         if (inkJSONAsset != null)
         {
-            StartStory();
+            InitializeStory();
         }
     }
 
@@ -67,6 +69,21 @@ public class InkDialogueController : MonoBehaviour
     {
         if (InputManager.Instance.IsLeftMouseButtonPressed() && MouseWorldPosition.GetInteractable(interactableMask))
         {
+            if (!isQuestStarted)
+            {
+                isQuestStarted = true;
+
+                if (questManager != null && compass != null)
+                {
+                    Quest currentQuest = questManager.GetCurrentQuest();
+                    if (currentQuest != null && currentQuest.QuestMarker != null)
+                    {
+                        OnStartQuest?.Invoke(true);
+                        compass.AddMarker(currentQuest.QuestMarker);
+                    }
+                }
+            }
+
             if (story != null && story.variablesState.GlobalVariableExistsWithName("startQuest"))
             {
                 isInteracting = (bool)story.variablesState["startQuest"];
@@ -74,6 +91,7 @@ public class InkDialogueController : MonoBehaviour
 
                 LockCamera();
             }
+
             if (HasRequiredItem())
             {
                 if (story != null && story.variablesState.GlobalVariableExistsWithName("hasItem"))
@@ -82,6 +100,7 @@ public class InkDialogueController : MonoBehaviour
                 }
             }
         }
+
         if (InputManager.Instance.IsRightMouseButtonPressed())
         {
             UnlockCamera();
@@ -155,15 +174,27 @@ public class InkDialogueController : MonoBehaviour
         }
     }
 
-    public void UpdateQuestData(TextAsset newInkJSON, ItemObject newRequiredItem)
+    public void UpdateQuestData(TextAsset newInkJSON, ItemObject newRequiredItem, bool addToCompass = false)
     {
         inkJSONAsset = newInkJSON;
         requiredItem = newRequiredItem;
         isQuestCompleted = false;
+        isQuestStarted = false;
 
         if (inkJSONAsset != null)
         {
-            StartStory();
+            InitializeStory();
+        }
+
+        if (addToCompass && questManager != null && compass != null)
+        {
+            Quest currentQuest = questManager.GetCurrentQuest();
+            if (currentQuest != null && currentQuest.QuestMarker != null)
+            {
+                compass.AddMarker(currentQuest.QuestMarker);
+
+                isQuestStarted = true;
+            }
         }
     }
 
@@ -172,7 +203,7 @@ public class InkDialogueController : MonoBehaviour
         return isQuestCompleted;
     }
 
-    void StartStory()
+    void InitializeStory()
     {
         if (inkJSONAsset == null)
         {
@@ -185,12 +216,22 @@ public class InkDialogueController : MonoBehaviour
             OnCreateStory(story);
         }
 
-        if (questManager != null && compass != null)
+        RefreshView();
+    }
+
+    void StartStory()
+    {
+        if (inkJSONAsset == null)
         {
-            Quest currentQuest = questManager.GetCurrentQuest();
-            if (currentQuest != null && currentQuest.QuestMarker != null)
+            return;
+        }
+
+        if (story == null)
+        {
+            story = new Story(inkJSONAsset.text);
+            if (OnCreateStory != null)
             {
-                compass.AddMarker(currentQuest.QuestMarker);
+                OnCreateStory(story);
             }
         }
 
@@ -245,7 +286,7 @@ public class InkDialogueController : MonoBehaviour
     void OnClickChoiceButton(Choice choice)
     {
         story.ChooseChoiceIndex(choice.index);
-        RefreshView(); 
+        RefreshView();
 
         if (HasRequiredItem() && story.variablesState.GlobalVariableExistsWithName("completeQuest"))
         {
@@ -310,11 +351,7 @@ public class InkDialogueController : MonoBehaviour
             var nextQuest = questManager.GetCurrentQuest();
             if (nextQuest != null)
             {
-                UpdateQuestData(nextQuest.inkJSONAsset, nextQuest.requiredItem);
-                if (nextQuest.QuestMarker != null && compass != null)
-                {
-                    compass.AddMarker(nextQuest.QuestMarker);
-                }
+                UpdateQuestData(nextQuest.inkJSONAsset, nextQuest.requiredItem, false);
             }
         }
 

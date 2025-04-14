@@ -1,25 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Ink.Runtime;
+using System;
 
 [System.Serializable]
 public class Quest
 {
     [Tooltip("The JSON file containing the Ink dialogue for this quest")]
     public TextAsset inkJSONAsset;
-
     [Tooltip("The item required to complete this quest")]
     public ItemObject requiredItem;
-
     [Tooltip("The item reward after completing a quest")]
     public ItemObject rewardItem;
-
     [Tooltip("The item reward ammount")]
     public int rewardAmount = 1;
-
     [Tooltip("Whether this quest has been completed")]
     public bool isCompleted = false;
-
     [Tooltip("The marker for the compass for this quest")]
     public Marker QuestMarker;
 }
@@ -27,10 +23,8 @@ public class Quest
 public class QuestManager : MonoBehaviour
 {
     [SerializeField] List<Quest> quests = new List<Quest>();
-
     InkDialogueController dialogueController;
     Compass compass;
-
     int currentQuestIndex = 0;
 
     private void Start()
@@ -44,19 +38,30 @@ public class QuestManager : MonoBehaviour
             compass = FindObjectOfType<Compass>();
         }
 
+        InkDialogueController.OnStartQuest += InkDialogueController_OnStartQuest;
+
         InitializeFirstQuest();
+    }
+
+    private void LateUpdate()
+    {
+        CheckQuestCompletion();
+    }
+
+    private void InkDialogueController_OnStartQuest(bool shouldAddMarker)
+    {
+        if (shouldAddMarker && compass != null && quests.Count > currentQuestIndex && quests[currentQuestIndex].QuestMarker != null)
+        {
+            Debug.Log("Adding marker to compass for quest: " + quests[currentQuestIndex].inkJSONAsset.name);
+            compass.AddMarker(quests[currentQuestIndex].QuestMarker);
+        }
     }
 
     void InitializeFirstQuest()
     {
         if (quests.Count > 0 && dialogueController != null)
         {
-            dialogueController.UpdateQuestData(quests[0].inkJSONAsset, quests[0].requiredItem);
-
-            if (compass != null && quests[0].QuestMarker != null)
-            {
-                compass.AddMarker(quests[0].QuestMarker);
-            }
+            dialogueController.UpdateQuestData(quests[0].inkJSONAsset, quests[0].requiredItem, false);
         }
         else
         {
@@ -74,13 +79,10 @@ public class QuestManager : MonoBehaviour
             }
 
             quests[currentQuestIndex].isCompleted = true;
+
             if (currentQuestIndex < quests.Count - 1)
             {
                 currentQuestIndex++;
-                if (compass != null && quests[currentQuestIndex].QuestMarker != null)
-                {
-                    compass.AddMarker(quests[currentQuestIndex].QuestMarker);
-                }
             }
         }
     }
@@ -90,7 +92,7 @@ public class QuestManager : MonoBehaviour
         if (currentQuestIndex < quests.Count && dialogueController != null)
         {
             Quest currentQuest = quests[currentQuestIndex];
-            dialogueController.UpdateQuestData(currentQuest.inkJSONAsset, currentQuest.requiredItem);
+            dialogueController.UpdateQuestData(currentQuest.inkJSONAsset, currentQuest.requiredItem, false);
         }
     }
 
