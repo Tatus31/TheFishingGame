@@ -10,13 +10,16 @@ public class InventoryDisplayController : MonoBehaviour
     [SerializeField] GameObject mainCamera;
     [SerializeField] GameObject inventoryUIObj;
     [SerializeField] GameObject shipEquipmentUIObj;
-    [SerializeField] LayerMask interactionLayerUI;
+    [SerializeField] GameObject craftingUIObj;
+    [SerializeField] LayerMask shipEquipmentLayerUI;
+    [SerializeField] LayerMask craftingLayerUI;
     CameraLook cameraLook;
 
     private void Start()
     {
         inventoryUIObj.SetActive(false);
         shipEquipmentUIObj.SetActive(false);
+        craftingUIObj.SetActive(false);
 
         cameraLook = FindObjectOfType<CameraLook>();
     }
@@ -42,7 +45,13 @@ public class InventoryDisplayController : MonoBehaviour
         Cursor.visible = true;
         isHiden = false;
         inventoryUIObj.SetActive(true);
-        if (MouseWorldPosition.GetInteractable(interactionLayerUI))
+
+        if (MouseWorldPosition.GetInteractable(craftingLayerUI))
+        {
+            craftingUIObj.SetActive(true);
+        }
+
+        if (MouseWorldPosition.GetInteractable(shipEquipmentLayerUI))
         {
             mainCamera.SetActive(false);
             shipEquipmentUIObj.SetActive(true);
@@ -62,6 +71,10 @@ public class InventoryDisplayController : MonoBehaviour
             shipEquipmentUIObj.SetActive(false);
             mainCamera.SetActive(true);
             player.SetActive(true);
+        }
+        if (craftingUIObj.activeSelf)
+        {
+            craftingUIObj.SetActive(false);
         }
         cameraLook.enabled = true;
     }

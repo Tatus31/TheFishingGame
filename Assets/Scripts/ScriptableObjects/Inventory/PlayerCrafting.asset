@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bf3254c37fbeb344ab3a7fe22895901, type: 3}
-  m_Name: PlayerEquipment
+  m_Name: PlayerCrafting
   m_EditorClassIdentifier: 
   database: {fileID: 11400000, guid: e3cb95eafb03eca4eb59f121a9ed45a2, type: 2}
   inventoryContainer:
@@ -21,38 +21,7 @@ MonoBehaviour:
         id: -1
         weight: 1
         description: 
+        sacrificeValue: 0
         stats: []
       amount: 0
-    - AllowedItems: 
-      item:
-        name: 
-        id: -1
-        weight: 1
-        description: 
-        stats: []
-      amount: 0
-    - AllowedItems: 08000000
-      item:
-        name: 
-        id: -1
-        weight: 1
-        description: 
-        stats: []
-      amount: 0
-    - AllowedItems: 08000000
-      item:
-        name: 
-        id: -1
-        weight: 1
-        description: 
-        stats: []
-      amount: 0
-    - AllowedItems: 08000000
-      item:
-        name: 
-        id: -1
-        weight: 1
-        description: 
-        stats: []
-      amount: 0
-  type: 1
+  type: 2
