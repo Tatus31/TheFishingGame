@@ -5,6 +5,8 @@ public class OxygenLevel : MonoBehaviour
 {   
     public Slider slider;
 
+    
+
     public float maxHealth = 1000;
     public float currentOxygenLevel;
 
@@ -15,6 +17,7 @@ public class OxygenLevel : MonoBehaviour
     {
         slider.maxValue = health;
         slider.value = health;
+        
     }
 
    public void SetHealth(float health)
