@@ -1,88 +1,86 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+// Skrypt odpowiada za reakcje po wejściu gracza pod wodę i obsługę tlenu oraz efektów graficznych
 public class Ontrigger : MonoBehaviour
 {
-    public GameObject HealtBar;
+    // UI: Pasek pokazujący poziom tlenu
+    public GameObject OxygenLvlBar;
 
-    private float maxHealthAfterSwim = 100f;
+    // Maksymalny poziom tlenu po wyjściu z wody
+    private float maxOxygenAfterSwim = 100f;
 
-    private Slider FadingOut;
-
-   
-    public Image FadinWhenLowOnOxygen;
-
-    public float TimeToFade = 0.1f;
-
-    public float Colormultiplier = 0.5f;
-
-    
-
+    // UI: Obraz do efektu "fade-in" (prawdopodobnie czarny obraz, przezroczysty)
     [SerializeField]
-    private GameObject playerScriptGO;
+    private Image FadinWhenLowOnOxygen;
+
+    // Referencja do obiektu ze sliderem tlenu
+    [SerializeField]
+    private GameObject OxygenLevelSlider;
+
+    // Siła, z jaką gracz będzie ciągnięty w dół, gdy zabraknie tlenu
+    private float FrocePullDown = 20f;
+
+    // Referencja Skryptu Ruchu Gracza
+    [SerializeField]
+    private PlayerMovement playerMovement;
+
+    // Wykonywane, gdy jakiś obiekt wchodzi w trigger
     void OnTriggerEnter(Collider other)
     {   
-
         Debug.Log("Jestem pod woda!");
 
+        // Jeśli obiekt ma tag "EyeLevel" (czyli np. głowa gracza weszła pod wodę)
         if(other.CompareTag("EyeLevel"))
         {
             Debug.Log(other);
-            HealtBar.SetActive(true);
+            OxygenLvlBar.SetActive(true); // Pokazujemy pasek tlenu
         }
-       
     }
 
-
+    // Wykonywane co klatkę, jeśli jakiś obiekt pozostaje w triggerze
     void OnTriggerStay(Collider other)
-    {   
+    {
         if(other.CompareTag("EyeLevel"))
         {
-            playerScriptGO.GetComponent<OxygenLevel>().TakeOxygenLevelDown(0.10f);
+            // Obniżamy poziom tlenu (0.1 na klatkę — dość szybko)
+            OxygenLevelSlider.GetComponent<OxygenLevel>().TakeOxygenLevelDown(0.10f);
         }
-        
 
-        if(HealtBar.GetComponent<Slider>().value == 0){
+        // Jeśli tlen spadnie do zera
+        if(OxygenLvlBar.GetComponent<Slider>().value == 0)
+        {
             Debug.Log("Dying!");
+
+            // Gracz jest ciągnięty w dół
+            playerMovement.GetComponent<PlayerMovement>().rb.AddForce(
+                Vector3.down * FrocePullDown * Time.deltaTime,
+                ForceMode.Force
+            );
+
+            // Uruchamiamy efekt fade (ciemność na ekranie?)
             GetComponent<ScreenFader>().StartFade();
-            
         }
     }
 
+    // Wykonywane, gdy obiekt opuszcza trigger
     void OnTriggerExit(Collider other)
-    {   
-
-        if(HealtBar.GetComponent<Slider>().value == 0){
-            Debug.Log("Dying!");
-            HealtBar.GetComponent<Slider>().value = 100f;
-            GetComponent<ScreenFader>().StartFadeIn();
-            
-        }
-
-        if(other.CompareTag("EyeLevel"))
+    {
+        // Jeśli tlen był zerowy — resetujemy go
+        if(OxygenLvlBar.GetComponent<Slider>().value == 0)
         {
-            HealtBar.SetActive(false);
-            playerScriptGO.GetComponent<OxygenLevel>().currentOxygenLevel = maxHealthAfterSwim;
-            
+            Debug.Log("Dying!");
+            OxygenLvlBar.GetComponent<Slider>().value = 100f;
+            GetComponent<ScreenFader>().StartFadeIn(); // Rozjaśnienie ekranu
         }
-        HealtBar.SetActive(false);
-        playerScriptGO.GetComponent<OxygenLevel>().currentOxygenLevel = maxHealthAfterSwim;
-
         
-        //GetComponent<ScreenFader>().StartFadeIn();
+        OxygenLvlBar.SetActive(false);
+        OxygenLevelSlider.GetComponent<OxygenLevel>().GetSetCurrentOxygenLevel = maxOxygenAfterSwim;
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Start: ukryj pasek tlenu na początku gry
     void Start()
     {
-        HealtBar.SetActive(false);
-        
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        OxygenLvlBar.SetActive(false);
     }
 }
