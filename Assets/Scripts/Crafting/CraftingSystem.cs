@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -133,6 +134,7 @@ public class CraftingSystem : MonoBehaviour
                     if (totalSacrificeValue >= currentRequiredValue)
                     {
                         Debug.Log("Ritual successful!");
+                        StartCoroutine(ResetSliderValue());
                         CreateRewardItem();
                     }
                 }
@@ -174,6 +176,12 @@ public class CraftingSystem : MonoBehaviour
             Debug.LogError("No reward item configured or no valid sacrifice slot!");
             ResetRitual();
         }
+    }
+
+    IEnumerator ResetSliderValue()
+    {
+        yield return new WaitForSeconds(1f);
+        sacrificeSlider.value = 0;
     }
 
     public void ResetRitual()
