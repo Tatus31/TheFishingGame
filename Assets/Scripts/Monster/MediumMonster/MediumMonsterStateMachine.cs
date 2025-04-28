@@ -13,7 +13,7 @@ public class MediumMonsterStateMachine : MonoBehaviour
     [SerializeField] Transform playerTransform;
 
     [Header("General Monster Controls")]
-    [SerializeField] float obstacleAvoidanceDistance = 1f;
+    [SerializeField] public float obstacleAvoidanceDistance = 1f;
     [SerializeField] float obstacleAvoidanceForce = 3f;
     [SerializeField] float swimSpeed = 3f;
     [SerializeField] float rotationSpeed = 6f;
@@ -26,10 +26,14 @@ public class MediumMonsterStateMachine : MonoBehaviour
     [SerializeField] float minTimeAtTarget = 1.5f;
     [SerializeField] float allowedDistanceFromTarget = 0.5f;
 
+    [Header("Investigating Monster Controls")]
+    [SerializeField] float investigationSwimSpeed = 10f;
+
     BaseMediumMonsterState currentState;
     Rigidbody rb;
 
     public MediumMonsterIdleState IdleState { get; private set; }
+    public MediumMonsterInvestigatingState InvestigatingState { get; private set; }
     public BaseMediumMonsterState PreviousState { get; private set; }
     public BaseMediumMonsterState CurrentState { get; private set; }
 
@@ -51,6 +55,7 @@ public class MediumMonsterStateMachine : MonoBehaviour
     private void Start()
     {
         IdleState = new MediumMonsterIdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, rb);
+        InvestigatingState = new MediumMonsterInvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed);
 
         SwitchState(IdleState);
     }

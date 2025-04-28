@@ -7117,6 +7117,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9229a321e58b31e47b154ae1d814cefe, type: 3}
+--- !u!4 &981615592 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8864503909078596508, guid: 3548faf8ae8f0544facc5fbb7ce15482,
+    type: 3}
+  m_PrefabInstance: {fileID: 3087287014181863011}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &990845531
 GameObject:
   m_ObjectHideFlags: 0
@@ -10151,6 +10157,11 @@ PrefabInstance:
       objectReference: {fileID: 7157433146232501158}
     - target: {fileID: 1749270837177424874, guid: ee204cb6cb0fb01429f492652e8d07ac,
         type: 3}
+      propertyPath: maxDistanceToShip
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1749270837177424874, guid: ee204cb6cb0fb01429f492652e8d07ac,
+        type: 3}
       propertyPath: minDistanceToShip
       value: 80
       objectReference: {fileID: 0}
@@ -10159,6 +10170,21 @@ PrefabInstance:
       propertyPath: initialDetectionTimer
       value: 60
       objectReference: {fileID: 0}
+    - target: {fileID: 1749270837177424874, guid: ee204cb6cb0fb01429f492652e8d07ac,
+        type: 3}
+      propertyPath: monsterHeads.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1749270837177424874, guid: ee204cb6cb0fb01429f492652e8d07ac,
+        type: 3}
+      propertyPath: monsterHeads.Array.data[0]
+      value: 
+      objectReference: {fileID: 981615592}
+    - target: {fileID: 1749270837177424874, guid: ee204cb6cb0fb01429f492652e8d07ac,
+        type: 3}
+      propertyPath: monsterHeads.Array.data[1]
+      value: 
+      objectReference: {fileID: 356985764}
     - target: {fileID: 1749270837177424874, guid: ee204cb6cb0fb01429f492652e8d07ac,
         type: 3}
       propertyPath: baseInvestigationPointUpdateInterval
@@ -16647,8 +16673,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4996794195676576455, guid: 3548faf8ae8f0544facc5fbb7ce15482,
         type: 3}
+      propertyPath: swimSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4996794195676576455, guid: 3548faf8ae8f0544facc5fbb7ce15482,
+        type: 3}
       propertyPath: maxVelocity
-      value: 6
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4996794195676576455, guid: 3548faf8ae8f0544facc5fbb7ce15482,
         type: 3}
@@ -16668,7 +16699,7 @@ PrefabInstance:
     - target: {fileID: 4996794195676576455, guid: 3548faf8ae8f0544facc5fbb7ce15482,
         type: 3}
       propertyPath: idleMovementRadius
-      value: 4
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4996794195676576455, guid: 3548faf8ae8f0544facc5fbb7ce15482,
         type: 3}
@@ -16684,6 +16715,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Weight
       value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5856450058592646430, guid: 3548faf8ae8f0544facc5fbb7ce15482,
+        type: 3}
+      propertyPath: m_Name
+      value: HeadDirMed
       objectReference: {fileID: 0}
     - target: {fileID: 8666475913168177638, guid: 3548faf8ae8f0544facc5fbb7ce15482,
         type: 3}
@@ -18073,6 +18109,11 @@ PrefabInstance:
       propertyPath: m_Interpolate
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 636126021333776368, guid: 8f05c85c9f7126140ada90df6480d426,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 677049559617618707, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
       propertyPath: m_Weight
@@ -18147,6 +18188,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MonsterWithModel
+      objectReference: {fileID: 0}
+    - target: {fileID: 5781530319976135822, guid: 8f05c85c9f7126140ada90df6480d426,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6154655928519774853, guid: 8f05c85c9f7126140ada90df6480d426,
+        type: 3}
+      propertyPath: m_Name
+      value: HeadDirLarge
       objectReference: {fileID: 0}
     - target: {fileID: 6484817234330914108, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
