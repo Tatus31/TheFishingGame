@@ -16,7 +16,7 @@ public class InvestigatingState : BaseMonsterState
         this.investigationSwimSpeed = investigationSwimSpeed;
     }
 
-    public override void EnterState(MonsterStateMachine monsterState)
+    public override void EnterState(MonsterLargeStateMachine monsterState)
     {
         rb = monsterState.GetComponent<Rigidbody>();
         DetectionManager.Instance.StartInvestigation(shipTransform);
@@ -27,13 +27,13 @@ public class InvestigatingState : BaseMonsterState
 
     }
 
-    public override void UpdateState(MonsterStateMachine monsterState)
+    public override void UpdateState(MonsterLargeStateMachine monsterState)
     {
         DetectionManager.Instance.UpdateInvestigationPoint(shipTransform);
         DetectionManager.Instance.DecreaseDetectionTimer();
     }
 
-    public override void FixedUpdateState(MonsterStateMachine monsterState)
+    public override void FixedUpdateState(MonsterLargeStateMachine monsterState)
     {
         Vector3 investigationPoint = DetectionManager.Instance.GetInvestigationPoint();
         Vector3 directionToTarget = (investigationPoint - monsterHead.position).normalized;
@@ -56,7 +56,7 @@ public class InvestigatingState : BaseMonsterState
         }
     }
 
-    public override void DrawGizmos(MonsterStateMachine monsterState)
+    public override void DrawGizmos(MonsterLargeStateMachine monsterState)
     {
         Vector3 investigationPoint = DetectionManager.Instance.GetInvestigationPoint();
         Gizmos.color = Color.yellow;

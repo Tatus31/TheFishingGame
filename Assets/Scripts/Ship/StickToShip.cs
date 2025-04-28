@@ -106,7 +106,7 @@ public class StickToShip : MonoBehaviour
             isControllingShip = false;
 
             if (playerRb != null)
-                playerRb.interpolation = RigidbodyInterpolation.Interpolate;
+                //playerRb.interpolation = RigidbodyInterpolation.Interpolate;
 
             PlayerMovement.Instance.IsControllable = true;
 
@@ -126,7 +126,7 @@ public class StickToShip : MonoBehaviour
             isControllingShip = true;
 
             if (playerRb != null)
-                playerRb.interpolation = RigidbodyInterpolation.None;
+                //playerRb.interpolation = RigidbodyInterpolation.None;
 
             PlayerMovement.Instance.IsControllable = false;
 

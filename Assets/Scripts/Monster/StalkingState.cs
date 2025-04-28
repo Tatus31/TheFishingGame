@@ -51,7 +51,7 @@ public class StalkingState : BaseMonsterState
         }
     }
 
-    public override void EnterState(MonsterStateMachine monsterState)
+    public override void EnterState(MonsterLargeStateMachine monsterState)
     {
         shipVel = Vector3.zero;
         isTransitioning = false;
@@ -82,7 +82,7 @@ public class StalkingState : BaseMonsterState
         shipVel = velocity;
     }
 
-    public override void UpdateState(MonsterStateMachine monsterState)
+    public override void UpdateState(MonsterLargeStateMachine monsterState)
     {
         if (rb.velocity.magnitude > 0.1f)
         {
@@ -106,7 +106,7 @@ public class StalkingState : BaseMonsterState
         }
     }
 
-    public override void FixedUpdateState(MonsterStateMachine monsterState)
+    public override void FixedUpdateState(MonsterLargeStateMachine monsterState)
     {
         if (shipTransform == null || monsterTransform == null)
             return;
@@ -172,7 +172,7 @@ public class StalkingState : BaseMonsterState
         }
     }
 
-    public override void DrawGizmos(MonsterStateMachine monsterState)
+    public override void DrawGizmos(MonsterLargeStateMachine monsterState)
     {
         if (shipTransform != null && monsterTransform != null)
         {

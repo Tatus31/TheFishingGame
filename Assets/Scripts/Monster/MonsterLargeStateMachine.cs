@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class MonsterStateMachine : MonoBehaviour
+public class MonsterLargeStateMachine : MonoBehaviour
 {
-    public static MonsterStateMachine Instance;
+    public static MonsterLargeStateMachine Instance;
 
     [Header("Refrences")]
     [SerializeField] Transform monsterHead;

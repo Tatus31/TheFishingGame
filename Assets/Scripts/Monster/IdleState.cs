@@ -35,7 +35,7 @@ public class IdleState : BaseMonsterState
         monsterTransform = monsterHead;
     }
 
-    public override void EnterState(MonsterStateMachine monsterState)
+    public override void EnterState(MonsterLargeStateMachine monsterState)
     {
         hasTarget = false;
         timeAtTarget = 0f;
@@ -49,7 +49,7 @@ public class IdleState : BaseMonsterState
 
     }
 
-    public override void UpdateState(MonsterStateMachine monsterState)
+    public override void UpdateState(MonsterLargeStateMachine monsterState)
     {
         monsterState.LookAtTarget(targetDirection);
 
@@ -68,7 +68,7 @@ public class IdleState : BaseMonsterState
         }
     }
 
-    public override void FixedUpdateState(MonsterStateMachine monsterState)
+    public override void FixedUpdateState(MonsterLargeStateMachine monsterState)
     {
         if (!hasTarget)
         {
@@ -83,7 +83,7 @@ public class IdleState : BaseMonsterState
         rb.AddForce(combinedDirection * swimSpeed, ForceMode.Acceleration);
     }
 
-    public override void DrawGizmos(MonsterStateMachine monsterState)
+    public override void DrawGizmos(MonsterLargeStateMachine monsterState)
     {
         Gizmos.DrawWireSphere(monsterTransform.position, idleMovementRadius);
         Gizmos.DrawSphere(currentTarget, 0.2f);

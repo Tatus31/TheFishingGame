@@ -723,7 +723,7 @@ public class DebugWindowEditor : EditorWindow
 
     void SetMonsterState(string stateName)
     {
-        MonsterStateMachine monsterStateMachine = MonsterStateMachine.Instance;
+        MonsterLargeStateMachine monsterStateMachine = MonsterLargeStateMachine.Instance;
 
         if (monsterStateMachine != null)
         {
