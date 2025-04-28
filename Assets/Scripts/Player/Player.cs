@@ -96,7 +96,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        var monster = collision.gameObject.GetComponent<MonsterStateMachine>();
+        var monster = collision.gameObject.GetComponent<MonsterLargeStateMachine>();
 
         //if (monster)
         //{

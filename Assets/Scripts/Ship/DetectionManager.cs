@@ -112,9 +112,9 @@ public class DetectionManager : MonoBehaviour
         float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
         if (distance <= minDistanceToShip && !isInvestigating)
         {
-            if (MonsterStateMachine.Instance != null)
+            if (MonsterLargeStateMachine.Instance != null)
             {
-                MonsterStateMachine.Instance.SwitchState(MonsterStateMachine.Instance.InvestigatingState);
+                MonsterLargeStateMachine.Instance.SwitchState(MonsterLargeStateMachine.Instance.InvestigatingState);
                 isInvestigating = true;
             }
         }

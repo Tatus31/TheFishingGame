@@ -25,7 +25,7 @@ public class AttackingPlayerState : BaseMonsterState
         this.monsterEscapeTime = monsterEscapeTime;
     }
 
-    public override void EnterState(MonsterStateMachine monsterState)
+    public override void EnterState(MonsterLargeStateMachine monsterState)
     {
         ShipDamage.Instance.OnDamageTaken += ShipDamage_OnDamageTaken;
     }
@@ -40,7 +40,7 @@ public class AttackingPlayerState : BaseMonsterState
         ShipDamage.Instance.OnDamageTaken -= ShipDamage_OnDamageTaken;
     }
 
-    public override void UpdateState(MonsterStateMachine monsterState)
+    public override void UpdateState(MonsterLargeStateMachine monsterState)
     {
         if (rb.velocity.magnitude > 0.1f)
         {
@@ -49,7 +49,7 @@ public class AttackingPlayerState : BaseMonsterState
         }
     }
 
-    public override void FixedUpdateState(MonsterStateMachine monsterState)
+    public override void FixedUpdateState(MonsterLargeStateMachine monsterState)
     {
         directionToPlayer = (playerTransform.position - monsterTransform.position).normalized;
 
@@ -64,14 +64,14 @@ public class AttackingPlayerState : BaseMonsterState
         }
     }
 
-    IEnumerator SwimAwayFromShip(MonsterStateMachine monsterState)
+    IEnumerator SwimAwayFromShip(MonsterLargeStateMachine monsterState)
     {
         yield return new WaitForSeconds(monsterEscapeTime);
         monsterState.SwitchState(monsterState.IdleState);
         isMonsterRetreating = false;
     }
 
-    public override void DrawGizmos(MonsterStateMachine monsterState)
+    public override void DrawGizmos(MonsterLargeStateMachine monsterState)
     {
         if (!isMonsterRetreating)
         {

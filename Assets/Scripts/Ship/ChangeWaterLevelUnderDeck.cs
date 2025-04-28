@@ -53,12 +53,12 @@ public class ChangeWaterLevelUnderDeck : MonoBehaviour
         shipRepairPoints.OnRepairPointsChanged += ShipRepairPoints_OnRepairPointsChanged;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (isInvincible)
             return;
 
-        if(currentRepairPoints > 0 && !shipSank)
+        if (currentRepairPoints > 0 && !shipSank)
             LinearlyIncreaseWaterLevel();
     }
 
@@ -99,12 +99,6 @@ public class ChangeWaterLevelUnderDeck : MonoBehaviour
         float currentDropSpeed = baseSpeed / (1 + (currentRepairPoints - 1) * lowerSpeedMultiplier);
         Vector3 currentWaterLevelPos = transform.position;
         currentWaterLevelPos.y = Mathf.MoveTowards(currentWaterLevelPos.y, localMinWaterLevel.y, currentDropSpeed * Time.fixedDeltaTime);
-
-        if (Vector3.Distance(transform.position, localMinWaterLevel) <= 0.01f)
-        {
-            Debug.Log("water level down");
-        }
-
         transform.position = currentWaterLevelPos;
     }
 

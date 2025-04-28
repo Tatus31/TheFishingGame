@@ -34,6 +34,11 @@ public class DangerLamp : MonoBehaviour
 
     private void Update()
     {
+
+    }
+
+    private void LateUpdate()
+    {
         Collider[] collisions = Physics.OverlapSphere(transform.position, dangerDetectionRadius);
 
         float closestDanger = dangerDetectionRadius;

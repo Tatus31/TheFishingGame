@@ -9,10 +9,11 @@ public class ItemDatabaseObject : ScriptableObject,ISerializationCallbackReceive
 
     public void OnAfterDeserialize()
     {
-        GetItem  = new Dictionary<int, ItemObject>();
+        GetItem = new Dictionary<int, ItemObject>();
         for (int i = 0; i < ItemObjects.Length; i++)
         {
-            GetItem .Add(i, ItemObjects[i]);
+            ItemObjects[i].data.id = i; 
+            GetItem.Add(i, ItemObjects[i]);
         }
     }
 

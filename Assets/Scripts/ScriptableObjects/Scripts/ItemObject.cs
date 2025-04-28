@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.TerrainTools;
 using UnityEngine;
 
 public enum ItemType
@@ -40,6 +41,8 @@ public class Item
     public int id = -1;
     public int weight;
     public string description;
+    public int sacrificeValue;
+    public bool isQuestItem;
     public StatModification[] stats;
 
     public Item()
@@ -48,6 +51,8 @@ public class Item
         id = -1;
         description = "";
         weight = 1;
+        sacrificeValue = 1;
+        isQuestItem = false;
     }
 
     public Item(ItemObject itemObject)
@@ -56,6 +61,8 @@ public class Item
         id = itemObject.data.id;
         weight = itemObject.data.weight;
         stats = itemObject.data.stats;
+        sacrificeValue = itemObject.data.sacrificeValue;
+        isQuestItem = itemObject.data.isQuestItem;
     }
 }
 
