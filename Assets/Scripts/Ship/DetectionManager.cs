@@ -6,6 +6,9 @@ using static ShipMovement;
 public class DetectionManager : MonoBehaviour
 {
     public static DetectionManager Instance { get; private set; }
+
+    public static event Action OnInvestigationEnd;
+
     [SerializeField] Transform shipTransform;
     [SerializeField] Transform[] monsterHeads;
     [SerializeField] float initialDetectionTimer = 200f;
@@ -264,7 +267,7 @@ public class DetectionManager : MonoBehaviour
         }
     }
 
-    private void EndInvestigation(Transform monster)
+    void EndInvestigation(Transform monster)
     {
         if (!monsterStates.ContainsKey(monster) || !monsterTypes.ContainsKey(monster)) return;
 
@@ -279,6 +282,7 @@ public class DetectionManager : MonoBehaviour
                 if (largeStateMachine != null)
                 {
                     largeStateMachine.SwitchState(largeStateMachine.IdleState);
+                    OnInvestigationEnd?.Invoke();
                 }
                 break;
 
@@ -287,6 +291,7 @@ public class DetectionManager : MonoBehaviour
                 if (mediumStateMachine != null)
                 {
                     mediumStateMachine.SwitchState(mediumStateMachine.IdleState);
+                    OnInvestigationEnd?.Invoke();
                 }
                 break;
         }
@@ -376,7 +381,7 @@ public class DetectionManager : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawLine(shipTransform.position, monsterHead.position);
 
-            if (monsterStates.ContainsKey(monsterHead))
+            if (monsterStates.ContainsKey(monsterHead) && monsterStates[monsterHead].isInvestigating)
             {
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawWireSphere(investigationTargetPoint, 1f);
@@ -385,29 +390,14 @@ public class DetectionManager : MonoBehaviour
                 UnityEditor.Handles.color = Color.white;
                 string monsterType = monsterTypes.ContainsKey(monsterHead) ? monsterTypes[monsterHead].ToString() : "no name";
                 float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
-                string timerLabel = $"Distance to Ship: {distance:F2}m";
+                string timerLabel = $"{monsterType} Monster\n" +
+                                    $"Detection Timer: {monsterStates[monsterHead].currentDetectionTimer:F2}\n" +
+                                    $"Investigation Interval: {currentInvestigationPointUpdateInterval:F2}\n" +
+                                    $"Distance to Ship: {distance:F2}m\n" +
+                                    $"Max allowed distance away from ship {maxDistanceToShip:F2}m";
                 Vector3 labelPosition = monsterHead.position;
                 UnityEditor.Handles.Label(labelPosition + Vector3.down, timerLabel);
 #endif
-
-                if (monsterStates[monsterHead].isInvestigating)
-                {
-                    Gizmos.color = Color.yellow;
-                    Gizmos.DrawWireSphere(investigationTargetPoint, 1f);
-
-    #if UNITY_EDITOR
-                    UnityEditor.Handles.color = Color.white;
-                    monsterType = monsterTypes.ContainsKey(monsterHead) ? monsterTypes[monsterHead].ToString() : "no name";
-                    distance = Vector3.Distance(shipTransform.position, monsterHead.position);
-                    timerLabel = $"{monsterType} Monster\n" +
-                                        $"Detection Timer: {monsterStates[monsterHead].currentDetectionTimer:F2}\n" +
-                                        $"Investigation Interval: {currentInvestigationPointUpdateInterval:F2}\n" +
-                                        $"Distance to Ship: {distance:F2}m";
-                    labelPosition = monsterHead.position;
-                    UnityEditor.Handles.Label(labelPosition + Vector3.down, timerLabel);
-    #endif
-                }
-
             }
         }
     }

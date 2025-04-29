@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class SinkShip : MonoBehaviour
 {
+    public static Action<bool> OnShipSank;
+
     Rigidbody shipRB;
     StableFloatingRigidBody stableFloatingRB;
     ChangeWaterLevelUnderDeck waterLevel;
@@ -14,9 +16,7 @@ public class SinkShip : MonoBehaviour
     float sinkingBuoyancy = 0.98f;
     [SerializeField] float sinkingDelay = 3f;
     [SerializeField] float sinkTimer = 5f;
-
     float timer;
-
     bool isSinking = false;
 
     private void Awake()
@@ -27,21 +27,16 @@ public class SinkShip : MonoBehaviour
 
     private void Start()
     {
-        if (shipDamage == null)
-            return;
-
-        if (waterLevel == null)
-        {
-            return;
-        }
-
         timer = sinkTimer;
 
         shipDamage = ShipDamage.Instance;
         waterLevel = ChangeWaterLevelUnderDeck.Instance;
 
-        waterLevel.OnSinkingShip += IncreaseWaterLevel_OnSinkingShip;
-        shipDamage.OnSinkingShipByDamage += ShipDamage_OnSinkingShipByDamage;
+        if (shipDamage != null)
+            shipDamage.OnSinkingShipByDamage += ShipDamage_OnSinkingShipByDamage;
+
+        if (waterLevel != null)
+            waterLevel.OnSinkingShip += IncreaseWaterLevel_OnSinkingShip;
     }
 
     private void Update()
@@ -50,11 +45,11 @@ public class SinkShip : MonoBehaviour
             return;
 
         timer -= Time.deltaTime;
-
         if (timer <= 0f)
         {
             RespawnShip.Instance.RespawnShipManually();
             isSinking = false;
+            timer = sinkTimer;
         }
     }
 
@@ -68,13 +63,21 @@ public class SinkShip : MonoBehaviour
         StartCoroutine(StartSinking());
     }
 
-    private IEnumerator StartSinking()
+    IEnumerator StartSinking()
     {
+        if (isSinking)
+        {
+            yield break; 
+        }
+
         yield return new WaitForSeconds(sinkingDelay);
 
-        stableFloatingRB.SafeFloating = false;
-        stableFloatingRB.FloatToSleep = false;
-        stableFloatingRB.Buoyancy = sinkingBuoyancy;
+        if (stableFloatingRB != null)
+        {
+            stableFloatingRB.SafeFloating = false;
+            stableFloatingRB.FloatToSleep = false;
+            stableFloatingRB.Buoyancy = sinkingBuoyancy;
+        }
 
         if (TryGetComponent<ShipMovement>(out shipMovement))
         {
@@ -82,5 +85,19 @@ public class SinkShip : MonoBehaviour
         }
 
         isSinking = true;
+        OnShipSank?.Invoke(isSinking);
+    }
+
+    private void OnDestroy()
+    {
+        if (shipDamage != null)
+        {
+            shipDamage.OnSinkingShipByDamage -= ShipDamage_OnSinkingShipByDamage;
+        }
+
+        if (waterLevel != null)
+        {
+            waterLevel.OnSinkingShip -= IncreaseWaterLevel_OnSinkingShip;
+        }
     }
 }

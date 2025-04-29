@@ -28,12 +28,19 @@ public class MediumMonsterStateMachine : MonoBehaviour
 
     [Header("Investigating Monster Controls")]
     [SerializeField] float investigationSwimSpeed = 10f;
+    [SerializeField] float visionAngle = 45f;
+    [SerializeField] float visionDistance = 15f;
+
+    [Header("Attacking Monster Controls")]
+    [SerializeField] float monsterEscapeTime = 2f;
+    [SerializeField] float swimAttackSpeed = 20f;
 
     BaseMediumMonsterState currentState;
     Rigidbody rb;
 
     public MediumMonsterIdleState IdleState { get; private set; }
     public MediumMonsterInvestigatingState InvestigatingState { get; private set; }
+    public MediumMonsterAttackingState AttackingState { get; private set; }
     public BaseMediumMonsterState PreviousState { get; private set; }
     public BaseMediumMonsterState CurrentState { get; private set; }
 
@@ -55,7 +62,8 @@ public class MediumMonsterStateMachine : MonoBehaviour
     private void Start()
     {
         IdleState = new MediumMonsterIdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, rb);
-        InvestigatingState = new MediumMonsterInvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed);
+        InvestigatingState = new MediumMonsterInvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
+        AttackingState = new MediumMonsterAttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime);
 
         SwitchState(IdleState);
     }
@@ -66,6 +74,10 @@ public class MediumMonsterStateMachine : MonoBehaviour
         {
             rb = GetComponent<Rigidbody>();
         }
+
+        IdleState = new MediumMonsterIdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, rb);
+        InvestigatingState = new MediumMonsterInvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
+        AttackingState = new MediumMonsterAttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime);
     }
 
     private void Update()
@@ -129,6 +141,21 @@ public class MediumMonsterStateMachine : MonoBehaviour
         }
 
         return avoidanceDirection * obstacleAvoidanceForce;
+    }
+
+    public bool IsInConeOfVision(Transform origin, Vector3 targetPosition)
+    {
+        Vector3 directionToTarget = (targetPosition - origin.position);
+        float distanceToTarget = directionToTarget.magnitude;
+
+        if (distanceToTarget > visionDistance)
+            return false;
+
+        directionToTarget.Normalize();
+        float dotProduct = Vector3.Dot(origin.forward, directionToTarget);
+        float angleToTarget = Mathf.Acos(dotProduct) * Mathf.Rad2Deg;
+
+        return angleToTarget <= visionAngle;
     }
 
     public void LookAt(Vector3 lookAtDirection)

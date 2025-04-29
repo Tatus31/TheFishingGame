@@ -2,24 +2,28 @@ using UnityEngine;
 
 public class MediumMonsterInvestigatingState : BaseMediumMonsterState
 {
-    private float investigationSwimSpeed = 8f;
-    private float investigationStopDistance = 12f;
-    private Transform monsterHead;
-    private Rigidbody rb;
-    private Transform shipTransform;
+    float investigationSwimSpeed = 8f;
+    float visionAngle = 45f;
+    float visionDistance = 15f;
+    Transform monsterHead;
+    Rigidbody rb;
+    Transform shipTransform;
 
-    public MediumMonsterInvestigatingState(Transform shipTransform, Transform monsterHead, Rigidbody rb, float investigationSwimSpeed)
+    public MediumMonsterInvestigatingState(Transform shipTransform, Transform monsterHead, Rigidbody rb, float investigationSwimSpeed, float visionAngle, float visionDistance)
     {
         this.shipTransform = shipTransform;
         this.monsterHead = monsterHead;
         this.rb = rb;
         this.investigationSwimSpeed = investigationSwimSpeed;
+        this.visionAngle = visionAngle;
+        this.visionDistance = visionDistance;
     }
 
     public override void EnterState(MediumMonsterStateMachine monster)
     {
+#if UNITY_EDITOR
         Debug.Log($"Entering Investigating State {monster.transform.name}");
-
+#endif
         DetectionManager.Instance.StartInvestigation(monsterHead, shipTransform);
     }
 
@@ -42,9 +46,9 @@ public class MediumMonsterInvestigatingState : BaseMediumMonsterState
         rb.AddForce(movement, ForceMode.Acceleration);
         monster.LookAtTarget(directionToTarget);
 
-        if (distanceToTarget <= investigationStopDistance)
+        if (monster.IsInConeOfVision(monsterHead, investigationPoint))
         {
-            Debug.Log("Transitioning to next State");
+            monster.SwitchState(monster.AttackingState);
         }
         else if (!DetectionManager.Instance.ShouldContinueInvestigation(monsterHead))
         {
@@ -67,11 +71,27 @@ public class MediumMonsterInvestigatingState : BaseMediumMonsterState
         Gizmos.DrawLine(monsterHead.position, investigationPoint);
 
 #if UNITY_EDITOR
-        Vector3 labelPosition = monsterHead.position + (investigationPoint - monsterHead.position) * 0.5f;
-        string transitionLabel = $"Medium Monster\nDistance to Target: {Vector3.Distance(monsterHead.position, investigationPoint):F2}\n" +
-                               $"Threshold: {investigationStopDistance:F2}";
-        UnityEditor.Handles.Label(labelPosition, transitionLabel);
+        UnityEditor.Handles.color = new Color(1f, 1f, 0f, 0.2f);
+        UnityEditor.Handles.DrawSolidArc(
+            monsterHead.position,
+            Vector3.up, 
+            Quaternion.Euler(0, -visionAngle, 0) * monsterHead.forward,
+            visionAngle * 2f,
+            visionDistance
+        );
+
+        UnityEditor.Handles.color = Color.yellow;
+        UnityEditor.Handles.DrawWireArc(
+            monsterHead.position,
+            Vector3.up,
+            Quaternion.Euler(0, -visionAngle, 0) * monsterHead.forward,
+            visionAngle * 2f,
+            visionDistance
+        );
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawRay(monsterHead.position, monsterHead.forward * visionDistance);
 #endif
     }
-}
 
+}

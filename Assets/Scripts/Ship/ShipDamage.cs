@@ -196,6 +196,7 @@ public class ShipDamage : MonoBehaviour
                 attribute.Value.SetModifiedValueDirectly(currentHealth);
                 if (currentHealth == 0)
                 {
+                    Debug.Log("Ship is sinking");
                     OnSinkingShipByDamage?.Invoke(this, EventArgs.Empty);
                 }
                 break;
