@@ -7,11 +7,11 @@ public class MonsterLargeStateMachine : MonoBehaviour
 {
     public static MonsterLargeStateMachine Instance;
 
-    [Header("Refrences")]
+    [Header("[Refrences]")]
     [SerializeField] Transform monsterHead;
     [SerializeField] Transform shipTransform;
     [SerializeField] Transform playerTransform;
-    [Header("General Monster Controls")]
+    [Header("[General Monster Controls]")]
     [SerializeField] float obstacleAvoidanceDistance = 1f;
     [SerializeField] float obstacleAvoidanceForce = 3f;
     [SerializeField] float swimSpeed = 2f;
@@ -19,22 +19,24 @@ public class MonsterLargeStateMachine : MonoBehaviour
     [SerializeField] float maxVelocity = 8f;
     [SerializeField] LayerMask waterLayer;
     [SerializeField] LayerMask obstacleLayer;
-    [Header("Idle Monster Controls")]
+    [Header("[Idle Monster Controls]")]
     [SerializeField] float idleMovementRadius = 10f;
     [SerializeField] float minTimeAtTarget = 0.1f;
     [SerializeField] float allowedDistanceFromTarget = 0.1f;
-    [Header("Stalking Monster Controls")]
+    [Header("[Stalking Monster Controls]")]
     [SerializeField] float stalkingDistance = 15f;
     [SerializeField] float minStalkingDistance = 8f;
     [SerializeField] float swimStalkingSpeed = 12f;
-    [Header("Attacking Monster Controls")]
+    [Header("[Attacking Monster Controls]")]
     [SerializeField] float swimAttackSpeed = 20f;
     [SerializeField] float monsterEscapeTime = 2f;
-    [Header("Investigating Monster Controls")]
+    [SerializeField] float turnSmoothTime = 1.2f;
+    [SerializeField] float maxAttackDuration = 6f;
+    [SerializeField] int maxNumberOfAttacks = 5;
+    [Header("[Investigating Monster Controls]")]
     [SerializeField] float investigationSwimSpeed = 10f;
-    [Header("Attacking Player Controls")]
-    [SerializeField] float swimAttackPlayerSpeed = 20f;
-    [SerializeField] float monsterEscapePlayerTime = 6f;
+    [SerializeField] float visionAngle = 45f;
+    [SerializeField] float visionDistance = 15f;
 
     BaseMonsterState currentState;
 
@@ -47,7 +49,6 @@ public class MonsterLargeStateMachine : MonoBehaviour
     public BaseMonsterState PreviousState { get; private set; }
     public BaseMonsterState CurrentState { get; private set; }
     public AttackingPlayerState AttackingPlayerState { get; private set; }
-
     public Transform ShipTransform { get { return shipTransform; } set { shipTransform = value; } }
 
     private void Awake()
@@ -68,9 +69,8 @@ public class MonsterLargeStateMachine : MonoBehaviour
     {
         IdleState = new IdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, waterLayer, rb, monsterHead);
         StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance, obstacleAvoidanceDistance);
-        AttackingState = new AttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime);
-        InvestigatingState = new InvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed);
-        AttackingPlayerState = new AttackingPlayerState(playerTransform, monsterHead, swimAttackPlayerSpeed, rb, monsterEscapePlayerTime);
+        AttackingState = new AttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks);
+        InvestigatingState = new InvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
 
         SwitchState(IdleState);
     }
@@ -84,9 +84,8 @@ public class MonsterLargeStateMachine : MonoBehaviour
 
         IdleState = new IdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, waterLayer, rb, monsterHead);
         StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance, obstacleAvoidanceDistance);
-        AttackingState = new AttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime);
-        InvestigatingState = new InvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed);
-        AttackingPlayerState = new AttackingPlayerState(playerTransform, monsterHead, swimAttackPlayerSpeed, rb, monsterEscapePlayerTime);
+        AttackingState = new AttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks);
+        InvestigatingState = new InvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
     }
 
     private void Update()
@@ -180,6 +179,21 @@ public class MonsterLargeStateMachine : MonoBehaviour
         }
 
         return transform.position;
+    }
+
+    public bool IsInConeOfVision(Transform origin, Vector3 targetPosition)
+    {
+        Vector3 directionToTarget = (targetPosition - origin.position);
+        float distanceToTarget = directionToTarget.magnitude;
+
+        if (distanceToTarget > visionDistance)
+            return false;
+
+        directionToTarget.Normalize();
+        float dotProduct = Vector3.Dot(origin.forward, directionToTarget);
+        float angleToTarget = Mathf.Acos(dotProduct) * Mathf.Rad2Deg;
+
+        return angleToTarget <= visionAngle;
     }
 
     public void LookAtTarget(Vector3 targetDirection)

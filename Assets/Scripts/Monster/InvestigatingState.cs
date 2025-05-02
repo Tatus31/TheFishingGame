@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 
 public class InvestigatingState : BaseMonsterState
@@ -6,14 +7,17 @@ public class InvestigatingState : BaseMonsterState
     Transform monsterHead;
     Rigidbody rb;
     float investigationSwimSpeed = 10f;
-    float investigationStopDistance = 15f;
+    float visionAngle = 45f;
+    float visionDistance = 15f;
 
-    public InvestigatingState(Transform shipTransform, Transform monsterHead, Rigidbody rb, float investigationSwimSpeed)
+    public InvestigatingState(Transform shipTransform, Transform monsterHead, Rigidbody rb, float investigationSwimSpeed, float visionAngle, float visionDistance)
     {
         this.shipTransform = shipTransform;
         this.monsterHead = monsterHead;
         this.rb = rb;
         this.investigationSwimSpeed = investigationSwimSpeed;
+        this.visionAngle = visionAngle;
+        this.visionDistance = visionDistance;
     }
 
     public override void EnterState(MonsterLargeStateMachine monsterState)
@@ -47,9 +51,9 @@ public class InvestigatingState : BaseMonsterState
         rb.AddForce(movement, ForceMode.Acceleration);
         monsterState.LookAtTarget(directionToTarget);
 
-        if (distanceToTarget <= investigationStopDistance)
+        if (monsterState.IsInConeOfVision(monsterHead, investigationPoint))
         {
-            monsterState.SwitchState(monsterState.StalkingState);
+            monsterState.SwitchState(monsterState.AttackingState);
         }
         else if (!DetectionManager.Instance.ShouldContinueInvestigation(monsterHead))
         {
@@ -59,16 +63,35 @@ public class InvestigatingState : BaseMonsterState
 
     public override void DrawGizmos(MonsterLargeStateMachine monsterState)
     {
+        if (monsterHead == null) return;
+
         Vector3 investigationPoint = DetectionManager.Instance.GetInvestigationPoint();
-        Gizmos.color = Color.yellow;
+
+        Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(investigationPoint, 1f);
         Gizmos.DrawLine(monsterHead.position, investigationPoint);
 
 #if UNITY_EDITOR
-        Vector3 labelPosition = monsterHead.position + (investigationPoint - monsterHead.position) * 0.5f;
-        string transitionLabel = $"Transition to Stalking:\nDistance to Target: {Vector3.Distance(monsterHead.position, investigationPoint):F2}\n" +
-                                $"Threshold: {investigationStopDistance:F2}";
-        UnityEditor.Handles.Label(labelPosition, transitionLabel);
+        UnityEditor.Handles.color = new Color(1f, 1f, 0f, 0.2f);
+        UnityEditor.Handles.DrawSolidArc(
+            monsterHead.position,
+            Vector3.up,
+            Quaternion.Euler(0, -visionAngle, 0) * monsterHead.forward,
+            visionAngle * 2f,
+            visionDistance
+        );
+
+        UnityEditor.Handles.color = Color.yellow;
+        UnityEditor.Handles.DrawWireArc(
+            monsterHead.position,
+            Vector3.up,
+            Quaternion.Euler(0, -visionAngle, 0) * monsterHead.forward,
+            visionAngle * 2f,
+            visionDistance
+        );
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawRay(monsterHead.position, monsterHead.forward * visionDistance);
 #endif
     }
 

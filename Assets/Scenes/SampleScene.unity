@@ -10198,7 +10198,7 @@ PrefabInstance:
     - target: {fileID: 1749270837177424874, guid: ee204cb6cb0fb01429f492652e8d07ac,
         type: 3}
       propertyPath: investigationPointUpdateTime
-      value: 15
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 1749270837177424874, guid: ee204cb6cb0fb01429f492652e8d07ac,
         type: 3}
@@ -13650,9 +13650,9 @@ MonoBehaviour:
   playerTransform: {fileID: 423857259}
   obstacleAvoidanceDistance: 1
   obstacleAvoidanceForce: 3
-  swimSpeed: 2
+  swimSpeed: 1
   rotationSpeed: 5
-  maxVelocity: 8
+  maxVelocity: 4
   waterLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -13664,12 +13664,15 @@ MonoBehaviour:
   allowedDistanceFromTarget: 0.1
   stalkingDistance: 15
   minStalkingDistance: 8
-  swimStalkingSpeed: 12
-  swimAttackSpeed: 20
-  monsterEscapeTime: 2
-  investigationSwimSpeed: 10
-  swimAttackPlayerSpeed: 20
-  monsterEscapePlayerTime: 6
+  swimStalkingSpeed: 2
+  swimAttackSpeed: 25
+  monsterEscapeTime: 5
+  turnSmoothTime: 0.9
+  maxAttackDuration: 6
+  maxNumberOfAttacks: 2
+  investigationSwimSpeed: 4
+  visionAngle: 45
+  visionDistance: 15
 --- !u!43 &1756162855
 Mesh:
   m_ObjectHideFlags: 0
@@ -16719,7 +16722,7 @@ PrefabInstance:
     - target: {fileID: 4996794195676576455, guid: 3548faf8ae8f0544facc5fbb7ce15482,
         type: 3}
       propertyPath: visionDistance
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4996794195676576455, guid: 3548faf8ae8f0544facc5fbb7ce15482,
         type: 3}
@@ -16765,6 +16768,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HeadDirMed
+      objectReference: {fileID: 0}
+    - target: {fileID: 8618727909466918498, guid: 3548faf8ae8f0544facc5fbb7ce15482,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8666475913168177638, guid: 3548faf8ae8f0544facc5fbb7ce15482,
         type: 3}
@@ -18162,7 +18170,7 @@ PrefabInstance:
     - target: {fileID: 636126021333776368, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
       propertyPath: m_IsKinematic
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 677049559617618707, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
@@ -18237,7 +18245,7 @@ PrefabInstance:
     - target: {fileID: 5781530319976135822, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
       propertyPath: m_Name
-      value: MonsterWithModel
+      value: LargeMonster
       objectReference: {fileID: 0}
     - target: {fileID: 5781530319976135822, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
@@ -18262,7 +18270,7 @@ PrefabInstance:
     - target: {fileID: 6484817234330914108, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 147.5
+      value: 134.80667
       objectReference: {fileID: 0}
     - target: {fileID: 6484817234330914108, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
