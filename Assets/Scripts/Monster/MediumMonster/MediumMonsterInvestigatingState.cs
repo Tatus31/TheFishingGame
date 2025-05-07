@@ -21,6 +21,8 @@ public class MediumMonsterInvestigatingState : BaseMediumMonsterState
 
     public override void EnterState(MediumMonsterStateMachine monster)
     {
+        AudioManager.PlaySound(AudioManager.HeartBeatSlowSound);
+
 #if UNITY_EDITOR
         Debug.Log($"Entering Investigating State {monster.transform.name}");
 #endif

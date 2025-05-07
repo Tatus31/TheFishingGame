@@ -7,12 +7,12 @@ public class MediumMonsterStateMachine : MonoBehaviour
 {
     public static MediumMonsterStateMachine Instance;
 
-    [Header("References")]
+    [Header("[References]")]
     [SerializeField] public Transform monsterHead;
     [SerializeField] Transform shipTransform;
     [SerializeField] Transform playerTransform;
 
-    [Header("General Monster Controls")]
+    [Header("[General Monster Controls]")]
     [SerializeField] public float obstacleAvoidanceDistance = 1f;
     [SerializeField] float obstacleAvoidanceForce = 3f;
     [SerializeField] float swimSpeed = 3f;
@@ -21,19 +21,23 @@ public class MediumMonsterStateMachine : MonoBehaviour
     [SerializeField] LayerMask waterLayer;
     [SerializeField] LayerMask obstacleLayer;
 
-    [Header("Idle Monster Controls")]
+    [Header("[Idle Monster Controls]")]
     [SerializeField] float idleMovementRadius = 12f;
     [SerializeField] float minTimeAtTarget = 1.5f;
     [SerializeField] float allowedDistanceFromTarget = 0.5f;
 
-    [Header("Investigating Monster Controls")]
+    [Header("[Investigating Monster Controls]")]
     [SerializeField] float investigationSwimSpeed = 10f;
     [SerializeField] float visionAngle = 45f;
     [SerializeField] float visionDistance = 15f;
 
-    [Header("Attacking Monster Controls")]
+    [Header("[Attacking Monster Controls]")]
     [SerializeField] float monsterEscapeTime = 2f;
     [SerializeField] float swimAttackSpeed = 20f;
+    [SerializeField] float maxAttackDuration = 6f;
+    [SerializeField] int maxNumberOfAttacks = 5;
+    [SerializeField] float turnSmoothTime = 1.2f;
+    [SerializeField] float predictionValue = 1.5f;
 
     BaseMediumMonsterState currentState;
     Rigidbody rb;
@@ -63,7 +67,7 @@ public class MediumMonsterStateMachine : MonoBehaviour
     {
         IdleState = new MediumMonsterIdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, rb);
         InvestigatingState = new MediumMonsterInvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
-        AttackingState = new MediumMonsterAttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime);
+        AttackingState = new MediumMonsterAttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue);
 
         SwitchState(IdleState);
     }
@@ -77,7 +81,7 @@ public class MediumMonsterStateMachine : MonoBehaviour
 
         IdleState = new MediumMonsterIdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, rb);
         InvestigatingState = new MediumMonsterInvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
-        AttackingState = new MediumMonsterAttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime);
+        AttackingState = new MediumMonsterAttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue);
     }
 
     private void Update()

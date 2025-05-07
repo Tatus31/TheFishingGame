@@ -7117,6 +7117,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9229a321e58b31e47b154ae1d814cefe, type: 3}
+--- !u!1 &965216309 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6457795096094294152, guid: ee204cb6cb0fb01429f492652e8d07ac,
+    type: 3}
+  m_PrefabInstance: {fileID: 1375747150}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &981615592 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8864503909078596508, guid: 3548faf8ae8f0544facc5fbb7ce15482,
@@ -7437,12 +7443,25 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1375747150}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 965216309}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06b6fb3c9417aa448b65db7ec1107b44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1051454075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965216309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8564c316bf85cf34ea2525b9ec3ade4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playingSounds: []
 --- !u!1 &1077416420
 GameObject:
   m_ObjectHideFlags: 0
@@ -10429,7 +10448,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6457795096094294152, guid: ee204cb6cb0fb01429f492652e8d07ac,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1051454075}
   m_SourcePrefab: {fileID: 100100000, guid: ee204cb6cb0fb01429f492652e8d07ac, type: 3}
 --- !u!1 &1412143046
 GameObject:
@@ -13667,9 +13690,13 @@ MonoBehaviour:
   swimStalkingSpeed: 12
   swimAttackSpeed: 20
   monsterEscapeTime: 2
+  turnSmoothTime: 1.2
+  maxAttackDuration: 6
+  maxNumberOfAttacks: 5
+  predictionValue: 1.5
   investigationSwimSpeed: 10
-  swimAttackPlayerSpeed: 20
-  monsterEscapePlayerTime: 6
+  visionAngle: 45
+  visionDistance: 15
 --- !u!43 &1756162855
 Mesh:
   m_ObjectHideFlags: 0
@@ -18237,7 +18264,7 @@ PrefabInstance:
     - target: {fileID: 5781530319976135822, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
       propertyPath: m_Name
-      value: MonsterWithModel
+      value: LargeMonster
       objectReference: {fileID: 0}
     - target: {fileID: 5781530319976135822, guid: 8f05c85c9f7126140ada90df6480d426,
         type: 3}
