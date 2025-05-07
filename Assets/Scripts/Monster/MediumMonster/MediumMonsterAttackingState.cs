@@ -3,24 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackingState : BaseMonsterState
+public class MediumMonsterAttackingState : BaseMediumMonsterState
 {
     Transform shipTransform;
     Transform playerTransform;
     Transform monsterTransform;
-    Rigidbody rb;
     ShipMovement shipMovement;
 
     float swimAttackSpeed = 200f;
     float monsterEscapeTime = 2f;
     float turnSmoothTime = 1.2f;
-    float maxAttackDuration = 6f;
-    float attackDuration = 0f;
 
+    int numberOfAttacks = 0;
+    int maxNumberOfAttacks = 5;
     float predictionValue = 1.5f;
 
-    int maxNumberOfAttacks = 5;
-    int numberOfAttacks = 0;
+    Rigidbody rb;
 
     Vector3 targetDirection;
     Vector3 directionToShip;
@@ -31,7 +29,10 @@ public class AttackingState : BaseMonsterState
     bool shipSank;
     bool isMonsterPursuing = false;
 
-    public AttackingState(Transform shipTransform, Transform monsterTransform, Transform playerTransform, float swimAttackSpeed,
+    float attackDuration = 0f;
+    float maxAttackDuration = 6f;
+
+    public MediumMonsterAttackingState(Transform shipTransform, Transform monsterTransform, Transform playerTransform, float swimAttackSpeed,
         Rigidbody rb, float monsterEscapeTime, float maxAttackDuration, float turnSmoothTime, int maxNumberOfAttacks, float predictionValue)
     {
         this.shipTransform = shipTransform;
@@ -45,16 +46,18 @@ public class AttackingState : BaseMonsterState
         this.maxNumberOfAttacks = maxNumberOfAttacks;
         this.predictionValue = predictionValue;
 
+        currentMoveDirection = Vector3.zero;
+
         if (shipTransform != null)
         {
             shipMovement = shipTransform.GetComponent<ShipMovement>();
         }
-
-        currentMoveDirection = Vector3.zero;
     }
 
-    public override void EnterState(MonsterLargeStateMachine monsterState)
+    public override void EnterState(MediumMonsterStateMachine monsterState)
     {
+        AudioManager.PlaySound(AudioManager.HeartBeatSound);
+
         isMonsterPursuing = true;
         SetTargetDirection();
         attackDuration = 0f;
@@ -78,14 +81,17 @@ public class AttackingState : BaseMonsterState
     private void PlayerMovement_OnPlayerSwimmingChange(object sender, bool e)
     {
         isPlayerSwimming = e;
+
         SetTargetDirection();
     }
 
     private void ShipDamage_OnDamageTaken(object sender, int e)
     {
         isMonsterRetreating = true;
+
         numberOfAttacks++;
         attackDuration = 0f;
+
         SetTargetDirection();
     }
 
@@ -132,7 +138,7 @@ public class AttackingState : BaseMonsterState
         isMonsterPursuing = false;
     }
 
-    public override void UpdateState(MonsterLargeStateMachine monsterState)
+    public override void UpdateState(MediumMonsterStateMachine monsterState)
     {
         if (rb.velocity.magnitude > 0.1f)
         {
@@ -147,12 +153,13 @@ public class AttackingState : BaseMonsterState
             {
                 isMonsterRetreating = true;
                 attackDuration = 0f;
+
                 SetTargetDirection();
             }
         }
     }
 
-    public override void FixedUpdateState(MonsterLargeStateMachine monsterState)
+    public override void FixedUpdateState(MediumMonsterStateMachine monsterState)
     {
         currentMoveDirection = Vector3.Lerp(currentMoveDirection, targetDirection, Time.fixedDeltaTime / turnSmoothTime);
         rb.AddForce(currentMoveDirection * swimAttackSpeed, ForceMode.Acceleration);
@@ -163,7 +170,7 @@ public class AttackingState : BaseMonsterState
         }
     }
 
-    IEnumerator SwimAwayFromShip(MonsterLargeStateMachine monsterState)
+    IEnumerator SwimAwayFromShip(MediumMonsterStateMachine monsterState)
     {
         yield return new WaitForSeconds(monsterEscapeTime);
 
@@ -175,10 +182,11 @@ public class AttackingState : BaseMonsterState
 
         isMonsterRetreating = false;
         attackDuration = 0f;
+
         SetTargetDirection();
     }
 
-    public override void DrawGizmos(MonsterLargeStateMachine monsterState)
+    public override void DrawGizmos(MediumMonsterStateMachine monsterState)
     {
         Gizmos.color = isMonsterRetreating ? Color.blue : Color.red;
         Gizmos.DrawRay(monsterTransform.position, currentMoveDirection * 5f);
@@ -188,27 +196,6 @@ public class AttackingState : BaseMonsterState
         {
             float sphereSize = isMonsterRetreating ? 2f : 1f;
             Gizmos.DrawWireSphere(currentTarget.position, sphereSize);
-
-            if (!isMonsterRetreating && shipMovement != null && !isPlayerSwimming)
-            {
-                Vector3 shipVelocity = shipMovement.ShipFlatVel;
-                if (shipVelocity.magnitude > 0.1f)
-                {
-                    Vector3 predictedPosition = currentTarget.position + shipVelocity.normalized * predictionValue;
-
-                    Gizmos.color = Color.yellow;
-                    Gizmos.DrawWireSphere(predictedPosition, 1.5f);
-                    Gizmos.DrawLine(currentTarget.position, predictedPosition);
-                }
-            }
         }
-    }
-
-    public override void OnTriggerEnter(Collider other)
-    {
-    }
-
-    public override void OnTriggerExit(Collider other)
-    {
     }
 }

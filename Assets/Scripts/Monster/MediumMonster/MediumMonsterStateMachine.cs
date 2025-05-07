@@ -7,13 +7,13 @@ public class MediumMonsterStateMachine : MonoBehaviour
 {
     public static MediumMonsterStateMachine Instance;
 
-    [Header("References")]
+    [Header("[References]")]
     [SerializeField] public Transform monsterHead;
     [SerializeField] Transform shipTransform;
     [SerializeField] Transform playerTransform;
 
-    [Header("General Monster Controls")]
-    [SerializeField] float obstacleAvoidanceDistance = 1f;
+    [Header("[General Monster Controls]")]
+    [SerializeField] public float obstacleAvoidanceDistance = 1f;
     [SerializeField] float obstacleAvoidanceForce = 3f;
     [SerializeField] float swimSpeed = 3f;
     [SerializeField] float rotationSpeed = 6f;
@@ -21,15 +21,30 @@ public class MediumMonsterStateMachine : MonoBehaviour
     [SerializeField] LayerMask waterLayer;
     [SerializeField] LayerMask obstacleLayer;
 
-    [Header("Idle Monster Controls")]
+    [Header("[Idle Monster Controls]")]
     [SerializeField] float idleMovementRadius = 12f;
     [SerializeField] float minTimeAtTarget = 1.5f;
     [SerializeField] float allowedDistanceFromTarget = 0.5f;
+
+    [Header("[Investigating Monster Controls]")]
+    [SerializeField] float investigationSwimSpeed = 10f;
+    [SerializeField] float visionAngle = 45f;
+    [SerializeField] float visionDistance = 15f;
+
+    [Header("[Attacking Monster Controls]")]
+    [SerializeField] float monsterEscapeTime = 2f;
+    [SerializeField] float swimAttackSpeed = 20f;
+    [SerializeField] float maxAttackDuration = 6f;
+    [SerializeField] int maxNumberOfAttacks = 5;
+    [SerializeField] float turnSmoothTime = 1.2f;
+    [SerializeField] float predictionValue = 1.5f;
 
     BaseMediumMonsterState currentState;
     Rigidbody rb;
 
     public MediumMonsterIdleState IdleState { get; private set; }
+    public MediumMonsterInvestigatingState InvestigatingState { get; private set; }
+    public MediumMonsterAttackingState AttackingState { get; private set; }
     public BaseMediumMonsterState PreviousState { get; private set; }
     public BaseMediumMonsterState CurrentState { get; private set; }
 
@@ -51,6 +66,8 @@ public class MediumMonsterStateMachine : MonoBehaviour
     private void Start()
     {
         IdleState = new MediumMonsterIdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, rb);
+        InvestigatingState = new MediumMonsterInvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
+        AttackingState = new MediumMonsterAttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue);
 
         SwitchState(IdleState);
     }
@@ -61,6 +78,10 @@ public class MediumMonsterStateMachine : MonoBehaviour
         {
             rb = GetComponent<Rigidbody>();
         }
+
+        IdleState = new MediumMonsterIdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, rb);
+        InvestigatingState = new MediumMonsterInvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
+        AttackingState = new MediumMonsterAttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue);
     }
 
     private void Update()
@@ -124,6 +145,21 @@ public class MediumMonsterStateMachine : MonoBehaviour
         }
 
         return avoidanceDirection * obstacleAvoidanceForce;
+    }
+
+    public bool IsInConeOfVision(Transform origin, Vector3 targetPosition)
+    {
+        Vector3 directionToTarget = (targetPosition - origin.position);
+        float distanceToTarget = directionToTarget.magnitude;
+
+        if (distanceToTarget > visionDistance)
+            return false;
+
+        directionToTarget.Normalize();
+        float dotProduct = Vector3.Dot(origin.forward, directionToTarget);
+        float angleToTarget = Mathf.Acos(dotProduct) * Mathf.Rad2Deg;
+
+        return angleToTarget <= visionAngle;
     }
 
     public void LookAt(Vector3 lookAtDirection)

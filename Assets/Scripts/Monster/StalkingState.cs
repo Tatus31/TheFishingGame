@@ -19,7 +19,7 @@ public class StalkingState : BaseMonsterState
     float obstacleAvoidanceDistance = 1f;
 
     float attackTimer = 0f;
-    float attackTimerThreshold = 10f; 
+    float attackTimerThreshold = 10f;
 
     bool isTransitioning = false;
 

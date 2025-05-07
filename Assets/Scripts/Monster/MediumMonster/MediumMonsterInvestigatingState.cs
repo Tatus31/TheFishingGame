@@ -1,16 +1,15 @@
-using System.Threading;
 using UnityEngine;
 
-public class InvestigatingState : BaseMonsterState
+public class MediumMonsterInvestigatingState : BaseMediumMonsterState
 {
-    Transform shipTransform;
-    Transform monsterHead;
-    Rigidbody rb;
-    float investigationSwimSpeed = 10f;
+    float investigationSwimSpeed = 8f;
     float visionAngle = 45f;
     float visionDistance = 15f;
+    Transform monsterHead;
+    Rigidbody rb;
+    Transform shipTransform;
 
-    public InvestigatingState(Transform shipTransform, Transform monsterHead, Rigidbody rb, float investigationSwimSpeed, float visionAngle, float visionDistance)
+    public MediumMonsterInvestigatingState(Transform shipTransform, Transform monsterHead, Rigidbody rb, float investigationSwimSpeed, float visionAngle, float visionDistance)
     {
         this.shipTransform = shipTransform;
         this.monsterHead = monsterHead;
@@ -20,48 +19,50 @@ public class InvestigatingState : BaseMonsterState
         this.visionDistance = visionDistance;
     }
 
-    public override void EnterState(MonsterLargeStateMachine monsterState)
+    public override void EnterState(MediumMonsterStateMachine monster)
     {
-        Debug.Log($"Entering Investigating State {monsterState.transform.name}");
+        AudioManager.PlaySound(AudioManager.HeartBeatSlowSound);
 
+#if UNITY_EDITOR
+        Debug.Log($"Entering Investigating State {monster.transform.name}");
+#endif
         DetectionManager.Instance.StartInvestigation(monsterHead, shipTransform);
     }
 
-    public override void ExitState()
-    {
-
-    }
-
-    public override void UpdateState(MonsterLargeStateMachine monsterState)
+    public override void UpdateState(MediumMonsterStateMachine monster)
     {
         DetectionManager.Instance.UpdateInvestigationPoint(monsterHead, shipTransform);
         DetectionManager.Instance.DecreaseDetectionTimer(monsterHead);
     }
 
-    public override void FixedUpdateState(MonsterLargeStateMachine monsterState)
+    public override void FixedUpdateState(MediumMonsterStateMachine monster)
     {
         Vector3 investigationPoint = DetectionManager.Instance.GetInvestigationPoint();
         Vector3 directionToTarget = (investigationPoint - monsterHead.position).normalized;
         float distanceToTarget = Vector3.Distance(monsterHead.position, investigationPoint);
 
         Vector3 movement = directionToTarget * investigationSwimSpeed;
-        Vector3 obstacleAvoidance = monsterState.GetObstacleAvoidanceDirection(1f);
+        Vector3 obstacleAvoidance = monster.GetObstacleAvoidanceDirection(monster.obstacleAvoidanceDistance);
         movement += obstacleAvoidance;
 
         rb.AddForce(movement, ForceMode.Acceleration);
-        monsterState.LookAtTarget(directionToTarget);
+        monster.LookAtTarget(directionToTarget);
 
-        if (monsterState.IsInConeOfVision(monsterHead, investigationPoint))
+        if (monster.IsInConeOfVision(monsterHead, investigationPoint))
         {
-            monsterState.SwitchState(monsterState.AttackingState);
+            monster.SwitchState(monster.AttackingState);
         }
         else if (!DetectionManager.Instance.ShouldContinueInvestigation(monsterHead))
         {
-            monsterState.SwitchState(monsterState.IdleState);
+            monster.SwitchState(monster.IdleState);
         }
     }
 
-    public override void DrawGizmos(MonsterLargeStateMachine monsterState)
+    public override void ExitState()
+    {
+    }
+
+    public override void DrawGizmos(MediumMonsterStateMachine monsterState)
     {
         if (monsterHead == null) return;
 
@@ -75,7 +76,7 @@ public class InvestigatingState : BaseMonsterState
         UnityEditor.Handles.color = new Color(1f, 1f, 0f, 0.2f);
         UnityEditor.Handles.DrawSolidArc(
             monsterHead.position,
-            Vector3.up,
+            Vector3.up, 
             Quaternion.Euler(0, -visionAngle, 0) * monsterHead.forward,
             visionAngle * 2f,
             visionDistance
@@ -95,13 +96,4 @@ public class InvestigatingState : BaseMonsterState
 #endif
     }
 
-    public override void OnTriggerEnter(Collider other)
-    {
-
-    }
-
-    public override void OnTriggerExit(Collider other)
-    {
-
-    }
 }

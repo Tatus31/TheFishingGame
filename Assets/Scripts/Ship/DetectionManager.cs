@@ -1,35 +1,52 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using static ShipMovement;
 
 public class DetectionManager : MonoBehaviour
 {
     public static DetectionManager Instance { get; private set; }
+
+    public static event Action OnInvestigationEnd;
+
     [SerializeField] Transform shipTransform;
-    [SerializeField] Transform monsterHead;
+    [SerializeField] Transform[] monsterHeads;
     [SerializeField] float initialDetectionTimer = 200f;
     [SerializeField] float detectionTimerDecreaseRate = 1f;
-    [SerializeField] float baseInvestigationPointUpdateInterval = 2f;
+    [SerializeField] float investigationPointUpdateTime = 2f;
     [SerializeField] float minDistanceToShip = 10f;
+    [SerializeField] float maxDistanceToShip = 30f;
     [SerializeField] float investigationCooldown = 10f;
 
-    float currentDetectionTimer;
+    Dictionary<Transform, MonsterDetectionState> monsterStates = new Dictionary<Transform, MonsterDetectionState>();
+    Dictionary<Transform, MonsterType> monsterTypes = new Dictionary<Transform, MonsterType>();
+
     float investigationPointUpdateTimer;
     float currentInvestigationPointUpdateInterval;
-    float currentCooldownTimer = 0f;
 
     Vector3 investigationTargetPoint;
 
-    bool isInvestigating = false;
     bool isDecoyActive = false;
     bool isLightsActive = false;
     bool isLightsFlickerActive = false;
     bool isCollisionActive = false;
-    bool isisHuntingPlayer = false;
+    bool isHuntingPlayer = false;
 
     SpeedLevel speedLevel;
 
-    public bool IsInvestigating { get { return isInvestigating; } set { isInvestigating = value; } }
+    public enum MonsterType
+    {
+        Large,
+        Medium
+    }
+
+    [Serializable]
+    private class MonsterDetectionState
+    {
+        public float currentDetectionTimer;
+        public float currentCooldownTimer = 0f;
+        public bool isInvestigating = false;
+    }
 
     [Serializable]
     public class DetectionValues
@@ -59,18 +76,86 @@ public class DetectionManager : MonoBehaviour
 
     private void Start()
     {
+        InitializeMonsterStates();
+
         OnDetectionChange += ShipMovement_OnDetectionChange;
         LightsManager.OnLightsToggled += LightsManager_OnLightsToggled;
         LightsManager.OnLightsFlicker += LightsManager_OnLightsFlicker;
         Decoy.OnDecoyActivated += Decoy_OnDecoyActivated;
     }
 
+    private void InitializeMonsterStates()
+    {
+        monsterStates.Clear();
+        monsterTypes.Clear();
+
+        foreach (Transform head in monsterHeads)
+        {
+            if (head != null)
+            {
+                monsterStates.Add(head, new MonsterDetectionState
+                {
+                    currentDetectionTimer = 0f,
+                    currentCooldownTimer = 0f,
+                    isInvestigating = false
+                });
+
+                if (head.GetComponentInParent<MonsterLargeStateMachine>() != null)
+                {
+                    monsterTypes.Add(head, MonsterType.Large);
+                }
+                else if (head.GetComponentInParent<MediumMonsterStateMachine>() != null)
+                {
+                    monsterTypes.Add(head, MonsterType.Medium);
+                }
+                else
+                {
+                    Debug.LogWarning($"Monster type not recognized for {head.name}. Please assign a valid type.");
+                }
+            }
+        }
+    }
+
     private void Decoy_OnDecoyActivated(object sender, Transform e)
     {
-        //MonsterStateMachine.Instance.InvestigatingState.SetInvestigationRadius(detectionValues.decoyDetection);
-        //MonsterStateMachine.Instance.SwitchState(MonsterStateMachine.Instance.InvestigatingState);
-        //Debug.Log("decoy deployed");
-        //isSearching = true;
+        isDecoyActive = true;
+
+        foreach (var monsterHead in monsterStates.Keys)
+        {
+            if (IsInCooldown(monsterHead)) continue;
+
+            StartDecoyInvestigation(monsterHead, e);
+        }
+    }
+
+    public void StartDecoyInvestigation(Transform monster, Transform decoyTransform)
+    {
+        if (!monsterStates.ContainsKey(monster) || !monsterTypes.ContainsKey(monster)) return;
+
+        var state = monsterStates[monster];
+        state.isInvestigating = true;
+        state.currentDetectionTimer = initialDetectionTimer;
+
+        investigationTargetPoint = decoyTransform.position;
+
+        switch (monsterTypes[monster])
+        {
+            case MonsterType.Large:
+                var largeStateMachine = monster.GetComponentInParent<MonsterLargeStateMachine>();
+                if (largeStateMachine != null)
+                {
+                    largeStateMachine.SwitchState(largeStateMachine.InvestigatingState);
+                }
+                break;
+
+            case MonsterType.Medium:
+                var mediumStateMachine = monster.GetComponentInParent<MediumMonsterStateMachine>();
+                if (mediumStateMachine != null && mediumStateMachine.InvestigatingState != null)
+                {
+                    mediumStateMachine.SwitchState(mediumStateMachine.InvestigatingState);
+                }
+                break;
+        }
     }
 
     private void LightsManager_OnLightsFlicker(object sender, bool e)
@@ -83,65 +168,138 @@ public class DetectionManager : MonoBehaviour
         isLightsActive = e;
     }
 
-    private void OnValidate()
-    {
-        //Debug.Log($"detection values: \n{detectionValues.collisionDetection} \n {detectionValues.reverseSpeedDetection}\n {detectionValues.neutralSpeedDetection}" +
-        //    $"\n {detectionValues.forward1SpeedDetection}\n {detectionValues.forward2SpeedDetection}\n {detectionValues.forward3SpeedDetection}");
-    }
-
     private void ShipMovement_OnDetectionChange(object sender, ShipMovement.SpeedLevel e)
     {
         speedLevel = e;
-
-        //Debug.Log($"current detection: {currentDetectionMultiplier} for: {e}");
     }
 
     private void Update()
     {
-        if (currentCooldownTimer > 0f)
-        {
-            currentCooldownTimer -= Time.deltaTime;
-            return; 
-        }
-
-        if (isisHuntingPlayer)
+        if (isHuntingPlayer)
         {
             return;
         }
 
-        float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
-        if (distance <= minDistanceToShip && !isInvestigating)
+        foreach (Transform monsterHead in monsterHeads)
         {
-            if (MonsterLargeStateMachine.Instance != null)
+            if (monsterHead == null || !monsterStates.ContainsKey(monsterHead) || !monsterTypes.ContainsKey(monsterHead))
+                continue;
+
+            var state = monsterStates[monsterHead];
+
+            if (state.currentCooldownTimer > 0f)
             {
-                MonsterLargeStateMachine.Instance.SwitchState(MonsterLargeStateMachine.Instance.InvestigatingState);
-                isInvestigating = true;
+                state.currentCooldownTimer -= Time.deltaTime;
+                continue;
+            }
+
+            float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
+
+            if (state.isInvestigating)
+            {
+                if (distance > maxDistanceToShip)
+                {
+                    EndInvestigation(monsterHead);
+                    continue; 
+                }
+
+                UpdateInvestigationPoint(monsterHead, shipTransform);
+                DecreaseDetectionTimer(monsterHead);
+
+                if (!ShouldContinueInvestigation(monsterHead))
+                {
+                    EndInvestigation(monsterHead);
+                }
+            }
+            else
+            {
+                if (distance <= minDistanceToShip)
+                {
+                    switch (monsterTypes[monsterHead])
+                    {
+                        case MonsterType.Large:
+                            var largeStateMachine = monsterHead.GetComponentInParent<MonsterLargeStateMachine>();
+                            if (largeStateMachine != null)
+                            {
+                                largeStateMachine.SwitchState(largeStateMachine.InvestigatingState);
+                                state.isInvestigating = true;
+                                StartInvestigation(monsterHead, shipTransform);
+                            }
+                            break;
+
+                        case MonsterType.Medium:
+                            var mediumStateMachine = monsterHead.GetComponentInParent<MediumMonsterStateMachine>();
+                            if (mediumStateMachine != null && mediumStateMachine.InvestigatingState != null)
+                            {
+                                mediumStateMachine.SwitchState(mediumStateMachine.InvestigatingState);
+                                state.isInvestigating = true;
+                                StartInvestigation(monsterHead, shipTransform);
+                            }
+                            break;
+                    }
+                }
             }
         }
     }
 
-    public void StartInvestigation(Transform shipTransform)
+
+    public void StartInvestigation(Transform monster, Transform target)
     {
-        currentDetectionTimer = initialDetectionTimer;
-        investigationTargetPoint = shipTransform.position;
+        if (!monsterStates.ContainsKey(monster)) return;
+
+        var state = monsterStates[monster];
+        state.currentDetectionTimer = initialDetectionTimer;
+        investigationTargetPoint = target.position;
         UpdateInvestigationInterval();
         investigationPointUpdateTimer = currentInvestigationPointUpdateInterval;
     }
 
-    public void UpdateInvestigationPoint(Transform shipTransform)
+    public void UpdateInvestigationPoint(Transform monster, Transform target)
     {
+        if (!monsterStates.ContainsKey(monster)) return;
+
         investigationPointUpdateTimer -= Time.deltaTime;
         if (investigationPointUpdateTimer <= 0)
         {
-            investigationTargetPoint = shipTransform.position;
+            investigationTargetPoint = target.position;
             UpdateInvestigationInterval();
             investigationPointUpdateTimer = currentInvestigationPointUpdateInterval;
         }
     }
 
+    void EndInvestigation(Transform monster)
+    {
+        if (!monsterStates.ContainsKey(monster) || !monsterTypes.ContainsKey(monster)) return;
+
+        var state = monsterStates[monster];
+        state.isInvestigating = false;
+        StartCooldown(monster);
+
+        switch (monsterTypes[monster])
+        {
+            case MonsterType.Large:
+                var largeStateMachine = monster.GetComponentInParent<MonsterLargeStateMachine>();
+                if (largeStateMachine != null)
+                {
+                    largeStateMachine.SwitchState(largeStateMachine.IdleState);
+                    OnInvestigationEnd?.Invoke();
+                }
+                break;
+
+            case MonsterType.Medium:
+                var mediumStateMachine = monster.GetComponentInParent<MediumMonsterStateMachine>();
+                if (mediumStateMachine != null)
+                {
+                    mediumStateMachine.SwitchState(mediumStateMachine.IdleState);
+                    OnInvestigationEnd?.Invoke();
+                }
+                break;
+        }
+    }
+
     void UpdateInvestigationInterval()
     {
-        float interval = baseInvestigationPointUpdateInterval;
+        float interval = investigationPointUpdateTime;
         float totalReductionPercent = 0f;
 
         if (isDecoyActive)
@@ -179,41 +337,69 @@ public class DetectionManager : MonoBehaviour
         currentInvestigationPointUpdateInterval = Mathf.Max(0.1f, currentInvestigationPointUpdateInterval);
     }
 
-    public void DecreaseDetectionTimer()
+    public void DecreaseDetectionTimer(Transform monster)
     {
-        currentDetectionTimer -= detectionTimerDecreaseRate * Time.deltaTime;
+        if (!monsterStates.ContainsKey(monster)) return;
+
+        var state = monsterStates[monster];
+        state.currentDetectionTimer -= detectionTimerDecreaseRate * Time.deltaTime;
+    }
+
+    public void StartCooldown(Transform monster)
+    {
+        if (!monsterStates.ContainsKey(monster)) return;
+
+        var state = monsterStates[monster];
+        state.currentCooldownTimer = investigationCooldown;
+    }
+
+    public bool ShouldContinueInvestigation(Transform monster)
+    {
+        if (!monsterStates.ContainsKey(monster)) return false;
+        return monsterStates[monster].currentDetectionTimer > 0;
+    }
+
+    public Vector3 GetInvestigationPoint()
+    {
+        return investigationTargetPoint;
+    }
+
+    public bool IsInCooldown(Transform monster)
+    {
+        if (!monsterStates.ContainsKey(monster)) return false;
+        return monsterStates[monster].currentCooldownTimer > 0f;
     }
 
     private void OnDrawGizmos()
     {
-        if (shipTransform == null || monsterHead == null) return;
+        if (shipTransform == null || monsterHeads.Length == 0) return;
 
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(shipTransform.position, monsterHead.position);
+        foreach (Transform monsterHead in monsterHeads)
+        {
+            if (monsterHead == null) continue;
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(investigationTargetPoint, 1f);
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(shipTransform.position, monsterHead.position);
+
+            if (monsterStates.ContainsKey(monsterHead) && monsterStates[monsterHead].isInvestigating)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawWireSphere(investigationTargetPoint, 1f);
 
 #if UNITY_EDITOR
-        UnityEditor.Handles.color = Color.white;
-        string timerLabel = $"Detection Timer: {currentDetectionTimer:F2}" + $"\nInvestigation point interval {currentInvestigationPointUpdateInterval:F2}";
-        Vector3 labelPosition = (monsterHead.position);
-        UnityEditor.Handles.Label(labelPosition + Vector3.down, timerLabel);
+                UnityEditor.Handles.color = Color.white;
+                string monsterType = monsterTypes.ContainsKey(monsterHead) ? monsterTypes[monsterHead].ToString() : "no name";
+                float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
+                string timerLabel = $"{monsterType} Monster\n" +
+                                    $"Detection Timer: {monsterStates[monsterHead].currentDetectionTimer:F2}\n" +
+                                    $"Investigation Interval: {currentInvestigationPointUpdateInterval:F2}\n" +
+                                    $"Distance to Ship: {distance:F2}m\n" +
+                                    $"Max allowed distance away from ship {maxDistanceToShip:F2}m";
+                Vector3 labelPosition = monsterHead.position;
+                UnityEditor.Handles.Label(labelPosition + Vector3.down, timerLabel);
 #endif
+            }
+        }
     }
-
-    public void StartCooldown()
-    {
-        currentCooldownTimer = investigationCooldown;
-    }
-
-    public bool ShouldContinueInvestigation() => currentDetectionTimer > 0;
-    public Vector3 GetInvestigationPoint() => investigationTargetPoint;
-    public bool IsInCooldown => currentCooldownTimer > 0f;
-    public void SetDecoyActive(bool active) => isDecoyActive = active;
-    public void SetLightsActive(bool active) => isLightsActive = active;
-    public void SetLightsFlickerActive(bool active) => isLightsFlickerActive = active;
-    public void SetCollisionActive(bool active) => isCollisionActive = active;
-    public void SetSpeedState(SpeedLevel state) => speedLevel = state;
 
 }
