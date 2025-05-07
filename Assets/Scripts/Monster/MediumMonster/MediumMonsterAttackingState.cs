@@ -8,6 +8,7 @@ public class MediumMonsterAttackingState : BaseMediumMonsterState
     Transform shipTransform;
     Transform playerTransform;
     Transform monsterTransform;
+    ShipMovement shipMovement;
 
     float swimAttackSpeed = 200f;
     float monsterEscapeTime = 2f;
@@ -15,6 +16,7 @@ public class MediumMonsterAttackingState : BaseMediumMonsterState
 
     int numberOfAttacks = 0;
     int maxNumberOfAttacks = 5;
+    float predictionValue = 1.5f;
 
     Rigidbody rb;
 
@@ -30,7 +32,8 @@ public class MediumMonsterAttackingState : BaseMediumMonsterState
     float attackDuration = 0f;
     float maxAttackDuration = 6f;
 
-    public MediumMonsterAttackingState(Transform shipTransform, Transform monsterTransform, Transform playerTransform, float swimAttackSpeed, Rigidbody rb, float monsterEscapeTime, float maxAttackDuration, float turnSmoothTime, int maxNumberOfAttacks)
+    public MediumMonsterAttackingState(Transform shipTransform, Transform monsterTransform, Transform playerTransform, float swimAttackSpeed,
+        Rigidbody rb, float monsterEscapeTime, float maxAttackDuration, float turnSmoothTime, int maxNumberOfAttacks, float predictionValue)
     {
         this.shipTransform = shipTransform;
         this.monsterTransform = monsterTransform;
@@ -41,12 +44,20 @@ public class MediumMonsterAttackingState : BaseMediumMonsterState
         this.maxAttackDuration = maxAttackDuration;
         this.turnSmoothTime = turnSmoothTime;
         this.maxNumberOfAttacks = maxNumberOfAttacks;
+        this.predictionValue = predictionValue;
 
         currentMoveDirection = Vector3.zero;
+
+        if (shipTransform != null)
+        {
+            shipMovement = shipTransform.GetComponent<ShipMovement>();
+        }
     }
 
     public override void EnterState(MediumMonsterStateMachine monsterState)
     {
+        AudioManager.PlaySound(AudioManager.HeartBeatSound);
+
         isMonsterPursuing = true;
         SetTargetDirection();
         attackDuration = 0f;
@@ -84,20 +95,36 @@ public class MediumMonsterAttackingState : BaseMediumMonsterState
         SetTargetDirection();
     }
 
-    private void SetTargetDirection()
+    void SetTargetDirection()
     {
         Transform currentTransform;
+        Vector3 predictedPosition;
 
         if (isPlayerSwimming)
         {
             currentTransform = playerTransform;
+            predictedPosition = currentTransform.position;
         }
         else
         {
             currentTransform = shipTransform;
+            predictedPosition = currentTransform.position;
+
+            if (shipMovement != null)
+            {
+                Vector3 shipVelocity = shipMovement.ShipFlatVel;
+
+                float distanceToShip = Vector3.Distance(monsterTransform.position, currentTransform.position);
+                float velocityMagnitude = shipVelocity.magnitude;
+
+                if (velocityMagnitude > 0.1f)
+                {
+                    predictedPosition += shipVelocity.normalized * velocityMagnitude * predictionValue;
+                }
+            }
         }
 
-        directionToShip = (currentTransform.position - monsterTransform.position).normalized;
+        directionToShip = (predictedPosition - monsterTransform.position).normalized;
         targetDirection = isMonsterRetreating ? -directionToShip : directionToShip;
     }
 

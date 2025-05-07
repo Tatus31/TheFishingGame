@@ -17,7 +17,7 @@ public class AttackingState : BaseMonsterState
     float maxAttackDuration = 6f;
     float attackDuration = 0f;
 
-    float predictionFactor = 1.5f; 
+    float predictionValue = 1.5f; 
 
     int maxNumberOfAttacks = 5;
     int numberOfAttacks = 0;
@@ -31,7 +31,8 @@ public class AttackingState : BaseMonsterState
     bool shipSank;
     bool isMonsterPursuing = false;
 
-    public AttackingState(Transform shipTransform, Transform monsterTransform, Transform playerTransform, float swimAttackSpeed, Rigidbody rb, float monsterEscapeTime, float maxAttackDuration, float turnSmoothTime, int maxNumberOfAttacks)
+    public AttackingState(Transform shipTransform, Transform monsterTransform, Transform playerTransform, float swimAttackSpeed, 
+        Rigidbody rb, float monsterEscapeTime, float maxAttackDuration, float turnSmoothTime, int maxNumberOfAttacks, float predictionValue)
     {
         this.shipTransform = shipTransform;
         this.monsterTransform = monsterTransform;
@@ -42,6 +43,7 @@ public class AttackingState : BaseMonsterState
         this.maxAttackDuration = maxAttackDuration;
         this.turnSmoothTime = turnSmoothTime;
         this.maxNumberOfAttacks = maxNumberOfAttacks;
+        this.predictionValue = predictionValue;
 
         if (shipTransform != null)
         {
@@ -87,7 +89,7 @@ public class AttackingState : BaseMonsterState
         SetTargetDirection();
     }
 
-    private void SetTargetDirection()
+    void SetTargetDirection()
     {
         Transform currentTransform;
         Vector3 predictedPosition;
@@ -111,7 +113,7 @@ public class AttackingState : BaseMonsterState
                 
                 if (velocityMagnitude > 0.1f)
                 {
-                    predictedPosition += shipVelocity.normalized * velocityMagnitude * predictionFactor;
+                    predictedPosition += shipVelocity.normalized * velocityMagnitude * predictionValue;
                 }
             }
         }
@@ -192,7 +194,7 @@ public class AttackingState : BaseMonsterState
                 Vector3 shipVelocity = shipMovement.ShipFlatVel;
                 if (shipVelocity.magnitude > 0.1f)
                 {
-                    Vector3 predictedPosition = currentTarget.position + shipVelocity.normalized * predictionFactor;
+                    Vector3 predictedPosition = currentTarget.position + shipVelocity.normalized * predictionValue;
 
                     Gizmos.color = Color.yellow;
                     Gizmos.DrawWireSphere(predictedPosition, 1.5f);

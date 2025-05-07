@@ -33,6 +33,7 @@ public class MonsterLargeStateMachine : MonoBehaviour
     [SerializeField] float turnSmoothTime = 1.2f;
     [SerializeField] float maxAttackDuration = 6f;
     [SerializeField] int maxNumberOfAttacks = 5;
+    [SerializeField] float predictionValue = 1.5f;
     [Header("[Investigating Monster Controls]")]
     [SerializeField] float investigationSwimSpeed = 10f;
     [SerializeField] float visionAngle = 45f;
@@ -69,7 +70,7 @@ public class MonsterLargeStateMachine : MonoBehaviour
     {
         IdleState = new IdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, waterLayer, rb, monsterHead);
         StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance, obstacleAvoidanceDistance);
-        AttackingState = new AttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks);
+        AttackingState = new AttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue);
         InvestigatingState = new InvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
 
         SwitchState(IdleState);
@@ -84,7 +85,7 @@ public class MonsterLargeStateMachine : MonoBehaviour
 
         IdleState = new IdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, waterLayer, rb, monsterHead);
         StalkingState = new StalkingState(shipTransform, monsterHead, rb, minStalkingDistance, swimStalkingSpeed, stalkingDistance, obstacleAvoidanceDistance);
-        AttackingState = new AttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks);
+        AttackingState = new AttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue);
         InvestigatingState = new InvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
     }
 
