@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class MediumMonsterStateMachine : MonoBehaviour
 {
-    public static MediumMonsterStateMachine Instance;
+    //public static MediumMonsterStateMachine Instance;
 
     [Header("[References]")]
     [SerializeField] public Transform monsterHead;
@@ -52,14 +52,14 @@ public class MediumMonsterStateMachine : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning($"There exists a {Instance.name} in the scene already");
-#endif
-        }
+//        if (Instance != null)
+//        {
+//#if UNITY_EDITOR
+//            Debug.LogWarning($"There exists a {Instance.name} in the scene already");
+//#endif
+//        }
 
-        Instance = this;
+//        Instance = this;
         rb = GetComponent<Rigidbody>();
     }
 
@@ -150,14 +150,16 @@ public class MediumMonsterStateMachine : MonoBehaviour
     public bool IsInConeOfVision(Transform origin, Vector3 targetPosition)
     {
         Vector3 directionToTarget = (targetPosition - origin.position);
+
         float distanceToTarget = directionToTarget.magnitude;
 
         if (distanceToTarget > visionDistance)
             return false;
 
         directionToTarget.Normalize();
+
         float dotProduct = Vector3.Dot(origin.forward, directionToTarget);
-        float angleToTarget = Mathf.Acos(dotProduct) * Mathf.Rad2Deg;
+        float angleToTarget = Mathf.Acos(Mathf.Clamp(dotProduct, -1f, 1f)) * Mathf.Rad2Deg;
 
         return angleToTarget <= visionAngle;
     }

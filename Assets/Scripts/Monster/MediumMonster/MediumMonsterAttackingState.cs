@@ -196,6 +196,30 @@ public class MediumMonsterAttackingState : BaseMediumMonsterState
         {
             float sphereSize = isMonsterRetreating ? 2f : 1f;
             Gizmos.DrawWireSphere(currentTarget.position, sphereSize);
+
+            Vector3 targetPosition;
+            if (isPlayerSwimming)
+            {
+                targetPosition = playerTransform.position;
+                Gizmos.color = Color.yellow;
+            }
+            else
+            {
+                targetPosition = shipTransform.position;
+                if (shipMovement != null)
+                {
+                    Vector3 shipVelocity = shipMovement.ShipFlatVel;
+                    float velocityMagnitude = shipVelocity.magnitude;
+
+                    if (velocityMagnitude > 0.1f)
+                    {
+                        targetPosition += shipVelocity.normalized * velocityMagnitude * predictionValue;
+                    }
+                }
+                Gizmos.color = Color.red;
+            }
+
+            Gizmos.DrawWireSphere(targetPosition, 1.5f);
         }
     }
 }

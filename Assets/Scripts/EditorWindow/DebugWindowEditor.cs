@@ -723,36 +723,36 @@ public class DebugWindowEditor : EditorWindow
 
     void SetMonsterState(string stateName)
     {
-        MonsterLargeStateMachine monsterStateMachine = MonsterLargeStateMachine.Instance;
+        //MonsterLargeStateMachine monsterStateMachine = MonsterLargeStateMachine.Instance;
 
-        if (monsterStateMachine != null)
-        {
-            switch (stateName)
-            {
-                case "Idle":
-                    monsterStateMachine.SwitchState(monsterStateMachine.IdleState);
-                    break;
-                case "Stalking":
-                    monsterStateMachine.SwitchState(monsterStateMachine.StalkingState);
-                    break;
-                case "Attacking":
-                    monsterStateMachine.SwitchState(monsterStateMachine.AttackingState);
-                    break;
-                default:
-                    Debug.LogWarning($"no state with name {stateName}");
-                    return;
-            }
+//        if (monsterStateMachine != null)
+//        {
+//            switch (stateName)
+//            {
+//                case "Idle":
+//                    monsterStateMachine.SwitchState(monsterStateMachine.IdleState);
+//                    break;
+//                case "Stalking":
+//                    monsterStateMachine.SwitchState(monsterStateMachine.StalkingState);
+//                    break;
+//                case "Attacking":
+//                    monsterStateMachine.SwitchState(monsterStateMachine.AttackingState);
+//                    break;
+//                default:
+//                    Debug.LogWarning($"no state with name {stateName}");
+//                    return;
+//            }
 
-#if UNITY_EDITOR
-            Debug.Log($"monster state changed to {stateName}");
-#endif
-        }
-        else
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning($"{monsterStateMachine} instance not found in the scene. (Are you in playmode?)");
-#endif
-        }
+//#if UNITY_EDITOR
+//            Debug.Log($"monster state changed to {stateName}");
+//#endif
+//        }
+//        else
+//        {
+//#if UNITY_EDITOR
+//            Debug.LogWarning($"{monsterStateMachine} instance not found in the scene. (Are you in playmode?)");
+//#endif
+//        }
     }
 
     void IncreaseSpeedLevel()

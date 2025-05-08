@@ -592,6 +592,7 @@ GameObject:
   - component: {fileID: 1537217511958340230}
   - component: {fileID: 1336722839975282903}
   - component: {fileID: 636126021333776368}
+  - component: {fileID: 8499709906589158723}
   m_Layer: 10
   m_Name: MonsterWithModel
   m_TagString: MonsterDanger
@@ -676,10 +677,51 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
+  m_IsKinematic: 1
+  m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &8499709906589158723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5781530319976135822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0610c5c2b5550d4b91c2643efc44ef6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterHead: {fileID: 3416824208474553907}
+  shipTransform: {fileID: 0}
+  playerTransform: {fileID: 0}
+  obstacleAvoidanceDistance: 1
+  obstacleAvoidanceForce: 3
+  swimSpeed: 2
+  rotationSpeed: 5
+  maxVelocity: 3
+  waterLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  idleMovementRadius: 10
+  minTimeAtTarget: 0.1
+  allowedDistanceFromTarget: 0.1
+  stalkingDistance: 15
+  minStalkingDistance: 8
+  swimStalkingSpeed: 12
+  swimAttackSpeed: 20
+  monsterEscapeTime: 10
+  turnSmoothTime: 0.9
+  maxAttackDuration: 6
+  maxNumberOfAttacks: 1
+  predictionValue: 5
+  investigationSwimSpeed: 10
+  visionAngle: 45
+  visionDistance: 15
 --- !u!1 &6154655928519774853
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,7 +733,7 @@ GameObject:
   - component: {fileID: 3416824208474553907}
   - component: {fileID: 3328727567160492847}
   m_Layer: 10
-  m_Name: HeadDir
+  m_Name: HeadDirLarge
   m_TagString: MonsterDanger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

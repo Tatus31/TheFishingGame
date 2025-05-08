@@ -394,7 +394,7 @@ public class DetectionManager : MonoBehaviour
                                     $"Detection Timer: {monsterStates[monsterHead].currentDetectionTimer:F2}\n" +
                                     $"Investigation Interval: {currentInvestigationPointUpdateInterval:F2}\n" +
                                     $"Distance to Ship: {distance:F2}m\n" +
-                                    $"Max allowed distance away from ship {maxDistanceToShip:F2}m";
+                                    $"Max distance from ship {maxDistanceToShip:F2}m";
                 Vector3 labelPosition = monsterHead.position;
                 UnityEditor.Handles.Label(labelPosition + Vector3.down, timerLabel);
 #endif

@@ -189,18 +189,29 @@ public class AttackingState : BaseMonsterState
             float sphereSize = isMonsterRetreating ? 2f : 1f;
             Gizmos.DrawWireSphere(currentTarget.position, sphereSize);
 
-            if (!isMonsterRetreating && shipMovement != null && !isPlayerSwimming)
+            Vector3 targetPosition;
+            if (isPlayerSwimming)
             {
-                Vector3 shipVelocity = shipMovement.ShipFlatVel;
-                if (shipVelocity.magnitude > 0.1f)
-                {
-                    Vector3 predictedPosition = currentTarget.position + shipVelocity.normalized * predictionValue;
-
-                    Gizmos.color = Color.yellow;
-                    Gizmos.DrawWireSphere(predictedPosition, 1.5f);
-                    Gizmos.DrawLine(currentTarget.position, predictedPosition);
-                }
+                targetPosition = playerTransform.position;
+                Gizmos.color = Color.yellow;
             }
+            else
+            {
+                targetPosition = shipTransform.position;
+                if (shipMovement != null)
+                {
+                    Vector3 shipVelocity = shipMovement.ShipFlatVel;
+                    float velocityMagnitude = shipVelocity.magnitude;
+
+                    if (velocityMagnitude > 0.1f)
+                    {
+                        targetPosition += shipVelocity.normalized * velocityMagnitude * predictionValue;
+                    }
+                }
+                Gizmos.color = Color.red;
+            }
+
+            Gizmos.DrawWireSphere(targetPosition, 1.5f);
         }
     }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class MonsterLargeStateMachine : MonoBehaviour
 {
-    public static MonsterLargeStateMachine Instance;
+    //public static MonsterLargeStateMachine Instance;
 
     [Header("[Refrences]")]
     [SerializeField] Transform monsterHead;
@@ -54,14 +54,14 @@ public class MonsterLargeStateMachine : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
-        {
-#if UNITY_EDITOR
-            Debug.LogWarning($"there exists a {Instance.name} in the scene already");
-#endif
-        }
+//        if (Instance != null)
+//        {
+//#if UNITY_EDITOR
+//            Debug.LogWarning($"there exists a {Instance.name} in the scene already");
+//#endif
+//        }
 
-        Instance = this;
+//        Instance = this;
 
         rb = GetComponent<Rigidbody>();
     }
