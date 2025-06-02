@@ -144,6 +144,7 @@ public class ShipMovement : MonoBehaviour
         HandleMovement();
         HandleRotation();
         UpdateShipState();
+        
         OnShipSpeedChange?.Invoke(this, ShipFlatVel);
     }
 
@@ -217,6 +218,9 @@ public class ShipMovement : MonoBehaviour
         //Debug.Log(MathF.Floor(currentWheelRotation));
     }
 
+    
+    
+    
     void UpdateShipState()
     {
         ShipFlatVel = new Vector3(shipRigidbody.velocity.x, 0f, shipRigidbody.velocity.z);
