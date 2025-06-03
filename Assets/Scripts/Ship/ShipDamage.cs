@@ -18,16 +18,18 @@ public class ShipDamage : MonoBehaviour
     [Header("Damage values")]
     [Tooltip("Damage done when the ship collides with dangers")]
     [SerializeField] int baseCollisionDamage = 100;
-    [Tooltip("Damage done when the ship collides with medium dangers")]
-    [SerializeField] int baseCollisionDamageMedium = 50;
-    [Tooltip("Damage done when the ship collides with small dangers")]
-    [SerializeField] int baseCollisionDamageSmall = 25;
     [Tooltip("Damage done when the ship enters a toxic area")]
     [SerializeField] int baseToxicDamage = 2;
     [Tooltip("Damage done when the ship is on fire (TickRate)")]
     [SerializeField] int baseFireDamage = 5;
-    [Tooltip("Damage done when the ship is hit by monster")]
-    [SerializeField] int baseMonsterDamage = 25;
+
+    [Header("Monster Damage by Type")]
+    [Tooltip("Damage done when the ship is hit by a large monster")]
+    [SerializeField] int baseLargeMonsterDamage = 50;
+    [Tooltip("Damage done when the ship is hit by a medium monster")]
+    [SerializeField] int baseMediumMonsterDamage = 25;
+    [Tooltip("Damage done when the ship is hit by a small monster")]
+    [SerializeField] int baseSmallMonsterDamage = 10;
 
     [Header("Damage Cooldown")]
     [Tooltip("Time the ship is invulnerable after taking damage")]
@@ -40,7 +42,7 @@ public class ShipDamage : MonoBehaviour
     public int PreviousHealth { get; private set; }
     public int BaseFireDamage { get { return baseFireDamage; } private set { baseFireDamage = value; } }
     public bool IsInvulnerable { get { return isInDamageCooldown; } }
-    public bool IsInvincible {  get { return isInvincible; } set { isInvincible = value; } } 
+    public bool IsInvincible { get { return isInvincible; } set { isInvincible = value; } }
 
     private void Awake()
     {
@@ -114,7 +116,8 @@ public class ShipDamage : MonoBehaviour
 
         if (collision.collider.CompareTag(TagHolder.monsterDanger))
         {
-            TakeDamage(baseMonsterDamage);
+            DetectionManager.MonsterType monsterType = GetMonsterTypeFromCollision(collision);
+            TakeMonsterDamage(monsterType);
         }
     }
 
@@ -126,6 +129,77 @@ public class ShipDamage : MonoBehaviour
         if (other.CompareTag(TagHolder.toxicDanger))
         {
             TakeDamage(baseToxicDamage);
+        }
+    }
+
+    DetectionManager.MonsterType GetMonsterTypeFromCollision(Collision collision)
+    {
+        Transform monsterTransform = collision.transform;
+        if (DetectionManager.Instance != null)
+        {
+            DetectionManager.MonsterType type = DetectionManager.Instance.GetMonsterType(monsterTransform);
+            if (type != DetectionManager.MonsterType.NotRecognized)
+            {
+                return type;
+            }
+            if (monsterTransform.parent != null)
+            {
+                type = DetectionManager.Instance.GetMonsterType(monsterTransform.parent);
+                if (type != DetectionManager.MonsterType.NotRecognized)
+                {
+                    return type;
+                }
+            }
+
+            foreach (Transform child in monsterTransform.GetComponentsInChildren<Transform>())
+            {
+                type = DetectionManager.Instance.GetMonsterType(child);
+                if (type != DetectionManager.MonsterType.NotRecognized)
+                {
+                    return type;
+                }
+            }
+        }
+
+        if (monsterTransform.GetComponentInParent<MonsterLargeStateMachine>() != null)
+        {
+            return DetectionManager.MonsterType.Large;
+        }
+        else if (monsterTransform.GetComponentInParent<MediumMonsterStateMachine>() != null)
+        {
+            var mediumStateMachine = monsterTransform.GetComponentInParent<MediumMonsterStateMachine>();
+            return mediumStateMachine.isSmallMonster ? DetectionManager.MonsterType.Small : DetectionManager.MonsterType.Medium;
+        }
+
+        return DetectionManager.MonsterType.Medium;
+    }
+
+    public void TakeMonsterDamage(DetectionManager.MonsterType monsterType)
+    {
+        if (isInvincible || isInDamageCooldown)
+            return;
+
+        int damageAmount = GetMonsterDamageByType(monsterType);
+
+#if UNITY_EDITOR
+        Debug.Log($"Ship hit by {monsterType} monster, taking {damageAmount} damage");
+#endif
+
+        TakeDamage(damageAmount);
+    }
+
+    private int GetMonsterDamageByType(DetectionManager.MonsterType monsterType)
+    {
+        switch (monsterType)
+        {
+            case DetectionManager.MonsterType.Large:
+                return baseLargeMonsterDamage;
+            case DetectionManager.MonsterType.Medium:
+                return baseMediumMonsterDamage;
+            case DetectionManager.MonsterType.Small:
+                return baseSmallMonsterDamage;
+            default:
+                return baseMediumMonsterDamage; 
         }
     }
 
@@ -148,7 +222,7 @@ public class ShipDamage : MonoBehaviour
             actualDamage = Mathf.RoundToInt(baseDamage * damageMultiplier);
         }
 #if UNITY_EDITOR
-        Debug.Log($"ship took {actualDamage} damage");
+        Debug.Log($"ship took {actualDamage} collision damage");
 #endif
         currentHealth -= actualDamage;
         currentHealth = Mathf.Max(0, currentHealth);
@@ -232,4 +306,8 @@ public class ShipDamage : MonoBehaviour
     public void SetPermanentSavedModifiedStatValue(Stats stats) => ship.SetPermanentSavedModifiedStatValue(stats);
 
     public void SetPermanentSavedBaseStatValue(Stats stats) => ship.SetPermanentSavedBaseStatValue(stats);
+
+    public int GetLargeMonsterDamage() => baseLargeMonsterDamage;
+    public int GetMediumMonsterDamage() => baseMediumMonsterDamage;
+    public int GetSmallMonsterDamage() => baseSmallMonsterDamage;
 }

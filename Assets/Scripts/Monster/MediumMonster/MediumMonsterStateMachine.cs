@@ -50,6 +50,8 @@ public class MediumMonsterStateMachine : MonoBehaviour
 
     public Transform ShipTransform { get { return shipTransform; } set { shipTransform = value; } }
 
+    public bool isSmallMonster = true; 
+
     private void Awake()
     {
 //        if (Instance != null)

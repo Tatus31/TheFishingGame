@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using static ShipMovement;
 
@@ -37,7 +38,9 @@ public class DetectionManager : MonoBehaviour
     public enum MonsterType
     {
         Large,
-        Medium
+        Medium,
+        Small,
+        NotRecognized
     }
 
     [Serializable]
@@ -103,10 +106,17 @@ public class DetectionManager : MonoBehaviour
                 if (head.GetComponentInParent<MonsterLargeStateMachine>() != null)
                 {
                     monsterTypes.Add(head, MonsterType.Large);
+                    Debug.Log($"Monster type set to Large for {head.name}.");
+                }
+                else if (head.GetComponentInParent<MediumMonsterStateMachine>() != null && head.GetComponentInParent<MediumMonsterStateMachine>().isSmallMonster)
+                {
+                    monsterTypes.Add(head, MonsterType.Small);
+                    Debug.Log($"Monster type set to Small for {head.name}.");
                 }
                 else if (head.GetComponentInParent<MediumMonsterStateMachine>() != null)
                 {
                     monsterTypes.Add(head, MonsterType.Medium);
+                    Debug.Log($"Monster type set to Medium for {head.name}.");
                 }
                 else
                 {
@@ -153,6 +163,13 @@ public class DetectionManager : MonoBehaviour
                 if (mediumStateMachine != null && mediumStateMachine.InvestigatingState != null)
                 {
                     mediumStateMachine.SwitchState(mediumStateMachine.InvestigatingState);
+                }
+                break;
+            case MonsterType.Small:
+                var smallStateMachine = monster.GetComponentInParent<MediumMonsterStateMachine>();
+                if (smallStateMachine != null && smallStateMachine.InvestigatingState != null && smallStateMachine.isSmallMonster)
+                {
+                    smallStateMachine.SwitchState(smallStateMachine.InvestigatingState);
                 }
                 break;
         }
@@ -236,6 +253,13 @@ public class DetectionManager : MonoBehaviour
                                 StartInvestigation(monsterHead, shipTransform);
                             }
                             break;
+                        case MonsterType.Small:
+                            var smallStateMachine = monsterHead.GetComponentInParent<MediumMonsterStateMachine>();
+                            if (smallStateMachine != null && smallStateMachine.InvestigatingState != null && smallStateMachine.isSmallMonster)
+                            {
+                                smallStateMachine.SwitchState(smallStateMachine.InvestigatingState);
+                            }
+                            break;
                     }
                 }
             }
@@ -291,6 +315,15 @@ public class DetectionManager : MonoBehaviour
                 if (mediumStateMachine != null)
                 {
                     mediumStateMachine.SwitchState(mediumStateMachine.IdleState);
+                    OnInvestigationEnd?.Invoke();
+                }
+                break;
+
+            case MonsterType.Small:
+                var smallStateMachine = monster.GetComponentInParent<MediumMonsterStateMachine>();
+                if (smallStateMachine != null && smallStateMachine.isSmallMonster)
+                {
+                    smallStateMachine.SwitchState(smallStateMachine.IdleState);
                     OnInvestigationEnd?.Invoke();
                 }
                 break;
@@ -368,6 +401,16 @@ public class DetectionManager : MonoBehaviour
     {
         if (!monsterStates.ContainsKey(monster)) return false;
         return monsterStates[monster].currentCooldownTimer > 0f;
+    }
+
+    public MonsterType GetMonsterType(Transform monster)
+    {
+        if (monsterTypes.ContainsKey(monster))
+        {
+            return monsterTypes[monster];
+        }
+
+        return MonsterType.NotRecognized;
     }
 
     private void OnDrawGizmos()

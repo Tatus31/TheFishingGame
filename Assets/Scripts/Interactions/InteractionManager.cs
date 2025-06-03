@@ -8,6 +8,7 @@ using System;
 public class InteractionManager : MonoBehaviour
 {
     public static InteractionManager Instance;
+
     public enum EquipedTool
     {
         Harpoon,
@@ -16,12 +17,14 @@ public class InteractionManager : MonoBehaviour
         FireExtinguisher,
         Wrench
     }
+
     [System.Serializable]
     public class ToolConfiguration
     {
         public GameObject handObject;
         public LayerMask interactionMask;
     }
+
     [Header("Tool Configurations")]
     [SerializeField] ToolConfiguration fishingConfig;
     [SerializeField] ToolConfiguration harpoonConfig;
@@ -30,24 +33,31 @@ public class InteractionManager : MonoBehaviour
     [SerializeField] ToolConfiguration wrenchConfig;
 
     EquipedTool currentTool = EquipedTool.Empty;
+
     public EquipedTool CurrentTool => currentTool;
     public bool HasHarpoon => currentTool == EquipedTool.Harpoon;
     public bool AreHandsEmpty => currentTool == EquipedTool.EmptyHands;
     public bool hasFireExtinguisher => currentTool == EquipedTool.FireExtinguisher;
     public bool hasWrench => currentTool == EquipedTool.Wrench;
+
     private void Awake()
     {
         if (Instance != null)
             Debug.LogWarning($"There already is a {Instance.name} in the scene");
         Instance = this;
     }
+
     private void Start()
     {
         EquipTool(EquipedTool.EmptyHands);
     }
+
     private void Update()
     {
+        HandleNumberKeyInput();
+
         if (!Input.GetKeyDown(KeyCode.E)) return;
+
         if (MouseWorldPosition.GetInteractable(harpoonConfig.interactionMask))
         {
             EquipTool(EquipedTool.Harpoon);
@@ -66,6 +76,29 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
+    private void HandleNumberKeyInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            EquipTool(EquipedTool.EmptyHands);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            EquipTool(EquipedTool.Harpoon);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            EquipTool(EquipedTool.FireExtinguisher);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            EquipTool(EquipedTool.Wrench);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            EquipTool(EquipedTool.Empty);
+        }
+    }
 
     public void EquipTool(EquipedTool newTool)
     {
@@ -92,7 +125,9 @@ public class InteractionManager : MonoBehaviour
             case EquipedTool.Empty:
                 break;
         }
+
         currentTool = newTool;
     }
+
     public bool IsToolEquipped(EquipedTool tool) => currentTool == tool;
 }
