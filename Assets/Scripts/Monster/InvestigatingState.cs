@@ -25,6 +25,7 @@ public class InvestigatingState : BaseMonsterState
         Debug.Log($"Entering Investigating State {monsterState.transform.name}");
 
         DetectionManager.Instance.StartInvestigation(monsterHead, shipTransform);
+        AudioManager.PlaySound(AudioManager.HeartBeatSlowSound);
     }
 
     public override void ExitState()

@@ -18,6 +18,10 @@ public class ShipDamage : MonoBehaviour
     [Header("Damage values")]
     [Tooltip("Damage done when the ship collides with dangers")]
     [SerializeField] int baseCollisionDamage = 100;
+    [Tooltip("Damage done when the ship collides with medium dangers")]
+    [SerializeField] int baseCollisionDamageMedium = 50;
+    [Tooltip("Damage done when the ship collides with small dangers")]
+    [SerializeField] int baseCollisionDamageSmall = 25;
     [Tooltip("Damage done when the ship enters a toxic area")]
     [SerializeField] int baseToxicDamage = 2;
     [Tooltip("Damage done when the ship is on fire (TickRate)")]

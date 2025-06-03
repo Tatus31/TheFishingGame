@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 3264011705679843235}
   - component: {fileID: 8546437076675036140}
   - component: {fileID: 1749270837177424874}
+  - component: {fileID: 1616288149125868814}
   m_Layer: 0
   m_Name: Core
   m_TagString: Untagged
@@ -70,7 +71,7 @@ MonoBehaviour:
     m_Bits: 0
   InteractableMask:
     serializedVersion: 2
-    m_Bits: 6277448
+    m_Bits: 14666056
   interactionRange: 1
 --- !u!114 &562229352171340135
 MonoBehaviour:
@@ -170,9 +171,13 @@ MonoBehaviour:
   mainCamera: {fileID: 0}
   inventoryUIObj: {fileID: 0}
   shipEquipmentUIObj: {fileID: 0}
-  interactionLayerUI:
+  craftingUIObj: {fileID: 0}
+  shipEquipmentLayerUI:
     serializedVersion: 2
     m_Bits: 65536
+  craftingLayerUI:
+    serializedVersion: 2
+    m_Bits: 8388608
 --- !u!114 &3264011705679843235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,12 +215,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shipTransform: {fileID: 0}
-  monsterHead: {fileID: 0}
+  monsterHeads:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   initialDetectionTimer: 60
   detectionTimerDecreaseRate: 1
-  baseInvestigationPointUpdateInterval: 10
+  investigationPointUpdateTime: 25
   minDistanceToShip: 80
-  investigationCooldown: 10
+  maxDistanceToShip: 100
+  investigationCooldown: 25
   detectionValues:
     decoyDetection: 6
     lightsDetection: 1
@@ -226,6 +235,19 @@ MonoBehaviour:
     forward1SpeedDetection: 1
     forward2SpeedDetection: 2
     forward3SpeedDetection: 3
+--- !u!114 &1616288149125868814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6457795096094294152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8564c316bf85cf34ea2525b9ec3ade4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playingSounds: []
 --- !u!1001 &1429464446321929340
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -553,10 +575,14 @@ MonoBehaviour:
   quests:
   - inkJSONAsset: {fileID: 4900000, guid: cdb88ec172f66e14ca6e155ec753665d, type: 3}
     requiredItem: {fileID: 11400000, guid: f1ea2ed4fed1dc942aafbfec3d4ac6bd, type: 2}
+    rewardItem: {fileID: 11400000, guid: 5f286e2645dde77438647c5e9f0f5200, type: 2}
+    rewardAmount: 1
     isCompleted: 0
     QuestMarker: {fileID: 0}
   - inkJSONAsset: {fileID: 4900000, guid: 6cf48bb6d89824cc69e35b43f9a1aca6, type: 3}
     requiredItem: {fileID: 11400000, guid: 1255fa7e215a76d49b495b4bde034b50, type: 2}
+    rewardItem: {fileID: 0}
+    rewardAmount: 1
     isCompleted: 0
     QuestMarker: {fileID: 0}
 --- !u!223 &8409594632863114415 stripped

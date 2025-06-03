@@ -63,6 +63,8 @@ public class AttackingState : BaseMonsterState
         PlayerMovement.Instance.OnPlayerSwimmingChange += PlayerMovement_OnPlayerSwimmingChange;
         SinkShip.OnShipSank += SinkShip_OnShipSank;
         DetectionManager.OnInvestigationEnd += DetectionManager_OnInvestigationEnd;
+
+        AudioManager.PlaySound(AudioManager.HeartBeatSlowSound);
     }
 
     private void DetectionManager_OnInvestigationEnd()
