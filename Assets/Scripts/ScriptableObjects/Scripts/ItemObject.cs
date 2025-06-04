@@ -11,7 +11,8 @@ public enum ItemType
     Propeller,
     Storage,
     Detection,
-    fireExtinguisher
+    fireExtinguisher,
+    Metal
 }
 
 public enum Stats

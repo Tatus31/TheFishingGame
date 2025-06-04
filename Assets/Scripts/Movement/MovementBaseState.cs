@@ -6,7 +6,7 @@ public abstract class MovementBaseState
     protected int groundContactCount = 0;
     protected bool OnGround => groundContactCount > 0;
 
-    protected float maxGroundAngle = 45f;
+    protected float maxGroundAngle = 65f;
     protected float minGroundDotProduct;
 
     Vector3 debugMoveDirection;
@@ -19,6 +19,7 @@ public abstract class MovementBaseState
     public MovementBaseState()
     {
         minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
+        minGroundDotProduct = Mathf.Abs(minGroundDotProduct);
     }
 
     public virtual void EnterState(PlayerMovement player)
