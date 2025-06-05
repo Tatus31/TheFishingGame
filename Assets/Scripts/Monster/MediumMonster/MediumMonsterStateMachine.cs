@@ -181,7 +181,7 @@ public class MediumMonsterStateMachine : MonoBehaviour
         {
             Vector3 randomPoint = transform.position + Random.insideUnitSphere * radius;
 
-            if (Physics.CheckSphere(randomPoint, 0.1f, waterLayer))
+            if (Physics.CheckSphere(randomPoint, 0.1f, waterLayer) && !Physics.CheckSphere(randomPoint, 20f, obstacleLayer))
             {
                 return randomPoint;
             }
