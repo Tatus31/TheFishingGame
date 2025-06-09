@@ -16,7 +16,7 @@ public class Testing : MonoBehaviour
 
 
     FishingStateManager fishingStateManager;
-
+    ShipMovement shipMovement;
     public bool isRepairing = false;
 
     private Camera mainCamera;
@@ -26,17 +26,42 @@ public class Testing : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        mainCamera = Camera.main; 
+        mainCamera = Camera.main;
+        shipMovement = FindObjectOfType<ShipMovement>();
     }
 
     private void Start()
     {
-
     }
 
 
     void Update()
     {
+        //GameObject objCanv = MouseWorldPosition.GetObjectOverMouse(MouseWorldPosition.Instance.InteractableMask);
+
+        //if (objCanv != null )
+        //{
+        //    Debug.Log("Object over mouse: " + objCanv.name);
+
+        //    if (MouseWorldPosition.GetInteractable(MouseWorldPosition.Instance.InteractableMask))
+        //    {
+        //        GameObject interactObj = objCanv.GetComponentInChildren<Canvas>().gameObject;
+        //        Debug.Log("Interactable object found: " + interactObj.name);
+        //        interactObj.transform.GetChild(0).gameObject.SetActive(true);
+        //    }
+        //    else
+        //    {
+        //        GameObject interactObj = objCanv.GetComponentInChildren<Canvas>().gameObject;
+        //        interactObj.transform.GetChild(0).gameObject.SetActive(false);
+        //    }
+
+        //    if (shipMovement.IsControllingShip)
+        //    {
+        //        GameObject interactObj = objCanv.GetComponentInChildren<Canvas>().gameObject;
+        //        interactObj.transform.GetChild(0).gameObject.SetActive(false);
+        //    }
+        //}
+
         if (Input.GetKeyDown(KeyCode.E) && MouseWorldPosition.GetInteractable(InteractableElectronic) && !isRepairing)
         {
             Cursor.lockState = CursorLockMode.None;
