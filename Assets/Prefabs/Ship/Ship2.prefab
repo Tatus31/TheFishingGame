@@ -101,7 +101,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!114 &7087460234940785925
@@ -197,6 +197,7 @@ MonoBehaviour:
   waterDeceleration: 0.2
   waterDragMultiplier: 1.2
   currentSpeedLevel: 0
+  currentWheelRotation: 0
 --- !u!114 &3041340655423699789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,7 +213,9 @@ MonoBehaviour:
   baseCollisionDamage: 100
   baseToxicDamage: 2
   baseFireDamage: 5
-  baseMonsterDamage: 50
+  baseLargeMonsterDamage: 50
+  baseMediumMonsterDamage: 25
+  baseSmallMonsterDamage: 10
   damageCooldownDuration: 0.5
 --- !u!114 &6140329532064406066
 MonoBehaviour:
@@ -646,6 +649,8 @@ GameObject:
   - component: {fileID: 5789058972879045702}
   - component: {fileID: 1897686771230706837}
   - component: {fileID: 65807180691514215}
+  - component: {fileID: 6150712366563667295}
+  - component: {fileID: 4629246369345556261}
   m_Layer: 14
   m_Name: Kierownica_2
   m_TagString: Untagged
@@ -661,12 +666,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 930849307603657779}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.1507577, y: 0, z: -0, w: 0.98857075}
-  m_LocalPosition: {x: 0.722089, y: 2.7937746, z: -2.5487285}
-  m_LocalScale: {x: 0.016625103, y: 0.016625103, z: 0.016625103}
+  m_LocalRotation: {x: -0, y: 0.00000005918611, z: 0.000000007263183, w: 1}
+  m_LocalPosition: {x: -0.0010827361, y: -0.00026502376, z: 0.0008487184}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5241440958377880700}
+  m_Father: {fileID: 3990038612447342261}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1897686771230706837
 MeshFilter:
@@ -719,6 +724,39 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!95 &6150712366563667295
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930849307603657779}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7274d83cb7f5b84438e06df133c866d3, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4629246369345556261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930849307603657779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd09c41936929b345818c8b9ab460562, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1026879815738989638
 GameObject:
   m_ObjectHideFlags: 0
@@ -3356,7 +3394,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1767
+  m_VersionIndex: 1782
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3381,7 +3419,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 397ff8b8aa1dfd440902c1f4b75ae2cb, type: 2}
+  - {fileID: 2100000, guid: e5d9540217c8de148a9d28504000baa1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3497,6 +3535,7 @@ GameObject:
   - component: {fileID: 8599595257617562101}
   - component: {fileID: 8456067742770727177}
   - component: {fileID: 2040148921575121100}
+  - component: {fileID: 8071968506935156132}
   m_Layer: 14
   m_Name: Wajcha
   m_TagString: Untagged
@@ -3512,13 +3551,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1482798709920331267}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0.31802133, y: -0, z: -0.000000014901161, w: 0.94808364}
   m_LocalPosition: {x: 1.07487, y: 2.6698797, z: -2.60769}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5241440958377880700}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -37.087, y: 0, z: 0}
 --- !u!33 &8456067742770727177
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3570,6 +3609,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!95 &8071968506935156132
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482798709920331267}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a28c3a9b4b1c9554fbc4d70b8e10aa31, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1828488996143196388
 GameObject:
   m_ObjectHideFlags: 0
@@ -3657,6 +3717,39 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1914902698645697719
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3990038612447342261}
+  m_Layer: 14
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3990038612447342261
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1914902698645697719}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.15075772, y: -0.000000059604645, z: 0.0000000017425918,
+    w: 0.9885708}
+  m_LocalPosition: {x: 0.722107, y: 2.7937746, z: -2.548744}
+  m_LocalScale: {x: 0.016625104, y: 0.016625103, z: 0.0166251}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5789058972879045702}
+  m_Father: {fileID: 5241440958377880700}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1934602952312306907
 GameObject:
   m_ObjectHideFlags: 0
@@ -3721,6 +3814,13 @@ MonoBehaviour:
     GateFit: 2
     FocusDistance: 10
     m_SensorSize: {x: 1, y: 1}
+    Iso: 200
+    ShutterSpeed: 0.005
+    Aperture: 16
+    BladeCount: 5
+    Curvature: {x: 2, y: 11}
+    BarrelClipping: 0.25
+    Anamorphism: 0
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -6207,7 +6307,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1767
+  m_VersionIndex: 1782
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -6232,7 +6332,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 397ff8b8aa1dfd440902c1f4b75ae2cb, type: 2}
+  - {fileID: 2100000, guid: e5d9540217c8de148a9d28504000baa1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9309,7 +9409,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1767
+  m_VersionIndex: 1782
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -9334,7 +9434,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 397ff8b8aa1dfd440902c1f4b75ae2cb, type: 2}
+  - {fileID: 2100000, guid: e5d9540217c8de148a9d28504000baa1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9449,6 +9549,13 @@ MonoBehaviour:
     GateFit: 2
     FocusDistance: 10
     m_SensorSize: {x: 1, y: 1}
+    Iso: 200
+    ShutterSpeed: 0.005
+    Aperture: 16
+    BladeCount: 5
+    Curvature: {x: 2, y: 11}
+    BarrelClipping: 0.25
+    Anamorphism: 0
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -12132,7 +12239,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1767
+  m_VersionIndex: 1782
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -12157,7 +12264,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 397ff8b8aa1dfd440902c1f4b75ae2cb, type: 2}
+  - {fileID: 2100000, guid: e5d9540217c8de148a9d28504000baa1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12272,6 +12379,13 @@ MonoBehaviour:
     GateFit: 2
     FocusDistance: 10
     m_SensorSize: {x: 1, y: 1}
+    Iso: 200
+    ShutterSpeed: 0.005
+    Aperture: 16
+    BladeCount: 5
+    Curvature: {x: 2, y: 11}
+    BarrelClipping: 0.25
+    Anamorphism: 0
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -15678,7 +15792,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1767
+  m_VersionIndex: 1782
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -15703,7 +15817,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 397ff8b8aa1dfd440902c1f4b75ae2cb, type: 2}
+  - {fileID: 2100000, guid: 43aefeff7af78e241aa78d1dfa99076a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -15818,6 +15932,13 @@ MonoBehaviour:
     GateFit: 2
     FocusDistance: 10
     m_SensorSize: {x: 1, y: 1}
+    Iso: 200
+    ShutterSpeed: 0.005
+    Aperture: 16
+    BladeCount: 5
+    Curvature: {x: 2, y: 11}
+    BarrelClipping: 0.25
+    Anamorphism: 0
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -15857,7 +15978,7 @@ Transform:
   m_Children:
   - {fileID: 8284850731485446677}
   - {fileID: 2086297586490440704}
-  - {fileID: 5789058972879045702}
+  - {fileID: 3990038612447342261}
   - {fileID: 8155127923474399866}
   - {fileID: 1231481712494075642}
   - {fileID: 3926375345556584963}
@@ -16406,6 +16527,13 @@ MonoBehaviour:
     GateFit: 2
     FocusDistance: 10
     m_SensorSize: {x: 1, y: 1}
+    Iso: 200
+    ShutterSpeed: 0.005
+    Aperture: 16
+    BladeCount: 5
+    Curvature: {x: 2, y: 11}
+    BarrelClipping: 0.25
+    Anamorphism: 0
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

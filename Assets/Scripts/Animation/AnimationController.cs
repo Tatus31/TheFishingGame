@@ -14,7 +14,10 @@ public class AnimationController: MonoBehaviour
         LureAnimator,
         EmptyHandsAnimator,
         HarpoonAnimator,
-        RepairMiniGameAnimator
+        RepairMiniGameAnimator,
+        ShipLampAnimator,
+        ShipGearAnimator,
+        ShipWheelAnimator,
     }
 
     [Serializable]
@@ -27,17 +30,19 @@ public class AnimationController: MonoBehaviour
     [SerializeField]
     List<AnimatorEntry> animators = new List<AnimatorEntry>();
 
-    [HideInInspector] public static string ON_RUN = "onRun";
-    [HideInInspector] public static string ON_THROW = "onThrow";
-    [HideInInspector] public static string FLEE_LEFT = "fleeLeft";
-    [HideInInspector] public static string FLEE_RIGHT = "fleeRight";
-    [HideInInspector] public static string REEL = "reel";
-    [HideInInspector] public static string DONE_FISHING = "doneFishing";
-    [HideInInspector] public static string FISH_FLEEING = "fishFleeing";
-    [HideInInspector] public static string LURE_CATCH = "lureCatch";
-    [HideInInspector] public static string HARPOON_AIM = "harpoonAim";
-    [HideInInspector] public static string ON_HIT = "onHit";
-    [HideInInspector] public static string SPEED_MULTIPLIER = "speedMultiplier";
+    [HideInInspector] public const string ON_RUN = "onRun";
+    [HideInInspector] public const string ON_THROW = "onThrow";
+    [HideInInspector] public const string FLEE_LEFT = "fleeLeft";
+    [HideInInspector] public const string FLEE_RIGHT = "fleeRight";
+    [HideInInspector] public const string REEL = "reel";
+    [HideInInspector] public const string DONE_FISHING = "doneFishing";
+    [HideInInspector] public const string FISH_FLEEING = "fishFleeing";
+    [HideInInspector] public const string LURE_CATCH = "lureCatch";
+    [HideInInspector] public const string HARPOON_AIM = "harpoonAim";
+    [HideInInspector] public const string ON_HIT = "onHit";
+    [HideInInspector] public const string SPEED_MULTIPLIER = "speedMultiplier";
+    [HideInInspector] public const string GEAR_STATE = "gearState";
+    [HideInInspector] public const string WHEEL_BLEND_STATE = "WheelRotation";
 
     void Awake()
     {

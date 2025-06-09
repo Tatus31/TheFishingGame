@@ -27,7 +27,7 @@ public class DangerLamp : MonoBehaviour
 
     private void Start()
     {
-        animator = GetComponentInChildren<Animator>();
+        animator = AnimationController.Instance.GetAnimator(AnimationController.Animators.ShipLampAnimator);
         lt = GetComponentInChildren<Light>();
         lt.range = lightRange;
     }

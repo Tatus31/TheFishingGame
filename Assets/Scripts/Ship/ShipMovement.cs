@@ -68,7 +68,10 @@ public class ShipMovement : MonoBehaviour
         {
             buoyancySystem.Buoyancy = shipRigidbody.mass * 1.1f;
         }
+
+        UpdateGearAnimation();
     }
+
     private void Update()
     {
         if (isControllingShip)
@@ -92,6 +95,8 @@ public class ShipMovement : MonoBehaviour
 
     public void IncreaseSpeedLevel()
     {
+        SpeedLevel previousLevel = currentSpeedLevel;
+
         switch (currentSpeedLevel)
         {
             case SpeedLevel.reverse:
@@ -110,11 +115,18 @@ public class ShipMovement : MonoBehaviour
                 break;
         }
 
+        if (previousLevel != currentSpeedLevel)
+        {
+            UpdateGearAnimation();
+        }
+
         OnDetectionChange?.Invoke(this, currentSpeedLevel);
     }
 
     public void DecreaseSpeedLevel()
     {
+        SpeedLevel previousLevel = currentSpeedLevel;
+
         switch (currentSpeedLevel)
         {
             case SpeedLevel.forward3:
@@ -133,18 +145,43 @@ public class ShipMovement : MonoBehaviour
                 break;
         }
 
+        if (previousLevel != currentSpeedLevel)
+        {
+            UpdateGearAnimation();
+        }
+
         OnDetectionChange?.Invoke(this, currentSpeedLevel);
     }
 
+    void UpdateGearAnimation()
+    {
+        if (AnimationController.Instance == null)
+        {
+            Debug.LogWarning("AnimationController instance not found");
+            return;
+        }
+
+        Animator gearAnimator = AnimationController.Instance.GetAnimator(AnimationController.Animators.ShipGearAnimator);
+
+        if (gearAnimator == null)
+        {
+            Debug.LogWarning("Ship Gear Animator not found");
+            return;
+        }
+
+        int gearState = (int)currentSpeedLevel;
+        AnimationController.Instance.PlayAnimation(gearAnimator, "gearState", gearState);
+    } 
+
     void FixedUpdate()
     {
-        if (!isControllingShip)
-            return;
+        //if (!isControllingShip)
+        //    return;
 
         HandleMovement();
         HandleRotation();
         UpdateShipState();
-        
+
         OnShipSpeedChange?.Invoke(this, ShipFlatVel);
     }
 
@@ -218,9 +255,6 @@ public class ShipMovement : MonoBehaviour
         //Debug.Log(MathF.Floor(currentWheelRotation));
     }
 
-    
-    
-    
     void UpdateShipState()
     {
         ShipFlatVel = new Vector3(shipRigidbody.velocity.x, 0f, shipRigidbody.velocity.z);
@@ -228,6 +262,12 @@ public class ShipMovement : MonoBehaviour
 
     public void SetNeutralSpeed()
     {
+        SpeedLevel previousLevel = currentSpeedLevel;
         currentSpeedLevel = SpeedLevel.neutral;
+
+        if (previousLevel != currentSpeedLevel)
+        {
+            UpdateGearAnimation();
+        }
     }
 }
