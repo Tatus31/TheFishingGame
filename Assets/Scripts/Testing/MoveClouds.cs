@@ -8,14 +8,14 @@ public class MoveClouds : MonoBehaviour
     [SerializeField] private GameObject CloudGameObject;
     [SerializeField] private GameObject CloudTowardsPoint;
     [SerializeField] private List<Transform> CloudTransforms = new List<Transform>();
-    public float speed = 1f; // Szybkość ruchu
+    private float speed = 0.02f; // Szybkość ruchu
     private float t = 0f; // Pozycja na splajnie (0 - początek, 1 - koniec)
     private int direction = 1; // Kierunek: 1 = przód, -1 = tył
     public SplineContainer spline;
 
     public List<Transform> GetCloudTransformsList
     {
-        get { return CloudTransforms; }
+       get { return CloudTransforms; }
         set { CloudTransforms = value; }
     }
     

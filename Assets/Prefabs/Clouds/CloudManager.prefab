@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4357546302563060204}
-  - component: {fileID: 1888277217065034062}
   - component: {fileID: 3204386135613989308}
   m_Layer: 0
   m_Name: CloudManager
@@ -33,19 +32,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1888277217065034062
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6279618487856261518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea7c8f884326441ba8efbb13103272d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CloudToMove: {fileID: 0}
 --- !u!114 &3204386135613989308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,8 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 658643999d6e340619c8236cd9d745b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Cloud: {fileID: 0}
-  CloudGameObject: {fileID: 0}
+  Cloud: {fileID: 8535286356891698636, guid: e44e58dd9de024ccc9b59623e5d0b59d, type: 3}
+  CloudGameObject: {fileID: 380867921470322983, guid: e44e58dd9de024ccc9b59623e5d0b59d,
+    type: 3}
   CloudTowardsPoint: {fileID: 0}
   CloudTransforms: []
   speed: 1

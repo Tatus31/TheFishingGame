@@ -37,15 +37,14 @@ public class StartFire : MonoBehaviour
        
         isOnFire = false;
 
-        electricalDevice = GetComponent<ElectricalDevice>();
-        startfirewhenincloud = (StartFireWhenInCloud)FindAnyObjectByType(typeof(StartFireWhenInCloud));
+        electricalDevice = FindAnyObjectByType<ElectricalDevice>();
+        startfirewhenincloud = FindObjectOfType<StartFireWhenInCloud>();
         shipDamage = ShipDamage.Instance;
         
 
         ElectricalDevice.OnDegradation += ElectricalDevice_OnDegradation;
         ChangeWaterLevelUnderDeck.Instance.OnShipCatchingWater += ChangeWaterLevelUnderDeck_OnShipCatchingWater;
-        if(startfirewhenincloud != null)
-            startfirewhenincloud.OnShipInCloud += OnShipInCloudFire;
+        StartFireWhenInCloud.OnShipInCloud += OnShipInCloudFire;
     }
 
     private void ChangeWaterLevelUnderDeck_OnShipCatchingWater(object sender, bool e)
@@ -85,9 +84,10 @@ public class StartFire : MonoBehaviour
 
         if (FireProbability >= FireProbabilityMaxValue)
         {
-            FireActionStart();  
+            FireActionStart();
             RandomPosFireStart();
-            FireProbability = 0; // Resetujemy licznik po nowym ogniu
+            FireProbability = 0;
+            FireTickDamage();
         }
 
         Debug.Log($"🔥 Aktualne ryzyko pożaru: {FireProbability}");
@@ -114,7 +114,7 @@ public class StartFire : MonoBehaviour
         fireVFX.SetActive(true);
         isOnFire = true;
         RandomPosFireStart();
-        //StartCoroutine(FireTickDamage());
+        StartCoroutine(FireTickDamage());
     }
 
     void FireActionStop()
