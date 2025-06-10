@@ -6,271 +6,315 @@ using UnityEngine.UI;
 
 public class RepairMiniGame : MonoBehaviour
 {
-    [SerializeField] Vector3 parentStartPosition;
-    [SerializeField] Vector3 parentEndPosition;
-    [SerializeField] Vector3 repairPointOffset;
+    //[Header("UI Setup")]
+    //[SerializeField] Canvas gameCanvas; 
+    //[SerializeField] RectTransform repairBarRect;
 
-    [SerializeField] float pointerSpeed = 1f;
-    [SerializeField] float pointerSpeedIncreese = 0.05f;
+    //[Header("Alternative World Space Setup (if not using UI)")]
+    //[SerializeField] bool useWorldSpace = false;
+    //[SerializeField] Camera gameCamera;
+    //[SerializeField] float worldSpaceWidth = 5f;
+    //[SerializeField] float worldSpaceHeight = 1f;
 
-    [SerializeField] int minRepairPoints = 3;
-    [SerializeField] int maxRepairPoints = 5;
-    [SerializeField] int winCondition = 5;
+    //[Header("Game Settings")]
+    //[SerializeField] float pointerSpeed = 1f;
+    //[SerializeField] float pointerSpeedIncreese = 0.05f;
+    //[SerializeField] int minRepairPoints = 3;
+    //[SerializeField] int maxRepairPoints = 5;
+    //[SerializeField] int winCondition = 5;
+    //[SerializeField] GameObject repairPointPrefab;
+    //[SerializeField] Transform repairBarParent;
+    //[SerializeField] LayerMask repairPointLayerMask;
+    //[SerializeField] float maxPointDistance;
+    //[SerializeField] float triggerExitDelay = 0.1f;
 
-    [SerializeField] GameObject repairPointPrefab;
-    [SerializeField] Transform repairBarParent;
+    //public bool isInsideTrigger = false;
+    //public bool isHittingRepairPoint = false;
 
-    [SerializeField] LayerMask repairPointLayerMask;
-    [SerializeField] float maxPointDistance;
+    //string repairPointTag = "RepairPoint";
+    //Collider currentRepairPoint;
 
-    public bool isInsideTrigger = false;
-    public bool isHittingRepairPoint = false;
+    //int repairHealth = 1;
+    //float currentPointerSpeed;
+    //float pointerTimer = 0f;
+    //float cooldownTimer = 0f;
+    //float triggerExitTimer = 0f;
 
-    string repairPointTag = "RepairPoint";
-    Collider currentRepairPoint;
+    //Vector3 calculatedStartPosition;
+    //Vector3 calculatedEndPosition;
+    //Vector3 calculatedRepairPointOffset;
 
-    int repairHealth = 1;
-    float currentPointerSpeed;
-    float pointerTimer = 0f;
-    float cooldownTimer = 0f;
+    //AnimationController animator;
+    //Animator repairMiniGameAnimator;
 
-    [SerializeField] float triggerExitDelay = 0.1f;
-    float triggerExitTimer = 0f;
+    //enum GameState
+    //{
+    //    Playing,
+    //    Won,
+    //    Lost,
+    //    Cooldown
+    //}
 
-    AnimationController animator;
-    Animator repairMiniGameAnimator;
-    enum GameState
-    {
-        Playing,
-        Won,
-        Lost,
-        Cooldown
-    }
+    //GameState currentState = GameState.Playing;
+    //List<GameObject> activeRepairPoints = new List<GameObject>();
 
-    GameState currentState = GameState.Playing;
+    //private void Start()
+    //{
+    //    animator = AnimationController.Instance;
+    //    repairMiniGameAnimator = animator.GetAnimator(AnimationController.Animators.RepairMiniGameAnimator);
 
-    List<GameObject> activeRepairPoints = new List<GameObject>();
+    //    currentPointerSpeed = pointerSpeed;
+    //    CalculatePositions();
+    //    StartGame();
+    //}
 
-    private void Start()
-    {
-        animator = AnimationController.Instance;
-        repairMiniGameAnimator = animator.GetAnimator(AnimationController.Animators.RepairMiniGameAnimator);
+    //private void Update()
+    //{
+    //    if (Screen.width != lastScreenWidth || Screen.height != lastScreenHeight)
+    //    {
+    //        CalculatePositions();
+    //        lastScreenWidth = Screen.width;
+    //        lastScreenHeight = Screen.height;
+    //    }
 
-        currentPointerSpeed = pointerSpeed;
-        StartGame();
-    }
+    //    if (InputManager.Instance.IsLeftMouseButtonPressed())
+    //    {
+    //        animator.PlayAnimation(repairMiniGameAnimator, AnimationController.ON_HIT, true);
+    //        StartCoroutine(StopAnimationAfterDelay());
+    //    }
+    //    if (isInsideTrigger)
+    //    {
+    //        StartCoroutine(CheckHitAfterDelay());
+    //    }
 
-    private void Update()
-    {
-        if (InputManager.Instance.IsLeftMouseButtonPressed())
-        {
-            animator.PlayAnimation(repairMiniGameAnimator, AnimationController.ON_HIT, true);
-            StartCoroutine(StopAnimationAfterDelay());
-        }
-        if (isInsideTrigger)
-        {
-            StartCoroutine(CheckHitAfterDelay());
-        }
+    //    switch (currentState)
+    //    {
+    //        case GameState.Playing:
+    //            MovePointer();
+    //            HandleInput();
+    //            break;
+    //        case GameState.Won:
+    //        case GameState.Lost:
+    //            HandleCooldown();
+    //            break;
+    //        case GameState.Cooldown:
+    //            HandleCooldown();
+    //            break;
+    //    }
+    //}
 
+    //private int lastScreenWidth;
+    //private int lastScreenHeight;
 
-        switch (currentState)
-        {
-            case GameState.Playing:
-                MovePointer();
-                HandleInput();
-                break;
-            case GameState.Won:
-            case GameState.Lost:
-                HandleCooldown();
-                break;
-            case GameState.Cooldown:
-                HandleCooldown();
-                break;
-        }
-    }
+    //void CalculatePositions()
+    //{
+    //    if (useWorldSpace)
+    //    {
+    //        CalculateWorldSpacePositions();
+    //    }
+    //    else
+    //    {
+    //        CalculateUIPositions();
+    //    }
+    //}
 
-    void MovePointer()
-    {
-        pointerTimer += Time.deltaTime * currentPointerSpeed;
-        float t = Mathf.PingPong(pointerTimer, 1f);
-        transform.position = Vector3.Lerp(parentStartPosition, parentEndPosition, t);
-    }
+    //void CalculateWorldSpacePositions()
+    //{
+    //    if (gameCamera == null)
+    //        gameCamera = Camera.main;
 
-    void HandleInput()
-    {
-        //if (InputManager.Instance.IsLeftMouseButtonPressed())
-        //{
-        //    //Debug.Log($"Click detected - isInsideTrigger: {isInsideTrigger}, currentRepairPoint: {(currentRepairPoint != null ? currentRepairPoint.name : "null")}");
+    //    Vector3 centerPos = transform.position;
+    //    calculatedStartPosition = centerPos + Vector3.left * (worldSpaceWidth * 0.5f);
+    //    calculatedEndPosition = centerPos + Vector3.right * (worldSpaceWidth * 0.5f);
+    //    calculatedRepairPointOffset = Vector3.up * (worldSpaceHeight * 0.1f);
+    //}
 
-        //    animator.PlayAnimation(repairMiniGameAnimator, AnimationController.ON_HIT, true);
+    //void CalculateUIPositions()
+    //{
+    //    if (repairBarRect == null)
+    //    {
+    //        float screenWidth = Screen.width;
+    //        float screenHeight = Screen.height;
 
-        //    if (isInsideTrigger)
-        //    {
-        //        StartCoroutine(CheckHitAfterDelay());
-        //    }
-        //    else
-        //    {
-        //        //Debug.Log("Miss - decreasing repair health");
-        //        repairHealth--;
-        //        GetComponentInChildren<TextMeshProUGUI>().text = repairHealth.ToString();
-        //    }
+    //        Vector3 screenCenter = new Vector3(screenWidth * 0.5f, screenHeight * 0.5f, 0);
+    //        Vector3 screenLeft = new Vector3(screenWidth * 0.25f, screenHeight * 0.5f, 0);
+    //        Vector3 screenRight = new Vector3(screenWidth * 0.75f, screenHeight * 0.5f, 0);
 
-        //    StartCoroutine(StopAnimationAfterDelay());
-        //}
+    //        calculatedStartPosition = Camera.main.ScreenToWorldPoint(screenLeft);
+    //        calculatedEndPosition = Camera.main.ScreenToWorldPoint(screenRight);
+    //        calculatedRepairPointOffset = Vector3.up * 0.5f;
+    //    }
+    //    else
+    //    {
+    //        Vector3[] corners = new Vector3[4];
+    //        repairBarRect.GetWorldCorners(corners);
 
-        if (repairHealth < -99)
-        {
-            //Debug.Log("lose");
-            currentState = GameState.Lost;
-            repairBarParent.gameObject.SetActive(false);
-        }
-        else if (repairHealth >= winCondition)
-        {
-            //Debug.Log("win");
-            currentState = GameState.Won;
-            repairBarParent.gameObject.SetActive(false);
+    //        calculatedStartPosition = corners[0];
+    //        calculatedEndPosition = new Vector3(corners[2].x, corners[0].y, corners[0].z);
+    //        calculatedRepairPointOffset = Vector3.up * ((corners[2].y - corners[0].y) * 0.1f);
+    //    }
+    //}
 
-            GameObject repairPointObj = MouseWorldPosition.GetObjectOverMouse(maxPointDistance, repairPointLayerMask);
-            if (repairPointObj != null)
-            {
-                Vector3 repairPointPosition = repairPointObj.transform.position;
-                repairPointObj.SetActive(false);
+    //void MovePointer()
+    //{
+    //    pointerTimer += Time.deltaTime * currentPointerSpeed;
+    //    float t = Mathf.PingPong(pointerTimer, 1f);
+    //    transform.position = Vector3.Lerp(calculatedStartPosition, calculatedEndPosition, t);
+    //}
 
-                ShipRepairPoints shipRepairPoints = FindObjectOfType<ShipRepairPoints>();
-                if (shipRepairPoints != null)
-                {
-                    shipRepairPoints.ResetRepairPointAtPosition(repairPointPosition);
-                }
-            }
-        }
-    }
+    //void HandleInput()
+    //{
+    //    if (repairHealth < -99)
+    //    {
+    //        currentState = GameState.Lost;
+    //        repairBarParent.gameObject.SetActive(false);
+    //    }
+    //    else if (repairHealth >= winCondition)
+    //    {
+    //        currentState = GameState.Won;
+    //        repairBarParent.gameObject.SetActive(false);
 
-    IEnumerator CheckHitAfterDelay()
-    {
-        yield return new WaitForSeconds(0.05f);
+    //        GameObject repairPointObj = MouseWorldPosition.GetObjectOverMouse(maxPointDistance, repairPointLayerMask);
+    //        if (repairPointObj != null)
+    //        {
+    //            Vector3 repairPointPosition = repairPointObj.transform.position;
+    //            repairPointObj.SetActive(false);
 
-        if (isInsideTrigger && currentRepairPoint != null)
-        {
-            repairHealth++;
-            GetComponentInChildren<TextMeshProUGUI>().text = repairHealth.ToString();
+    //            ShipRepairPoints shipRepairPoints = FindObjectOfType<ShipRepairPoints>();
+    //            if (shipRepairPoints != null)
+    //            {
+    //                shipRepairPoints.ResetRepairPointAtPosition(repairPointPosition);
+    //            }
+    //        }
+    //    }
+    //}
 
-            activeRepairPoints.Remove(currentRepairPoint.gameObject);
-            IncreasePointerSpeed();
-            Destroy(currentRepairPoint.gameObject);
-            currentRepairPoint = null;
-            isInsideTrigger = false;
+    //IEnumerator CheckHitAfterDelay()
+    //{
+    //    yield return new WaitForSeconds(0.05f);
 
-            if (activeRepairPoints.Count == 0)
-            {
-                SpawnRepairPoints();
-            }
-        }
-    }
+    //    if (isInsideTrigger && currentRepairPoint != null)
+    //    {
+    //        repairHealth++;
+    //        GetComponentInChildren<TextMeshProUGUI>().text = repairHealth.ToString();
 
-    IEnumerator StopAnimationAfterDelay()
-    {
-        yield return new WaitForSeconds(0.7f);
-        animator.PlayAnimation(repairMiniGameAnimator, AnimationController.ON_HIT, false);
-    }
+    //        activeRepairPoints.Remove(currentRepairPoint.gameObject);
+    //        IncreasePointerSpeed();
+    //        Destroy(currentRepairPoint.gameObject);
+    //        currentRepairPoint = null;
+    //        isInsideTrigger = false;
 
-    void HandleCooldown()
-    {
-        cooldownTimer -= Time.deltaTime;
+    //        if (activeRepairPoints.Count == 0)
+    //        {
+    //            SpawnRepairPoints();
+    //        }
+    //    }
+    //}
 
-        if (cooldownTimer <= 0)
-        {
-            StartGame();
-        }
-    }
+    //IEnumerator StopAnimationAfterDelay()
+    //{
+    //    yield return new WaitForSeconds(0.7f);
+    //    animator.PlayAnimation(repairMiniGameAnimator, AnimationController.ON_HIT, false);
+    //}
 
-    void StartGame()
-    {
-        foreach (GameObject point in activeRepairPoints)
-        {
-            if (point != null)
-                Destroy(point);
-        }
-        activeRepairPoints.Clear();
+    //void HandleCooldown()
+    //{
+    //    cooldownTimer -= Time.deltaTime;
 
-        repairHealth = 1;
-        currentPointerSpeed = pointerSpeed;
-        pointerTimer = 0f;
-        isInsideTrigger = false;
-        currentRepairPoint = null;
+    //    if (cooldownTimer <= 0)
+    //    {
+    //        StartGame();
+    //    }
+    //}
 
-        GetComponentInChildren<TextMeshProUGUI>().text = repairHealth.ToString();
-        repairBarParent.gameObject.SetActive(true);
+    //void StartGame()
+    //{
+    //    foreach (GameObject point in activeRepairPoints)
+    //    {
+    //        if (point != null)
+    //            Destroy(point);
+    //    }
+    //    activeRepairPoints.Clear();
 
-        SpawnRepairPoints();
+    //    repairHealth = 1;
+    //    currentPointerSpeed = pointerSpeed;
+    //    pointerTimer = 0f;
+    //    isInsideTrigger = false;
+    //    currentRepairPoint = null;
 
-        currentState = GameState.Playing;
-    }
+    //    GetComponentInChildren<TextMeshProUGUI>().text = repairHealth.ToString();
+    //    repairBarParent.gameObject.SetActive(true);
 
-    void IncreasePointerSpeed()
-    {
-        currentPointerSpeed += pointerSpeedIncreese;
-    }
+    //    SpawnRepairPoints();
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag(repairPointTag))
-        {
-            //Debug.Log($"Entered trigger with object: {other.name}");
-            isInsideTrigger = true;
-            currentRepairPoint = other;
-            triggerExitTimer = triggerExitDelay;
-        }
-    }
+    //    currentState = GameState.Playing;
+    //}
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag(repairPointTag))
-        {
-            isInsideTrigger = false;
-            currentRepairPoint = null;
-        }
-    }
+    //void IncreasePointerSpeed()
+    //{
+    //    currentPointerSpeed += pointerSpeedIncreese;
+    //}
 
-    void SpawnRepairPoints()
-    {
-        int numPoints = Random.Range(minRepairPoints, maxRepairPoints + 1);
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.CompareTag(repairPointTag))
+    //    {
+    //        isInsideTrigger = true;
+    //        currentRepairPoint = other;
+    //        triggerExitTimer = triggerExitDelay;
+    //    }
+    //}
 
-        List<Vector3> occupiedPositions = new List<Vector3>();
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (other.CompareTag(repairPointTag))
+    //    {
+    //        isInsideTrigger = false;
+    //        currentRepairPoint = null;
+    //    }
+    //}
 
-        float minDistance = 100f;
-        int maxAttempts = 10;
+    //void SpawnRepairPoints()
+    //{
+    //    int numPoints = Random.Range(minRepairPoints, maxRepairPoints + 1);
+    //    List<Vector3> occupiedPositions = new List<Vector3>();
 
-        for (int i = 0; i < numPoints; i++)
-        {
-            Vector3 spawnPosition;
+    //    float barWidth = Vector3.Distance(calculatedStartPosition, calculatedEndPosition);
+    //    float minDistance = barWidth / (maxRepairPoints + 1); 
 
-            bool validPosition = false;
-            int attempts = 0;
+    //    int maxAttempts = 10;
 
-            do
-            {
-                float t = Random.Range(0f, 1f);
-                spawnPosition = Vector3.Lerp(parentStartPosition + repairPointOffset, parentEndPosition + repairPointOffset, t);
+    //    for (int i = 0; i < numPoints; i++)
+    //    {
+    //        Vector3 spawnPosition;
+    //        bool validPosition = false;
+    //        int attempts = 0;
 
-                validPosition = true;
-                foreach (Vector3 existingPos in occupiedPositions)
-                {
-                    if (Vector3.Distance(spawnPosition, existingPos) < minDistance)
-                    {
-                        validPosition = false;
-                        break;
-                    }
-                }
-                attempts++;
+    //        do
+    //        {
+    //            float t = Random.Range(0f, 1f);
+    //            spawnPosition = Vector3.Lerp(calculatedStartPosition + calculatedRepairPointOffset,
+    //                                       calculatedEndPosition + calculatedRepairPointOffset, t);
 
-            } while (!validPosition && attempts < maxAttempts);
+    //            validPosition = true;
+    //            foreach (Vector3 existingPos in occupiedPositions)
+    //            {
+    //                if (Vector3.Distance(spawnPosition, existingPos) < minDistance)
+    //                {
+    //                    validPosition = false;
+    //                    break;
+    //                }
+    //            }
+    //            attempts++;
 
-            if (validPosition)
-            {
-                GameObject repairPoint = Instantiate(repairPointPrefab, spawnPosition, Quaternion.identity, repairBarParent);
-                activeRepairPoints.Add(repairPoint);
-                occupiedPositions.Add(spawnPosition);
-            }
-        }
-    }
+    //        } while (!validPosition && attempts < maxAttempts);
+
+    //        if (validPosition)
+    //        {
+    //            GameObject repairPoint = Instantiate(repairPointPrefab, spawnPosition, Quaternion.identity, repairBarParent);
+    //            activeRepairPoints.Add(repairPoint);
+    //            occupiedPositions.Add(spawnPosition);
+    //        }
+    //    }
+    //}
 }
