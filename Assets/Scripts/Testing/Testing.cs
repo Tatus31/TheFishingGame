@@ -93,6 +93,10 @@ public class Testing : MonoBehaviour
 
         if (MouseWorldPosition.GetInteractable(Interactable) && Input.GetKeyDown(KeyCode.E))
         {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            cameraLook.Sensitivity = 0f;
+
             repairBarObject.SetActive(true);
         }
     }

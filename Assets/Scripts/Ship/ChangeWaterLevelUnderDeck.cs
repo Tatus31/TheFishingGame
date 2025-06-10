@@ -38,7 +38,12 @@ public class ChangeWaterLevelUnderDeck : MonoBehaviour
     private void Awake()
     {
         if (Instance != null)
+        {
+#if UNITY_EDITOR
             Debug.LogWarning($"there exists a {Instance.name} in the scene already");
+#endif
+        }
+
 
         Instance = this;
     }
