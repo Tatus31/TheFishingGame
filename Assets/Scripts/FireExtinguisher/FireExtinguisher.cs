@@ -9,21 +9,43 @@ public class FireExtinguisher : MonoBehaviour
     [SerializeField] LayerMask layerMask;
     [SerializeField] int timeToPutOutFire;
     [SerializeField] int fireGracePeriodTime;
+    [SerializeField] GameObject particleSystemObj;
 
     StartFire fire;
 
     private void Awake()
     {
         if (Instance != null)
+        {
+#if UNITY_EDITOR
             Debug.LogWarning($"there exists a {Instance.name} in the scene already");
+#endif
+        }
 
         Instance = this;
     }
 
+    private void Start()
+    {
+        particleSystemObj.SetActive(false);
+    }
+
     private void Update()
     {
-        if(MouseWorldPosition.GetInteractable(layerMask) && InputManager.Instance.IsLeftMouseButtonHeld())
-            StartCoroutine(StartFireExtinguisher());
+        if (InputManager.Instance.IsLeftMouseButtonHeld())
+        {
+            particleSystemObj.SetActive(true);
+
+            if (MouseWorldPosition.GetInteractable(layerMask) && InputManager.Instance.IsLeftMouseButtonHeld())
+            {
+                StartCoroutine(StartFireExtinguisher());
+            }
+        }
+        else
+        {
+            particleSystemObj.SetActive(false);
+        }
+
     }
 
     IEnumerator StartFireExtinguisher()
@@ -37,16 +59,11 @@ public class FireExtinguisher : MonoBehaviour
 
         if (fire.IsOnFire)
         {
-            Debug.Log("ptting out fire");
+
             yield return new WaitForSeconds(timeToPutOutFire);
             fire.IsOnFire = false;
         }
 
         yield return null; 
-    }
-
-    IEnumerator FireGracePeriod()
-    {
-        yield return new WaitForSeconds(timeToPutOutFire);
     }
 }

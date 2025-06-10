@@ -185,6 +185,7 @@ public class ShipDamage : MonoBehaviour
         Debug.Log($"Ship hit by {monsterType} monster, taking {damageAmount} damage");
 #endif
 
+        CameraEffectsManager.Instance.SwitchState(CameraEffectsManager.Instance.colisionShakeState);
         TakeDamage(damageAmount);
     }
 
@@ -229,6 +230,7 @@ public class ShipDamage : MonoBehaviour
         OnDamageTaken?.Invoke(this, actualDamage);
         UpdateAttributes();
 
+        CameraEffectsManager.Instance.SwitchState(CameraEffectsManager.Instance.colisionShakeState);
         StartDamageCooldown();
     }
 
