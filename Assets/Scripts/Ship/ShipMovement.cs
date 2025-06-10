@@ -156,18 +156,12 @@ public class ShipMovement : MonoBehaviour
     void UpdateGearAnimation()
     {
         if (AnimationController.Instance == null)
-        {
-            Debug.LogWarning("AnimationController instance not found");
             return;
-        }
 
         Animator gearAnimator = AnimationController.Instance.GetAnimator(AnimationController.Animators.ShipGearAnimator);
 
         if (gearAnimator == null)
-        {
-            Debug.LogWarning("Ship Gear Animator not found");
             return;
-        }
 
         int gearState = (int)currentSpeedLevel;
         AnimationController.Instance.PlayAnimation(gearAnimator, "gearState", gearState);

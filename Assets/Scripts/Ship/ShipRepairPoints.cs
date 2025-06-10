@@ -79,9 +79,9 @@ public class ShipRepairPoints : MonoBehaviour
         {
             totalHoleDamage += damageTaken;
             int damagePerHole = damageTaken / holesToSpawn;
-
+#if UNITY_EDITOR
             Debug.Log($"damage taken {damageTaken} spread across {holesToSpawn}");
-
+#endif
             for (int i = 0; i < holesToSpawn; i++)
             {
                 SpawnHole(damagePerHole);
@@ -89,7 +89,9 @@ public class ShipRepairPoints : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR
             Debug.Log($"{damageTaken} too small for holes");
+#endif
         }
     }
 

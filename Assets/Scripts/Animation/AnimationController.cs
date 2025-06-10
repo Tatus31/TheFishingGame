@@ -43,6 +43,8 @@ public class AnimationController: MonoBehaviour
     [HideInInspector] public const string SPEED_MULTIPLIER = "speedMultiplier";
     [HideInInspector] public const string GEAR_STATE = "gearState";
     [HideInInspector] public const string WHEEL_BLEND_STATE = "WheelRotation";
+    [HideInInspector] public const string IS_FIXING_HOLE = "isFixingHole";
+    [HideInInspector] public const string FIX_SPEED_MULTIPLIER = "fixSpeedMultiplier";
 
     void Awake()
     {
