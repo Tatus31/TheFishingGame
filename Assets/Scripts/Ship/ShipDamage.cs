@@ -185,7 +185,9 @@ public class ShipDamage : MonoBehaviour
         Debug.Log($"Ship hit by {monsterType} monster, taking {damageAmount} damage");
 #endif
 
-        CameraEffectsManager.Instance.SwitchState(CameraEffectsManager.Instance.colisionShakeState);
+        if(StickToShip.Instance.IsOnShip)
+            CameraEffectsManager.Instance.SwitchState(CameraEffectsManager.Instance.colisionShakeState);
+
         TakeDamage(damageAmount);
     }
 
@@ -230,7 +232,9 @@ public class ShipDamage : MonoBehaviour
         OnDamageTaken?.Invoke(this, actualDamage);
         UpdateAttributes();
 
-        CameraEffectsManager.Instance.SwitchState(CameraEffectsManager.Instance.colisionShakeState);
+        if (StickToShip.Instance.IsOnShip)
+            CameraEffectsManager.Instance.SwitchState(CameraEffectsManager.Instance.colisionShakeState);
+
         StartDamageCooldown();
     }
 
@@ -276,7 +280,6 @@ public class ShipDamage : MonoBehaviour
                 attribute.Value.SetModifiedValueDirectly(currentHealth);
                 if (currentHealth == 0)
                 {
-                    Debug.Log("Ship is sinking");
                     OnSinkingShipByDamage?.Invoke(this, EventArgs.Empty);
                 }
                 break;

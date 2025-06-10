@@ -62,10 +62,14 @@ public class InventoryDisplayController : MonoBehaviour
 
     void HideInventory()
     {
+        inventoryUIObj.GetComponent<UserInterface>().DisableToolTip();
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         isHiden = true;
+
         inventoryUIObj.SetActive(false);
+
         if (shipEquipmentUIObj.activeSelf)
         {
             shipEquipmentUIObj.SetActive(false);

@@ -17,6 +17,7 @@ public abstract class UserInterface : MonoBehaviour
     GameObject tooltipPanel;
     TextMeshProUGUI itemNameText;
     TextMeshProUGUI itemDescriptionText;
+    TextMeshProUGUI itemCostText;
 
     float tooltipOffset = -115f;
 
@@ -69,6 +70,15 @@ public abstract class UserInterface : MonoBehaviour
         itemDescriptionText.fontSize = 12;
         itemDescriptionText.color = Color.white;
         itemDescriptionText.alignment = TextAlignmentOptions.Left;
+
+        GameObject costObj = new GameObject("ItemCost");
+        costObj.transform.SetParent(tooltipPanel.transform);
+        RectTransform costRect = costObj.AddComponent<RectTransform>();
+        costRect.sizeDelta = new Vector2(180, 60);
+        itemCostText = costObj.AddComponent<TextMeshProUGUI>();
+        itemCostText.fontSize = 12;
+        itemCostText.color = Color.white;
+        itemCostText.alignment = TextAlignmentOptions.Left;
 
         tooltipPanel.SetActive(false);
 
@@ -131,6 +141,7 @@ public abstract class UserInterface : MonoBehaviour
         {
             itemNameText.text = slot.ItemObject.name;
             itemDescriptionText.text = slot.ItemObject.description;
+            itemCostText.text = "Sacrifice value: " + slot.ItemObject.data.sacrificeValue.ToString();
 
             if (fadeCoroutine != null)
             {
@@ -142,7 +153,7 @@ public abstract class UserInterface : MonoBehaviour
         }
     }
 
-    void HideTooltip()
+    public void HideTooltip()
     {
         if (tooltipPanel.activeSelf)
         {
@@ -152,6 +163,14 @@ public abstract class UserInterface : MonoBehaviour
             }
 
             fadeCoroutine = StartCoroutine(FadeTooltip(false));
+        }
+    }
+
+    public void DisableToolTip()
+    {
+        if (tooltipPanel.activeSelf)
+        {
+            tooltipPanel.SetActive(false);
         }
     }
 
