@@ -1,52 +1,56 @@
 VAR startQuest = false
 VAR hasItem = false
 VAR completeQuest = false
+VAR placeMarker = false
 
 -> check_loop
 
 === check_loop ===
 ~ startQuest = true
-I looked at Monsieur Fogg... and I could contain myself no longer.
-'What is the purpose of our journey, Monsieur?'
-'A wager,' he replied.
--> wager_response
+You hear the Trader fiddle with the "Scrap" you brought for a while...
+Then all you can hear is silance and the wind once again.
+-> quest_start
 
-=== wager_response ===
-'A wager!'[] I returned.
-He nodded.
-+ ['But surely that is foolishness!']
-    'A most serious matter then!'
-    He nodded again.
-    -> wager_questions
-+ ['A most serious matter then!']
-    He nodded again.
-    -> wager_questions
+=== quest_start ===
 
-=== wager_questions ===
-+ ['But can we win?']
-    'That is what we will endeavour to find out,' he answered.
-    -> wager_questions
-+ ['A modest wager, I trust?']
-    'Twenty thousand pounds,' he replied, quite flatly.
-    -> wager_questions
-+ [Give the required item]
+[Trader]: That was perfect... Just waht I was looking for. 
+
++ What is it exacly?
+    You fight back your fear and slowly walk up to the mirror
+    -> walkup
++ Walk away
+-> ending
+
+=== walkup ===
+[Trader]: Oh nothing for that little brain of yours to be conserned about... but maybe if you help me again I might give you a hint.
++ Reluctantly agree to help again.
+-> agree
++ Shake your head and demand information.
+-> disagree
+
+=== agree ===
+~ placeMarker = true
+[Trader]: I like the sound of that.  
+-> quest
+
+=== disagree ===
+[Trader]: Well fine, fine... That "Scrap" you are collecting can help our little boat in more ways than you can imagine,
+check whats under the deck and you should find what I'm talking about.
+-> ending
+
+== quest ==
+[Trader]: Very well, again I will mark where you can find the next artifact so bring it back to me like you did last time.
+
++ [Give the artifact] 
     {hasItem:
         ~ completeQuest = true
-        Ah, I see you have what I seek. Very well...
+        Well done, we really work well together(together).
         -> ending
     - else:
-        You don't have what I need. Find it and return to me.
-        -> wager_questions
+        [Trader]: Still not blind try again next time.
+        -> ending
     }
-+ [Say nothing further]
-    I asked nothing further of him then[.], and after a final, polite cough, he offered nothing more to me. <>
-    'Ah[.'],' I replied, uncertain what I thought.
-    After that, <>
-    we passed the day in silence.
-    -> END
 
 === ending ===
-Twice!? Beaten by an object... Twice! I've only known the taste of victory, but this taste... 
-Is Is this my blood? Haha I've never known such... Such... relief..?
-I- I need some time to think... We will meet again, machine. May your woes be many... and your days few.
+You decide to leave the room.
 -> END

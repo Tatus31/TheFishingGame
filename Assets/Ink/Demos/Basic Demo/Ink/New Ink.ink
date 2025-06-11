@@ -1,45 +1,60 @@
 ﻿VAR startQuest = false
 VAR hasItem = false
 VAR completeQuest = false
+VAR placeMarker = false
 
 -> check_loop
 
 === check_loop ===
 ~ startQuest = true
-You there—traveler! A relic of old lies hidden in the ruins.
-Will you find it for me?
+You walk up to a strange warped one way mirror and behind it you see.... 
+nothing no reflection no siluete 
+but for some inexplicable reason you know that behind that steined glass is something beckoning you to talk to it...   
 -> quest_start
 
 === quest_start ===
-I sense the artifact's presence... dusty, ancient, powerful. 
-Bring it to me. Only then shall your path be clear.
 
-+ ...
-    wind rustles the grass.
-    -> ponder
+[???]: Come here do not be afraid. 
+
++ Lisen to the voice.
+    You fight back your fear and slowly walk up to the mirror.
+    -> walkup
++ Walk away.
+-> ending
+
+=== walkup ===
+~ placeMarker = true
+[???]: Ah Finally someone new.... Oh but before I forget let me introduce myself, you can call me The Trader.
+
+[Trader]: Or at least thats what everyone used to call me here back in the day but I'm loosing track of whats important here. 
+Are you willing to help me out a bit in here, obviously not for free mind you.
++ Nod your head and tell him you agree.
+-> agree
++ Shake your head and tell him you disagree.
+-> disagree
+
+=== agree ===
+[Trader]: well I didn't expect you to be so willing to help. 
+-> quest
+
+=== disagree ===
+[Trader]: well then suit yourself... I know you will be back.
+-> ending
+
+== quest ==
+[Trader]: Well then all I need of you is to just collect a bunch of scrap for me... nothing dangerous at least for you,
+ mind you the wildlife here seems to dislike my boat with a burning passion for whatever reason so make sure to patch it every now and then.
+
 + [Give the artifact] 
     {hasItem:
         ~ completeQuest = true
-        You have it... The relic of the First Flame. Thank you.
+        Well finally... Took you long enough but still here's a treat for a job well done.
         -> ending
     - else:
-        You don’t have it yet. Search the ruins—time fades it fast.
-        -> quest_start
+        [Trader]: Nice try but I'm not blind at least yet.
+        -> ending
     }
 
-=== ponder ===
-The old world crumbled under its own weight. Kingdoms lost, gods silenced...
-And yet we cling to echoes.
-You seek purpose in ruins, and I in what remains of faith.
--> agree
-
-=== agree ===
-Then take this moment—and guard it well.
-+ [Nod and hold out the relic]
-    -> ending
-
 === ending ===
-It is done. The relic is safe once more. 
-Strange... I feel lighter. As if time itself loosened its grip.
-Go now, traveler. Others may yet need your hand.
+You decide to leave the room.
 -> END

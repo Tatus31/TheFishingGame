@@ -28,6 +28,7 @@ public class InkDialogueController : MonoBehaviour
 
     bool isQuestCompleted = false;
     bool isQuestStarted = false;
+    bool markerPlaced = false;
 
     QuestManager questManager;
     Story story;
@@ -69,27 +70,17 @@ public class InkDialogueController : MonoBehaviour
     {
         if (InputManager.Instance.IsLeftMouseButtonPressed() && MouseWorldPosition.GetInteractable(interactableMask))
         {
-            if (!isQuestStarted)
-            {
-                isQuestStarted = true;
-
-                if (questManager != null && compass != null)
-                {
-                    Quest currentQuest = questManager.GetCurrentQuest();
-                    if (currentQuest != null && currentQuest.QuestMarker != null)
-                    {
-                        OnStartQuest?.Invoke(true);
-                        compass.AddMarker(currentQuest.QuestMarker);
-                    }
-                }
-            }
-
             if (story != null && story.variablesState.GlobalVariableExistsWithName("startQuest"))
             {
                 isInteracting = (bool)story.variablesState["startQuest"];
                 isInteracting = true;
 
                 LockCamera();
+            }
+
+            if (story != null && !story.canContinue && story.currentChoices.Count == 0 && HasRequiredItem())
+            {
+                StartStory();
             }
 
             if (HasRequiredItem())
@@ -99,6 +90,8 @@ public class InkDialogueController : MonoBehaviour
                     story.variablesState["hasItem"] = true;
                 }
             }
+
+            CheckAndPlaceMarker();
         }
 
         if (InputManager.Instance.IsRightMouseButtonPressed())
@@ -113,6 +106,26 @@ public class InkDialogueController : MonoBehaviour
         else
         {
             TurnCanvasElementsOff();
+        }
+    }
+
+    private void CheckAndPlaceMarker()
+    {
+        if (story != null && story.variablesState.GlobalVariableExistsWithName("placeMarker"))
+        {
+            bool shouldPlaceMarker = (bool)story.variablesState["placeMarker"];
+
+            if (shouldPlaceMarker && !markerPlaced && questManager != null && compass != null)
+            {
+                Quest currentQuest = questManager.GetCurrentQuest();
+                if (currentQuest != null && currentQuest.QuestMarker != null)
+                {
+                    compass.AddMarker(currentQuest.QuestMarker);
+                    markerPlaced = true;
+                    isQuestStarted = true;
+                    OnStartQuest?.Invoke(true);
+                }
+            }
         }
     }
 
@@ -180,6 +193,7 @@ public class InkDialogueController : MonoBehaviour
         requiredItem = newRequiredItem;
         isQuestCompleted = false;
         isQuestStarted = false;
+        markerPlaced = false;
 
         if (inkJSONAsset != null)
         {
@@ -191,9 +205,16 @@ public class InkDialogueController : MonoBehaviour
             Quest currentQuest = questManager.GetCurrentQuest();
             if (currentQuest != null && currentQuest.QuestMarker != null)
             {
-                compass.AddMarker(currentQuest.QuestMarker);
-
-                isQuestStarted = true;
+                if (story != null && story.variablesState.GlobalVariableExistsWithName("placeMarker"))
+                {
+                    bool shouldPlaceMarker = (bool)story.variablesState["placeMarker"];
+                    if (shouldPlaceMarker)
+                    {
+                        compass.AddMarker(currentQuest.QuestMarker);
+                        markerPlaced = true;
+                        isQuestStarted = true;
+                    }
+                }
             }
         }
     }
@@ -226,13 +247,15 @@ public class InkDialogueController : MonoBehaviour
             return;
         }
 
-        if (story == null)
+        story = new Story(inkJSONAsset.text);
+        if (OnCreateStory != null)
         {
-            story = new Story(inkJSONAsset.text);
-            if (OnCreateStory != null)
-            {
-                OnCreateStory(story);
-            }
+            OnCreateStory(story);
+        }
+
+        if (HasRequiredItem() && story.variablesState.GlobalVariableExistsWithName("hasItem"))
+        {
+            story.variablesState["hasItem"] = true;
         }
 
         RefreshView();
@@ -250,6 +273,8 @@ public class InkDialogueController : MonoBehaviour
             CreateContentView(text);
         }
 
+        CheckAndPlaceMarker();
+
         if (story.currentChoices.Count > 0)
         {
             for (int i = 0; i < story.currentChoices.Count; i++)
@@ -265,6 +290,16 @@ public class InkDialogueController : MonoBehaviour
         }
         else
         {
+            if (HasRequiredItem() && story.variablesState.GlobalVariableExistsWithName("completeQuest"))
+            {
+                bool shouldComplete = (bool)story.variablesState["completeQuest"];
+                if (shouldComplete && !isQuestCompleted)
+                {
+                    isQuestCompleted = true;
+                    TakeRequiredItem();
+                }
+            }
+
             Button choice = CreateChoiceView("Leave...");
             choice.onClick.AddListener(delegate
             {
@@ -356,6 +391,7 @@ public class InkDialogueController : MonoBehaviour
         }
 
         isQuestCompleted = false;
+        markerPlaced = false; 
     }
 
     void RemoveChildren()
