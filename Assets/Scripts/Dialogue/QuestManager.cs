@@ -12,7 +12,7 @@ public class Quest
     public ItemObject requiredItem;
     [Tooltip("The item reward after completing a quest")]
     public ItemObject rewardItem;
-    [Tooltip("The item reward ammount")]
+    [Tooltip("The item reward amount")]
     public int rewardAmount = 1;
     [Tooltip("Whether this quest has been completed")]
     public bool isCompleted = false;
@@ -26,6 +26,8 @@ public class QuestManager : MonoBehaviour
     InkDialogueController dialogueController;
     Compass compass;
     int currentQuestIndex = 0;
+
+    private int lastCheckedQuestIndex = -1;
 
     private void Start()
     {
@@ -43,6 +45,11 @@ public class QuestManager : MonoBehaviour
         InitializeFirstQuest();
     }
 
+    private void OnDestroy()
+    {
+        InkDialogueController.OnStartQuest -= InkDialogueController_OnStartQuest;
+    }
+
     private void LateUpdate()
     {
         CheckQuestCompletion();
@@ -50,55 +57,86 @@ public class QuestManager : MonoBehaviour
 
     private void InkDialogueController_OnStartQuest(bool shouldAddMarker)
     {
-        if (shouldAddMarker && compass != null && quests.Count > currentQuestIndex && quests[currentQuestIndex].QuestMarker != null)
+        if (shouldAddMarker && compass != null && IsValidQuestIndex(currentQuestIndex) && quests[currentQuestIndex].QuestMarker != null)
         {
-            Debug.Log("Adding marker to compass for quest: " + quests[currentQuestIndex].inkJSONAsset.name);
             compass.AddMarker(quests[currentQuestIndex].QuestMarker);
         }
     }
 
     void InitializeFirstQuest()
     {
-        if (quests.Count > 0 && dialogueController != null)
+        currentQuestIndex = FindNextAvailableQuest(0);
+
+        if (IsValidQuestIndex(currentQuestIndex) && dialogueController != null)
         {
-            dialogueController.UpdateQuestData(quests[0].inkJSONAsset, quests[0].requiredItem, false);
+            dialogueController.UpdateQuestData(quests[currentQuestIndex].inkJSONAsset, quests[currentQuestIndex].requiredItem, false);
         }
         else
         {
-            Debug.LogWarning("No quests have been added to the QuestManager or dialogueController is missing");
+            Debug.LogWarning("No available quests to initialize or dialogueController is missing");
         }
+    }
+
+    private int FindNextAvailableQuest(int startIndex)
+    {
+        for (int i = startIndex; i < quests.Count; i++)
+        {
+            if (!quests[i].isCompleted)
+            {
+                return i;
+            }
+        }
+        return -1; 
+    }
+
+    private bool IsValidQuestIndex(int index)
+    {
+        return index >= 0 && index < quests.Count;
     }
 
     public void CompleteCurrentQuest()
     {
-        if (currentQuestIndex < quests.Count)
+        if (!IsValidQuestIndex(currentQuestIndex))
         {
-            if (compass != null && quests[currentQuestIndex].QuestMarker != null)
-            {
-                compass.DeleteMarker(quests[currentQuestIndex].QuestMarker);
-            }
+            Debug.LogWarning("Cannot complete quest: invalid quest index " + currentQuestIndex);
+            return;
+        }
 
-            quests[currentQuestIndex].isCompleted = true;
+        if (compass != null && quests[currentQuestIndex].QuestMarker != null)
+        {
+            compass.DeleteMarker(quests[currentQuestIndex].QuestMarker);
+        }
+        quests[currentQuestIndex].isCompleted = true;
 
-            if (currentQuestIndex < quests.Count - 1)
-            {
-                currentQuestIndex++;
-            }
+        int nextQuestIndex = FindNextAvailableQuest(currentQuestIndex + 1);
+
+        if (nextQuestIndex != -1)
+        {
+            currentQuestIndex = nextQuestIndex;
+            UpdateCurrentQuest();
+        }
+        else
+        {
+            Debug.Log("All quests completed!");
         }
     }
 
     public void UpdateCurrentQuest()
     {
-        if (currentQuestIndex < quests.Count && dialogueController != null)
+        if (IsValidQuestIndex(currentQuestIndex) && dialogueController != null)
         {
             Quest currentQuest = quests[currentQuestIndex];
             dialogueController.UpdateQuestData(currentQuest.inkJSONAsset, currentQuest.requiredItem, false);
+        }
+        else
+        {
+            Debug.LogWarning("Cannot update quest: invalid index or missing dialogueController");
         }
     }
 
     public Quest GetCurrentQuest()
     {
-        if (currentQuestIndex < quests.Count)
+        if (IsValidQuestIndex(currentQuestIndex))
         {
             return quests[currentQuestIndex];
         }
@@ -107,10 +145,12 @@ public class QuestManager : MonoBehaviour
 
     public void CheckQuestCompletion()
     {
-        if (currentQuestIndex < quests.Count && dialogueController != null)
+        if (IsValidQuestIndex(currentQuestIndex) && dialogueController != null &&
+            currentQuestIndex != lastCheckedQuestIndex)
         {
             if (dialogueController.IsQuestCompleted() && !quests[currentQuestIndex].isCompleted)
             {
+                lastCheckedQuestIndex = currentQuestIndex;
                 CompleteCurrentQuest();
             }
         }
@@ -118,6 +158,41 @@ public class QuestManager : MonoBehaviour
 
     public void AddQuest(Quest quest)
     {
-        quests.Add(quest);
+        if (quest != null && quest.inkJSONAsset != null)
+        {
+            quests.Add(quest);
+
+            if (quests.Count == 1 || !IsValidQuestIndex(currentQuestIndex) || quests[currentQuestIndex].isCompleted)
+            {
+                InitializeFirstQuest();
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Cannot add null quest or quest without inkJSONAsset");
+        }
+    }
+
+    public void PrintQuestStatus()
+    {
+        Debug.Log("=== Quest Status ===");
+        Debug.Log("Current Quest Index: " + currentQuestIndex);
+        for (int i = 0; i < quests.Count; i++)
+        {
+            string status = quests[i].isCompleted ? "COMPLETED" : "ACTIVE";
+            string current = (i == currentQuestIndex) ? " <- CURRENT" : "";
+            Debug.Log($"Quest {i}: {quests[i].inkJSONAsset.name} - {status}{current}");
+        }
+    }
+
+    public void ResetAllQuests()
+    {
+        foreach (Quest quest in quests)
+        {
+            quest.isCompleted = false;
+        }
+        currentQuestIndex = 0;
+        lastCheckedQuestIndex = -1;
+        InitializeFirstQuest();
     }
 }

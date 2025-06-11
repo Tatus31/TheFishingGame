@@ -13,7 +13,7 @@ Then all you can hear is silance and the wind once again.
 
 === quest_start ===
 
-[Trader]: That was perfect... Just waht I was looking for. 
+[Trader]: That was perfect... Just what I was looking for. 
 
 + What is it exacly?
     You fight back your fear and slowly walk up to the mirror
