@@ -6,7 +6,7 @@ public abstract class MovementBaseState
     protected int groundContactCount = 0;
     protected bool OnGround => groundContactCount > 0;
 
-    protected float maxGroundAngle = 65f;
+    protected float maxGroundAngle = 90f;
     protected float minGroundDotProduct;
 
     Vector3 debugMoveDirection;
