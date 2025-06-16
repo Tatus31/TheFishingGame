@@ -12,7 +12,6 @@ public class StartFireWhenInCloud : MonoBehaviour
         if(other.gameObject.CompareTag("Ship"))
         {
             OnShipInCloud?.Invoke();
-            Debug.Log("Jest g");
         }
 
     }

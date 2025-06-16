@@ -15,14 +15,9 @@ public class StartFire : MonoBehaviour
     [SerializeField] private Vector3 rotation;
     [SerializeField] private float FireProbability;
     private float FireProbabilityMaxValue = 500f;
-    //private Random random = new Random();
-    [SerializeField] private List<GameObject> FirePointList = new List<GameObject>();
-   
-    
-    
+           
     ElectricalDevice electricalDevice;
     ShipDamage shipDamage;
-    StartFireWhenInCloud startfirewhenincloud;
 
     bool isSparking;
     bool isUsed;
@@ -38,7 +33,6 @@ public class StartFire : MonoBehaviour
         isOnFire = false;
 
         electricalDevice = FindAnyObjectByType<ElectricalDevice>();
-        startfirewhenincloud = FindObjectOfType<StartFireWhenInCloud>();
         shipDamage = ShipDamage.Instance;
         
 
@@ -66,8 +60,7 @@ public class StartFire : MonoBehaviour
             sparksVFX.SetActive(true); 
         else
             sparksVFX.SetActive(false);
-        
-        
+
     }
 
     private void ElectricalDevice_OnDegradation(object sender, EventArgs e)
@@ -85,13 +78,9 @@ public class StartFire : MonoBehaviour
         if (FireProbability >= FireProbabilityMaxValue)
         {
             FireActionStart();
-            RandomPosFireStart();
             FireProbability = 0;
             FireTickDamage();
         }
-
-        Debug.Log($"🔥 Aktualne ryzyko pożaru: {FireProbability}");
-
     }
 
 
@@ -109,44 +98,20 @@ public class StartFire : MonoBehaviour
     void FireActionStart()
     {   
         if (isOnFire) return;
-        
-        Debug.Log("start fire");
+
         fireVFX.SetActive(true);
         isOnFire = true;
-        RandomPosFireStart();
         StartCoroutine(FireTickDamage());
     }
 
-    void FireActionStop()
+    public void FireActionStop()
     {
         fireVFX.SetActive(false);
         isOnFire = false;
         
-        foreach (GameObject obj in FirePointList)
-        {
-            obj.SetActive(false);
-        }
-    }
-
-    void RandomPosFireStart()
-    {
-        if (FirePointList.Count == 0) return;  // Sprawdzenie, czy lista nie jest pusta
-
-        // Filtrowanie listy: znajdź punkty, które jeszcze się nie palą
-        List<GameObject> wolnePunkty = FirePointList.FindAll(p => !p.activeSelf);
-
-        if (wolnePunkty.Count == 0)
-        {
-            Debug.Log("Wszystkie punkty ognia są już aktywne!");
-            return; // Jeśli nie ma dostępnych miejsc, kończymy
-        }
-
-        // Wybieramy losowy punkt spośród dostępnych
-        int losowyIndeks = UnityEngine.Random.Range(0, wolnePunkty.Count);
-    
-        Debug.Log($"Nowy pożar w miejscu: {wolnePunkty[losowyIndeks].name}");
-    
-        wolnePunkty[losowyIndeks].SetActive(true);
-
+        //foreach (GameObject obj in FirePointList)
+        //{
+        //    obj.SetActive(false);
+        //}
     }
 }
