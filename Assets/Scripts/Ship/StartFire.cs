@@ -51,7 +51,7 @@ public class StartFire : MonoBehaviour
 
     private void Update()
     {
-        if (shipDamage.GetModifiedStatValue(Stats.Health) == shipDamage.GetPermanentModifiedStatValue(Stats.Health))
+        if (shipDamage.GetModifiedStatValue(Stats.Health) >= shipDamage.GetPermanentModifiedStatValue(Stats.Health) - 20)
             isSparking = false;
         else
             isSparking = true;
