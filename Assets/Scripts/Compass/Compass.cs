@@ -11,7 +11,7 @@ public class Compass : MonoBehaviour
     [SerializeField] float compassViewAngle = 180f;
 
     float halfCompassWidth;
-    List<Marker> markers = new List<Marker>();
+    public List<Marker> markers = new List<Marker>();
 
     private void Start()
     {

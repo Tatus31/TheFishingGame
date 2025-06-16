@@ -84,17 +84,13 @@ public class InteractionManager : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            EquipTool(EquipedTool.Harpoon);
+            EquipTool(EquipedTool.FireExtinguisher);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            EquipTool(EquipedTool.FireExtinguisher);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
             EquipTool(EquipedTool.Wrench);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha0))
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             EquipTool(EquipedTool.Empty);
         }

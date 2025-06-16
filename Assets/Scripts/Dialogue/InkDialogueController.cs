@@ -27,7 +27,6 @@ public class InkDialogueController : MonoBehaviour
     [SerializeField] ItemObject requiredItem;
 
     bool isQuestCompleted = false;
-    bool isQuestStarted = false;
     bool markerPlaced = false;
 
     QuestManager questManager;
@@ -122,7 +121,6 @@ public class InkDialogueController : MonoBehaviour
                 {
                     compass.AddMarker(currentQuest.questMarker);
                     markerPlaced = true;
-                    isQuestStarted = true;
                     OnStartQuest?.Invoke(true);
                 }
             }
@@ -192,7 +190,6 @@ public class InkDialogueController : MonoBehaviour
         inkJSONAsset = newInkJSON;
         requiredItem = newRequiredItem;
         isQuestCompleted = false;
-        isQuestStarted = false;
         markerPlaced = false;
 
         if (inkJSONAsset != null)
@@ -212,7 +209,6 @@ public class InkDialogueController : MonoBehaviour
                     {
                         compass.AddMarker(currentQuest.questMarker);
                         markerPlaced = true;
-                        isQuestStarted = true;
                     }
                 }
             }

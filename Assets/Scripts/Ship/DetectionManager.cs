@@ -106,17 +106,14 @@ public class DetectionManager : MonoBehaviour
                 if (head.GetComponentInParent<MonsterLargeStateMachine>() != null)
                 {
                     monsterTypes.Add(head, MonsterType.Large);
-                    Debug.Log($"Monster type set to Large for {head.name}.");
                 }
                 else if (head.GetComponentInParent<MediumMonsterStateMachine>() != null && head.GetComponentInParent<MediumMonsterStateMachine>().isSmallMonster)
                 {
                     monsterTypes.Add(head, MonsterType.Small);
-                    Debug.Log($"Monster type set to Small for {head.name}.");
                 }
                 else if (head.GetComponentInParent<MediumMonsterStateMachine>() != null)
                 {
                     monsterTypes.Add(head, MonsterType.Medium);
-                    Debug.Log($"Monster type set to Medium for {head.name}.");
                 }
                 else
                 {

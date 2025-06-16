@@ -26,8 +26,6 @@ public abstract class MovementBaseState
     {
         PlayAnimation(player);
 
-        Debug.Log(player.CurrentState);
-
         playerCollider = player.GetComponent<Collider>();
         if (playerCollider == null)
         {
