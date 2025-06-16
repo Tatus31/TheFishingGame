@@ -9,7 +9,9 @@ public class PlayerOxygenLevel : MonoBehaviour
     [SerializeField] LayerMask waterLayer;
     [SerializeField] float maxOxygen = 100f;
     [SerializeField] float oxygenDepletionRate = 10f;
-    [SerializeField] float oxygenRefillRate = 20f; 
+    [SerializeField] float oxygenRefillRate = 20f;
+    [SerializeField] Transform targetPoint;
+    [SerializeField] GameObject transportedObject;
 
     bool isUnderwater = false;
 
@@ -23,6 +25,11 @@ public class PlayerOxygenLevel : MonoBehaviour
     {
         CheckIfUnderwater();
         UpdateOxygenOverTime();
+
+        if(slider.value <= 0)
+        {
+            FindObjectOfType<ShipTransporter>().MovePlayer(targetPoint, transportedObject);
+        }
     }
 
     void CheckIfUnderwater()

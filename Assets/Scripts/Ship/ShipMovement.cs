@@ -169,8 +169,8 @@ public class ShipMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        //if (!isControllingShip)
-        //    return;
+        if (IsUnderDeck.isUnderDeck)
+            return;
 
         HandleMovement();
         HandleRotation();

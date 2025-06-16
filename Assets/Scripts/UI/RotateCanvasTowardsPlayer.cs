@@ -20,7 +20,8 @@ public class RotateCanvasTowardsPlayer : MonoBehaviour
 
     private void Start()
     {
-
+        if(playerTransform == null)
+            playerTransform = FindObjectOfType<CameraLook>().transform;
     }
 
     void Update()

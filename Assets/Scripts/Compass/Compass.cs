@@ -32,16 +32,16 @@ public class Compass : MonoBehaviour
         }
     }
 
-    private Transform GetOrientationTransform()
+    Transform GetOrientationTransform()
     {
-        if (StickToShip.Instance != null && StickToShip.Instance.IsOnShip)
-        {
-            ShipMovement shipMovement = FindObjectOfType<ShipMovement>();
-            if (shipMovement != null && shipMovement.IsControllingShip)
-            {
-                return shipMovement.transform;
-            }
-        }
+        //if (StickToShip.Instance != null && StickToShip.Instance.IsOnShip)
+        //{
+        //    ShipMovement shipMovement = FindObjectOfType<ShipMovement>();
+        //    if (shipMovement != null && shipMovement.IsControllingShip)
+        //    {
+        //        return shipMovement.transform;
+        //    }
+        //}
 
         return playerOrientationTransform;
     }

@@ -23,7 +23,6 @@ but for some inexplicable reason you know that behind that steined glass is some
 -> ending
 
 === walkup ===
-~ placeMarker = true
 [???]: Ah Finally someone new.... Oh but before I forget let me introduce myself, you can call me The Trader.
 
 [Trader]: Or at least thats what everyone used to call me here back in the day but I'm loosing track of whats important here. 
@@ -34,6 +33,7 @@ Are you willing to help me out a bit in here, obviously not for free mind you.
 -> disagree
 
 === agree ===
+~ placeMarker = true
 [Trader]: well I didn't expect you to be so willing to help. 
 -> quest
 
