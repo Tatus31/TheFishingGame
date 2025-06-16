@@ -118,9 +118,9 @@ public class InkDialogueController : MonoBehaviour
             if (shouldPlaceMarker && !markerPlaced && questManager != null && compass != null)
             {
                 Quest currentQuest = questManager.GetCurrentQuest();
-                if (currentQuest != null && currentQuest.QuestMarker != null)
+                if (currentQuest != null && currentQuest.questMarker != null)
                 {
-                    compass.AddMarker(currentQuest.QuestMarker);
+                    compass.AddMarker(currentQuest.questMarker);
                     markerPlaced = true;
                     isQuestStarted = true;
                     OnStartQuest?.Invoke(true);
@@ -175,9 +175,9 @@ public class InkDialogueController : MonoBehaviour
 
                     if (questManager != null && compass != null)
                     {
-                        if (currentQuest != null && currentQuest.QuestMarker != null)
+                        if (currentQuest != null && currentQuest.questMarker != null)
                         {
-                            compass.DeleteMarker(currentQuest.QuestMarker);
+                            compass.DeleteMarker(currentQuest.questMarker);
                         }
                     }
 
@@ -203,14 +203,14 @@ public class InkDialogueController : MonoBehaviour
         if (addToCompass && questManager != null && compass != null)
         {
             Quest currentQuest = questManager.GetCurrentQuest();
-            if (currentQuest != null && currentQuest.QuestMarker != null)
+            if (currentQuest != null && currentQuest.questMarker != null)
             {
                 if (story != null && story.variablesState.GlobalVariableExistsWithName("placeMarker"))
                 {
                     bool shouldPlaceMarker = (bool)story.variablesState["placeMarker"];
                     if (shouldPlaceMarker)
                     {
-                        compass.AddMarker(currentQuest.QuestMarker);
+                        compass.AddMarker(currentQuest.questMarker);
                         markerPlaced = true;
                         isQuestStarted = true;
                     }
@@ -364,7 +364,7 @@ public class InkDialogueController : MonoBehaviour
             if (questManager.GetCurrentQuest() != null)
             {
                 UpdateQuestData(questManager.GetCurrentQuest().inkJSONAsset, questManager.GetCurrentQuest().requiredItem);
-                compass.DeleteMarker(questManager.GetCurrentQuest().QuestMarker);
+                compass.DeleteMarker(questManager.GetCurrentQuest().questMarker);
             }
         }
     }
@@ -376,9 +376,9 @@ public class InkDialogueController : MonoBehaviour
         if (questManager != null)
         {
             Quest currentQuest = questManager.GetCurrentQuest();
-            if (currentQuest != null && currentQuest.QuestMarker != null && compass != null)
+            if (currentQuest != null && currentQuest.questMarker != null && compass != null)
             {
-                compass.DeleteMarker(currentQuest.QuestMarker);
+                compass.DeleteMarker(currentQuest.questMarker);
             }
 
             questManager.CompleteCurrentQuest();

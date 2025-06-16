@@ -17,13 +17,14 @@ public class Quest
     [Tooltip("Whether this quest has been completed")]
     public bool isCompleted = false;
     [Tooltip("The marker for the compass for this quest")]
-    public Marker QuestMarker;
+    public Marker questMarker;
 }
 
 public class QuestManager : MonoBehaviour
 {
     [SerializeField] List<Quest> quests = new List<Quest>();
     InkDialogueController dialogueController;
+    [SerializeField] List<Marker> staticMarkers = new List<Marker>();
     Compass compass;
     int currentQuestIndex = 0;
 
@@ -38,6 +39,14 @@ public class QuestManager : MonoBehaviour
         if (compass == null)
         {
             compass = FindObjectOfType<Compass>();
+        }
+
+        if(staticMarkers.Count > 0)
+        {
+            foreach (var marker in staticMarkers)
+            {
+                compass.AddMarker(marker);
+            }
         }
 
         InkDialogueController.OnStartQuest += InkDialogueController_OnStartQuest;
@@ -57,9 +66,9 @@ public class QuestManager : MonoBehaviour
 
     private void InkDialogueController_OnStartQuest(bool shouldAddMarker)
     {
-        if (shouldAddMarker && compass != null && IsValidQuestIndex(currentQuestIndex) && quests[currentQuestIndex].QuestMarker != null)
+        if (shouldAddMarker && compass != null && IsValidQuestIndex(currentQuestIndex) && quests[currentQuestIndex].questMarker != null)
         {
-            compass.AddMarker(quests[currentQuestIndex].QuestMarker);
+            compass.AddMarker(quests[currentQuestIndex].questMarker);
         }
     }
 
@@ -102,9 +111,9 @@ public class QuestManager : MonoBehaviour
             return;
         }
 
-        if (compass != null && quests[currentQuestIndex].QuestMarker != null)
+        if (compass != null && quests[currentQuestIndex].questMarker != null)
         {
-            compass.DeleteMarker(quests[currentQuestIndex].QuestMarker);
+            compass.DeleteMarker(quests[currentQuestIndex].questMarker);
         }
         quests[currentQuestIndex].isCompleted = true;
 
