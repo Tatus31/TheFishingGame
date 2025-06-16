@@ -61,7 +61,8 @@ public class FireExtinguisher : MonoBehaviour
         {
 
             yield return new WaitForSeconds(timeToPutOutFire);
-            fire.IsOnFire = false;
+
+            fire.FireActionStop();
         }
 
         yield return null; 
