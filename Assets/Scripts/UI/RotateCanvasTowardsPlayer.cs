@@ -9,12 +9,19 @@ public class RotateCanvasTowardsPlayer : MonoBehaviour
         ShipControls,
         Heart,
         pump,
-        Harpoon
+        Harpoon,
+        repair,
+
     }
 
     [SerializeField] Transform playerTransform;
     [SerializeField] float rotationSpeed = 5f;
     public CanvasType canvasType;
+
+    private void Start()
+    {
+
+    }
 
     void Update()
     {

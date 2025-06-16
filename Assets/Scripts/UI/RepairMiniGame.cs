@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class RepairMiniGame : MonoBehaviour
 {
@@ -19,6 +15,7 @@ public class RepairMiniGame : MonoBehaviour
     Animator repairAnimator;
 
     bool wasFixingLastFrame = false;
+    GameObject lastValidRepairPointObj = null;
 
     private void Start()
     {
@@ -30,6 +27,17 @@ public class RepairMiniGame : MonoBehaviour
 
     private void Update()
     {
+        GameObject repairPointObj = MouseWorldPosition.GetObjectOverMouse(maxPointDistance, repairPointLayerMask);
+
+        if (repairPointObj != null)
+        {
+            lastValidRepairPointObj = repairPointObj;
+        }
+        else
+        {
+            repairPointObj = lastValidRepairPointObj;
+        }
+
         if (InputManager.Instance.IsLeftMouseButtonHeld())
         {
             isFixingHole = true;
@@ -41,12 +49,12 @@ public class RepairMiniGame : MonoBehaviour
             repairAnimator.SetBool(AnimationController.IS_FIXING_HOLE, isFixingHole);
         }
 
-        CheckAnimationCompletion();
+        CheckAnimationCompletion(lastValidRepairPointObj);
 
         wasFixingLastFrame = isFixingHole;
     }
 
-    void CheckAnimationCompletion()
+    void CheckAnimationCompletion(GameObject repairPointObj)
     {
         if (wasFixingLastFrame && !isFixingHole && !isFixed)
         {
@@ -55,20 +63,19 @@ public class RepairMiniGame : MonoBehaviour
             if (stateInfo.IsName("FixHole") && stateInfo.normalizedTime >= 0.95f)
             {
                 isFixed = true;
-                OnRepairComplete();
+                OnRepairComplete(repairPointObj);
             }
         }
     }
 
-    void OnRepairComplete()
+    void OnRepairComplete(GameObject repairPointObj)
     {
-#if UNITY_EDITOR
-        Debug.Log("Repair completed!");
-#endif
-
-        GameObject repairPointObj = MouseWorldPosition.GetObjectOverMouse(maxPointDistance, repairPointLayerMask);
         if (repairPointObj != null)
         {
+#if UNITY_EDITOR
+            Debug.Log("Repair completed!");
+#endif
+
             Vector3 repairPointPosition = repairPointObj.transform.position;
             repairPointObj.SetActive(false);
 
