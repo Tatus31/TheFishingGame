@@ -26,7 +26,10 @@ public class SuitWalkState : MovementBaseState
     {
     }
 
-    public override void UpdateState() { }
+    public override void UpdateState() 
+    {
+        base.UpdateState(player);
+    }
 
     public override void FixedUpdateState()
     {

@@ -2,6 +2,7 @@
 VAR hasItem = false
 VAR completeQuest = false
 VAR placeMarker = false
+VAR playCutscene = false
 
 -> check_loop
 
@@ -34,7 +35,7 @@ You hear the Trader laugh maniacally behind the counter.
 + [Give the artifact] 
     {hasItem:
         ~ completeQuest = true
-        Well done, we really work well together(together).
+        Well done, we really work well together.
         -> endingtrue
     - else:
         [Trader]: I don't have the time to be playing with you now.
@@ -46,4 +47,5 @@ You decide to leave the room.
 -> END
 
 === endingtrue ===
+~ playCutscene = true
 -> END

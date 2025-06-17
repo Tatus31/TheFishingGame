@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Ink.Runtime;
 using System;
+using Ink.Parsed;
+using UnityEngine.Events;
 
 [System.Serializable]
 public class Quest
@@ -22,6 +24,8 @@ public class Quest
 
 public class QuestManager : MonoBehaviour
 {
+    public static UnityAction OnLastQuestCompleted;
+
     [SerializeField] List<Quest> quests = new List<Quest>();
     InkDialogueController dialogueController;
     [SerializeField] List<Marker> staticMarkers = new List<Marker>();
@@ -29,6 +33,7 @@ public class QuestManager : MonoBehaviour
     int currentQuestIndex = 0;
 
     private int lastCheckedQuestIndex = -1;
+    public bool isDone = false;
 
     private void Start()
     {
@@ -39,6 +44,10 @@ public class QuestManager : MonoBehaviour
         if (compass == null)
         {
             compass = FindObjectOfType<Compass>();
+            if (compass == null)
+            {
+                return;
+            }
         }
 
         if(staticMarkers.Count > 0)
@@ -127,6 +136,7 @@ public class QuestManager : MonoBehaviour
         else
         {
             Debug.Log("All quests completed!");
+            PlayFinalCutscene();
         }
     }
 
@@ -165,43 +175,14 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    public void AddQuest(Quest quest)
+    void PlayFinalCutscene()
     {
-        if (quest != null && quest.inkJSONAsset != null)
+        if (dialogueController.story != null && dialogueController.story.variablesState.GlobalVariableExistsWithName("playCutscene"))
         {
-            quests.Add(quest);
-
-            if (quests.Count == 1 || !IsValidQuestIndex(currentQuestIndex) || quests[currentQuestIndex].isCompleted)
-            {
-                InitializeFirstQuest();
-            }
+            Debug.Log("Playing final cutscene");
+            dialogueController.story.variablesState["playCutscene"] = true;
+            isDone = true;
+            OnLastQuestCompleted?.Invoke();
         }
-        else
-        {
-            Debug.LogWarning("Cannot add null quest or quest without inkJSONAsset");
-        }
-    }
-
-    public void PrintQuestStatus()
-    {
-        Debug.Log("=== Quest Status ===");
-        Debug.Log("Current Quest Index: " + currentQuestIndex);
-        for (int i = 0; i < quests.Count; i++)
-        {
-            string status = quests[i].isCompleted ? "COMPLETED" : "ACTIVE";
-            string current = (i == currentQuestIndex) ? " <- CURRENT" : "";
-            Debug.Log($"Quest {i}: {quests[i].inkJSONAsset.name} - {status}{current}");
-        }
-    }
-
-    public void ResetAllQuests()
-    {
-        foreach (Quest quest in quests)
-        {
-            quest.isCompleted = false;
-        }
-        currentQuestIndex = 0;
-        lastCheckedQuestIndex = -1;
-        InitializeFirstQuest();
     }
 }

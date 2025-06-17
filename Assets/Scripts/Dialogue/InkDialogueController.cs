@@ -30,7 +30,7 @@ public class InkDialogueController : MonoBehaviour
     bool markerPlaced = false;
 
     QuestManager questManager;
-    Story story;
+    public Story story;
     CameraLook cameraLook;
     Compass compass;
 
@@ -67,6 +67,9 @@ public class InkDialogueController : MonoBehaviour
 
     private void Update()
     {
+        if (questManager.isDone)
+            return;
+
         if (InputManager.Instance.IsLeftMouseButtonPressed() && MouseWorldPosition.GetInteractable(interactableMask))
         {
             if (story != null && story.variablesState.GlobalVariableExistsWithName("startQuest"))

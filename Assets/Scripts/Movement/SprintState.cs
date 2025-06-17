@@ -28,6 +28,8 @@ public class SprintState : MovementBaseState
 
     public override void UpdateState()
     {
+        base.UpdateState(player);
+
         if (!player.inputManager.IsHoldingSprintKey())
         {
             player.SwitchState(player.WalkState);
