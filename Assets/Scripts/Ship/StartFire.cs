@@ -11,18 +11,16 @@ public class StartFire : MonoBehaviour
     [SerializeField] GameObject fireVFX;
     [SerializeField] GameObject sparksVFX;
     [SerializeField] private float fireTickInterval = 1.0f;
-    [SerializeField] private Vector3 position;
-    [SerializeField] private Vector3 rotation;
     [SerializeField] private float FireProbability;
+    [SerializeField] private float fireGracePeriodTime = 10f;
+
     private float FireProbabilityMaxValue = 500f;
-           
+
     ElectricalDevice electricalDevice;
     ShipDamage shipDamage;
 
-    bool isSparking;
-    bool isUsed;
+    bool isInGracePeriod = false;
     bool isOnFire;
-    bool isWaterUnderDeck;
     public bool IsOnFire {  get { return isOnFire; } set {  isOnFire = value; } }
 
     private void Start()
@@ -52,15 +50,9 @@ public class StartFire : MonoBehaviour
     private void Update()
     {
         if (shipDamage.GetModifiedStatValue(Stats.Health) >= shipDamage.GetPermanentModifiedStatValue(Stats.Health) - 20)
-            isSparking = false;
-        else
-            isSparking = true;
-
-        if(isSparking)
-            sparksVFX.SetActive(true); 
+            sparksVFX.SetActive(true);
         else
             sparksVFX.SetActive(false);
-
     }
 
     private void ElectricalDevice_OnDegradation(object sender, EventArgs e)
@@ -88,6 +80,7 @@ public class StartFire : MonoBehaviour
     {
         while (isOnFire)
         {
+            Debug.Log("Taking Damage from fire");
             shipDamage.TakeDamage(shipDamage.BaseFireDamage);
             yield return new WaitForSeconds(fireTickInterval);
         }
@@ -96,8 +89,8 @@ public class StartFire : MonoBehaviour
     }
 
     void FireActionStart()
-    {   
-        if (isOnFire) return;
+    {
+        if (isOnFire || isInGracePeriod) return;
 
         fireVFX.SetActive(true);
         isOnFire = true;
@@ -106,12 +99,18 @@ public class StartFire : MonoBehaviour
 
     public void FireActionStop()
     {
+        if (!isOnFire) return;
+
         fireVFX.SetActive(false);
         isOnFire = false;
-        
-        //foreach (GameObject obj in FirePointList)
-        //{
-        //    obj.SetActive(false);
-        //}
+        StartCoroutine(FireGracePeriod());
     }
+
+    IEnumerator FireGracePeriod()
+    {
+        isInGracePeriod = true;
+        yield return new WaitForSeconds(fireGracePeriodTime);
+        isInGracePeriod = false;
+    }
+
 }

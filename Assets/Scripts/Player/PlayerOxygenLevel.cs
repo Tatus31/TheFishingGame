@@ -25,8 +25,9 @@ public class PlayerOxygenLevel : MonoBehaviour
     {
         CheckIfUnderwater();
         UpdateOxygenOverTime();
+        UpdateOxygenUnderDeck();
 
-        if(slider.value <= 0)
+        if (slider.value <= 0)
         {
             FindObjectOfType<ShipTransporter>().MovePlayer(targetPoint, transportedObject);
         }
@@ -53,6 +54,14 @@ public class PlayerOxygenLevel : MonoBehaviour
         else
         {
             UpdateOxygenLevel(oxygenRefillRate * Time.deltaTime);
+        }
+    }
+
+    void UpdateOxygenUnderDeck()
+    {
+        if (IsUnderDeck.isUnderDeck && IsUnderDeck.startFire.IsOnFire)
+        {
+            UpdateOxygenLevel(-oxygenDepletionRate * Time.deltaTime);
         }
     }
 

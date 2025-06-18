@@ -61,6 +61,9 @@ public abstract class MovementBaseState
         if (player.GetMoveDirection().magnitude < 0.01f)
         {
             Vector3 horizontalVelocity = new Vector3(player.rb.velocity.x, 0, player.rb.velocity.z);
+
+            //AudioManager.MuteSound(AudioManager.WalkSound);
+
             if (horizontalVelocity.magnitude > 0)
             {
                 Vector3 frictionForce = -horizontalVelocity.normalized * frictionAmount;
@@ -72,6 +75,8 @@ public abstract class MovementBaseState
     {
         player.FlatVel = new Vector3(player.rb.velocity.x, 0f, player.rb.velocity.z);
         Vector3 moveDirection = player.GetMoveDirection();
+
+        //AudioManager.PlaySound(AudioManager.WalkSound);
 
         debugMoveDirection = moveDirection;
         debugContactNormal = contactNormal;

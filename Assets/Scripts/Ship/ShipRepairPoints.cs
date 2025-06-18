@@ -126,6 +126,16 @@ public class ShipRepairPoints : MonoBehaviour
         }
     }
 
+    public void ResetAllRepairPoints()
+    {
+        foreach (var pointToReset in RepairPoints)
+        {
+            int healthToRestore = pointToReset.damageValue;
+            pointToReset.isUsed = false;
+            pointToReset.damageValue = 0;
+        }
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

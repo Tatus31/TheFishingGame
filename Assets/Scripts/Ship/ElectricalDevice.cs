@@ -51,6 +51,12 @@ public class ElectricalDevice : MonoBehaviour
         UpdateDegradationCondition();
     }
 
+    public void RepairDevice(int repairValue)
+    {
+        deviceStats.condition = repairValue;
+        UpdateDegradationCondition();
+    }
+
     void UpdateDegradationCondition()
     {
         DegradationCondition newDegradation = GetDegradationCondition(deviceStats.condition);

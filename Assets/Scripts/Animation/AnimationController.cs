@@ -18,6 +18,7 @@ public class AnimationController: MonoBehaviour
         ShipLampAnimator,
         ShipGearAnimator,
         ShipWheelAnimator,
+        WrenchAnimator,
     }
 
     [Serializable]
@@ -45,6 +46,7 @@ public class AnimationController: MonoBehaviour
     [HideInInspector] public const string WHEEL_BLEND_STATE = "WheelRotation";
     [HideInInspector] public const string IS_FIXING_HOLE = "isFixingHole";
     [HideInInspector] public const string FIX_SPEED_MULTIPLIER = "fixSpeedMultiplier";
+    [HideInInspector] public const string ON_USE = "onUse";
 
     void Awake()
     {

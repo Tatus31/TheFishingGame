@@ -7,7 +7,6 @@ public class SinkShip : MonoBehaviour
 {
     public static Action<bool> OnShipSank;
 
-    Rigidbody shipRB;
     StableFloatingRigidBody stableFloatingRB;
     ChangeWaterLevelUnderDeck waterLevel;
     ShipDamage shipDamage;
@@ -21,7 +20,6 @@ public class SinkShip : MonoBehaviour
 
     private void Awake()
     {
-        shipRB = GetComponent<Rigidbody>();
         stableFloatingRB = GetComponent<StableFloatingRigidBody>();
     }
 

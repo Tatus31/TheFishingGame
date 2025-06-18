@@ -5,6 +5,12 @@ using UnityEngine;
 public class IsUnderDeck : MonoBehaviour
 {
     public static bool isUnderDeck = false;
+    public static StartFire startFire;
+
+    private void Start()
+    {
+        startFire = FindObjectOfType<StartFire>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {

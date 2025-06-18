@@ -8,6 +8,7 @@ public class AudioManager : MonoBehaviour
     public static AudioManager Instance;
     public static string HeartBeatSound = "HeartBeatSound";
     public static string HeartBeatSlowSound = "HeartBeatSlowSound";
+    public static string WalkSound = "Audio";
 
     [SerializeField]
     private List<AudioSource> playingSounds = new List<AudioSource>();

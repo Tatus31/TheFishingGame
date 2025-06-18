@@ -98,6 +98,7 @@ public class ShipDamage : MonoBehaviour
 #if UNITY_EDITOR
         Debug.Log($"restored {amount} health");
 #endif
+        OnDamageTaken?.Invoke(this, amount);
         UpdateAttributes();
     }
 
