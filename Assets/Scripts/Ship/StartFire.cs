@@ -71,7 +71,6 @@ public class StartFire : MonoBehaviour
         {
             FireActionStart();
             FireProbability = 0;
-            FireTickDamage();
         }
     }
 

@@ -1,18 +1,24 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class SwimmingState : MovementBaseState
 {
-    private PlayerMovement player;
-    private float maxSpeed;
-    private float accelAmount;
-    private float buoyancy = 1f; 
-    private float waterDrag = 0.5f; 
-    private float submergenceRange = 10f;
-    private float submergenceOffset = 0.5f;
-    private float submergence;
-    private Vector3 upAxis = Vector3.up;
-    private float gravityMultiplier = 0.02f;
+    PlayerMovement player;
+
+    float maxSpeed;
+    float accelAmount;
+    float buoyancy = 1f; 
+    float waterDrag = 0.5f; 
+    float submergenceRange = 10f;
+    float submergenceOffset = 0.5f;
+    float submergence;
+    float gravityMultiplier = 0.02f;
+
+    Vector3 upAxis = Vector3.up;
+
+    bool isSinking;
 
     public SwimmingState(PlayerMovement player, float maxSpeed, float accelAmount)
     {
@@ -23,9 +29,16 @@ public class SwimmingState : MovementBaseState
 
     public override void EnterState(PlayerMovement player)
     {
+        ClimbLadderToShip.OnClimb += ClimbLadderToShip_OnClimb;
+
         this.player = player;
 
         PlayerSetup();
+    }
+
+    private void ClimbLadderToShip_OnClimb(bool b)
+    {
+        isSinking = b;
     }
 
     public override void ExitState()
@@ -60,7 +73,9 @@ public class SwimmingState : MovementBaseState
         Vector3 swimDirection = (cameraForward * verticalInput) + (cameraRight * horizontalInput);
         swimDirection.Normalize();
         Vector3 targetVelocity = swimDirection * maxSpeed;
-        player.rb.velocity *= 1f - (waterDrag * Time.deltaTime);
+
+        if(!isSinking)
+            player.rb.velocity *= 1f - (waterDrag * Time.deltaTime);
 
         Vector3 velocityChange = (targetVelocity - player.rb.velocity);
 

@@ -128,12 +128,20 @@ public class ShipRepairPoints : MonoBehaviour
 
     public void ResetAllRepairPoints()
     {
-        foreach (var pointToReset in RepairPoints)
+        int totalHealthToRestore = 0;
+
+        foreach (var point in repairPoints)
         {
-            int healthToRestore = pointToReset.damageValue;
-            pointToReset.isUsed = false;
-            pointToReset.damageValue = 0;
+            if (point.isUsed)
+            {
+                totalHealthToRestore += point.damageValue;
+                point.isUsed = false;
+                point.damageValue = 0;
+            }
         }
+
+        totalHoleDamage = 0;
+        OnRepairPointsChanged?.Invoke(GetUsedRepairPoints());
     }
 
     private void OnDrawGizmos()

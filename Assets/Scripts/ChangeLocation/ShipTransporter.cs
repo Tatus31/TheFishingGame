@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ShipTransporter : MonoBehaviour
 {
+    public static UnityAction<bool> OnClimb;
+
     [SerializeField] public Transform targetPoint;
     [SerializeField] LayerMask collisionLayerMask;
     [SerializeField] GameObject transportedObject;
@@ -62,6 +65,9 @@ public class ShipTransporter : MonoBehaviour
 
     public void MovePlayer(Transform targetPoint, GameObject transportedObject)
     {
+
+        OnClimb?.Invoke(true);
+
         if (transportedObject == null || targetPoint == null) return;
 
         Rigidbody playerRigidbody = transportedObject.GetComponent<Rigidbody>();
@@ -108,6 +114,8 @@ public class ShipTransporter : MonoBehaviour
         {
             cc.enabled = true;
         }
+
+        OnClimb?.Invoke(false);
     }
 
     protected void RespawnShip()

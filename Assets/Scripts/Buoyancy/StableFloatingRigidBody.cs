@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class StableFloatingRigidBody : MonoBehaviour
@@ -43,6 +42,8 @@ public class StableFloatingRigidBody : MonoBehaviour
     Vector3 previousVelocity;
     Vector3 previousPosition;
     Vector3 smoothedVelocity;
+
+    bool isSinking;
 
     public bool FloatToSleep { get { return floatToSleep; } set { floatToSleep = value; } }
     public bool SafeFloating { get { return safeFloating; } set { safeFloating = value; } }
@@ -102,6 +103,16 @@ public class StableFloatingRigidBody : MonoBehaviour
         smoothedVelocity = Vector3.zero;
     }
 
+    private void Start()
+    {
+        SinkShip.OnShipSank += SinkShip_OnShipSank;
+    }
+
+    private void SinkShip_OnShipSank(bool isSinking)
+    {
+        this.isSinking = isSinking;
+    }
+
     void FixedUpdate()
     {
         Vector3 currentVelocity = (transform.position - previousPosition) / Time.fixedDeltaTime;
@@ -151,8 +162,11 @@ public class StableFloatingRigidBody : MonoBehaviour
                 Vector3 worldPoint = transform.TransformPoint(buoyancyOffsets[i]);
 
                 float drag = Mathf.Max(0f, 1f - dragFactor * submergence[i]);
-                body.velocity *= drag;
-                body.angularVelocity *= drag;
+                if (!isSinking)
+                {
+                    body.velocity *= drag;
+                    body.angularVelocity *= drag;
+                }
 
                 body.AddForceAtPosition(
                     gravity * (buoyancyFactor * submergence[i]),

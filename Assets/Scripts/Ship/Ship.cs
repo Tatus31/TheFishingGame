@@ -234,7 +234,6 @@ public class Ship : ObjectInventory
         {
             int detectionRange = GetModifiedStatValue(Stats.DetectionRange);
             fogController.SetFogEnd(detectionRange);
-            Debug.Log($"changed fog to {detectionRange + fogController.defaultFogEnd}");
         }
     }
 
@@ -250,7 +249,6 @@ public class Ship : ObjectInventory
                 if (device.DeviceStats.deviceStats == Stats.DetectionRange)
                 {
                     baseValue += GetDegradationModifier(device.CurrentDegradation, device.DeviceStats.statDegradation);
-                    Debug.Log($"current deg modifier {baseValue}");
                 }
             }
         }
@@ -364,7 +362,9 @@ public class Ship : ObjectInventory
 
     public void AttributeModified(ShipAttributes attribute)
     {
+#if UNITY_EDITOR
         Debug.Log($"{attribute.type} changed to {attribute.value.ModifiedValue} points");
+#endif
     }
 
     private void OnApplicationQuit()

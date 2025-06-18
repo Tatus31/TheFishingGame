@@ -7,6 +7,7 @@ public class ShipDamage : MonoBehaviour
 
     public event EventHandler OnSinkingShipByDamage;
     public event EventHandler<int> OnDamageTaken;
+    public event EventHandler<int> OnRestoreDamage;
 
     Ship ship;
     ShipMovement shipMovement;
@@ -85,10 +86,10 @@ public class ShipDamage : MonoBehaviour
 
     private void Ship_OnStatsChange(object sender, EventArgs e)
     {
-        currentHealth = ship.GetModifiedStatValue(Stats.Health);
-        maxHealth = ship.GetModifiedStatValue(Stats.Health);
+        currentHealth = GetModifiedStatValue(Stats.Health);
+        maxHealth = GetPermanentSavedStatValue(Stats.Health);
 
-        SetPermanentSavedBaseStatValue(Stats.Health);
+        //SetPermanentSavedBaseStatValue(Stats.Health);
         SetPermanentSavedModifiedStatValue(Stats.Health);
     }
 
@@ -98,7 +99,7 @@ public class ShipDamage : MonoBehaviour
 #if UNITY_EDITOR
         Debug.Log($"restored {amount} health");
 #endif
-        OnDamageTaken?.Invoke(this, amount);
+        OnRestoreDamage?.Invoke(this, amount);
         UpdateAttributes();
     }
 
@@ -278,7 +279,7 @@ public class ShipDamage : MonoBehaviour
         {
             if (attribute.type == Stats.Health)
             {
-                attribute.Value.SetModifiedValueDirectly(currentHealth);
+                attribute.Value.SetModifiedValueDirectlyOnlyForModified(currentHealth);
                 if (currentHealth == 0)
                 {
                     OnSinkingShipByDamage?.Invoke(this, EventArgs.Empty);

@@ -24,18 +24,18 @@ public class RespawnShip : ShipTransporter
         SinkShip.OnShipSank += SinkShip_OnShipSank;
     }
 
-    private void SinkShip_OnShipSank(bool obj)
+    private void SinkShip_OnShipSank(bool isSinking)
     {
-        Debug.Log("reset");
+        if (isSinking)
+        {
+            StartFire startFire = FindObjectOfType<StartFire>();
+            ShipDamage shipDamage = FindObjectOfType<ShipDamage>();
+            ShipRepairPoints shipRepairPoints = FindObjectOfType<ShipRepairPoints>();
+            ElectricalDevice electricalDevice = FindObjectOfType<ElectricalDevice>();
 
-        StartFire startFire = FindObjectOfType<StartFire>();
-        ShipDamage shipDamage = FindObjectOfType<ShipDamage>();
-        ShipRepairPoints shipRepairPoints = FindObjectOfType<ShipRepairPoints>();
-        ElectricalDevice electricalDevice = FindObjectOfType<ElectricalDevice>();
-
-        startFire.IsOnFire = false;
-        shipDamage.RestoreHealth(shipDamage.GetModifiedStatValue(Stats.Health));
-        shipRepairPoints.ResetAllRepairPoints();
-        electricalDevice.RepairDevice(100);
+            startFire.FireActionStop();
+            shipDamage.RestoreHealth(shipDamage.GetPermanentModifiedStatValue(Stats.Health));
+            electricalDevice.RepairDevice(100);
+        }
     }
 }

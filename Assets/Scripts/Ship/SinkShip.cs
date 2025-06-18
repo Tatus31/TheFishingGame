@@ -7,16 +7,18 @@ public class SinkShip : MonoBehaviour
 {
     public static Action<bool> OnShipSank;
 
-    StableFloatingRigidBody stableFloatingRB;
+    public StableFloatingRigidBody stableFloatingRB;
     ChangeWaterLevelUnderDeck waterLevel;
     ShipDamage shipDamage;
-    ShipMovement shipMovement;
 
     float sinkingBuoyancy = 0.98f;
+    public float buoyancy;
     [SerializeField] float sinkingDelay = 3f;
     [SerializeField] float sinkTimer = 5f;
     float timer;
-    bool isSinking = false;
+    [SerializeField] bool isSinking = false;
+
+    public float Buoyancy { get { return buoyancy; } set { buoyancy = value; } }
 
     private void Awake()
     {
@@ -29,6 +31,8 @@ public class SinkShip : MonoBehaviour
 
         shipDamage = ShipDamage.Instance;
         waterLevel = ChangeWaterLevelUnderDeck.Instance;
+
+        buoyancy = stableFloatingRB.Buoyancy;
 
         if (shipDamage != null)
             shipDamage.OnSinkingShipByDamage += ShipDamage_OnSinkingShipByDamage;
@@ -47,6 +51,11 @@ public class SinkShip : MonoBehaviour
         {
             RespawnShip.Instance.RespawnShipManually();
             isSinking = false;
+
+            stableFloatingRB.SafeFloating = true;
+            stableFloatingRB.FloatToSleep = true;
+            stableFloatingRB.Buoyancy = buoyancy;
+
             timer = sinkTimer;
         }
     }
@@ -77,10 +86,8 @@ public class SinkShip : MonoBehaviour
             stableFloatingRB.Buoyancy = sinkingBuoyancy;
         }
 
-        if (TryGetComponent<ShipMovement>(out shipMovement))
-        {
-            shipMovement.SetNeutralSpeed();
-        }
+        ShipMovement shipMovement = GetComponent<ShipMovement>();
+        shipMovement.SetNeutralSpeed();
 
         isSinking = true;
         OnShipSank?.Invoke(isSinking);

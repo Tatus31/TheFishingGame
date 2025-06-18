@@ -61,6 +61,7 @@ public class ModifiableInt
         }
 
         modifiedValue = baseValue + valueToAdd;
+
         ValueModified?.Invoke();
     }
 
@@ -92,6 +93,12 @@ public class ModifiableInt
     {
         modifiedValue = newValue;
         baseValue = newValue; 
+        ValueModified?.Invoke();
+    }
+
+    public void SetModifiedValueDirectlyOnlyForModified(int newValue)
+    {
+        modifiedValue = newValue;
         ValueModified?.Invoke();
     }
 

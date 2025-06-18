@@ -14,6 +14,7 @@ public class PlayerOxygenLevel : MonoBehaviour
     [SerializeField] GameObject transportedObject;
 
     bool isUnderwater = false;
+    bool isUnderDeckOnFire;
 
     void Start()
     {
@@ -51,7 +52,7 @@ public class PlayerOxygenLevel : MonoBehaviour
         {
             UpdateOxygenLevel(-oxygenDepletionRate * Time.deltaTime);
         }
-        else
+        else if(!isUnderDeckOnFire)
         {
             UpdateOxygenLevel(oxygenRefillRate * Time.deltaTime);
         }
@@ -62,6 +63,11 @@ public class PlayerOxygenLevel : MonoBehaviour
         if (IsUnderDeck.isUnderDeck && IsUnderDeck.startFire.IsOnFire)
         {
             UpdateOxygenLevel(-oxygenDepletionRate * Time.deltaTime);
+            isUnderDeckOnFire = true;
+        }
+        else
+        {
+            isUnderDeckOnFire = false;
         }
     }
 
