@@ -16,7 +16,7 @@ public class StickToShip : MonoBehaviour
     bool isOnShip;
     public bool IsOnShip { get { return isOnShip; } }
 
-    bool isControllingShip;
+    public bool isControllingShip;
 
     Vector3 localPositionOffset;
     Quaternion localRotationOffset;

@@ -26,6 +26,10 @@ public class ShipMovement : MonoBehaviour
     [SerializeField] float forward2Speed = 2f;
     [SerializeField] float forward3Speed = 3f;
 
+    [Header("Speed Limit Settings")]
+    [SerializeField] float absoluteSpeedLimit = 5f;
+    [SerializeField] bool enforceSpeedLimit = true; 
+
     [Header("Steering Wheel Settings")]
     [SerializeField] float maxWheelRotation = 90f;
     [SerializeField] float wheelReturnSpeed = 5f;
@@ -54,6 +58,7 @@ public class ShipMovement : MonoBehaviour
     public bool IsControllingShip { get { return isControllingShip; } set { isControllingShip = value; } }
     public float CurrentWheelRotation { get { return currentWheelRotation; } }
     public SpeedLevel CurrentSpeedLevel { get { return currentSpeedLevel; } }
+    public float AbsoluteSpeedLimit { get { return absoluteSpeedLimit; } set { absoluteSpeedLimit = value; } }
 
     void Awake()
     {
@@ -165,7 +170,7 @@ public class ShipMovement : MonoBehaviour
 
         int gearState = (int)currentSpeedLevel;
         AnimationController.Instance.PlayAnimation(gearAnimator, "gearState", gearState);
-    } 
+    }
 
     void FixedUpdate()
     {
@@ -175,6 +180,11 @@ public class ShipMovement : MonoBehaviour
         HandleMovement();
         HandleRotation();
         UpdateShipState();
+
+        if (enforceSpeedLimit)
+        {
+            EnforceSpeedLimit();
+        }
 
         OnShipSpeedChange?.Invoke(this, ShipFlatVel);
     }
@@ -249,6 +259,17 @@ public class ShipMovement : MonoBehaviour
         //Debug.Log(MathF.Floor(currentWheelRotation));
     }
 
+    void EnforceSpeedLimit()
+    {
+        float currentVelocityMagnitude = shipRigidbody.velocity.magnitude;
+
+        if (currentVelocityMagnitude > absoluteSpeedLimit)
+        {
+            Vector3 limitedVelocity = shipRigidbody.velocity.normalized * absoluteSpeedLimit;
+            shipRigidbody.velocity = limitedVelocity;
+        }
+    }
+
     void UpdateShipState()
     {
         ShipFlatVel = new Vector3(shipRigidbody.velocity.x, 0f, shipRigidbody.velocity.z);
@@ -261,7 +282,34 @@ public class ShipMovement : MonoBehaviour
 
         if (previousLevel != currentSpeedLevel)
         {
+            Debug.Log($"Ship speed set to neutral: {currentSpeedLevel}");
             UpdateGearAnimation();
         }
+    }
+
+    public void HaltShip()
+    {
+        shipRigidbody.velocity = Vector3.zero;
+        shipRigidbody.angularVelocity = Vector3.zero;
+
+        currentSpeed = 0f;
+        currentTurnSpeed = 0f;
+        speedSmoothVelocity = 0f;
+        rotationSmoothVelocity = 0f;
+
+        SpeedLevel previousLevel = currentSpeedLevel;
+        currentSpeedLevel = SpeedLevel.neutral;
+
+        ShipFlatVel = Vector3.zero;
+
+        if (previousLevel != currentSpeedLevel)
+        {
+            UpdateGearAnimation();
+        }
+
+        OnDetectionChange?.Invoke(this, currentSpeedLevel);
+        OnShipSpeedChange?.Invoke(this, ShipFlatVel);
+
+        Debug.Log("Ship halted");
     }
 }

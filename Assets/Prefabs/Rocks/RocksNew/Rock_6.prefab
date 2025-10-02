@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 287524874485144386}
-  - component: {fileID: -123224743369118641}
   m_Layer: 0
   m_Name: Rock_6
   m_TagString: Untagged
@@ -31,15 +30,48 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3435191137194988063}
+  - {fileID: 2999279880162553549}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &-123224743369118641
-MeshCollider:
+--- !u!1 &3060353138486764557
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2763287160052617512}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2999279880162553549}
+  - component: {fileID: 1292965124085213137}
+  m_Layer: 0
+  m_Name: Col
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2999279880162553549
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3060353138486764557}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.21191901, y: -0.03093702, z: 0.1411022, w: 0.96655244}
+  m_LocalPosition: {x: 0.002143871, y: 0.004689936, z: 0.00424813}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 287524874485144386}
+  m_LocalEulerAnglesHint: {x: -23.636, y: -7.502, z: 18.183}
+--- !u!65 &1292965124085213137
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3060353138486764557}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -51,10 +83,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
+  serializedVersion: 3
+  m_Size: {x: 1.9862627, y: 2.7776356, z: 2.1811528}
+  m_Center: {x: -0.020670235, y: 0.008858681, z: 0.00590539}
 --- !u!1 &8658420808110825765
 GameObject:
   m_ObjectHideFlags: 0

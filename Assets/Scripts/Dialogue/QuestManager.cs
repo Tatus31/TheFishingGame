@@ -24,7 +24,7 @@ public class Quest
 
 public class QuestManager : MonoBehaviour
 {
-    public static UnityAction OnLastQuestCompleted;
+    public static EventHandler OnLastQuestCompleted;
 
     [SerializeField] List<Quest> quests = new List<Quest>();
     InkDialogueController dialogueController;
@@ -181,8 +181,9 @@ public class QuestManager : MonoBehaviour
         {
             Debug.Log("Playing final cutscene");
             dialogueController.story.variablesState["playCutscene"] = true;
+            OnLastQuestCompleted?.Invoke(this, EventArgs.Empty);
+
             isDone = true;
-            OnLastQuestCompleted?.Invoke();
         }
     }
 }

@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8535286356891698636}
   - component: {fileID: 8334725342247380633}
-  - component: {fileID: 8100381641431209739}
   - component: {fileID: 5670137922537355783}
   - component: {fileID: 4518953824172156509}
   - component: {fileID: 5463523506654974353}
@@ -31,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 380867921470322983}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 314.66867, y: 9.000001, z: 555.2569}
+  m_LocalPosition: {x: 289.30338, y: 9.000001, z: 555.332}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -59,23 +58,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 15.634853, y: 24.645893, z: 16.953465}
   m_Center: {x: 1.5170269, y: -11.822947, z: -0.78201103}
---- !u!114 &8100381641431209739
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 380867921470322983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16be960df6a536442bcbba693d7ea87e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireVFX: {fileID: 0}
-  sparksVFX: {fileID: 0}
-  fireTickInterval: 1
-  FireProbability: 0
-  fireGracePeriodTime: 10
 --- !u!114 &5670137922537355783
 MonoBehaviour:
   m_ObjectHideFlags: 0
