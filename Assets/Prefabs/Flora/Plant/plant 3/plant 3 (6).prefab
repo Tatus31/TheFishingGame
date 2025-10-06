@@ -81,7 +81,17 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 148192792051434116}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5c28e4bd60a773d4ea5e0cb4ef5093f7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -8975473747235591837}
   m_SourcePrefab: {fileID: 100100000, guid: 5c28e4bd60a773d4ea5e0cb4ef5093f7, type: 3}
+--- !u!23 &7729175279559494287 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 5c28e4bd60a773d4ea5e0cb4ef5093f7,
+    type: 3}
+  m_PrefabInstance: {fileID: 8971766764849157643}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8089440779378912090 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 5c28e4bd60a773d4ea5e0cb4ef5093f7,
@@ -109,3 +119,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 15.912925, y: 16.466457, z: 17.855831}
   m_Center: {x: 0.2145114, y: 7.73172, z: -0.16599417}
+--- !u!205 &-8975473747235591837
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8089440779378912090}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0.2145114, y: 7.73172, z: -0.16599464}
+  m_Size: 17.855831
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.051058806
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 7729175279559494287}
+  m_Enabled: 1
