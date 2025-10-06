@@ -16,12 +16,18 @@ public class StartFire : MonoBehaviour
 
     private float FireProbabilityMaxValue = 500f;
 
+    private float shipDamageDiffrance = 20f;
+
     ElectricalDevice electricalDevice;
     ShipDamage shipDamage;
+    Coroutine fireTickCoroutine;
 
     bool isInGracePeriod = false;
-    bool isOnFire;
+    public bool isOnFire;
     public bool IsOnFire {  get { return isOnFire; } set {  isOnFire = value; } }
+
+    int modifiedSatValueForHealth;
+    int permanentSavedStatValueForHealth;
 
     private void Start()
     {
@@ -29,10 +35,19 @@ public class StartFire : MonoBehaviour
         sparksVFX.SetActive(false);
        
         isOnFire = false;
+        shipDamage = ShipDamage.Instance;
+
+        if (shipDamage != null)
+        {
+            modifiedSatValueForHealth = shipDamage.GetModifiedStatValue(Stats.Health);
+            permanentSavedStatValueForHealth = shipDamage.GetPermanentSavedStatValue(Stats.Health);
+        }
+        else
+        {
+            Debug.LogError("ShipDamage instance is null in StartFire script.");
+        }
 
         electricalDevice = FindAnyObjectByType<ElectricalDevice>();
-        shipDamage = ShipDamage.Instance;
-        
 
         ElectricalDevice.OnDegradation += ElectricalDevice_OnDegradation;
         ChangeWaterLevelUnderDeck.Instance.OnShipCatchingWater += ChangeWaterLevelUnderDeck_OnShipCatchingWater;
@@ -49,7 +64,7 @@ public class StartFire : MonoBehaviour
 
     private void Update()
     {
-        if (shipDamage.GetModifiedStatValue(Stats.Health) >= shipDamage.GetPermanentModifiedStatValue(Stats.Health) - 20)
+        if (modifiedSatValueForHealth <= permanentSavedStatValueForHealth - shipDamageDiffrance)
             sparksVFX.SetActive(true);
         else
             sparksVFX.SetActive(false);
@@ -69,8 +84,8 @@ public class StartFire : MonoBehaviour
 
         if (FireProbability >= FireProbabilityMaxValue)
         {
-            FireActionStart();
             FireProbability = 0;
+            FireActionStart();
         }
     }
 
@@ -79,29 +94,50 @@ public class StartFire : MonoBehaviour
     {
         while (isOnFire)
         {
-            Debug.Log("Taking Damage from fire");
+            Debug.Log($"isOnFire inside {isOnFire}");
+
+            if (!isOnFire)
+            {
+                Debug.Log("Fire stopped - exiting coroutine");
+                yield break;
+            }
+
             shipDamage.TakeDamage(shipDamage.BaseFireDamage);
+
             yield return new WaitForSeconds(fireTickInterval);
         }
 
-        fireVFX.SetActive(false);
+        fireTickCoroutine = null;
     }
 
     void FireActionStart()
     {
         if (isOnFire || isInGracePeriod) return;
 
+        if (fireTickCoroutine != null)
+        {
+            StopCoroutine(fireTickCoroutine);
+            fireTickCoroutine = null;
+        }
+
         fireVFX.SetActive(true);
         isOnFire = true;
-        StartCoroutine(FireTickDamage());
+        fireTickCoroutine = StartCoroutine(FireTickDamage());
     }
 
     public void FireActionStop()
     {
         if (!isOnFire) return;
 
-        fireVFX.SetActive(false);
         isOnFire = false;
+
+        if (fireTickCoroutine != null)
+        {
+            StopCoroutine(fireTickCoroutine);
+            fireTickCoroutine = null;
+        }
+
+        fireVFX.SetActive(false);
         StartCoroutine(FireGracePeriod());
     }
 

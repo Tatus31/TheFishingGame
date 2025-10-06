@@ -6,6 +6,8 @@ public abstract class MovementBaseState
     protected int groundContactCount = 0;
     protected bool OnGround => groundContactCount > 0;
 
+    protected float angleMovmentBoost = 1.5f;
+
     protected float maxGroundAngle = 90f;
     protected float minGroundDotProduct;
 
@@ -16,10 +18,9 @@ public abstract class MovementBaseState
 
     Collider playerCollider;
 
-    public MovementBaseState()
+    void onValidate()
     {
         minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
-        minGroundDotProduct = Mathf.Abs(minGroundDotProduct);
     }
 
     public virtual void EnterState(PlayerMovement player)
@@ -32,6 +33,7 @@ public abstract class MovementBaseState
             Debug.LogWarning("player has no collider");
         }
 
+        onValidate();
         contactNormal = Vector3.up;
         groundContactCount = 0;
     }
@@ -85,10 +87,8 @@ public abstract class MovementBaseState
 
         float targetSpeed = moveDirection.magnitude * maxSpeed;
 
-        if (OnGround && contactNormal.y < 0.99f)
-        {
-            moveDirection = ProjectOnContactPlane(moveDirection).normalized;
-        }
+        if(OnGround)
+            moveDirection = ProjectOnContactPlane(moveDirection);
 
         Vector3 targetVelocity = moveDirection * targetSpeed;
         Vector3 velocityChange = (targetVelocity - player.FlatVel) * maxSpeedTime;

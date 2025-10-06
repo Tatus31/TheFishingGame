@@ -55,13 +55,13 @@ public class ShipDamage : MonoBehaviour
         }
 
         Instance = this;
+
+        ship = GetComponent<Ship>();
+        shipMovement = GetComponent<ShipMovement>();
     }
 
     private void Start()
     {
-        ship = GetComponent<Ship>();
-        shipMovement = GetComponent<ShipMovement>();
-
         shipMovement.OnShipSpeedChange += ShipMovement_OnShipSpeedChange;
         Ship.OnStatsChange += Ship_OnStatsChange;
 
@@ -280,7 +280,7 @@ public class ShipDamage : MonoBehaviour
             if (attribute.type == Stats.Health)
             {
                 attribute.Value.SetModifiedValueDirectlyOnlyForModified(currentHealth);
-                if (currentHealth == 0)
+                if (currentHealth <= 0)
                 {
                     OnSinkingShipByDamage?.Invoke(this, EventArgs.Empty);
                 }

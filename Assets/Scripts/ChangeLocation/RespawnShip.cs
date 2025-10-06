@@ -32,7 +32,12 @@ public class RespawnShip : ShipTransporter
             ShipDamage shipDamage = FindObjectOfType<ShipDamage>();
             ShipRepairPoints shipRepairPoints = FindObjectOfType<ShipRepairPoints>();
             ElectricalDevice electricalDevice = FindObjectOfType<ElectricalDevice>();
+            ShipMovement shipMovement = FindObjectOfType<ShipMovement>();
+            StickToShip stickToShip = FindObjectOfType<StickToShip>();
 
+            stickToShip.isControllingShip = false;
+            shipMovement.SetNeutralSpeed();
+            shipMovement.HaltShip();
             startFire.FireActionStop();
             shipDamage.RestoreHealth(shipDamage.GetPermanentModifiedStatValue(Stats.Health));
             electricalDevice.RepairDevice(100);

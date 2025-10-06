@@ -189,6 +189,11 @@ public class DetectionManager : MonoBehaviour
 
     private void Update()
     {
+       
+    }
+
+    private void FixedUpdate()
+    {
         if (isHuntingPlayer)
         {
             return;
@@ -214,7 +219,7 @@ public class DetectionManager : MonoBehaviour
                 if (distance > maxDistanceToShip)
                 {
                     EndInvestigation(monsterHead);
-                    continue; 
+                    continue;
                 }
 
                 UpdateInvestigationPoint(monsterHead, shipTransform);
@@ -426,18 +431,18 @@ public class DetectionManager : MonoBehaviour
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawWireSphere(investigationTargetPoint, 1f);
 
-#if UNITY_EDITOR
-                UnityEditor.Handles.color = Color.white;
-                string monsterType = monsterTypes.ContainsKey(monsterHead) ? monsterTypes[monsterHead].ToString() : "no name";
-                float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
-                string timerLabel = $"{monsterType} Monster\n" +
-                                    $"Detection Timer: {monsterStates[monsterHead].currentDetectionTimer:F2}\n" +
-                                    $"Investigation Interval: {currentInvestigationPointUpdateInterval:F2}\n" +
-                                    $"Distance to Ship: {distance:F2}m\n" +
-                                    $"Max distance from ship {maxDistanceToShip:F2}m";
-                Vector3 labelPosition = monsterHead.position;
-                UnityEditor.Handles.Label(labelPosition + Vector3.down, timerLabel);
-#endif
+//#if UNITY_EDITOR
+//                UnityEditor.Handles.color = Color.white;
+//                string monsterType = monsterTypes.ContainsKey(monsterHead) ? monsterTypes[monsterHead].ToString() : "no name";
+//                float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
+//                string timerLabel = $"{monsterType} Monster\n" +
+//                                    $"Detection Timer: {monsterStates[monsterHead].currentDetectionTimer:F2}\n" +
+//                                    $"Investigation Interval: {currentInvestigationPointUpdateInterval:F2}\n" +
+//                                    $"Distance to Ship: {distance:F2}m\n" +
+//                                    $"Max distance from ship {maxDistanceToShip:F2}m";
+//                Vector3 labelPosition = monsterHead.position;
+//                UnityEditor.Handles.Label(labelPosition + Vector3.down, timerLabel);
+//#endif
             }
         }
     }

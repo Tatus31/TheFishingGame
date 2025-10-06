@@ -10,6 +10,7 @@ public class TimelinePlayer : MonoBehaviour
     [SerializeField] GameObject UIObj;
     [SerializeField] GameObject playerObj;
 
+    QuestManager questManager;
     private void Awake()
     {
         director = GetComponent<PlayableDirector>();
@@ -17,11 +18,24 @@ public class TimelinePlayer : MonoBehaviour
         {
             Debug.LogError("PlayableDirector component is missing on this GameObject.");
         }
-
         QuestManager.OnLastQuestCompleted += PlayTimeline;
 
         director.played += OnTimelinePlayed;
         director.stopped += OnTimelineStopped;
+    }
+
+    private void PlayTimeline(object sender, EventArgs e)
+    {
+        questManager = sender as QuestManager;
+
+        if (director != null && !questManager.isDone)
+        {
+            director.Play();
+        }
+        else
+        {
+            return;
+        }
     }
 
     private void Start()
@@ -46,17 +60,5 @@ public class TimelinePlayer : MonoBehaviour
         UIObj.SetActive(false);
         playerObj.SetActive(false);
         Debug.Log("Timeline started playing.");
-    }
-
-    public void PlayTimeline()
-    {
-        if (director != null)
-        {
-            director.Play();
-        }
-        else
-        {
-            Debug.LogError("PlayableDirector is not assigned or missing.");
-        }
     }
 }

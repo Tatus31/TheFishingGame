@@ -32,16 +32,11 @@ public class DangerLamp : MonoBehaviour
         lt.range = lightRange;
     }
 
-    private void Update()
-    {
-
-    }
-
     private void LateUpdate()
     {
         Collider[] collisions = Physics.OverlapSphere(transform.position, dangerDetectionRadius);
 
-        float closestDanger = dangerDetectionRadius;
+        float closestDangerSqr = dangerDetectionRadius * dangerDetectionRadius;
         bool dangerFound = false;
 
         Vector3 closestDangerDirection = Vector3.zero;
@@ -49,36 +44,38 @@ public class DangerLamp : MonoBehaviour
 
         if (collisions.Length >= 1)
         {
+            Vector3 currentPos = transform.position;
+
             for (int i = 0; i < collisions.Length; i++)
             {
                 for (int j = 0; j < TagHolder.dangers.Length; j++)
                 {
                     if (collisions[i].CompareTag(TagHolder.dangers[j]))
                     {
-                        Vector3 collisionPoint = collisions[i].ClosestPoint(transform.position);
-                        float distanceToDanger = Vector3.Distance(transform.position, collisionPoint);
+                        Vector3 collisionPoint = collisions[i].ClosestPoint(currentPos);
+                        Vector3 directionToDanger = collisionPoint - currentPos;
+                        float distanceToDangerSqr = directionToDanger.sqrMagnitude;
 
-                        //Debug.Log($"Closest point is {Mathf.Floor(distanceToDanger)} away from danger");
-
-                        if (distanceToDanger < closestDanger)
+                        if (distanceToDangerSqr < closestDangerSqr)
                         {
-                            closestDanger = distanceToDanger;
-                            closestDangerDirection = (collisionPoint - transform.position).normalized;
+                            closestDangerSqr = distanceToDangerSqr;
+                            closestDangerDirection = directionToDanger.normalized;
                             closestCollisionPoint = collisionPoint;
                             dangerFound = true;
-
-                            //Debug.Log($"Nearest danger point is {Mathf.Floor(closestDanger)} away");
                         }
+                        break;
                     }
                 }
             }
 
             if (dangerFound)
             {
+                float closestDanger = Mathf.Sqrt(closestDangerSqr);
                 OnDangerDetection?.Invoke(this, (closestDanger, closestDangerDirection));
 
                 float speedFactor = 1 - (closestDanger / dangerDetectionRadius);
                 float lerpedAnimSpeed = Mathf.Lerp(minAnimationSpeed, maxAnimationSpeed, speedFactor);
+
                 AnimationController.Instance.PlayAnimation(animator, AnimationController.SPEED_MULTIPLIER, lerpedAnimSpeed);
 
                 lt.range = lightRange;
