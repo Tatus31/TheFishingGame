@@ -20,6 +20,9 @@ public class DangerLamp : MonoBehaviour
 
     float stopAnimation = 0f;
 
+    private static readonly int MaxColliders = 32; 
+    private readonly Collider[] ColliderBuffer = new Collider[MaxColliders];
+
     Animator animator;
     Light lt;
 
@@ -34,57 +37,61 @@ public class DangerLamp : MonoBehaviour
 
     private void LateUpdate()
     {
-        Collider[] collisions = Physics.OverlapSphere(transform.position, dangerDetectionRadius);
+        Vector3 currentPos = transform.position;
+
+        if (!Physics.CheckSphere(currentPos, dangerDetectionRadius))
+        {
+            lt.range = 0;
+            AnimationController.Instance.PlayAnimation(animator, AnimationController.SPEED_MULTIPLIER, stopAnimation);
+            return;
+        }
+
+        int hitCount = Physics.OverlapSphereNonAlloc(currentPos, dangerDetectionRadius, ColliderBuffer);
 
         float closestDangerSqr = dangerDetectionRadius * dangerDetectionRadius;
         bool dangerFound = false;
 
         Vector3 closestDangerDirection = Vector3.zero;
-        Vector3 closestCollisionPoint = Vector3.zero;
 
-        if (collisions.Length >= 1)
+        for (int i = 0; i < hitCount; i++)
         {
-            Vector3 currentPos = transform.position;
+            Collider col = ColliderBuffer[i];
+            if (col == null) continue;
 
-            for (int i = 0; i < collisions.Length; i++)
+            for (int j = 0; j < TagHolder.dangers.Length; j++)
             {
-                for (int j = 0; j < TagHolder.dangers.Length; j++)
+                if (col.CompareTag(TagHolder.dangers[j]))
                 {
-                    if (collisions[i].CompareTag(TagHolder.dangers[j]))
-                    {
-                        Vector3 collisionPoint = collisions[i].ClosestPoint(currentPos);
-                        Vector3 directionToDanger = collisionPoint - currentPos;
-                        float distanceToDangerSqr = directionToDanger.sqrMagnitude;
+                    Vector3 collisionPoint = col.ClosestPoint(currentPos);
+                    Vector3 directionToDanger = collisionPoint - currentPos;
+                    float distanceToDangerSqr = directionToDanger.sqrMagnitude;
 
-                        if (distanceToDangerSqr < closestDangerSqr)
-                        {
-                            closestDangerSqr = distanceToDangerSqr;
-                            closestDangerDirection = directionToDanger.normalized;
-                            closestCollisionPoint = collisionPoint;
-                            dangerFound = true;
-                        }
-                        break;
+                    if (distanceToDangerSqr < closestDangerSqr)
+                    {
+                        closestDangerSqr = distanceToDangerSqr;
+                        closestDangerDirection = directionToDanger.normalized;
+                        dangerFound = true;
                     }
+                    break;
                 }
             }
+        }
 
-            if (dangerFound)
-            {
-                float closestDanger = Mathf.Sqrt(closestDangerSqr);
-                OnDangerDetection?.Invoke(this, (closestDanger, closestDangerDirection));
+        if (dangerFound)
+        {
+            float closestDanger = Mathf.Sqrt(closestDangerSqr);
+            OnDangerDetection?.Invoke(this, (closestDanger, closestDangerDirection));
 
-                float speedFactor = 1 - (closestDanger / dangerDetectionRadius);
-                float lerpedAnimSpeed = Mathf.Lerp(minAnimationSpeed, maxAnimationSpeed, speedFactor);
+            float speedFactor = 1f - (closestDanger / dangerDetectionRadius);
+            float lerpedAnimSpeed = Mathf.Lerp(minAnimationSpeed, maxAnimationSpeed, speedFactor);
 
-                AnimationController.Instance.PlayAnimation(animator, AnimationController.SPEED_MULTIPLIER, lerpedAnimSpeed);
-
-                lt.range = lightRange;
-            }
-            else
-            {
-                lt.range = 0;
-                AnimationController.Instance.PlayAnimation(animator, AnimationController.SPEED_MULTIPLIER, stopAnimation);
-            }
+            AnimationController.Instance.PlayAnimation(animator, AnimationController.SPEED_MULTIPLIER, lerpedAnimSpeed);
+            lt.range = lightRange;
+        }
+        else
+        {
+            lt.range = 0f;
+            AnimationController.Instance.PlayAnimation(animator, AnimationController.SPEED_MULTIPLIER, stopAnimation);
         }
     }
 

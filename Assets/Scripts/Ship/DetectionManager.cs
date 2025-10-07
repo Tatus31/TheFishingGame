@@ -107,11 +107,11 @@ public class DetectionManager : MonoBehaviour
                 {
                     monsterTypes.Add(head, MonsterType.Large);
                 }
-                else if (head.GetComponentInParent<MediumMonsterStateMachine>() != null && head.GetComponentInParent<MediumMonsterStateMachine>().isSmallMonster)
+                else if (head.GetComponentInParent<LakeMonsterStateMachine>() != null && head.GetComponentInParent<LakeMonsterStateMachine>().isSmallMonster)
                 {
                     monsterTypes.Add(head, MonsterType.Small);
                 }
-                else if (head.GetComponentInParent<MediumMonsterStateMachine>() != null)
+                else if (head.GetComponentInParent<LakeMonsterStateMachine>() != null)
                 {
                     monsterTypes.Add(head, MonsterType.Medium);
                 }
@@ -156,14 +156,14 @@ public class DetectionManager : MonoBehaviour
                 break;
 
             case MonsterType.Medium:
-                var mediumStateMachine = monster.GetComponentInParent<MediumMonsterStateMachine>();
+                var mediumStateMachine = monster.GetComponentInParent<LakeMonsterStateMachine>();
                 if (mediumStateMachine != null && mediumStateMachine.InvestigatingState != null)
                 {
                     mediumStateMachine.SwitchState(mediumStateMachine.InvestigatingState);
                 }
                 break;
             case MonsterType.Small:
-                var smallStateMachine = monster.GetComponentInParent<MediumMonsterStateMachine>();
+                var smallStateMachine = monster.GetComponentInParent<LakeMonsterStateMachine>();
                 if (smallStateMachine != null && smallStateMachine.InvestigatingState != null && smallStateMachine.isSmallMonster)
                 {
                     smallStateMachine.SwitchState(smallStateMachine.InvestigatingState);
@@ -247,7 +247,7 @@ public class DetectionManager : MonoBehaviour
                             break;
 
                         case MonsterType.Medium:
-                            var mediumStateMachine = monsterHead.GetComponentInParent<MediumMonsterStateMachine>();
+                            var mediumStateMachine = monsterHead.GetComponentInParent<LakeMonsterStateMachine>();
                             if (mediumStateMachine != null && mediumStateMachine.InvestigatingState != null)
                             {
                                 mediumStateMachine.SwitchState(mediumStateMachine.InvestigatingState);
@@ -256,7 +256,7 @@ public class DetectionManager : MonoBehaviour
                             }
                             break;
                         case MonsterType.Small:
-                            var smallStateMachine = monsterHead.GetComponentInParent<MediumMonsterStateMachine>();
+                            var smallStateMachine = monsterHead.GetComponentInParent<LakeMonsterStateMachine>();
                             if (smallStateMachine != null && smallStateMachine.InvestigatingState != null && smallStateMachine.isSmallMonster)
                             {
                                 smallStateMachine.SwitchState(smallStateMachine.InvestigatingState);
@@ -313,7 +313,7 @@ public class DetectionManager : MonoBehaviour
                 break;
 
             case MonsterType.Medium:
-                var mediumStateMachine = monster.GetComponentInParent<MediumMonsterStateMachine>();
+                var mediumStateMachine = monster.GetComponentInParent<LakeMonsterStateMachine>();
                 if (mediumStateMachine != null)
                 {
                     mediumStateMachine.SwitchState(mediumStateMachine.IdleState);
@@ -322,7 +322,7 @@ public class DetectionManager : MonoBehaviour
                 break;
 
             case MonsterType.Small:
-                var smallStateMachine = monster.GetComponentInParent<MediumMonsterStateMachine>();
+                var smallStateMachine = monster.GetComponentInParent<LakeMonsterStateMachine>();
                 if (smallStateMachine != null && smallStateMachine.isSmallMonster)
                 {
                     smallStateMachine.SwitchState(smallStateMachine.IdleState);
