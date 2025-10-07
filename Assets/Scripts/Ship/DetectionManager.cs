@@ -10,13 +10,13 @@ public class DetectionManager : MonoBehaviour
 
     public static event Action OnInvestigationEnd;
 
-    [SerializeField] Transform shipTransform;
+    Transform shipTransform;
     [SerializeField] Transform[] monsterHeads;
     [SerializeField] float initialDetectionTimer = 200f;
     [SerializeField] float detectionTimerDecreaseRate = 1f;
     [SerializeField] float investigationPointUpdateTime = 2f;
-    [SerializeField] float minDistanceToShip = 10f;
-    [SerializeField] float maxDistanceToShip = 30f;
+    //[SerializeField] float minDistanceToShip = 10f;
+    //[SerializeField] float maxDistanceToShip = 30f;
     [SerializeField] float investigationCooldown = 10f;
 
     Dictionary<Transform, MonsterDetectionState> monsterStates = new Dictionary<Transform, MonsterDetectionState>();
@@ -32,6 +32,8 @@ public class DetectionManager : MonoBehaviour
     bool isLightsFlickerActive = false;
     bool isCollisionActive = false;
     bool isHuntingPlayer = false;
+
+    bool isInDangerArea = false;
 
     SpeedLevel speedLevel;
 
@@ -85,6 +87,13 @@ public class DetectionManager : MonoBehaviour
         LightsManager.OnLightsToggled += LightsManager_OnLightsToggled;
         LightsManager.OnLightsFlicker += LightsManager_OnLightsFlicker;
         Decoy.OnDecoyActivated += Decoy_OnDecoyActivated;
+        DangerAreaDetector.OnEnterDangerArea += DangerAreaDetector_OnEnterDangerArea;
+    }
+
+    private void DangerAreaDetector_OnEnterDangerArea(object sender, DangerAreaDetector.DangerObject e)
+    {
+        isInDangerArea = e.hasEnteredDangerousArea;
+        shipTransform = e.transform;
     }
 
     private void InitializeMonsterStates()
@@ -212,11 +221,11 @@ public class DetectionManager : MonoBehaviour
                 continue;
             }
 
-            float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
+            //float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
 
             if (state.isInvestigating)
             {
-                if (distance > maxDistanceToShip)
+                if (!isInDangerArea)
                 {
                     EndInvestigation(monsterHead);
                     continue;
@@ -232,7 +241,7 @@ public class DetectionManager : MonoBehaviour
             }
             else
             {
-                if (distance <= minDistanceToShip)
+                if (isInDangerArea)
                 {
                     switch (monsterTypes[monsterHead])
                     {
@@ -338,16 +347,25 @@ public class DetectionManager : MonoBehaviour
         float totalReductionPercent = 0f;
 
         if (isDecoyActive)
+        {
             totalReductionPercent += detectionValues.decoyDetection;
+        }
 
         if (isLightsActive)
+        {
             totalReductionPercent += detectionValues.lightsDetection;
+        }
 
         if (isLightsFlickerActive)
+        {
             totalReductionPercent += detectionValues.lightsFlickerDetection;
+        }
 
         if (isCollisionActive)
+        {
             totalReductionPercent += detectionValues.collisionDetection;
+        }
+
 
         switch (speedLevel)
         {
@@ -370,6 +388,46 @@ public class DetectionManager : MonoBehaviour
 
         currentInvestigationPointUpdateInterval = interval * (1f - (totalReductionPercent / 10f));
         currentInvestigationPointUpdateInterval = Mathf.Max(0.1f, currentInvestigationPointUpdateInterval);
+    }
+
+    public float GetCurrentDetectionValue()
+    {
+        float currentDetectionValue = 0f;
+        if (isDecoyActive)
+        {
+            currentDetectionValue += detectionValues.decoyDetection;
+        }
+        if (isLightsActive)
+        {
+            currentDetectionValue += detectionValues.lightsDetection;
+        }
+        if (isLightsFlickerActive)
+        {
+            currentDetectionValue += detectionValues.lightsFlickerDetection;
+        }
+        if (isCollisionActive)
+        {
+            currentDetectionValue += detectionValues.collisionDetection;
+        }
+        switch (speedLevel)
+        {
+            case SpeedLevel.reverse:
+                currentDetectionValue += detectionValues.reverseSpeedDetection;
+                break;
+            case SpeedLevel.neutral:
+                currentDetectionValue += detectionValues.neutralSpeedDetection;
+                break;
+            case SpeedLevel.forward1:
+                currentDetectionValue += detectionValues.forward1SpeedDetection;
+                break;
+            case SpeedLevel.forward2:
+                currentDetectionValue += detectionValues.forward2SpeedDetection;
+                break;
+            case SpeedLevel.forward3:
+                currentDetectionValue += detectionValues.forward3SpeedDetection;
+                break;
+        }
+        return currentDetectionValue;
     }
 
     public void DecreaseDetectionTimer(Transform monster)
@@ -431,18 +489,14 @@ public class DetectionManager : MonoBehaviour
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawWireSphere(investigationTargetPoint, 1f);
 
-//#if UNITY_EDITOR
-//                UnityEditor.Handles.color = Color.white;
-//                string monsterType = monsterTypes.ContainsKey(monsterHead) ? monsterTypes[monsterHead].ToString() : "no name";
-//                float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
-//                string timerLabel = $"{monsterType} Monster\n" +
-//                                    $"Detection Timer: {monsterStates[monsterHead].currentDetectionTimer:F2}\n" +
-//                                    $"Investigation Interval: {currentInvestigationPointUpdateInterval:F2}\n" +
-//                                    $"Distance to Ship: {distance:F2}m\n" +
-//                                    $"Max distance from ship {maxDistanceToShip:F2}m";
-//                Vector3 labelPosition = monsterHead.position;
-//                UnityEditor.Handles.Label(labelPosition + Vector3.down, timerLabel);
-//#endif
+#if UNITY_EDITOR
+                UnityEditor.Handles.color = Color.white;
+                string monsterType = monsterTypes.ContainsKey(monsterHead) ? monsterTypes[monsterHead].ToString() : "no name";
+                float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
+                string timerLabel = $"{monsterType} Monster\n" +
+                                    $"Detection Timer: {monsterStates[monsterHead].currentDetectionTimer:F2}\n" +
+                                    $"Investigation Interval: {currentInvestigationPointUpdateInterval:F2}";
+#endif
             }
         }
     }

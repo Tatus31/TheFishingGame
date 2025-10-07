@@ -8,6 +8,7 @@ public class DangerAreaDetector : MonoBehaviour
         public Transform transform;
         public bool hasEnteredDangerousArea;
 
+
         public DangerObject(Transform transform, bool hasEnteredDangerousArea)
         {
             this.transform = transform;
@@ -15,14 +16,21 @@ public class DangerAreaDetector : MonoBehaviour
         }
     }
 
+    float coolDownTime = 1f;
+    bool isOnCoolDown = false;
+
     public static event EventHandler<DangerObject> OnEnterDangerArea;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("DangerArea"))
         {
-            Debug.Log("Entering Danger Area");
-            OnEnterDangerArea?.Invoke(this, new DangerObject(this.transform, true));
+            if (!isOnCoolDown)
+            {
+                OnEnterDangerArea?.Invoke(this, new DangerObject(this.transform, true));
+                Debug.Log($"entering Danger Area sending {this.transform.position}");
+                isOnCoolDown = true;
+            }
         }
     }
 
@@ -30,8 +38,24 @@ public class DangerAreaDetector : MonoBehaviour
     {
         if (other.CompareTag("DangerArea"))
         {
-            Debug.Log("Exiting Danger Area");
-            OnEnterDangerArea?.Invoke(this, new DangerObject(this.transform, false));
+            if (isOnCoolDown)
+            {
+                OnEnterDangerArea?.Invoke(this, new DangerObject(this.transform, false));
+                Debug.Log("exiting Danger Area");
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if (coolDownTime > 0)
+        {
+            coolDownTime -= Time.deltaTime;
+        }
+        else
+        {
+            coolDownTime = 1f;
+            isOnCoolDown = false;
         }
     }
 }

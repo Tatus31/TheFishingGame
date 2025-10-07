@@ -58,6 +58,8 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
     {
         AudioManager.PlaySound(AudioManager.HeartBeatSound);
 
+        Debug.Log($"Entering Attacking State {monsterTransform.name}");
+
         isMonsterPursuing = true;
         SetTargetDirection();
         attackDuration = 0f;

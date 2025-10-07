@@ -8,6 +8,7 @@ public class LakeMonsterInvestigatingState : BaseLakeMonsterState
     Transform monsterHead;
     Rigidbody rb;
     Transform shipTransform;
+    float monsterDetectionTreshold = 3f;
 
     public LakeMonsterInvestigatingState(Transform shipTransform, Transform monsterHead, Rigidbody rb, float investigationSwimSpeed, float visionAngle, float visionDistance)
     {
@@ -38,18 +39,19 @@ public class LakeMonsterInvestigatingState : BaseLakeMonsterState
     public override void FixedUpdateState(LakeMonsterStateMachine monster)
     {
         Vector3 investigationPoint = DetectionManager.Instance.GetInvestigationPoint();
-        Vector3 directionToTarget = (investigationPoint - monsterHead.position).normalized;
-        float distanceToTarget = Vector3.Distance(monsterHead.position, investigationPoint);
+        Vector3 toTarget = (investigationPoint - monsterHead.position).normalized;
+        Vector3 avoidance = monster.GetSmartAvoidanceDirection();
 
-        Vector3 movement = directionToTarget * investigationSwimSpeed;
-        Vector3 obstacleAvoidance = monster.GetObstacleAvoidanceDirection(monster.obstacleAvoidanceDistance);
-        movement += obstacleAvoidance;
+        Vector3 finalDir = (toTarget + avoidance).normalized;
+        if (Vector3.Dot(toTarget, avoidance) < -0.3f)
+            finalDir = avoidance.normalized;
 
-        rb.AddForce(movement, ForceMode.Acceleration);
-        monster.LookAtTarget(directionToTarget);
+        rb.AddForce(finalDir * investigationSwimSpeed, ForceMode.Acceleration);
+        monster.LookAtTarget(finalDir);
 
-        if (monster.IsInConeOfVision(monsterHead, investigationPoint))
+        if (monster.IsInConeOfVision(monsterHead, investigationPoint) && DetectionManager.Instance.GetCurrentDetectionValue() >= monsterDetectionTreshold)
         {
+            Debug.Log($"Switching to Attacking State from Investigating State with {DetectionManager.Instance.GetCurrentDetectionValue()} detection value");
             monster.SwitchState(monster.AttackingState);
         }
         else if (!DetectionManager.Instance.ShouldContinueInvestigation(monsterHead))

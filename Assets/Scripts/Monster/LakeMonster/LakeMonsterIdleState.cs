@@ -25,7 +25,7 @@ public class LakeMonsterIdleState : BaseLakeMonsterState
 
     public override void EnterState(LakeMonsterStateMachine monster)
     {
-        currentTarget = monster.GetRandomValidTarget(monster.monsterHead, idleMovementRadius);
+        currentTarget = monster.GetRandomValidTargetInsideSafeSpace(monster.monsterHead, idleMovementRadius);
         timeAtCurrentTarget = 0f;
     }
 
