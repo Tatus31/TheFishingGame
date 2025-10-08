@@ -54,7 +54,6 @@ public class LakeMonsterStateMachine : MonoBehaviour
     public bool isSmallMonster = true;
 
     Vector3 _smoothedAvoidance = Vector3.zero; 
-    float _stuckTimer = 0f;
 
     private void Awake()
     {
@@ -250,7 +249,7 @@ public class LakeMonsterStateMachine : MonoBehaviour
     {
         for (int i = 0; i < 10; i++)
         {
-            Vector3 randomPoint = safeSpaceCenter.position + Random.insideUnitSphere * radius;
+            Vector3 randomPoint = transform.position + Random.insideUnitSphere * radius;
 
             if (Physics.CheckSphere(randomPoint, 0.1f, waterLayer) && !Physics.CheckSphere(randomPoint, 10f, obstacleLayer))
             {
@@ -261,11 +260,11 @@ public class LakeMonsterStateMachine : MonoBehaviour
         return transform.position;
     }
 
-    public Vector3 GetRandomValidTargetInsideSafeSpace(Transform transform, float radius)
+    public Vector3 GetRandomValidTargetInsideSafeSpace(float radius)
     {
         for (int i = 0; i < 10; i++)
         {
-            Vector3 randomPoint = transform.position + Random.insideUnitSphere * radius;
+            Vector3 randomPoint = safeSpaceCenter.position + Random.insideUnitSphere * radius;
 
             if (Physics.CheckSphere(randomPoint, 0.1f, waterLayer) && !Physics.CheckSphere(randomPoint, 10f, obstacleLayer))
             {

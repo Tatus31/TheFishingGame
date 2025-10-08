@@ -38,11 +38,8 @@ public class DangerAreaDetector : MonoBehaviour
     {
         if (other.CompareTag("DangerArea"))
         {
-            if (isOnCoolDown)
-            {
-                OnEnterDangerArea?.Invoke(this, new DangerObject(this.transform, false));
-                Debug.Log("exiting Danger Area");
-            }
+            OnEnterDangerArea?.Invoke(this, new DangerObject(this.transform, false));
+            Debug.Log("exiting Danger Area");
         }
     }
 

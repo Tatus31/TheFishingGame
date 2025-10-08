@@ -13,6 +13,8 @@ public class LakeMonsterIdleState : BaseLakeMonsterState
     float allowedDistanceFromTarget;
     Rigidbody rb;
 
+    bool hasReachedSafeSpace = false;
+
     public LakeMonsterIdleState(float idleMovementRadius, float obstacleAvoidanceDistance, float swimSpeed, float minTimeAtTarget, float allowedDistanceFromTarget, Rigidbody rb)
     {
         this.idleMovementRadius = idleMovementRadius;
@@ -25,8 +27,10 @@ public class LakeMonsterIdleState : BaseLakeMonsterState
 
     public override void EnterState(LakeMonsterStateMachine monster)
     {
-        currentTarget = monster.GetRandomValidTargetInsideSafeSpace(monster.monsterHead, idleMovementRadius);
+        hasReachedSafeSpace = false;
         timeAtCurrentTarget = 0f;
+
+        currentTarget = monster.GetRandomValidTargetInsideSafeSpace(idleMovementRadius);
     }
 
     public override void UpdateState(LakeMonsterStateMachine monster)
@@ -39,7 +43,16 @@ public class LakeMonsterIdleState : BaseLakeMonsterState
 
             if (timeAtCurrentTarget >= minTimeAtTarget)
             {
-                currentTarget = monster.GetRandomValidTarget(monster.monsterHead, idleMovementRadius);
+                if (!hasReachedSafeSpace)
+                {
+                    hasReachedSafeSpace = true;
+                    currentTarget = monster.GetRandomValidTargetInsideSafeSpace(idleMovementRadius);
+                }
+                else
+                {
+                    currentTarget = monster.GetRandomValidTarget(monster.monsterHead, idleMovementRadius);
+                }
+
                 timeAtCurrentTarget = 0f;
             }
         }

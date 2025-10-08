@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 using static ShipMovement;
 
@@ -33,7 +32,7 @@ public class DetectionManager : MonoBehaviour
     bool isCollisionActive = false;
     bool isHuntingPlayer = false;
 
-    bool isInDangerArea = false;
+    [SerializeField] bool isInDangerArea = false;
 
     SpeedLevel speedLevel;
 
@@ -86,7 +85,7 @@ public class DetectionManager : MonoBehaviour
         OnDetectionChange += ShipMovement_OnDetectionChange;
         LightsManager.OnLightsToggled += LightsManager_OnLightsToggled;
         LightsManager.OnLightsFlicker += LightsManager_OnLightsFlicker;
-        Decoy.OnDecoyActivated += Decoy_OnDecoyActivated;
+        //Decoy.OnDecoyActivated += Decoy_OnDecoyActivated;
         DangerAreaDetector.OnEnterDangerArea += DangerAreaDetector_OnEnterDangerArea;
     }
 
@@ -132,54 +131,54 @@ public class DetectionManager : MonoBehaviour
         }
     }
 
-    private void Decoy_OnDecoyActivated(object sender, Transform e)
-    {
-        isDecoyActive = true;
+    //private void Decoy_OnDecoyActivated(object sender, Transform e)
+    //{
+    //    isDecoyActive = true;
 
-        foreach (var monsterHead in monsterStates.Keys)
-        {
-            if (IsInCooldown(monsterHead)) continue;
+    //    foreach (var monsterHead in monsterStates.Keys)
+    //    {
+    //        if (IsInCooldown(monsterHead)) continue;
 
-            StartDecoyInvestigation(monsterHead, e);
-        }
-    }
+    //        StartDecoyInvestigation(monsterHead, e);
+    //    }
+    //}
 
-    public void StartDecoyInvestigation(Transform monster, Transform decoyTransform)
-    {
-        if (!monsterStates.ContainsKey(monster) || !monsterTypes.ContainsKey(monster)) return;
+    //public void StartDecoyInvestigation(Transform monster, Transform decoyTransform)
+    //{
+    //    if (!monsterStates.ContainsKey(monster) || !monsterTypes.ContainsKey(monster)) return;
 
-        var state = monsterStates[monster];
-        state.isInvestigating = true;
-        state.currentDetectionTimer = initialDetectionTimer;
+    //    var state = monsterStates[monster];
+    //    state.isInvestigating = true;
+    //    state.currentDetectionTimer = initialDetectionTimer;
 
-        investigationTargetPoint = decoyTransform.position;
+    //    investigationTargetPoint = decoyTransform.position;
 
-        switch (monsterTypes[monster])
-        {
-            case MonsterType.Large:
-                var largeStateMachine = monster.GetComponentInParent<MonsterLargeStateMachine>();
-                if (largeStateMachine != null)
-                {
-                    largeStateMachine.SwitchState(largeStateMachine.InvestigatingState);
-                }
-                break;
+    //    switch (monsterTypes[monster])
+    //    {
+    //        case MonsterType.Large:
+    //            var largeStateMachine = monster.GetComponentInParent<MonsterLargeStateMachine>();
+    //            if (largeStateMachine != null)
+    //            {
+    //                largeStateMachine.SwitchState(largeStateMachine.InvestigatingState);
+    //            }
+    //            break;
 
-            case MonsterType.Medium:
-                var mediumStateMachine = monster.GetComponentInParent<LakeMonsterStateMachine>();
-                if (mediumStateMachine != null && mediumStateMachine.InvestigatingState != null)
-                {
-                    mediumStateMachine.SwitchState(mediumStateMachine.InvestigatingState);
-                }
-                break;
-            case MonsterType.Small:
-                var smallStateMachine = monster.GetComponentInParent<LakeMonsterStateMachine>();
-                if (smallStateMachine != null && smallStateMachine.InvestigatingState != null && smallStateMachine.isSmallMonster)
-                {
-                    smallStateMachine.SwitchState(smallStateMachine.InvestigatingState);
-                }
-                break;
-        }
-    }
+    //        case MonsterType.Medium:
+    //            var mediumStateMachine = monster.GetComponentInParent<LakeMonsterStateMachine>();
+    //            if (mediumStateMachine != null && mediumStateMachine.InvestigatingState != null)
+    //            {
+    //                mediumStateMachine.SwitchState(mediumStateMachine.InvestigatingState);
+    //            }
+    //            break;
+    //        case MonsterType.Small:
+    //            var smallStateMachine = monster.GetComponentInParent<LakeMonsterStateMachine>();
+    //            if (smallStateMachine != null && smallStateMachine.InvestigatingState != null && smallStateMachine.isSmallMonster)
+    //            {
+    //                smallStateMachine.SwitchState(smallStateMachine.InvestigatingState);
+    //            }
+    //            break;
+    //    }
+    //}
 
     private void LightsManager_OnLightsFlicker(object sender, bool e)
     {

@@ -3077,7 +3077,7 @@ MonoBehaviour:
   obstacleAvoidanceForce: 2.5
   swimSpeed: 2
   rotationSpeed: 3
-  maxVelocity: 3
+  maxVelocity: 5
   waterLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -3086,12 +3086,12 @@ MonoBehaviour:
     m_Bits: 1024
   idleMovementRadius: 30
   minTimeAtTarget: 0.2
-  allowedDistanceFromTarget: 1
+  allowedDistanceFromTarget: 7
   investigationSwimSpeed: 5
   visionAngle: 45
   visionDistance: 30
   monsterEscapeTime: 2
-  swimAttackSpeed: 20
+  swimAttackSpeed: 50
   maxAttackDuration: 6
   maxNumberOfAttacks: 1
   turnSmoothTime: 1.2
@@ -6006,6 +6006,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b2a0b4c988fa28a49b19e9d7ed5396d1, type: 3}
+--- !u!4 &1175426181 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 257162419476134222, guid: 0315f51cdf4e66941835fa6432487b4a,
+    type: 3}
+  m_PrefabInstance: {fileID: 8219768186987127949}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1265539941 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1752238037147218202, guid: 116c090f5489a754090f66a9ab6e29c2,
@@ -6018,6 +6024,91 @@ Animator:
     type: 3}
   m_PrefabInstance: {fileID: 5697022866825482968}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1281795390
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1281795391}
+  - component: {fileID: 1281795393}
+  - component: {fileID: 1281795392}
+  m_Layer: 6
+  m_Name: Helmet (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1281795391
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281795390}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.48525003, y: -0.51432693, z: -0.514327, w: 0.48525038}
+  m_LocalPosition: {x: -0.11697412, y: -0.002998891, z: -0.00033117022}
+  m_LocalScale: {x: 86.565, y: 86.565, z: 86.565}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1175426181}
+  m_LocalEulerAnglesHint: {x: -3.332, y: -90, z: -90}
+--- !u!23 &1281795392
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281795390}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 7835e7e23ddd6484f84b6a5b7d788d85, type: 2}
+  - {fileID: 2100000, guid: 8abe5990d54544f498792dc91ded32db, type: 2}
+  - {fileID: 2100000, guid: 44adbadc412549746bfe34c6a80dcfa8, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1281795393
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281795390}
+  m_Mesh: {fileID: 6041377522765385347, guid: c18cf5e7381b83a459f5f11cc781f7eb, type: 3}
 --- !u!43 &1303193030
 Mesh:
   m_ObjectHideFlags: 0
@@ -10700,7 +10791,7 @@ PrefabInstance:
     - target: {fileID: 3407726907466856634, guid: 4c85dc26b19aea146bae3c9dbcef179a,
         type: 3}
       propertyPath: deviceStats.degradationTime
-      value: 1
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5044854105450314023, guid: 4c85dc26b19aea146bae3c9dbcef179a,
         type: 3}
@@ -12057,7 +12148,11 @@ PrefabInstance:
       objectReference: {fileID: 1703623250}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 257162419476134222, guid: 0315f51cdf4e66941835fa6432487b4a,
+        type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 1281795391}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 86132675218856515, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
