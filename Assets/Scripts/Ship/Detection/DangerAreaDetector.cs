@@ -8,7 +8,6 @@ public class DangerAreaDetector : MonoBehaviour
         public Transform transform;
         public bool hasEnteredDangerousArea;
 
-
         public DangerObject(Transform transform, bool hasEnteredDangerousArea)
         {
             this.transform = transform;
@@ -16,8 +15,10 @@ public class DangerAreaDetector : MonoBehaviour
         }
     }
 
-    float coolDownTime = 1f;
-    bool isOnCoolDown = false;
+    [SerializeField] private float coolDownTime = 1f;
+    private bool isOnCoolDown = false;
+
+    [SerializeField] private float underWaterOffset = 0.2f;
 
     public static event EventHandler<DangerObject> OnEnterDangerArea;
 
@@ -27,8 +28,13 @@ public class DangerAreaDetector : MonoBehaviour
         {
             if (!isOnCoolDown)
             {
+                Vector3 adjustedPosition = transform.position;
+                adjustedPosition.y -= underWaterOffset;
+                transform.position = adjustedPosition;
+
                 OnEnterDangerArea?.Invoke(this, new DangerObject(this.transform, true));
-                Debug.Log($"entering Danger Area sending {this.transform.position}");
+                Debug.Log($"Entering Danger Area new ship position {transform.position}");
+
                 isOnCoolDown = true;
             }
         }
@@ -39,7 +45,7 @@ public class DangerAreaDetector : MonoBehaviour
         if (other.CompareTag("DangerArea"))
         {
             OnEnterDangerArea?.Invoke(this, new DangerObject(this.transform, false));
-            Debug.Log("exiting Danger Area");
+            Debug.Log("Exiting Danger Area");
         }
     }
 

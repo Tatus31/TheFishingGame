@@ -7,7 +7,6 @@ public class LakeMonsterIdleState : BaseLakeMonsterState
     Vector3 currentTarget;
     float timeAtCurrentTarget;
     float idleMovementRadius;
-    float obstacleAvoidanceDistance;
     float swimSpeed;
     float minTimeAtTarget;
     float allowedDistanceFromTarget;
@@ -18,7 +17,6 @@ public class LakeMonsterIdleState : BaseLakeMonsterState
     public LakeMonsterIdleState(float idleMovementRadius, float obstacleAvoidanceDistance, float swimSpeed, float minTimeAtTarget, float allowedDistanceFromTarget, Rigidbody rb)
     {
         this.idleMovementRadius = idleMovementRadius;
-        this.obstacleAvoidanceDistance = obstacleAvoidanceDistance;
         this.swimSpeed = swimSpeed;
         this.minTimeAtTarget = minTimeAtTarget;
         this.allowedDistanceFromTarget = allowedDistanceFromTarget;
@@ -27,6 +25,8 @@ public class LakeMonsterIdleState : BaseLakeMonsterState
 
     public override void EnterState(LakeMonsterStateMachine monster)
     {
+        AudioManager.MuteSound(AudioManager.HeartBeatSound);
+
         hasReachedSafeSpace = false;
         timeAtCurrentTarget = 0f;
 
@@ -60,13 +60,24 @@ public class LakeMonsterIdleState : BaseLakeMonsterState
 
     public override void FixedUpdateState(LakeMonsterStateMachine monster)
     {
-        Vector3 moveDirection = (currentTarget - monster.monsterHead.position).normalized;
-        Vector3 avoidanceDirection = monster.GetObstacleAvoidanceDirection(obstacleAvoidanceDistance);
+        //Vector3 moveDirection = (currentTarget - monster.monsterHead.position).normalized;
+        //Vector3 avoidanceDirection = monster.GetObstacleAvoidanceDirection(obstacleAvoidanceDistance);
 
-        Vector3 finalDirection = (moveDirection + avoidanceDirection).normalized;
-        rb.AddForce(finalDirection * swimSpeed, ForceMode.Acceleration);
+        //Vector3 finalDirection = (moveDirection + avoidanceDirection).normalized;
+        //rb.AddForce(finalDirection * swimSpeed, ForceMode.Acceleration);
 
-        monster.LookAt(finalDirection);
+        //monster.LookAt(finalDirection);
+
+        Vector3 toTarget = (currentTarget - monster.monsterHead.position).normalized;
+        Vector3 avoidance = monster.GetSmartAvoidanceDirection();
+
+        Vector3 finalDir = (toTarget + avoidance).normalized;
+        if (Vector3.Dot(toTarget, avoidance) < -0.3f)
+            finalDir = avoidance.normalized;
+
+        rb.AddForce(finalDir * swimSpeed, ForceMode.Acceleration);
+        monster.LookAtTarget(finalDir);
+
     }
 
     public override void ExitState()

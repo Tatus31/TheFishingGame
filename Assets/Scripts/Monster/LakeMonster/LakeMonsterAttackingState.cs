@@ -56,6 +56,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
     public override void EnterState(LakeMonsterStateMachine monsterState)
     {
+        CameraOverlayManager.Instance.TriggerEventWithDelay();
         AudioManager.PlaySound(AudioManager.HeartBeatSound);
 
         Debug.Log($"Entering Attacking State {monsterTransform.name}");
@@ -136,6 +137,8 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
         PlayerMovement.Instance.OnPlayerSwimmingChange -= PlayerMovement_OnPlayerSwimmingChange;
         SinkShip.OnShipSank -= SinkShip_OnShipSank;
         DetectionManager.OnInvestigationEnd -= DetectionManager_OnInvestigationEnd;
+
+        CameraOverlayManager.Instance.EndEvent();
 
         isMonsterPursuing = false;
     }
