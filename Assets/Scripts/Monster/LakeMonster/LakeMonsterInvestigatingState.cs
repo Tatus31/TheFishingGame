@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 
 public class LakeMonsterInvestigatingState : BaseLakeMonsterState
@@ -39,25 +40,40 @@ public class LakeMonsterInvestigatingState : BaseLakeMonsterState
     public override void FixedUpdateState(LakeMonsterStateMachine monster)
     {
         Vector3 investigationPoint = DetectionManager.Instance.GetInvestigationPoint();
-        Vector3 toTarget = (investigationPoint - monsterHead.position).normalized;
-        Vector3 avoidance = monster.GetSmartAvoidanceDirection();
 
-        Vector3 finalDir = (toTarget + avoidance).normalized;
-        if (Vector3.Dot(toTarget, avoidance) < -0.3f)
-            finalDir = avoidance.normalized;
+        MonsterNavigateToPoint(monster, investigationPoint);
 
-        rb.AddForce(finalDir * investigationSwimSpeed, ForceMode.Acceleration);
-        monster.LookAtTarget(finalDir);
-
-        if (monster.IsInConeOfVision(monsterHead, investigationPoint) && DetectionManager.Instance.GetCurrentDetectionValue() >= monsterDetectionTreshold)
+        if (monster.IsInConeOfVision(monsterHead, investigationPoint))
         {
-            Debug.Log($"Switching to Attacking State from Investigating State with {DetectionManager.Instance.GetCurrentDetectionValue()} detection value");
-            monster.SwitchState(monster.AttackingState);
+            if(DetectionManager.Instance.GetCurrentDetectionValue() >= monsterDetectionTreshold)
+            {
+                Debug.Log($"Switching to Attacking State from Investigating State with {DetectionManager.Instance.GetCurrentDetectionValue()} detection value");
+                monster.SwitchState(monster.AttackingState);
+            }
+            else
+            {
+                monster.SwitchState(monster.IdleState);
+            }
+
         }
         else if (!DetectionManager.Instance.ShouldContinueInvestigation(monsterHead))
         {
             monster.SwitchState(monster.IdleState);
         }
+    }
+
+    private void MonsterNavigateToPoint(LakeMonsterStateMachine monster, Vector3 investigationPoint)
+    {
+        Vector3 toTarget = (investigationPoint - monsterHead.position).normalized;
+        Vector3 avoidance = monster.GetSmartAvoidanceDirection();
+
+        Vector3 finalDir = (toTarget + avoidance).normalized;
+
+        if (Vector3.Dot(toTarget, avoidance) < -0.3f)
+            finalDir = avoidance.normalized;
+
+        rb.AddForce(finalDir * investigationSwimSpeed, ForceMode.Acceleration);
+        monster.LookAtTarget(finalDir);
     }
 
     public override void ExitState()

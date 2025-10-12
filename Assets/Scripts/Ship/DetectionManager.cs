@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using static ShipMovement;
 
@@ -492,9 +493,13 @@ public class DetectionManager : MonoBehaviour
                 UnityEditor.Handles.color = Color.white;
                 string monsterType = monsterTypes.ContainsKey(monsterHead) ? monsterTypes[monsterHead].ToString() : "no name";
                 float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
+
                 string timerLabel = $"{monsterType} Monster\n" +
                                     $"Detection Timer: {monsterStates[monsterHead].currentDetectionTimer:F2}\n" +
                                     $"Investigation Interval: {currentInvestigationPointUpdateInterval:F2}";
+
+                Vector3 labelPosition = monsterHead.position - Vector3.up * 0.5f;
+                Handles.Label(labelPosition, timerLabel);
 #endif
             }
         }
