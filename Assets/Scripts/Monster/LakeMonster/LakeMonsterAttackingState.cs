@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LakeMonsterAttackingState : BaseLakeMonsterState
@@ -9,31 +8,35 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
     Transform playerTransform;
     Transform monsterTransform;
     ShipMovement shipMovement;
-
-    float swimAttackSpeed = 200f;
-    float monsterEscapeTime = 2f;
-    float turnSmoothTime = 1.2f;
-
-    int numberOfAttacks = 0;
-    int maxNumberOfAttacks = 5;
-    float predictionValue = 1.5f;
-
     Rigidbody rb;
+
+    float swimAttackSpeed;
+    float monsterEscapeTime;
+    float turnSmoothTime;
+    float predictionValue;
+    float attackDuration;
+    float maxAttackDuration;
+    float windUpTimer;
+    float windUpDuration = 1.5f;
+    float windUpRotationSpeed = 2f;
+
+    int numberOfAttacks;
+    int maxNumberOfAttacks;
+
+    bool isMonsterRetreating;
+    bool isPlayerSwimming;
+    bool shipSank;
+    bool isMonsterPursuing;
+    bool isWindingUp;
 
     Vector3 targetDirection;
     Vector3 directionToShip;
     Vector3 currentMoveDirection;
 
-    bool isMonsterRetreating = false;
-    bool isPlayerSwimming = false;
-    bool shipSank;
-    bool isMonsterPursuing = false;
-
-    float attackDuration = 0f;
-    float maxAttackDuration = 6f;
-
-    public LakeMonsterAttackingState(Transform shipTransform, Transform monsterTransform, Transform playerTransform, float swimAttackSpeed,
-        Rigidbody rb, float monsterEscapeTime, float maxAttackDuration, float turnSmoothTime, int maxNumberOfAttacks, float predictionValue)
+    public LakeMonsterAttackingState(
+        Transform shipTransform, Transform monsterTransform, Transform playerTransform,
+        float swimAttackSpeed, Rigidbody rb, float monsterEscapeTime, float maxAttackDuration,
+        float turnSmoothTime, int maxNumberOfAttacks, float predictionValue, float windUpDuration, float windUpRotationSpeed)
     {
         this.shipTransform = shipTransform;
         this.monsterTransform = monsterTransform;
@@ -45,134 +48,177 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
         this.turnSmoothTime = turnSmoothTime;
         this.maxNumberOfAttacks = maxNumberOfAttacks;
         this.predictionValue = predictionValue;
-
-        currentMoveDirection = Vector3.zero;
+        this.windUpDuration = windUpDuration;
+        this.windUpRotationSpeed = windUpRotationSpeed;
 
         if (shipTransform != null)
-        {
             shipMovement = shipTransform.GetComponent<ShipMovement>();
-        }
     }
 
     public override void EnterState(LakeMonsterStateMachine monsterState)
     {
-        CameraOverlayManager.Instance.TriggerEventWithDelay();
-        AudioManager.PlaySound(AudioManager.HeartBeatSound);
-
         Debug.Log($"Entering Attacking State {monsterTransform.name}");
+        InitializeAttackState();
 
-        isMonsterPursuing = true;
+        SubscribeEvents();
         SetTargetDirection();
-        attackDuration = 0f;
-
-        ShipDamage.Instance.OnDamageTaken += ShipDamage_OnDamageTaken;
-        PlayerMovement.Instance.OnPlayerSwimmingChange += PlayerMovement_OnPlayerSwimmingChange;
-        SinkShip.OnShipSank += SinkShip_OnShipSank;
-        DetectionManager.OnInvestigationEnd += DetectionManager_OnInvestigationEnd;
-    }
-
-    private void DetectionManager_OnInvestigationEnd()
-    {
-        isMonsterPursuing = false;
-    }
-
-    private void SinkShip_OnShipSank(bool obj)
-    {
-        shipSank = obj;
-    }
-
-    private void PlayerMovement_OnPlayerSwimmingChange(object sender, bool e)
-    {
-        isPlayerSwimming = e;
-
-        SetTargetDirection();
-    }
-
-    private void ShipDamage_OnDamageTaken(object sender, int e)
-    {
-        isMonsterRetreating = true;
-
-        numberOfAttacks++;
-        attackDuration = 0f;
-
-        SetTargetDirection();
-    }
-
-    void SetTargetDirection()
-    {
-        Transform currentTransform;
-        Vector3 predictedPosition;
-
-        if (isPlayerSwimming)
-        {
-            currentTransform = playerTransform;
-            predictedPosition = currentTransform.position;
-        }
-        else
-        {
-            currentTransform = shipTransform;
-            predictedPosition = currentTransform.position;
-
-            if (shipMovement != null)
-            {
-                Vector3 shipVelocity = shipMovement.ShipFlatVel;
-
-                float distanceToShip = Vector3.Distance(monsterTransform.position, currentTransform.position);
-                float velocityMagnitude = shipVelocity.magnitude;
-
-                if (velocityMagnitude > 0.1f)
-                {
-                    predictedPosition += shipVelocity.normalized * velocityMagnitude * predictionValue;
-                }
-            }
-        }
-
-        directionToShip = (predictedPosition - monsterTransform.position).normalized;
-        targetDirection = isMonsterRetreating ? -directionToShip : directionToShip;
     }
 
     public override void ExitState()
     {
-        ShipDamage.Instance.OnDamageTaken -= ShipDamage_OnDamageTaken;
-        PlayerMovement.Instance.OnPlayerSwimmingChange -= PlayerMovement_OnPlayerSwimmingChange;
-        SinkShip.OnShipSank -= SinkShip_OnShipSank;
-        DetectionManager.OnInvestigationEnd -= DetectionManager_OnInvestigationEnd;
-
+        UnsubscribeEvents();
         CameraOverlayManager.Instance.EndEvent();
-
         isMonsterPursuing = false;
     }
 
     public override void UpdateState(LakeMonsterStateMachine monsterState)
     {
-        if (rb.velocity.magnitude > 0.1f)
+        HandleMonsterRotation(monsterState);
+        if (isWindingUp)
         {
-            monsterState.LookAt(rb.velocity.normalized);
+            HandleWindUpRotation();
+            return;
         }
 
-        if (!isMonsterRetreating)
-        {
-            attackDuration += Time.deltaTime;
-
-            if (attackDuration > maxAttackDuration)
-            {
-                isMonsterRetreating = true;
-                attackDuration = 0f;
-
-                SetTargetDirection();
-            }
-        }
+        HandleAttackTimer();
     }
 
     public override void FixedUpdateState(LakeMonsterStateMachine monsterState)
     {
+        if (isWindingUp) return;
+
+        MoveMonster();
+        HandleRetreat(monsterState);
+    }
+
+    void InitializeAttackState()
+    {
+        CameraOverlayManager.Instance.TriggerEventWithDelay();
+        AudioManager.PlaySound(AudioManager.HeartBeatSound);
+
+        isMonsterPursuing = true;
+        isWindingUp = true;
+        windUpTimer = 0f;
+        attackDuration = 0f;
+        isMonsterRetreating = false;
+    }
+
+    void SubscribeEvents()
+    {
+        ShipDamage.Instance.OnDamageTaken += OnShipDamageTaken;
+        PlayerMovement.Instance.OnPlayerSwimmingChange += OnPlayerSwimmingChange;
+        SinkShip.OnShipSank += OnShipSank;
+        DetectionManager.OnInvestigationEnd += OnInvestigationEnd;
+    }
+
+    void UnsubscribeEvents()
+    {
+        ShipDamage.Instance.OnDamageTaken -= OnShipDamageTaken;
+        PlayerMovement.Instance.OnPlayerSwimmingChange -= OnPlayerSwimmingChange;
+        SinkShip.OnShipSank -= OnShipSank;
+        DetectionManager.OnInvestigationEnd -= OnInvestigationEnd;
+    }
+
+    void OnInvestigationEnd() => isMonsterPursuing = false;
+
+    void OnShipSank(bool sank) => shipSank = sank;
+
+    void OnPlayerSwimmingChange(object sender, bool swimming)
+    {
+        isPlayerSwimming = swimming;
+        SetTargetDirection();
+    }
+
+    void OnShipDamageTaken(object sender, int e)
+    {
+        numberOfAttacks++;
+        attackDuration = 0f;
+        StartRetreatAndWindUp();
+    }
+
+    void StartRetreatAndWindUp()
+    {
+        isMonsterRetreating = true;
+        isWindingUp = true;
+        windUpTimer = 0f;
+        SetTargetDirection();
+    }
+
+    void SetTargetDirection()
+    {
+        Vector3 predictedPosition = isPlayerSwimming
+            ? playerTransform.position
+            : PredictShipPosition();
+
+        directionToShip = (predictedPosition - monsterTransform.position).normalized;
+        targetDirection = isMonsterRetreating ? -directionToShip : directionToShip;
+    }
+
+    Vector3 PredictShipPosition()
+    {
+        if (shipTransform == null) return Vector3.zero;
+
+        Vector3 predictedPosition = shipTransform.position;
+
+        if (shipMovement != null)
+        {
+            Vector3 shipVelocity = shipMovement.ShipFlatVel;
+            if (shipVelocity.magnitude > 0.1f)
+            {
+                predictedPosition += shipVelocity.normalized * shipVelocity.magnitude * predictionValue;
+            }
+        }
+
+        return predictedPosition;
+    }
+
+    void HandleMonsterRotation(LakeMonsterStateMachine monsterState)
+    {
+        if (rb.velocity.magnitude > 0.1f)
+            monsterState.LookAt(rb.velocity.normalized);
+    }
+
+    void HandleWindUpRotation()
+    {
+        windUpTimer += Time.deltaTime;
+
+        Quaternion targetRotation = Quaternion.LookRotation(directionToShip);
+        monsterTransform.rotation = Quaternion.Slerp(
+            monsterTransform.rotation,
+            targetRotation,
+            Time.deltaTime * windUpRotationSpeed
+        );
+
+        if (windUpTimer >= windUpDuration)
+        {
+            isWindingUp = false;
+            windUpTimer = 0f;
+        }
+    }
+
+    void HandleAttackTimer()
+    {
+        if (isMonsterRetreating) return;
+
+        attackDuration += Time.deltaTime;
+        if (attackDuration > maxAttackDuration)
+        {
+            isMonsterRetreating = true;
+            attackDuration = 0f;
+            SetTargetDirection();
+        }
+    }
+
+    void MoveMonster()
+    {
         currentMoveDirection = Vector3.Lerp(currentMoveDirection, targetDirection, Time.fixedDeltaTime / turnSmoothTime);
         rb.AddForce(currentMoveDirection * swimAttackSpeed, ForceMode.Acceleration);
+    }
 
+    void HandleRetreat(LakeMonsterStateMachine monsterState)
+    {
         if (isMonsterRetreating)
-        {
             monsterState.StartCoroutine(SwimAwayFromShip(monsterState));
-        }
     }
 
     IEnumerator SwimAwayFromShip(LakeMonsterStateMachine monsterState)
@@ -187,7 +233,6 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
         isMonsterRetreating = false;
         attackDuration = 0f;
-
         SetTargetDirection();
     }
 
@@ -197,34 +242,16 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
         Gizmos.DrawRay(monsterTransform.position, currentMoveDirection * 5f);
 
         Transform currentTarget = isPlayerSwimming ? playerTransform : shipTransform;
-        if (currentTarget != null)
-        {
-            float sphereSize = isMonsterRetreating ? 2f : 1f;
-            Gizmos.DrawWireSphere(currentTarget.position, sphereSize);
+        if (currentTarget == null) return;
 
-            Vector3 targetPosition;
-            if (isPlayerSwimming)
-            {
-                targetPosition = playerTransform.position;
-                Gizmos.color = Color.yellow;
-            }
-            else
-            {
-                targetPosition = shipTransform.position;
-                if (shipMovement != null)
-                {
-                    Vector3 shipVelocity = shipMovement.ShipFlatVel;
-                    float velocityMagnitude = shipVelocity.magnitude;
+        float sphereSize = isMonsterRetreating ? 2f : 1f;
+        Gizmos.DrawWireSphere(currentTarget.position, sphereSize);
 
-                    if (velocityMagnitude > 0.1f)
-                    {
-                        targetPosition += shipVelocity.normalized * velocityMagnitude * predictionValue;
-                    }
-                }
-                Gizmos.color = Color.red;
-            }
+        Vector3 targetPosition = isPlayerSwimming
+            ? playerTransform.position
+            : PredictShipPosition();
 
-            Gizmos.DrawWireSphere(targetPosition, 1.5f);
-        }
+        Gizmos.color = isPlayerSwimming ? Color.yellow : Color.red;
+        Gizmos.DrawWireSphere(targetPosition, 1.5f);
     }
 }

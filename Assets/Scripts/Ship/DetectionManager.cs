@@ -116,7 +116,7 @@ public class DetectionManager : MonoBehaviour
                 {
                     monsterTypes.Add(head, MonsterType.Large);
                 }
-                else if (head.GetComponentInParent<LakeMonsterStateMachine>() != null && head.GetComponentInParent<LakeMonsterStateMachine>().isSmallMonster)
+                else if (head.GetComponentInParent<LakeMonsterStateMachine>() != null && head.GetComponentInParent<LakeMonsterStateMachine>().IsSmallMonster)
                 {
                     monsterTypes.Add(head, MonsterType.Small);
                 }
@@ -266,7 +266,7 @@ public class DetectionManager : MonoBehaviour
                             break;
                         case MonsterType.Small:
                             var smallStateMachine = monsterHead.GetComponentInParent<LakeMonsterStateMachine>();
-                            if (smallStateMachine != null && smallStateMachine.InvestigatingState != null && smallStateMachine.isSmallMonster)
+                            if (smallStateMachine != null && smallStateMachine.InvestigatingState != null && smallStateMachine.IsSmallMonster)
                             {
                                 smallStateMachine.SwitchState(smallStateMachine.InvestigatingState);
                             }
@@ -332,7 +332,7 @@ public class DetectionManager : MonoBehaviour
 
             case MonsterType.Small:
                 var smallStateMachine = monster.GetComponentInParent<LakeMonsterStateMachine>();
-                if (smallStateMachine != null && smallStateMachine.isSmallMonster)
+                if (smallStateMachine != null && smallStateMachine.IsSmallMonster)
                 {
                     smallStateMachine.SwitchState(smallStateMachine.IdleState);
                     OnInvestigationEnd?.Invoke();
@@ -490,15 +490,11 @@ public class DetectionManager : MonoBehaviour
                 Gizmos.DrawWireSphere(investigationTargetPoint, 1f);
 
 #if UNITY_EDITOR
-                UnityEditor.Handles.color = Color.white;
-                string monsterType = monsterTypes.ContainsKey(monsterHead) ? monsterTypes[monsterHead].ToString() : "no name";
-                float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
-
-                string timerLabel = $"{monsterType} Monster\n" +
-                                    $"Detection Timer: {monsterStates[monsterHead].currentDetectionTimer:F2}\n" +
+                Handles.color = Color.white;
+                string timerLabel = $"Detection Timer: {monsterStates[monsterHead].currentDetectionTimer:F2}\n" +
                                     $"Investigation Interval: {currentInvestigationPointUpdateInterval:F2}";
 
-                Vector3 labelPosition = monsterHead.position - Vector3.up * 0.5f;
+                Vector3 labelPosition = monsterHead.position - Vector3.down * 0.5f;
                 Handles.Label(labelPosition, timerLabel);
 #endif
             }

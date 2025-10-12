@@ -170,7 +170,7 @@ public class ShipDamage : MonoBehaviour
         else if (monsterTransform.GetComponentInParent<LakeMonsterStateMachine>() != null)
         {
             var mediumStateMachine = monsterTransform.GetComponentInParent<LakeMonsterStateMachine>();
-            return mediumStateMachine.isSmallMonster ? DetectionManager.MonsterType.Small : DetectionManager.MonsterType.Medium;
+            return mediumStateMachine.IsSmallMonster ? DetectionManager.MonsterType.Small : DetectionManager.MonsterType.Medium;
         }
 
         return DetectionManager.MonsterType.Medium;

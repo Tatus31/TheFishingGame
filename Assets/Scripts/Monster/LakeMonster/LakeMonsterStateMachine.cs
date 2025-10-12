@@ -20,7 +20,7 @@ public class LakeMonsterStateMachine : MonoBehaviour
     [SerializeField] float rotationSpeed = 6f;
     [SerializeField] float maxVelocity = 10f;
     [SerializeField] LayerMask waterLayer;
-    [SerializeField]public LayerMask obstacleLayer;
+    [SerializeField] public LayerMask obstacleLayer;
 
     [Header("[Idle Monster Controls]")]
     [SerializeField] float idleMovementRadius = 12f;
@@ -39,6 +39,11 @@ public class LakeMonsterStateMachine : MonoBehaviour
     [SerializeField] int maxNumberOfAttacks = 5;
     [SerializeField] float turnSmoothTime = 1.2f;
     [SerializeField] float predictionValue = 1.5f;
+    [SerializeField] float windUpDuration = 1.5f;
+    [SerializeField] float windUpRotationSpeed = 2f;
+
+    [Space(10)]
+    [SerializeField] public bool IsSmallMonster = true;
 
     BaseLakeMonsterState currentState;
     Rigidbody rb;
@@ -48,10 +53,7 @@ public class LakeMonsterStateMachine : MonoBehaviour
     public LakeMonsterAttackingState AttackingState { get; private set; }
     public BaseLakeMonsterState PreviousState { get; private set; }
     public BaseLakeMonsterState CurrentState { get; private set; }
-
     public Transform ShipTransform { get { return shipTransform; } set { shipTransform = value; } }
-
-    public bool isSmallMonster = true;
 
     Vector3 _smoothedAvoidance = Vector3.zero; 
 
@@ -72,7 +74,7 @@ public class LakeMonsterStateMachine : MonoBehaviour
     {
         IdleState = new LakeMonsterIdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, rb);
         InvestigatingState = new LakeMonsterInvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
-        AttackingState = new LakeMonsterAttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue);
+        AttackingState = new LakeMonsterAttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue, windUpDuration, windUpRotationSpeed);
 
         SwitchState(IdleState);
     }
@@ -86,7 +88,7 @@ public class LakeMonsterStateMachine : MonoBehaviour
 
         IdleState = new LakeMonsterIdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, rb);
         InvestigatingState = new LakeMonsterInvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
-        AttackingState = new LakeMonsterAttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue);
+        AttackingState = new LakeMonsterAttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue, windUpDuration, windUpRotationSpeed);
     }
 
     private void Update()
