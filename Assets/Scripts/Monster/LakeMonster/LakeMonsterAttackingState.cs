@@ -34,13 +34,13 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
     Vector3 currentMoveDirection;
 
     public LakeMonsterAttackingState(
-        Transform shipTransform, Transform monsterTransform, Transform playerTransform,
-        float swimAttackSpeed, Rigidbody rb, float monsterEscapeTime, float maxAttackDuration,
+        Transform shipTransform, Transform monsterTransform, Transform playerTransform, ShipMovement shipMovement, float swimAttackSpeed, Rigidbody rb, float monsterEscapeTime, float maxAttackDuration,
         float turnSmoothTime, int maxNumberOfAttacks, float predictionValue, float windUpDuration, float windUpRotationSpeed)
     {
         this.shipTransform = shipTransform;
         this.monsterTransform = monsterTransform;
         this.playerTransform = playerTransform;
+        this.shipMovement = shipMovement;
         this.swimAttackSpeed = swimAttackSpeed;
         this.rb = rb;
         this.monsterEscapeTime = monsterEscapeTime;
@@ -50,9 +50,6 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
         this.predictionValue = predictionValue;
         this.windUpDuration = windUpDuration;
         this.windUpRotationSpeed = windUpRotationSpeed;
-
-        if (shipTransform != null)
-            shipMovement = shipTransform.GetComponent<ShipMovement>();
     }
 
     public override void EnterState(LakeMonsterStateMachine monsterState)
@@ -95,6 +92,9 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
     {
         CameraOverlayManager.Instance.TriggerEventWithDelay();
         AudioManager.PlaySound(AudioManager.HeartBeatSound);
+
+        if(shipMovement.IsControllingShip)
+            CameraTransitionManager.Instance.EnableAttackCamera();
 
         isMonsterPursuing = true;
         isWindingUp = true;
@@ -146,9 +146,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
     void SetTargetDirection()
     {
-        Vector3 predictedPosition = isPlayerSwimming
-            ? playerTransform.position
-            : PredictShipPosition();
+        Vector3 predictedPosition = isPlayerSwimming ? playerTransform.position: PredictShipPosition();
 
         directionToShip = (predictedPosition - monsterTransform.position).normalized;
         targetDirection = isMonsterRetreating ? -directionToShip : directionToShip;
@@ -156,13 +154,15 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
     Vector3 PredictShipPosition()
     {
-        if (shipTransform == null) return Vector3.zero;
+        if (shipTransform == null) 
+            return Vector3.zero;
 
         Vector3 predictedPosition = shipTransform.position;
 
         if (shipMovement != null)
         {
             Vector3 shipVelocity = shipMovement.ShipFlatVel;
+
             if (shipVelocity.magnitude > 0.1f)
             {
                 predictedPosition += shipVelocity.normalized * shipVelocity.magnitude * predictionValue;
@@ -182,12 +182,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
     {
         windUpTimer += Time.deltaTime;
 
-        Quaternion targetRotation = Quaternion.LookRotation(directionToShip);
-        monsterTransform.rotation = Quaternion.Slerp(
-            monsterTransform.rotation,
-            targetRotation,
-            Time.deltaTime * windUpRotationSpeed
-        );
+        Quaternion targetRotation = Quaternion.LookRotation(directionToShip);monsterTransform.rotation = Quaternion.Slerp(monsterTransform.rotation, targetRotation, Time.deltaTime * windUpRotationSpeed);
 
         if (windUpTimer >= windUpDuration)
         {
@@ -205,6 +200,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
         {
             isMonsterRetreating = true;
             attackDuration = 0f;
+
             SetTargetDirection();
         }
     }
@@ -242,14 +238,14 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
         Gizmos.DrawRay(monsterTransform.position, currentMoveDirection * 5f);
 
         Transform currentTarget = isPlayerSwimming ? playerTransform : shipTransform;
-        if (currentTarget == null) return;
+
+        if (currentTarget == null) 
+            return;
 
         float sphereSize = isMonsterRetreating ? 2f : 1f;
         Gizmos.DrawWireSphere(currentTarget.position, sphereSize);
 
-        Vector3 targetPosition = isPlayerSwimming
-            ? playerTransform.position
-            : PredictShipPosition();
+        Vector3 targetPosition = isPlayerSwimming? playerTransform.position: PredictShipPosition();
 
         Gizmos.color = isPlayerSwimming ? Color.yellow : Color.red;
         Gizmos.DrawWireSphere(targetPosition, 1.5f);

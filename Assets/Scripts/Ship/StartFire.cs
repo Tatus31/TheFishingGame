@@ -16,8 +16,6 @@ public class StartFire : MonoBehaviour
 
     private float FireProbabilityMaxValue = 500f;
 
-    private float shipDamageDiffrance = 20f;
-
     ElectricalDevice electricalDevice;
     ShipDamage shipDamage;
     Coroutine fireTickCoroutine;
@@ -26,9 +24,6 @@ public class StartFire : MonoBehaviour
     public bool isOnFire;
     public bool IsOnFire {  get { return isOnFire; } set {  isOnFire = value; } }
 
-    int modifiedSatValueForHealth;
-    int permanentSavedStatValueForHealth;
-
     private void Start()
     {
         fireVFX.SetActive(false);
@@ -36,16 +31,6 @@ public class StartFire : MonoBehaviour
        
         isOnFire = false;
         shipDamage = ShipDamage.Instance;
-
-        if (shipDamage != null)
-        {
-            modifiedSatValueForHealth = shipDamage.GetModifiedStatValue(Stats.Health);
-            permanentSavedStatValueForHealth = shipDamage.GetPermanentSavedStatValue(Stats.Health);
-        }
-        else
-        {
-            Debug.LogError("ShipDamage instance is null in StartFire script.");
-        }
 
         electricalDevice = FindAnyObjectByType<ElectricalDevice>();
 
@@ -62,16 +47,17 @@ public class StartFire : MonoBehaviour
         FireActionStop();
     }
 
-    private void Update()
-    {
-        if (modifiedSatValueForHealth <= permanentSavedStatValueForHealth - shipDamageDiffrance)
-            sparksVFX.SetActive(true);
-        else
-            sparksVFX.SetActive(false);
-    }
-
     private void ElectricalDevice_OnDegradation(object sender, EventArgs e)
     {
+        if(electricalDevice.CurrentDegradation >= ElectricalDevice.DegradationCondition.Average)
+        {
+            sparksVFX.SetActive(true);
+        }
+        else
+        {
+            sparksVFX.SetActive(false);
+        }
+
         if (electricalDevice.CurrentDegradation == ElectricalDevice.DegradationCondition.Bad)
         {
             FireActionStart();
@@ -98,7 +84,7 @@ public class StartFire : MonoBehaviour
 
             if (!isOnFire)
             {
-                Debug.Log("Fire stopped - exiting coroutine");
+                Debug.Log("Fire stopped");
                 yield break;
             }
 

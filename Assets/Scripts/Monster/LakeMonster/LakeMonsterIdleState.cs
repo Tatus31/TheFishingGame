@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LakeMonsterIdleState : BaseLakeMonsterState
@@ -30,10 +28,22 @@ public class LakeMonsterIdleState : BaseLakeMonsterState
         hasReachedSafeSpace = false;
         timeAtCurrentTarget = 0f;
 
+        CameraTransitionManager.Instance.EnableMainCamera();
+
         currentTarget = monster.GetRandomValidTargetInsideSafeSpace(idleMovementRadius);
     }
 
     public override void UpdateState(LakeMonsterStateMachine monster)
+    {
+        StayNearTarget(monster);
+    }
+
+    public override void FixedUpdateState(LakeMonsterStateMachine monster)
+    {
+        SwimToTarget(monster);
+    }
+
+    private void StayNearTarget(LakeMonsterStateMachine monster)
     {
         float distanceToTarget = Vector3.Distance(monster.monsterHead.position, currentTarget);
 
@@ -58,16 +68,8 @@ public class LakeMonsterIdleState : BaseLakeMonsterState
         }
     }
 
-    public override void FixedUpdateState(LakeMonsterStateMachine monster)
+    private void SwimToTarget(LakeMonsterStateMachine monster)
     {
-        //Vector3 moveDirection = (currentTarget - monster.monsterHead.position).normalized;
-        //Vector3 avoidanceDirection = monster.GetObstacleAvoidanceDirection(obstacleAvoidanceDistance);
-
-        //Vector3 finalDirection = (moveDirection + avoidanceDirection).normalized;
-        //rb.AddForce(finalDirection * swimSpeed, ForceMode.Acceleration);
-
-        //monster.LookAt(finalDirection);
-
         Vector3 toTarget = (currentTarget - monster.monsterHead.position).normalized;
         Vector3 avoidance = monster.GetSmartAvoidanceDirection();
 
@@ -77,7 +79,6 @@ public class LakeMonsterIdleState : BaseLakeMonsterState
 
         rb.AddForce(finalDir * swimSpeed, ForceMode.Acceleration);
         monster.LookAtTarget(finalDir);
-
     }
 
     public override void ExitState()

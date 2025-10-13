@@ -47,6 +47,7 @@ public class LakeMonsterStateMachine : MonoBehaviour
 
     BaseLakeMonsterState currentState;
     Rigidbody rb;
+    ShipMovement shipMovement;
 
     public LakeMonsterIdleState IdleState { get; private set; }
     public LakeMonsterInvestigatingState InvestigatingState { get; private set; }
@@ -59,14 +60,6 @@ public class LakeMonsterStateMachine : MonoBehaviour
 
     private void Awake()
     {
-//        if (Instance != null)
-//        {
-//#if UNITY_EDITOR
-//            Debug.LogWarning($"There exists a {Instance.name} in the scene already");
-//#endif
-//        }
-
-//        Instance = this;
         rb = GetComponent<Rigidbody>();
     }
 
@@ -74,7 +67,13 @@ public class LakeMonsterStateMachine : MonoBehaviour
     {
         IdleState = new LakeMonsterIdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, rb);
         InvestigatingState = new LakeMonsterInvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
-        AttackingState = new LakeMonsterAttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue, windUpDuration, windUpRotationSpeed);
+        AttackingState = new LakeMonsterAttackingState(shipTransform, monsterHead, playerTransform, this.shipMovement, swimAttackSpeed, rb,
+            monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue, windUpDuration, windUpRotationSpeed);
+
+        if(shipTransform.TryGetComponent<ShipMovement>(out ShipMovement shipMovement))
+        {
+            this.shipMovement = shipMovement;
+        }
 
         SwitchState(IdleState);
     }
@@ -88,7 +87,8 @@ public class LakeMonsterStateMachine : MonoBehaviour
 
         IdleState = new LakeMonsterIdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, rb);
         InvestigatingState = new LakeMonsterInvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
-        AttackingState = new LakeMonsterAttackingState(shipTransform, monsterHead, playerTransform, swimAttackSpeed, rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue, windUpDuration, windUpRotationSpeed);
+        AttackingState = new LakeMonsterAttackingState(shipTransform, monsterHead, playerTransform, this.shipMovement, swimAttackSpeed,
+            rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue, windUpDuration, windUpRotationSpeed);
     }
 
     private void Update()
