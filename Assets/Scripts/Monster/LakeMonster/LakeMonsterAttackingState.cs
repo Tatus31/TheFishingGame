@@ -228,7 +228,6 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
         if (numberOfAttacks >= maxNumberOfAttacks || shipSank || !isMonsterPursuing)
         {
-            Debug.Log($"Switching to Idle State {monsterTransform.name} num of attacks {numberOfAttacks} >= {maxNumberOfAttacks}");
             numberOfAttacks = 0;
 
             monsterState.SwitchState(monsterState.IdleState);
