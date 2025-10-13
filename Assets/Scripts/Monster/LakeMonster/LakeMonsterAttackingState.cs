@@ -21,7 +21,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
     float windUpRotationSpeed = 2f;
 
     int numberOfAttacks;
-    int maxNumberOfAttacks;
+    int maxNumberOfAttacks = 3;
 
     bool isMonsterRetreating;
     bool isPlayerSwimming;
@@ -199,6 +199,10 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
         attackDuration += Time.deltaTime;
         if (attackDuration > maxAttackDuration)
         {
+            numberOfAttacks++;
+
+            Debug.Log($"Monster missed attack {numberOfAttacks}");
+
             isMonsterRetreating = true;
             attackDuration = 0f;
 
@@ -224,7 +228,9 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
         if (numberOfAttacks >= maxNumberOfAttacks || shipSank || !isMonsterPursuing)
         {
+            Debug.Log($"Switching to Idle State {monsterTransform.name} num of attacks {numberOfAttacks} >= {maxNumberOfAttacks}");
             numberOfAttacks = 0;
+
             monsterState.SwitchState(monsterState.IdleState);
         }
 

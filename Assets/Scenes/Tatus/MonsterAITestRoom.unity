@@ -12929,7 +12929,7 @@ PrefabInstance:
     - target: {fileID: 4080639458770842708, guid: bd19e4b64ab456943a67bd108f9a72ab,
         type: 3}
       propertyPath: windUpDuration
-      value: 0.75
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4080639458770842708, guid: bd19e4b64ab456943a67bd108f9a72ab,
         type: 3}
@@ -12939,13 +12939,23 @@ PrefabInstance:
     - target: {fileID: 4080639458770842708, guid: bd19e4b64ab456943a67bd108f9a72ab,
         type: 3}
       propertyPath: predictionValue
-      value: 8
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4080639458770842708, guid: bd19e4b64ab456943a67bd108f9a72ab,
         type: 3}
       propertyPath: safeSpaceCenter
       value: 
       objectReference: {fileID: 458639356}
+    - target: {fileID: 4080639458770842708, guid: bd19e4b64ab456943a67bd108f9a72ab,
+        type: 3}
+      propertyPath: maxAttackDuration
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4080639458770842708, guid: bd19e4b64ab456943a67bd108f9a72ab,
+        type: 3}
+      propertyPath: maxNumberOfAttacks
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4080639458770842708, guid: bd19e4b64ab456943a67bd108f9a72ab,
         type: 3}
       propertyPath: windUpRotationSpeed
@@ -13795,6 +13805,11 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 1791
       objectReference: {fileID: 0}
+    - target: {fileID: 4005666024844462506, guid: 0315f51cdf4e66941835fa6432487b4a,
+        type: 3}
+      propertyPath: MaxDistance
+      value: 5.79
+      objectReference: {fileID: 0}
     - target: {fileID: 4089963563866700952, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
       propertyPath: m_Mesh
@@ -13810,6 +13825,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1458365442}
+    - target: {fileID: 4662294518209527381, guid: 0315f51cdf4e66941835fa6432487b4a,
+        type: 3}
+      propertyPath: MaxDistance
+      value: 5.79
+      objectReference: {fileID: 0}
     - target: {fileID: 4824535685267732504, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
       propertyPath: m_Range
