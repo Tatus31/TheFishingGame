@@ -15,14 +15,28 @@ public class DangerAreaDetector : MonoBehaviour
         }
     }
 
+    [SerializeField] private float coolDownTime = 1f;
+    private bool isOnCoolDown = false;
+
+    [SerializeField] private float underWaterOffset = 0.2f;
+
     public static event EventHandler<DangerObject> OnEnterDangerArea;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("DangerArea"))
         {
-            Debug.Log("Entering Danger Area");
-            OnEnterDangerArea?.Invoke(this, new DangerObject(this.transform, true));
+            if (!isOnCoolDown)
+            {
+                Vector3 adjustedPosition = transform.position;
+                adjustedPosition.y -= underWaterOffset;
+                transform.position = adjustedPosition;
+
+                OnEnterDangerArea?.Invoke(this, new DangerObject(this.transform, true));
+                Debug.Log($"Entering Danger Area new ship position {transform.position}");
+
+                isOnCoolDown = true;
+            }
         }
     }
 
@@ -30,8 +44,21 @@ public class DangerAreaDetector : MonoBehaviour
     {
         if (other.CompareTag("DangerArea"))
         {
-            Debug.Log("Exiting Danger Area");
             OnEnterDangerArea?.Invoke(this, new DangerObject(this.transform, false));
+            Debug.Log("Exiting Danger Area");
+        }
+    }
+
+    private void Update()
+    {
+        if (coolDownTime > 0)
+        {
+            coolDownTime -= Time.deltaTime;
+        }
+        else
+        {
+            coolDownTime = 1f;
+            isOnCoolDown = false;
         }
     }
 }

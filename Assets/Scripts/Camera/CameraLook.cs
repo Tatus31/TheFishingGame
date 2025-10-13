@@ -6,9 +6,11 @@ public class CameraLook : MonoBehaviour
     [SerializeField] Transform cameraHolder;
     [SerializeField] Transform orientation;
     [Header("Sensitivity")]
-    [SerializeField][Range(0,1)] float sensitivity = 1f;
+    [SerializeField][Range(0, 1)] float sensitivity = 1f;
+    [Header("Options")]
+    [SerializeField] bool rotateAroundOrentationPoint = true;
 
-    public float Sensitivity {  get { return sensitivity; } set {  sensitivity = value; } }
+    public float Sensitivity { get { return sensitivity; } set { sensitivity = value; } }
 
     float sensMultiplier = 5f;
 
@@ -28,7 +30,10 @@ public class CameraLook : MonoBehaviour
 
     void LateUpdate()
     {
-        MouseLook();
+        if (rotateAroundOrentationPoint)
+            MouseAroundOrientationLook();
+        else
+            MouseLook();
     }
 
     void MouseLook()
@@ -44,4 +49,18 @@ public class CameraLook : MonoBehaviour
         cameraHolder.transform.localRotation = Quaternion.Euler(xRotation, desiredX, cameraHolder.rotation.z);
         PlayerMovement.Instance.orientation.rotation = Quaternion.Euler(0, desiredX, 0);
     }
+
+    void MouseAroundOrientationLook()
+    {
+        float mouseX = currentMouseDelta.x;
+        float mouseY = currentMouseDelta.y;
+
+        cameraHolder.RotateAround(orientation.position, Vector3.up, mouseX);
+
+        Vector3 rightAxis = cameraHolder.transform.right;
+        cameraHolder.RotateAround(orientation.position, rightAxis, -mouseY);
+
+        cameraHolder.LookAt(orientation.position);
+    }
+
 }

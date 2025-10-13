@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LakeMonsterIdleState : BaseLakeMonsterState
@@ -7,16 +5,16 @@ public class LakeMonsterIdleState : BaseLakeMonsterState
     Vector3 currentTarget;
     float timeAtCurrentTarget;
     float idleMovementRadius;
-    float obstacleAvoidanceDistance;
     float swimSpeed;
     float minTimeAtTarget;
     float allowedDistanceFromTarget;
     Rigidbody rb;
 
+    bool hasReachedSafeSpace = false;
+
     public LakeMonsterIdleState(float idleMovementRadius, float obstacleAvoidanceDistance, float swimSpeed, float minTimeAtTarget, float allowedDistanceFromTarget, Rigidbody rb)
     {
         this.idleMovementRadius = idleMovementRadius;
-        this.obstacleAvoidanceDistance = obstacleAvoidanceDistance;
         this.swimSpeed = swimSpeed;
         this.minTimeAtTarget = minTimeAtTarget;
         this.allowedDistanceFromTarget = allowedDistanceFromTarget;
@@ -25,11 +23,27 @@ public class LakeMonsterIdleState : BaseLakeMonsterState
 
     public override void EnterState(LakeMonsterStateMachine monster)
     {
-        currentTarget = monster.GetRandomValidTarget(monster.monsterHead, idleMovementRadius);
+        AudioManager.MuteSound(AudioManager.HeartBeatSound);
+
+        hasReachedSafeSpace = false;
         timeAtCurrentTarget = 0f;
+
+        CameraTransitionManager.Instance.EnableMainCamera();
+
+        currentTarget = monster.GetRandomValidTargetInsideSafeSpace(idleMovementRadius);
     }
 
     public override void UpdateState(LakeMonsterStateMachine monster)
+    {
+        StayNearTarget(monster);
+    }
+
+    public override void FixedUpdateState(LakeMonsterStateMachine monster)
+    {
+        SwimToTarget(monster);
+    }
+
+    private void StayNearTarget(LakeMonsterStateMachine monster)
     {
         float distanceToTarget = Vector3.Distance(monster.monsterHead.position, currentTarget);
 
@@ -39,21 +53,32 @@ public class LakeMonsterIdleState : BaseLakeMonsterState
 
             if (timeAtCurrentTarget >= minTimeAtTarget)
             {
-                currentTarget = monster.GetRandomValidTarget(monster.monsterHead, idleMovementRadius);
+                if (!hasReachedSafeSpace)
+                {
+                    hasReachedSafeSpace = true;
+                    currentTarget = monster.GetRandomValidTargetInsideSafeSpace(idleMovementRadius);
+                }
+                else
+                {
+                    currentTarget = monster.GetRandomValidTarget(monster.monsterHead, idleMovementRadius);
+                }
+
                 timeAtCurrentTarget = 0f;
             }
         }
     }
 
-    public override void FixedUpdateState(LakeMonsterStateMachine monster)
+    private void SwimToTarget(LakeMonsterStateMachine monster)
     {
-        Vector3 moveDirection = (currentTarget - monster.monsterHead.position).normalized;
-        Vector3 avoidanceDirection = monster.GetObstacleAvoidanceDirection(obstacleAvoidanceDistance);
+        Vector3 toTarget = (currentTarget - monster.monsterHead.position).normalized;
+        Vector3 avoidance = monster.GetSmartAvoidanceDirection();
 
-        Vector3 finalDirection = (moveDirection + avoidanceDirection).normalized;
-        rb.AddForce(finalDirection * swimSpeed, ForceMode.Acceleration);
+        Vector3 finalDir = (toTarget + avoidance).normalized;
+        if (Vector3.Dot(toTarget, avoidance) < -0.3f)
+            finalDir = avoidance.normalized;
 
-        monster.LookAt(finalDirection);
+        rb.AddForce(finalDir * swimSpeed, ForceMode.Acceleration);
+        monster.LookAtTarget(finalDir);
     }
 
     public override void ExitState()

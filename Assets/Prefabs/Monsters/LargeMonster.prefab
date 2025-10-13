@@ -623,7 +623,7 @@ GameObject:
   - component: {fileID: 903834673711909647}
   - component: {fileID: 7492516323022575370}
   - component: {fileID: 5136997971610549349}
-  - component: {fileID: 2083952522146304151}
+  - component: {fileID: 4080639458770842708}
   m_Layer: 10
   m_Name: LargeMonster
   m_TagString: MonsterDanger
@@ -646,6 +646,7 @@ Transform:
   m_Children:
   - {fileID: 1660495615729693288}
   - {fileID: 4809467983765037414}
+  - {fileID: 396008242037259082}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!95 &903834673711909647
@@ -712,7 +713,7 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2083952522146304151
+--- !u!114 &4080639458770842708
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -721,38 +722,37 @@ MonoBehaviour:
   m_GameObject: {fileID: 4936085379279539290}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0610c5c2b5550d4b91c2643efc44ef6, type: 3}
+  m_Script: {fileID: 11500000, guid: 7bfb42ebd82bd25489592c5ae5dfaff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   monsterHead: {fileID: 7655350669090556752}
   shipTransform: {fileID: 0}
   playerTransform: {fileID: 0}
-  obstacleAvoidanceDistance: 1
-  obstacleAvoidanceForce: 3
+  safeSpaceCenter: {fileID: 0}
+  obstacleAvoidanceDistance: 8
+  obstacleAvoidanceForce: 2.5
   swimSpeed: 2
-  rotationSpeed: 5
-  maxVelocity: 3
+  rotationSpeed: 3
+  maxVelocity: 5
   waterLayer:
     serializedVersion: 2
     m_Bits: 128
   obstacleLayer:
     serializedVersion: 2
-    m_Bits: 0
-  idleMovementRadius: 10
-  minTimeAtTarget: 0.1
-  allowedDistanceFromTarget: 0.1
-  stalkingDistance: 15
-  minStalkingDistance: 8
-  swimStalkingSpeed: 12
-  swimAttackSpeed: 20
-  monsterEscapeTime: 10
-  turnSmoothTime: 0.9
-  maxAttackDuration: 6
-  maxNumberOfAttacks: 1
-  predictionValue: 5
-  investigationSwimSpeed: 10
+    m_Bits: 1024
+  idleMovementRadius: 30
+  minTimeAtTarget: 0.2
+  allowedDistanceFromTarget: 7
+  investigationSwimSpeed: 5
   visionAngle: 45
-  visionDistance: 15
+  visionDistance: 30
+  monsterEscapeTime: 4
+  swimAttackSpeed: 50
+  maxAttackDuration: 10
+  maxNumberOfAttacks: 2
+  turnSmoothTime: 1.2
+  predictionValue: 1.7
+  isSmallMonster: 0
 --- !u!1 &4993494606201400461
 GameObject:
   m_ObjectHideFlags: 0
@@ -1274,3 +1274,131 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Weight: 0.5
   m_Effectors: []
+--- !u!1 &9128556573832118423
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 396008242037259082}
+  - component: {fileID: 7279630926539964474}
+  m_Layer: 10
+  m_Name: WaterSound
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &396008242037259082
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9128556573832118423}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -11.37, y: 1.43, z: 2.98}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5494293138224182614}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &7279630926539964474
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9128556573832118423}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: d0884a08cc978154496e3057aba609be, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1.02
+  MinDistance: 1
+  MaxDistance: 41.4
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.13055556
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

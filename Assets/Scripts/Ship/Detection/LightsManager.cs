@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LightsManager : MonoBehaviour
@@ -17,6 +15,11 @@ public class LightsManager : MonoBehaviour
 
     private void Start()
     {
+        if (lightsPrefab == null)
+        {
+            return;
+        }
+
         ElectricalDevice.OnDegradation += ElectricalDevice_OnDegradation;
     }
 
@@ -39,11 +42,6 @@ public class LightsManager : MonoBehaviour
 
     void Update()
     {
-        if (lightsPrefab == null)
-        {
-            return;
-        }
-
         if (Input.GetKeyDown(KeyCode.L))
         {
             ToggleLights();
