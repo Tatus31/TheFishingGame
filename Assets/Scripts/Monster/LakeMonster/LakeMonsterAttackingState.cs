@@ -50,6 +50,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
         this.predictionValue = predictionValue;
         this.windUpDuration = windUpDuration;
         this.windUpRotationSpeed = windUpRotationSpeed;
+
     }
 
     public override void EnterState(LakeMonsterStateMachine monsterState)
