@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 2588023803529675259, guid: a4c127d44cadb7542a93694f924eab0e,
         type: 3}
       propertyPath: m_Name
-      value: Minicoral_blue Variant
+      value: Minicoral_blue
       objectReference: {fileID: 0}
     - target: {fileID: 3405301294299783760, guid: a4c127d44cadb7542a93694f924eab0e,
         type: 3}
@@ -96,5 +96,60 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2588023803529675259, guid: a4c127d44cadb7542a93694f924eab0e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5133011026978935375}
   m_SourcePrefab: {fileID: 100100000, guid: a4c127d44cadb7542a93694f924eab0e, type: 3}
+--- !u!1 &742490243696302483 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2588023803529675259, guid: a4c127d44cadb7542a93694f924eab0e,
+    type: 3}
+  m_PrefabInstance: {fileID: 3001467864010086504}
+  m_PrefabAsset: {fileID: 0}
+--- !u!205 &5133011026978935375
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 742490243696302483}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.6974184
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 7071887051537180773}
+  - screenRelativeHeight: 0.3
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 5286831548044281456}
+  - screenRelativeHeight: 0.025989797
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 6513952108962916062}
+  m_Enabled: 1
+--- !u!23 &5286831548044281456 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6987829974007832088, guid: a4c127d44cadb7542a93694f924eab0e,
+    type: 3}
+  m_PrefabInstance: {fileID: 3001467864010086504}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &6513952108962916062 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8341071065437863606, guid: a4c127d44cadb7542a93694f924eab0e,
+    type: 3}
+  m_PrefabInstance: {fileID: 3001467864010086504}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &7071887051537180773 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5441255243509444621, guid: a4c127d44cadb7542a93694f924eab0e,
+    type: 3}
+  m_PrefabInstance: {fileID: 3001467864010086504}
+  m_PrefabAsset: {fileID: 0}
