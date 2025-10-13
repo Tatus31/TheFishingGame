@@ -65,15 +65,15 @@ public class LakeMonsterStateMachine : MonoBehaviour
 
     private void Start()
     {
+        if (shipTransform.TryGetComponent<ShipMovement>(out ShipMovement shipMovement))
+        {
+            this.shipMovement = shipMovement;
+        }
+
         IdleState = new LakeMonsterIdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, rb);
         InvestigatingState = new LakeMonsterInvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
         AttackingState = new LakeMonsterAttackingState(shipTransform, monsterHead, playerTransform, this.shipMovement, swimAttackSpeed, rb,
             monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue, windUpDuration, windUpRotationSpeed);
-
-        if(shipTransform.TryGetComponent<ShipMovement>(out ShipMovement shipMovement))
-        {
-            this.shipMovement = shipMovement;
-        }
 
         SwitchState(IdleState);
     }
