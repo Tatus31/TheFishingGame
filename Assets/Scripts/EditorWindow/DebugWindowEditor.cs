@@ -189,12 +189,12 @@ public class DebugWindowEditor : EditorWindow
 
         shipSectionContainer.Add(statsContainer);
 
-        //Button shipRespawnButton = new Button(RespawnShip);
-        //shipRespawnButton.name = "RespawnShip";
-        //shipRespawnButton.text = "Respawn Ship";
-        //shipRespawnButton.style.marginTop = 15;
-        //shipRespawnButton.style.marginBottom = 5;
-        //shipSectionContainer.Add(shipRespawnButton);
+        Button shipRespawnButton = new Button(RespawnShip);
+        shipRespawnButton.name = "RespawnShip";
+        shipRespawnButton.text = "Respawn Ship";
+        shipRespawnButton.style.marginTop = 15;
+        shipRespawnButton.style.marginBottom = 5;
+        shipSectionContainer.Add(shipRespawnButton);
 
         Button shipTransportButton = new Button(MoveShipToPosition);
         shipTransportButton.name = "shipTransportButton";
@@ -594,24 +594,24 @@ public class DebugWindowEditor : EditorWindow
         }
     }
 
-//    void RespawnShip()
-//    {
-//        RespawnShip respawnShip = global::RespawnShip.Instance;
+    void RespawnShip()
+    {
+        RespawnShip respawnShip = global::RespawnShip.Instance;
 
-//        if (respawnShip != null)
-//        {
-//            respawnShip.RespawnShipManually();
-//#if UNITY_EDITOR
-//            Debug.Log($"teleported to {respawnShip.targetPoint}.");
-//#endif
-//        }
-//        else
-//        {
-//#if UNITY_EDITOR
-//            Debug.LogWarning($"{respawnShip} instance not found in the scene. (Are you in playmode?)");
-//#endif
-//        }
-//    }
+        if (respawnShip != null)
+        {
+            respawnShip.RespawnShipManually();
+#if UNITY_EDITOR
+            Debug.Log($"teleported to {respawnShip.targetPoint}.");
+#endif
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"{respawnShip} instance not found in the scene. (Are you in playmode?)");
+#endif
+        }
+    }
 
     void MoveShipToPosition()
     {

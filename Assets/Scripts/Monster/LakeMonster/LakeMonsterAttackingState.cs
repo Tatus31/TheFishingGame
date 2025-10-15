@@ -19,6 +19,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
     float windUpTimer;
     float windUpDuration = 1.5f;
     float windUpRotationSpeed = 2f;
+    float stopPredictionAttackRange = 60f; 
 
     int numberOfAttacks;
     int maxNumberOfAttacks = 3;
@@ -35,7 +36,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
     public LakeMonsterAttackingState(
         Transform shipTransform, Transform monsterTransform, Transform playerTransform, ShipMovement shipMovement, float swimAttackSpeed, Rigidbody rb, float monsterEscapeTime, float maxAttackDuration,
-        float turnSmoothTime, int maxNumberOfAttacks, float predictionValue, float windUpDuration, float windUpRotationSpeed)
+        float turnSmoothTime, int maxNumberOfAttacks, float predictionValue, float windUpDuration, float windUpRotationSpeed, float stopPredictionAttackRange)
     {
         this.shipTransform = shipTransform;
         this.monsterTransform = monsterTransform;
@@ -50,6 +51,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
         this.predictionValue = predictionValue;
         this.windUpDuration = windUpDuration;
         this.windUpRotationSpeed = windUpRotationSpeed;
+        this.stopPredictionAttackRange = stopPredictionAttackRange;
 
     }
 
@@ -147,7 +149,22 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
     void SetTargetDirection()
     {
-        Vector3 predictedPosition = isPlayerSwimming ? playerTransform.position: PredictShipPosition();
+        float distanceToShip = Vector3.Distance(monsterTransform.position, shipTransform.position);
+
+        Vector3 predictedPosition;
+
+        if (isPlayerSwimming)
+        {
+            predictedPosition = playerTransform.position;
+        }
+        else if (distanceToShip <= stopPredictionAttackRange)
+        {
+            predictedPosition = AttackShipPosition();
+        }
+        else
+        {
+            predictedPosition = PredictShipPosition();
+        }
 
         directionToShip = (predictedPosition - monsterTransform.position).normalized;
         targetDirection = isMonsterRetreating ? -directionToShip : directionToShip;
@@ -155,7 +172,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
     Vector3 PredictShipPosition()
     {
-        if (shipTransform == null) 
+        if (shipTransform == null)
             return Vector3.zero;
 
         Vector3 predictedPosition = shipTransform.position;
@@ -171,6 +188,22 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
         }
 
         return predictedPosition;
+    }
+
+    Vector3 AttackShipPosition()
+    {
+        if (shipTransform == null)
+            return Vector3.zero;
+
+        Vector3 attackPosition = shipTransform.position;
+
+        //if (shipMovement != null)
+        //{
+        //    Vector3 shipVelocity = shipMovement.ShipFlatVel;
+        //    attackPosition += shipVelocity * 0.1f;
+        //}
+
+        return attackPosition;
     }
 
     void HandleMonsterRotation(LakeMonsterStateMachine monsterState)
@@ -240,20 +273,44 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
     public override void DrawGizmos(LakeMonsterStateMachine monsterState)
     {
+        if (monsterTransform == null)
+            return;
+
         Gizmos.color = isMonsterRetreating ? Color.blue : Color.red;
         Gizmos.DrawRay(monsterTransform.position, currentMoveDirection * 5f);
 
         Transform currentTarget = isPlayerSwimming ? playerTransform : shipTransform;
 
-        if (currentTarget == null) 
+        if (currentTarget == null)
             return;
 
         float sphereSize = isMonsterRetreating ? 2f : 1f;
         Gizmos.DrawWireSphere(currentTarget.position, sphereSize);
 
-        Vector3 targetPosition = isPlayerSwimming? playerTransform.position: PredictShipPosition();
+        Vector3 targetPosition;
 
-        Gizmos.color = isPlayerSwimming ? Color.yellow : Color.red;
+        if (isPlayerSwimming)
+        {
+            targetPosition = playerTransform.position;
+        }
+        else
+        {
+            float distanceToShip = Vector3.Distance(monsterTransform.position, shipTransform.position);
+
+            if (distanceToShip <= stopPredictionAttackRange)
+            {
+                targetPosition = AttackShipPosition();
+                Gizmos.color = Color.magenta; 
+            }
+            else
+            {
+                targetPosition = PredictShipPosition();
+                Gizmos.color = Color.yellow;
+            }
+        }
+
         Gizmos.DrawWireSphere(targetPosition, 1.5f);
+        Gizmos.DrawLine(monsterTransform.position, targetPosition);
     }
+
 }

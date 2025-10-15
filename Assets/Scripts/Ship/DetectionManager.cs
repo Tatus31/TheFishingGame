@@ -221,8 +221,6 @@ public class DetectionManager : MonoBehaviour
                 continue;
             }
 
-            //float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
-
             if (state.isInvestigating)
             {
                 if (!isInDangerArea)
@@ -475,7 +473,9 @@ public class DetectionManager : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (shipTransform == null || monsterHeads.Length == 0) return;
+#if UNITY_EDITOR
+        if (shipTransform == null || monsterHeads.Length == 0)
+            return;
 
         foreach (Transform monsterHead in monsterHeads)
         {
@@ -489,16 +489,18 @@ public class DetectionManager : MonoBehaviour
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawWireSphere(investigationTargetPoint, 1f);
 
-#if UNITY_EDITOR
+                float distance = Vector3.Distance(shipTransform.position, monsterHead.position);
                 Handles.color = Color.white;
                 string timerLabel = $"Detection Timer: {monsterStates[monsterHead].currentDetectionTimer:F2}\n" +
-                                    $"Investigation Interval: {currentInvestigationPointUpdateInterval:F2}";
+                                    $"Investigation Interval: {currentInvestigationPointUpdateInterval:F2}\n" +
+                                    $"Distance from ship: {distance:F2}";
 
                 Vector3 labelPosition = monsterHead.position - Vector3.down * 0.5f;
                 Handles.Label(labelPosition, timerLabel);
-#endif
+
             }
         }
+#endif
     }
 
 }

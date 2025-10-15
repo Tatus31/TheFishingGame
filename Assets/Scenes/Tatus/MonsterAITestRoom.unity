@@ -11818,7 +11818,7 @@ GameObject:
   - component: {fileID: 1922217220}
   - component: {fileID: 1922217221}
   m_Layer: 0
-  m_Name: Virtual Camera
+  m_Name: AttackCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13190,7 +13190,7 @@ PrefabInstance:
     - target: {fileID: 4080639458770842708, guid: bd19e4b64ab456943a67bd108f9a72ab,
         type: 3}
       propertyPath: predictionValue
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4080639458770842708, guid: bd19e4b64ab456943a67bd108f9a72ab,
         type: 3}
@@ -13210,7 +13210,12 @@ PrefabInstance:
     - target: {fileID: 4080639458770842708, guid: bd19e4b64ab456943a67bd108f9a72ab,
         type: 3}
       propertyPath: windUpRotationSpeed
-      value: 4
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4080639458770842708, guid: bd19e4b64ab456943a67bd108f9a72ab,
+        type: 3}
+      propertyPath: stopPredictionAttackRange
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 4936085379279539290, guid: bd19e4b64ab456943a67bd108f9a72ab,
         type: 3}
@@ -13918,6 +13923,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Ship2
+      objectReference: {fileID: 0}
+    - target: {fileID: 389315131517586987, guid: 0315f51cdf4e66941835fa6432487b4a,
+        type: 3}
+      propertyPath: shipSmoothing
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 844714074763406381, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}

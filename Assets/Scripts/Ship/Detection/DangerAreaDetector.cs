@@ -28,12 +28,12 @@ public class DangerAreaDetector : MonoBehaviour
         {
             if (!isOnCoolDown)
             {
-                Vector3 adjustedPosition = transform.position;
+                var adjustedPosition = transform.position;
                 adjustedPosition.y -= underWaterOffset;
-                transform.position = adjustedPosition;
+                Transform pos = transform;
+                pos.position = adjustedPosition;
 
-                OnEnterDangerArea?.Invoke(this, new DangerObject(this.transform, true));
-                Debug.Log($"Entering Danger Area new ship position {transform.position}");
+                OnEnterDangerArea?.Invoke(this, new DangerObject(pos, true));
 
                 isOnCoolDown = true;
             }
