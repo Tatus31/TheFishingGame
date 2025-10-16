@@ -25,7 +25,7 @@ public class ShipWaterPump : MonoBehaviour
 
     private void Update()
     {
-        if(MouseWorldPosition.GetInteractable(waterPumpLayerMask) && InputManager.Instance.IsLeftMouseButtonHeld())
+        if(MouseWorldPosition.GetInteractable(waterPumpLayerMask) && Input.GetKeyDown(KeyCode.E))
         {
             //Debug.Log("using waterPump");
 
