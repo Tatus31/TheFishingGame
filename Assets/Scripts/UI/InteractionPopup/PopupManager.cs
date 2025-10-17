@@ -1,34 +1,29 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System;
 
 public class PopupManager : MonoBehaviour
 {
+    public static event System.Action<PopupSO> OnPopupActivated;
+
     [SerializeField] PopupSO[] popupsSO;
     [SerializeField] GameObject panelPrefab;
+    [SerializeField] float fadeDuration = 0.5f;
 
-    [SerializeField] float hideDelay = 0.5f;
-
-    LayerMask hitLayerMask;
+    LayerMask currentLayerMask = -1;
+    Coroutine hidePanelCoroutine;
 
     TextMeshProUGUI infoText;
     TextMeshProUGUI interactText;
-
-    Coroutine hidePanelCoroutine;
+    CanvasGroup panelCanvasGroup;
 
     private void Start()
     {
-        if (popupsSO == null || popupsSO.Length <= 0)
-        {
+        if (popupsSO == null || popupsSO.Length == 0)
             Debug.LogError("PopupSO is not assigned in PopupManager.");
-        }
 
         if (panelPrefab == null)
-        {
             Debug.LogError("Panel Prefab is not assigned in PopupManager.");
-        }
 
         InfoKey infoKey = panelPrefab.GetComponentInChildren<InfoKey>(true);
         InteractKey interactKey = panelPrefab.GetComponentInChildren<InteractKey>(true);
@@ -39,28 +34,36 @@ public class PopupManager : MonoBehaviour
         if (interactKey)
             interactText = interactKey.GetComponent<TextMeshProUGUI>();
 
-        panelPrefab.SetActive(true);
-        InitializePopup(popupsSO[0]);
-        Canvas.ForceUpdateCanvases();
+        if (panelPrefab.TryGetComponent<CanvasGroup>(out CanvasGroup canvasGroup))
+        {
+            panelCanvasGroup = canvasGroup;
+        }
+        else
+        {
+            Debug.LogError("CanvasGroup component not found on panelPrefab.");
+        }
+
         panelPrefab.SetActive(false);
+        panelCanvasGroup.alpha = 0f;
 
         foreach (var popup in popupsSO)
-        {
             popup.IsInteractionActive = false;
-        }
     }
 
     private void Update()
     {
-        if (MouseWorldPosition.GetInteractable(MouseWorldPosition.Instance.InteractableMask, out hitLayerMask))
+        if (MouseWorldPosition.GetInteractable(MouseWorldPosition.Instance.InteractableMask, out LayerMask hitLayerMask))
         {
-            foreach (var popup in popupsSO)
+            if (hitLayerMask != currentLayerMask || !panelPrefab.activeSelf)
             {
-                if (popup.InteractableLayer == hitLayerMask)
+                currentLayerMask = hitLayerMask;
+
+                foreach (var popup in popupsSO)
                 {
-                    if (!panelPrefab.activeInHierarchy)
+                    if (popup.InteractableLayer == hitLayerMask)
                     {
                         InitializePopup(popup);
+                        break;
                     }
                 }
             }
@@ -82,10 +85,15 @@ public class PopupManager : MonoBehaviour
 
     void InitializePopup(PopupSO popup)
     {
-        if (popup.IsInteractionActive)
-            return;
+        foreach (var p in popupsSO)
+            p.IsInteractionActive = false;
 
-        panelPrefab.SetActive(true);
+        popup.IsInteractionActive = true;
+
+        if (!panelPrefab.activeSelf)
+            panelPrefab.SetActive(true);
+
+        panelCanvasGroup.alpha = 0f;
 
         if (infoText != null)
             infoText.text = popup.InformationKey.ToString();
@@ -93,19 +101,21 @@ public class PopupManager : MonoBehaviour
         if (interactText != null)
             interactText.text = popup.InteractionKey.ToString();
 
-        popup.IsInteractionActive = true;
+        OnPopupActivated?.Invoke(popup);
+
+        UIFadeManager.Instance.Fade(panelCanvasGroup, 1f, fadeDuration);
     }
 
     IEnumerator HidePanelAfterDelay()
     {
-        yield return new WaitForSeconds(hideDelay);
+        UIFadeManager.Instance.Fade(panelCanvasGroup, 0f, fadeDuration, () =>{ panelPrefab.SetActive(false); });
+
+        yield return new WaitForSeconds(fadeDuration);
 
         foreach (var popup in popupsSO)
-        {
             popup.IsInteractionActive = false;
-        }
 
-        panelPrefab.SetActive(false);
+        currentLayerMask = -1;
         hidePanelCoroutine = null;
     }
 }

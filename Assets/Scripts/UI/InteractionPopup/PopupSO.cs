@@ -7,4 +7,5 @@ public class PopupSO : ScriptableObject
     public KeyCode InformationKey;
     public LayerMask InteractableLayer;
     public bool IsInteractionActive;
+    [TextArea(15, 20)] public string InfoText;
 }
