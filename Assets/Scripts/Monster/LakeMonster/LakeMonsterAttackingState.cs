@@ -19,7 +19,8 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
     float windUpTimer;
     float windUpDuration = 1.5f;
     float windUpRotationSpeed = 2f;
-    float stopPredictionAttackRange = 60f; 
+    float stopPredictionAttackRange = 60f;
+    float maxPitch = 1.3f;
 
     int numberOfAttacks;
     int maxNumberOfAttacks = 3;
@@ -58,6 +59,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
     public override void EnterState(LakeMonsterStateMachine monsterState)
     {
         Debug.Log($"Entering Attacking State {monsterTransform.name}");
+        AudioManager.ChangeAudioPitch(AudioManager.HeartBeatSound, maxPitch);
         InitializeAttackState();
 
         SubscribeEvents();

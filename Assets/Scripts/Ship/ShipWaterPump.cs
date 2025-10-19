@@ -25,15 +25,12 @@ public class ShipWaterPump : MonoBehaviour
 
     private void Update()
     {
-        if(MouseWorldPosition.GetInteractable(waterPumpLayerMask) && Input.GetKeyDown(KeyCode.E))
+        if(MouseWorldPosition.GetInteractable(waterPumpLayerMask) && Input.GetKey(KeyCode.E))
         {
-            //Debug.Log("using waterPump");
+            Input.GetMouseButtonDown(0);
+            Debug.Log("using waterPump");
 
-            if (currentRepairPoints <= 0)
-            {
-                //Debug.Log("water is lowering");
-                ChangeWaterLevelUnderDeck.Instance.LinearlyDecreaseWaterLevel();
-            }
+            ChangeWaterLevelUnderDeck.Instance.LinearlyDecreaseWaterLevel();
         }
     }
 }

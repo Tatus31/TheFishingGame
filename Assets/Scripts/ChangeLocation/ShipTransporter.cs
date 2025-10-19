@@ -17,11 +17,13 @@ public class ShipTransporter : MonoBehaviour
     Collider playerCollider = null;
     float lastTeleportTime = 0f;
 
+    private void Start()
+    {
+    }
+
     private void Update()
     {
-        if (InputManager.Instance.IsLeftMouseButtonPressed() &&
-            isInsideTransportArea &&
-            playerCollider != null &&
+        if (Input.GetKeyDown(KeyCode.E) && isInsideTransportArea && playerCollider != null &&
             Time.time - lastTeleportTime > teleportCooldown)
         {
             if (IsCollision(playerCollider))

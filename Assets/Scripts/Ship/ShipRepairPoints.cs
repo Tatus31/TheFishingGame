@@ -108,8 +108,7 @@ public class ShipRepairPoints : MonoBehaviour
 
     public void ResetRepairPointAtPosition(Vector3 position)
     {
-        RepairPoint pointToReset = repairPoints.Find(point =>
-            Vector3.Distance(transform.TransformPoint(point.position), position) < 0.1f);
+        RepairPoint pointToReset = repairPoints.Find(point => Vector3.Distance(transform.TransformPoint(point.position), position) < 0.1f);
 
         if (pointToReset != null)
         {

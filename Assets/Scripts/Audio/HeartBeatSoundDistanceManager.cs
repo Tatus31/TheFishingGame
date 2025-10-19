@@ -43,7 +43,7 @@ public class HeartBeatSoundDistanceManager : MonoBehaviour
         float normalizedDistance = Mathf.Clamp01(distanceSqr * invertedMaxDistanceSqr);
         float pitch = Mathf.Lerp(maxPitch, minPitch, normalizedDistance);
 
-        AudioManager.ChangeAudioPitch(AudioManager.HeartBeatSound, pitch);
+        AudioManager.ChangeAudioPitch(AudioManager.HeartBeatSlowSound, pitch);
     }
 
     private void OnDrawGizmos()
