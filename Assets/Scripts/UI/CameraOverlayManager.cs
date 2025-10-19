@@ -71,7 +71,7 @@ public class CameraOverlayManager : MonoBehaviour
         {
             Debug.Log("Fading out camera overlay.");
             image.CrossFadeAlpha(0f, 1f, false);
-            monsterEvent.SetActive(false);
+            instance.SetActive(false);
         }
         else
         {
