@@ -110,6 +110,27 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public static void ChangeAudioPitch(string soundName, float pitch)
+    {
+        GameObject soundObj = GameObject.Find(soundName);
+        if (soundObj != null)
+        {
+            AudioSource audioSource = soundObj.GetComponent<AudioSource>();
+            if (audioSource != null)
+            {
+                audioSource.pitch = pitch;
+            }
+            else
+            {
+                Debug.LogWarning($"No AudioSource component found on {soundName}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Sound object '{soundName}' not found in scene");
+        }
+    }
+
     public static bool IsSoundPlaying(string soundName)
     {
         if (Instance == null) return false;

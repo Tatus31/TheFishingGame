@@ -32,7 +32,6 @@ public class ElectronicRepairMiniGame : MonoBehaviour
     {
         //InitializeMiniGame();
         //ShuffleWirePositions();
-
         ElectricalDevice.OnDegradation += HandleDegradation;
     }
     private void OnDestroy()

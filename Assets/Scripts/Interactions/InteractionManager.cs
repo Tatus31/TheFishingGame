@@ -29,7 +29,6 @@ public class InteractionManager : MonoBehaviour
     [SerializeField] ToolConfiguration fishingConfig;
     [SerializeField] ToolConfiguration harpoonConfig;
     [SerializeField] ToolConfiguration emptyHandsConfig;
-    [SerializeField] ToolConfiguration fireExtinguisherConfig;
     [SerializeField] ToolConfiguration wrenchConfig;
 
     EquipedTool currentTool = EquipedTool.Empty;
@@ -66,10 +65,6 @@ public class InteractionManager : MonoBehaviour
         {
             EquipTool(EquipedTool.EmptyHands);
         }
-        else if (MouseWorldPosition.GetInteractable(fireExtinguisherConfig.interactionMask))
-        {
-            EquipTool(EquipedTool.FireExtinguisher);
-        }
         else if (MouseWorldPosition.GetInteractable(wrenchConfig.interactionMask))
         {
             EquipTool(EquipedTool.Wrench);
@@ -84,13 +79,9 @@ public class InteractionManager : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            EquipTool(EquipedTool.FireExtinguisher);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
             EquipTool(EquipedTool.Wrench);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             EquipTool(EquipedTool.Empty);
         }
@@ -101,7 +92,6 @@ public class InteractionManager : MonoBehaviour
         fishingConfig.handObject.SetActive(false);
         harpoonConfig.handObject.SetActive(false);
         emptyHandsConfig.handObject.SetActive(false);
-        fireExtinguisherConfig.handObject.SetActive(false);
         wrenchConfig.handObject.SetActive(false);
 
         switch (newTool)
@@ -111,9 +101,6 @@ public class InteractionManager : MonoBehaviour
                 break;
             case EquipedTool.EmptyHands:
                 emptyHandsConfig.handObject.SetActive(true);
-                break;
-            case EquipedTool.FireExtinguisher:
-                fireExtinguisherConfig.handObject.SetActive(true);
                 break;
             case EquipedTool.Wrench:
                 wrenchConfig.handObject.SetActive(true);

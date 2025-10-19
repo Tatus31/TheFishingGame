@@ -41,6 +41,7 @@ public class LakeMonsterStateMachine : MonoBehaviour
     [SerializeField] float predictionValue = 1.5f;
     [SerializeField] float windUpDuration = 1.5f;
     [SerializeField] float windUpRotationSpeed = 2f;
+    [SerializeField] float stopPredictionAttackRange = 60f;
 
     [Space(10)]
     [SerializeField] public bool IsSmallMonster = true;
@@ -73,7 +74,7 @@ public class LakeMonsterStateMachine : MonoBehaviour
         IdleState = new LakeMonsterIdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, rb);
         InvestigatingState = new LakeMonsterInvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
         AttackingState = new LakeMonsterAttackingState(shipTransform, monsterHead, playerTransform, this.shipMovement, swimAttackSpeed, rb,
-            monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue, windUpDuration, windUpRotationSpeed);
+            monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue, windUpDuration, windUpRotationSpeed, stopPredictionAttackRange);
 
         SwitchState(IdleState);
     }
@@ -88,7 +89,7 @@ public class LakeMonsterStateMachine : MonoBehaviour
         IdleState = new LakeMonsterIdleState(idleMovementRadius, obstacleAvoidanceDistance, swimSpeed, minTimeAtTarget, allowedDistanceFromTarget, rb);
         InvestigatingState = new LakeMonsterInvestigatingState(shipTransform, monsterHead, rb, investigationSwimSpeed, visionAngle, visionDistance);
         AttackingState = new LakeMonsterAttackingState(shipTransform, monsterHead, playerTransform, this.shipMovement, swimAttackSpeed,
-            rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue, windUpDuration, windUpRotationSpeed);
+            rb, monsterEscapeTime, maxAttackDuration, turnSmoothTime, maxNumberOfAttacks, predictionValue, windUpDuration, windUpRotationSpeed, stopPredictionAttackRange);
     }
 
     private void Update()

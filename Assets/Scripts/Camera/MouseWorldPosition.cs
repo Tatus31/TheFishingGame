@@ -79,11 +79,31 @@ public class MouseWorldPosition : MonoBehaviour
     }
 
     public static bool GetInteractable(LayerMask mask)
-    {
+    { 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit raycastHit, Instance.interactionRange, Instance.InteractableMask))
         {
-            if (((1 << raycastHit.collider.gameObject.layer) & mask) != 0)
+            if 
+                (((1 << raycastHit.collider.gameObject.layer) & mask) != 0) 
+            {
+                return true;
+            }
+        } 
+        return false;
+    }
+
+    public static bool GetInteractable(LayerMask mask, out LayerMask hitLayer)
+    {
+        hitLayer = 0;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, Instance.interactionRange, Instance.InteractableMask))
+        {
+            int hitLayerIndex = raycastHit.collider.gameObject.layer;
+
+            hitLayer = 1 << hitLayerIndex;
+
+            if (((1 << hitLayerIndex) & mask) != 0)
             {
                 return true;
             }
@@ -91,4 +111,5 @@ public class MouseWorldPosition : MonoBehaviour
 
         return false;
     }
+
 }
