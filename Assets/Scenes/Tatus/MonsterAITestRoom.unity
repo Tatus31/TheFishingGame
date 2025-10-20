@@ -17,7 +17,7 @@ RenderSettings:
   m_Fog: 1
   m_FogColor: {r: 0.037785657, g: 0.10292042, b: 0.10943389, a: 1}
   m_FogMode: 2
-  m_FogDensity: 0.18
+  m_FogDensity: 0.08
   m_LinearFogStart: 0
   m_LinearFogEnd: 10
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -11369,14 +11369,34 @@ PrefabInstance:
       objectReference: {fileID: 7157433146232501158}
     - target: {fileID: 4426259278061551830, guid: bc147972a71a5e64ba701a9c47da3cf4,
         type: 3}
+      propertyPath: windUpDuration
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4426259278061551830, guid: bc147972a71a5e64ba701a9c47da3cf4,
+        type: 3}
       propertyPath: playerTransform
       value: 
       objectReference: {fileID: 423857259}
     - target: {fileID: 4426259278061551830, guid: bc147972a71a5e64ba701a9c47da3cf4,
         type: 3}
+      propertyPath: predictionValue
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 4426259278061551830, guid: bc147972a71a5e64ba701a9c47da3cf4,
+        type: 3}
       propertyPath: safeSpaceCenter
       value: 
       objectReference: {fileID: 458639356}
+    - target: {fileID: 4426259278061551830, guid: bc147972a71a5e64ba701a9c47da3cf4,
+        type: 3}
+      propertyPath: maxAttackDuration
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4426259278061551830, guid: bc147972a71a5e64ba701a9c47da3cf4,
+        type: 3}
+      propertyPath: stopPredictionAttackRange
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 4705157516112984280, guid: bc147972a71a5e64ba701a9c47da3cf4,
         type: 3}
       propertyPath: m_Name
@@ -12497,6 +12517,21 @@ PrefabInstance:
       propertyPath: turnSpeed
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 2233776803249099508, guid: 0315f51cdf4e66941835fa6432487b4a,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 5.028863
+      objectReference: {fileID: 0}
+    - target: {fileID: 2233776803249099508, guid: 0315f51cdf4e66941835fa6432487b4a,
+        type: 3}
+      propertyPath: m_Center.x
+      value: 2.0783393e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 2233776803249099508, guid: 0315f51cdf4e66941835fa6432487b4a,
+        type: 3}
+      propertyPath: m_Center.y
+      value: -0.62005836
+      objectReference: {fileID: 0}
     - target: {fileID: 2327712224509267410, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}
       propertyPath: targetPoint
@@ -12557,6 +12592,11 @@ PrefabInstance:
         type: 3}
       propertyPath: baseSmallMonsterDamage
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 3041340655423699789, guid: 0315f51cdf4e66941835fa6432487b4a,
+        type: 3}
+      propertyPath: damageCooldownDuration
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3041340655423699789, guid: 0315f51cdf4e66941835fa6432487b4a,
         type: 3}

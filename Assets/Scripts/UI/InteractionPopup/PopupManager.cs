@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using Game;
 
 public class PopupManager : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class PopupManager : MonoBehaviour
     TextMeshProUGUI infoText;
     TextMeshProUGUI interactText;
     CanvasGroup panelCanvasGroup;
+
+    bool cantShowPanel = false;
 
     private void Start()
     {
@@ -43,6 +46,8 @@ public class PopupManager : MonoBehaviour
             Debug.LogError("CanvasGroup component not found on panelPrefab.");
         }
 
+        EventManager.AddListener<OnEnteredInteraction>(OnEnteredInteraction);
+
         panelPrefab.SetActive(false);
         panelCanvasGroup.alpha = 0f;
 
@@ -50,8 +55,17 @@ public class PopupManager : MonoBehaviour
             popup.IsInteractionActive = false;
     }
 
+    void OnEnteredInteraction(OnEnteredInteraction e)
+    {
+        cantShowPanel = e.CanShowPanel;
+        StartCoroutine(HidePanelAfterDelay());
+    }
+
     private void Update()
     {
+        if (cantShowPanel)
+            return;
+
         if (MouseWorldPosition.GetInteractable(MouseWorldPosition.Instance.InteractableMask, out LayerMask hitLayerMask))
         {
             if (hitLayerMask != currentLayerMask || !panelPrefab.activeSelf)
@@ -117,5 +131,10 @@ public class PopupManager : MonoBehaviour
 
         currentLayerMask = -1;
         hidePanelCoroutine = null;
+    }
+
+    private void OnDestroy()
+    {
+        EventManager.RemoveListener<OnEnteredInteraction>(OnEnteredInteraction);
     }
 }

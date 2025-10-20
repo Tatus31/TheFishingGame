@@ -15,6 +15,7 @@ public class RespawnShip : ShipTransporter
             Debug.LogWarning($"there exists a {Instance.name} in the scene already");
 #endif
             Destroy(Instance);
+            
         }
 
         Instance = this;

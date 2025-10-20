@@ -21,10 +21,12 @@ public class ShipRepairPoints : MonoBehaviour
 
     [SerializeField] List<RepairPoint> repairPoints = new List<RepairPoint>();
     [SerializeField] GameObject obj;
+    List<GameObject> holePool = new();
     [SerializeField] int damageThreshold = 20;
 
-    int totalHoleDamage = 0;
     public List<RepairPoint> RepairPoints {  get { return repairPoints; } }
+
+    Queue<int> pendingHoleDamages = new();
 
     private void Awake()
     {
@@ -40,33 +42,42 @@ public class ShipRepairPoints : MonoBehaviour
 
     private void Start()
     {
+        foreach (var point in repairPoints)
+        {
+            Vector3 worldPoint = transform.TransformPoint(point.position);
+            Quaternion worldRotation = transform.rotation * Quaternion.Euler(point.rotation);
+            GameObject hole = Instantiate(obj, worldPoint, worldRotation, transform);
+            hole.SetActive(false);            
+            holePool.Add(hole);
+        }
+
         ShipDamage.Instance.OnDamageTaken += ShipDamage_OnDamageTaken;
     }
 
-    private void Update()
+    void Update()
     {
-        //foreach (var pair in repairPoints)
-        //{
-        //    if (Input.GetKeyDown(KeyCode.Space))
-        //    {
-        //        if (pair.isUsed == false)
-        //            SpawnHole();
-        //    }
-        //}
+        if (pendingHoleDamages.Count > 0)
+        {
+            int dmg = pendingHoleDamages.Dequeue();
+            SpawnHole(dmg);
+        }
     }
 
     public void SpawnHole(int damagePerHole = 0)
     {
-        RepairPoint unusedPoint = repairPoints.Find(point => !point.isUsed);
-        if (unusedPoint != null)
+        for (int i = 0; i < repairPoints.Count; i++)
         {
-            Vector3 worldPoint = transform.TransformPoint(unusedPoint.position);
-            Quaternion worldRotation = transform.rotation * Quaternion.Euler(unusedPoint.rotation);
-            Instantiate(obj, worldPoint, worldRotation, transform);
-            unusedPoint.isUsed = true;
-            unusedPoint.damageValue = damagePerHole;
-            OnRepairPointsChanged?.Invoke(GetUsedRepairPoints());
-            OnHoleCreate?.Invoke(this, EventArgs.Empty);
+            var point = repairPoints[i];
+            if (!point.isUsed)
+            {
+                point.isUsed = true;
+                point.damageValue = damagePerHole;
+
+                holePool[i].SetActive(true);         
+                OnRepairPointsChanged?.Invoke(GetUsedRepairPoints());
+                OnHoleCreate?.Invoke(this, EventArgs.Empty);
+                return;
+            }
         }
     }
 
@@ -77,15 +88,8 @@ public class ShipRepairPoints : MonoBehaviour
 
         if (holesToSpawn > 0)
         {
-            totalHoleDamage += damageTaken;
             int damagePerHole = damageTaken / holesToSpawn;
-#if UNITY_EDITOR
-            Debug.Log($"damage taken {damageTaken} spread across {holesToSpawn}");
-#endif
-            for (int i = 0; i < holesToSpawn; i++)
-            {
-                SpawnHole(damagePerHole);
-            }
+            for (int i = 0; i < holesToSpawn; i++) pendingHoleDamages.Enqueue(damagePerHole);
         }
         else
         {
@@ -139,7 +143,6 @@ public class ShipRepairPoints : MonoBehaviour
             }
         }
 
-        totalHoleDamage = 0;
         OnRepairPointsChanged?.Invoke(GetUsedRepairPoints());
     }
 

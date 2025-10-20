@@ -1,3 +1,4 @@
+using Game;
 using UnityEngine;
 
 public class RepairMiniGame : MonoBehaviour
@@ -48,6 +49,9 @@ public class RepairMiniGame : MonoBehaviour
             isFixingHole = false;
             repairAnimator.SetBool(AnimationController.IS_FIXING_HOLE, isFixingHole);
         }
+
+        Events.onEnteredInteraction.CanShowPanel = isFixingHole;
+        EventManager.Broadcast(Events.onEnteredInteraction);
 
         CheckAnimationCompletion(lastValidRepairPointObj);
 

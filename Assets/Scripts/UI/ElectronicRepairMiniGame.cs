@@ -1,3 +1,4 @@
+using Game;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -87,6 +88,9 @@ public class ElectronicRepairMiniGame : MonoBehaviour
                     currentWire = wire;
                     isDrawing = true;
 
+                    Events.onEnteredInteraction.CanShowPanel = isDrawing;
+                    EventManager.Broadcast(Events.onEnteredInteraction);
+
                     currentWire.lineRenderer.SetPosition(0, currentWire.wirePositionStart.position);
                     currentWire.lineRenderer.SetPosition(1, currentWire.wirePositionStart.position);
                     break;
@@ -131,6 +135,9 @@ public class ElectronicRepairMiniGame : MonoBehaviour
 
             isDrawing = false;
             currentWire = null;
+
+            Events.onEnteredInteraction.CanShowPanel = isDrawing;
+            EventManager.Broadcast(Events.onEnteredInteraction);
         }
     }
 

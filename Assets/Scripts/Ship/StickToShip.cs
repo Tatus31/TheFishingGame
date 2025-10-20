@@ -1,3 +1,4 @@
+using Game;
 using UnityEngine;
 
 public class StickToShip : MonoBehaviour
@@ -140,6 +141,9 @@ public class StickToShip : MonoBehaviour
                 shipMovement.IsControllingShip = true;
             }
         }
+
+        Events.onEnteredInteraction.CanShowPanel = isControllingShip;
+        EventManager.Broadcast(Events.onEnteredInteraction);
     }
 
     private void OnCollisionEnter(Collision collision)
