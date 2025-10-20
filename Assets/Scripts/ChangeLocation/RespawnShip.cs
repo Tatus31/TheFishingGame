@@ -14,7 +14,7 @@ public class RespawnShip : ShipTransporter
 #if UNITY_EDITOR
             Debug.LogWarning($"there exists a {Instance.name} in the scene already");
 #endif
-            Destroy(gameObject);
+            Destroy(Instance);
         }
 
         Instance = this;
