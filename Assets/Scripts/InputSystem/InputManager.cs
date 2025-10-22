@@ -76,4 +76,9 @@ public class InputManager : MonoBehaviour
     {
         return playerInputActions.Player.RightMouse.WasReleasedThisFrame();
     }
+
+    public bool GetPauseInputDown()
+    {
+        return playerInputActions.Player.Pause.WasPressedThisFrame();
+    }
 }

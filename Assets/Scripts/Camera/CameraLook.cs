@@ -17,6 +17,8 @@ public class CameraLook : MonoBehaviour
     Vector2 currentMouseDelta;
     float xRotation;
 
+    static bool lockCamera;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -30,6 +32,11 @@ public class CameraLook : MonoBehaviour
 
     void LateUpdate()
     {
+        if (lockCamera)
+        {
+            return;
+        }
+
         if (rotateAroundOrentationPoint)
             MouseAroundOrientationLook();
         else
@@ -61,6 +68,22 @@ public class CameraLook : MonoBehaviour
         cameraHolder.RotateAround(orientation.position, rightAxis, -mouseY);
 
         cameraHolder.LookAt(orientation.position);
+    }
+
+    public static void LockCamera(bool isLocked)
+    {
+        if (isLocked)
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+            lockCamera = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            lockCamera = false;
+        }
     }
 
 }
