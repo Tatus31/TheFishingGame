@@ -6,14 +6,17 @@ public class DangerAreaDetector : MonoBehaviour
     public class DangerObject
     {
         public Transform transform;
+        public Vector3 adjustedPosition;
         public bool hasEnteredDangerousArea;
 
-        public DangerObject(Transform transform, bool hasEnteredDangerousArea)
+        public DangerObject(Transform transform, Vector3 adjustedPosition, bool hasEnteredDangerousArea)
         {
             this.transform = transform;
+            this.adjustedPosition = adjustedPosition;
             this.hasEnteredDangerousArea = hasEnteredDangerousArea;
         }
     }
+
 
     [SerializeField] private float coolDownTime = 1f;
     private bool isOnCoolDown = false;
@@ -24,19 +27,17 @@ public class DangerAreaDetector : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("DangerArea"))
+        if (other.CompareTag("DangerArea") && !isOnCoolDown)
         {
-            if (!isOnCoolDown)
-            {
-                var adjustedPosition = transform.position;
-                adjustedPosition.y -= underWaterOffset;
-                Transform pos = transform;
-                pos.position = adjustedPosition;
+            Vector3 adjustedPosition = transform.position;
+            adjustedPosition.y -= underWaterOffset;
 
-                OnEnterDangerArea?.Invoke(this, new DangerObject(pos, true));
+            OnEnterDangerArea?.Invoke(
+                this,
+                new DangerObject(transform, adjustedPosition, true)
+            );
 
-                isOnCoolDown = true;
-            }
+            isOnCoolDown = true;
         }
     }
 
@@ -44,17 +45,17 @@ public class DangerAreaDetector : MonoBehaviour
     {
         if (other.CompareTag("DangerArea"))
         {
-            OnEnterDangerArea?.Invoke(this, new DangerObject(this.transform, false));
+            OnEnterDangerArea?.Invoke(
+                this,
+                new DangerObject(transform, transform.position, false)
+            );
             Debug.Log("Exiting Danger Area");
         }
     }
 
     private void Update()
     {
-        if (coolDownTime > 0)
-        {
-            coolDownTime -= Time.deltaTime;
-        }
+        if (coolDownTime > 0) coolDownTime -= Time.deltaTime;
         else
         {
             coolDownTime = 1f;

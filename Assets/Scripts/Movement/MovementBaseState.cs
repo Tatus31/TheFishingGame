@@ -47,14 +47,13 @@ public abstract class MovementBaseState
 
         CheckGroundContacts(player);
 
+        if (!OnGround)
+            SnapToGround(player);
+
         if (groundContactCount > 0)
-        {
             contactNormal.Normalize();
-        }
         else
-        {
             contactNormal = Vector3.up;
-        }
     }
 
     public abstract void FixedUpdateState();
@@ -63,9 +62,6 @@ public abstract class MovementBaseState
         if (player.GetMoveDirection().magnitude < 0.01f)
         {
             Vector3 horizontalVelocity = new Vector3(player.rb.velocity.x, 0, player.rb.velocity.z);
-
-            //AudioManager.MuteSound(AudioManager.WalkSound);
-
             if (horizontalVelocity.magnitude > 0)
             {
                 Vector3 frictionForce = -horizontalVelocity.normalized * frictionAmount;
@@ -78,16 +74,12 @@ public abstract class MovementBaseState
         player.FlatVel = new Vector3(player.rb.velocity.x, 0f, player.rb.velocity.z);
         Vector3 moveDirection = player.GetMoveDirection();
 
-        //AudioManager.PlaySound(AudioManager.WalkSound);
-
         debugMoveDirection = moveDirection;
         debugContactNormal = contactNormal;
 
-        player.rb.AddForce(Vector3.down);
-
         float targetSpeed = moveDirection.magnitude * maxSpeed;
 
-        if(OnGround)
+        if (OnGround)
             moveDirection = ProjectOnContactPlane(moveDirection);
 
         Vector3 targetVelocity = moveDirection * targetSpeed;
@@ -105,13 +97,10 @@ public abstract class MovementBaseState
     {
         Vector3 playerPos = player.transform.position;
         float scale = 2.0f;
-
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(playerPos, playerPos + debugContactNormal * scale);
-
         Gizmos.color = Color.green;
         Gizmos.DrawLine(playerPos, playerPos + debugMoveDirection * scale);
-
         Gizmos.color = Color.red;
         Gizmos.DrawLine(playerPos, playerPos + debugForceDirection * (scale * Mathf.Min(debugForceStrength / 10f, 3f)));
         Gizmos.DrawSphere(playerPos + debugForceDirection * (scale * Mathf.Min(debugForceStrength / 10f, 3f)), 0.1f);
@@ -127,7 +116,6 @@ public abstract class MovementBaseState
         for (int i = 0; i < collision.contactCount; i++)
         {
             Vector3 normal = collision.GetContact(i).normal;
-
             if (normal.y >= minGroundDotProduct)
             {
                 groundContactCount++;
@@ -146,5 +134,21 @@ public abstract class MovementBaseState
                 contactNormal = hit.normal;
             }
         }
+    }
+
+    bool SnapToGround(PlayerMovement player)
+    {
+        if (Physics.Raycast(player.transform.position, Vector3.down, out RaycastHit hit, 1.5f))
+        {
+            if (hit.normal.y >= minGroundDotProduct)
+            {
+                contactNormal = hit.normal;
+                groundContactCount = 1;
+                Vector3 adjustedVelocity = ProjectOnContactPlane(player.rb.velocity);
+                player.rb.velocity = adjustedVelocity;
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -19,6 +19,7 @@ public class LakeMonsterStateMachine : MonoBehaviour
     [SerializeField] float swimSpeed = 3f;
     [SerializeField] float rotationSpeed = 6f;
     [SerializeField] float maxVelocity = 10f;
+    [SerializeField] float gravityForce = 20f;
     [SerializeField] LayerMask waterLayer;
     [SerializeField] public LayerMask obstacleLayer;
 
@@ -56,8 +57,14 @@ public class LakeMonsterStateMachine : MonoBehaviour
     public BaseLakeMonsterState PreviousState { get; private set; }
     public BaseLakeMonsterState CurrentState { get; private set; }
     public Transform ShipTransform { get { return shipTransform; } set { shipTransform = value; } }
+    public Rigidbody Rb { get { return rb; } }
+    public float GravityForce { get { return gravityForce; } }
+    public bool DoubleGravityApplied { get { return doubleGravityApplied; } set { doubleGravityApplied = value; } }
+
 
     Vector3 _smoothedAvoidance = Vector3.zero; 
+
+    bool doubleGravityApplied = false;
 
     private void Awake()
     {
@@ -130,6 +137,7 @@ public class LakeMonsterStateMachine : MonoBehaviour
         if ((waterLayer.value & (1 << other.gameObject.layer)) != 0)
         {
             rb.useGravity = false;
+            doubleGravityApplied = false;
         }
     }
 
@@ -138,6 +146,7 @@ public class LakeMonsterStateMachine : MonoBehaviour
         if ((waterLayer.value & (1 << other.gameObject.layer)) != 0)
         {
             rb.useGravity = true;
+            doubleGravityApplied = true;
         }
     }
 

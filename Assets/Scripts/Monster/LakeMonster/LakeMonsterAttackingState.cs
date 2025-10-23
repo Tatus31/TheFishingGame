@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading;
 using UnityEngine;
 
 public class LakeMonsterAttackingState : BaseLakeMonsterState
@@ -91,6 +92,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
         MoveMonster();
         HandleRetreat(monsterState);
+        ApplyGravityOutsideWater(monsterState);
     }
 
     void InitializeAttackState()

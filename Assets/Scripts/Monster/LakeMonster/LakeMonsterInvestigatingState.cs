@@ -60,6 +60,8 @@ public class LakeMonsterInvestigatingState : BaseLakeMonsterState
         {
             monster.SwitchState(monster.IdleState);
         }
+
+        ApplyGravityOutsideWater(monster);
     }
 
     private void MonsterNavigateToPoint(LakeMonsterStateMachine monster, Vector3 investigationPoint)

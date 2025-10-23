@@ -41,6 +41,7 @@ public class LakeMonsterIdleState : BaseLakeMonsterState
     public override void FixedUpdateState(LakeMonsterStateMachine monster)
     {
         SwimToTarget(monster);
+        ApplyGravityOutsideWater(monster);
     }
 
     private void StayNearTarget(LakeMonsterStateMachine monster)

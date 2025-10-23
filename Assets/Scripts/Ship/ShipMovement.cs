@@ -74,6 +74,15 @@ public class ShipMovement : MonoBehaviour
             buoyancySystem.Buoyancy = shipRigidbody.mass * 1.1f;
         }
 
+        PlayerMovement.Instance.OnPlayerSwimmingChange += (sender, isSwimming) =>
+        {
+            if (isSwimming)
+            {
+                isControllingShip = false;
+                SetNeutralSpeed();
+            }
+        };
+
         UpdateGearAnimation();
     }
 
@@ -178,6 +187,10 @@ public class ShipMovement : MonoBehaviour
             return;
 
         HandleMovement();
+
+        if (!isControllingShip)
+            return;
+
         HandleRotation();
         UpdateShipState();
 

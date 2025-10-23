@@ -93,8 +93,10 @@ public class DetectionManager : MonoBehaviour
     private void DangerAreaDetector_OnEnterDangerArea(object sender, DangerAreaDetector.DangerObject e)
     {
         isInDangerArea = e.hasEnteredDangerousArea;
-        shipTransform = e.transform;
+        shipTransform = e.transform;              
+        investigationTargetPoint = e.adjustedPosition; 
     }
+
 
     private void InitializeMonsterStates()
     {
