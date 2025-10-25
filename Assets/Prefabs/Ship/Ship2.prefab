@@ -588,7 +588,7 @@ GameObject:
   - component: {fileID: 7406349752946159917}
   - component: {fileID: 390774792719447063}
   - component: {fileID: 2327712224509267410}
-  m_Layer: 25
+  m_Layer: 14
   m_Name: Klapa
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1631,7 +1631,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2919
+  m_VersionIndex: 2952
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -4558,7 +4558,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1839
+  m_VersionIndex: 1872
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -5704,7 +5704,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2919
+  m_VersionIndex: 2952
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8566,7 +8566,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1839
+  m_VersionIndex: 1872
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -9943,7 +9943,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2925
+  m_VersionIndex: 2958
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -10113,6 +10113,7 @@ GameObject:
   - component: {fileID: 5729918739844874600}
   - component: {fileID: 945652194209631177}
   - component: {fileID: 7284495201063432577}
+  - component: {fileID: 9088461469183175845}
   m_Layer: 14
   m_Name: Skrzynia_Dodatkowa (1)
   m_TagString: Untagged
@@ -10130,10 +10131,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.2552717, z: -0, w: 0.96686935}
   m_LocalPosition: {x: -0.7539922, y: 2.102, z: 1.9929988}
-  m_LocalScale: {x: 0.76666, y: 0.76666, z: 0.76666}
+  m_LocalScale: {x: 0.76666, y: 0.76666003, z: 0.76666}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5982689044692791154}
+  m_Father: {fileID: 5241440958377880700}
   m_LocalEulerAnglesHint: {x: 0, y: -29.579, z: 0}
 --- !u!33 &945652194209631177
 MeshFilter:
@@ -10186,6 +10187,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &9088461469183175845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3403970581855568393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7d62f0ac832d914a81a2895a7decca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationDataSO: {fileID: 11400000, guid: 63177c85dcd58fa419fdef12d0d33677, type: 2}
+  shipMovement: {fileID: 1734530913765566119}
+  smoothTime: 0.1
 --- !u!1 &3405382446034401606
 GameObject:
   m_ObjectHideFlags: 0
@@ -12875,7 +12891,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1839
+  m_VersionIndex: 1872
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -15872,7 +15888,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1839
+  m_VersionIndex: 1872
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -17043,7 +17059,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2919
+  m_VersionIndex: 2952
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -18115,7 +18131,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2919
+  m_VersionIndex: 2952
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -19303,7 +19319,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3797
+  m_VersionIndex: 3830
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -19508,6 +19524,7 @@ GameObject:
   - component: {fileID: 8284850731485446677}
   - component: {fileID: 7738023649181927381}
   - component: {fileID: 7374512856981388650}
+  - component: {fileID: 6701147809687145100}
   m_Layer: 14
   m_Name: Deska
   m_TagString: Untagged
@@ -19580,6 +19597,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6701147809687145100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6348391512051222165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7d62f0ac832d914a81a2895a7decca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationDataSO: {fileID: 11400000, guid: 71e14a23f536bbc4f8632d46220f9db4, type: 2}
+  shipMovement: {fileID: 1734530913765566119}
+  smoothTime: 0.1
 --- !u!1 &6450402067293631782
 GameObject:
   m_ObjectHideFlags: 0
@@ -22143,7 +22175,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1839
+  m_VersionIndex: 1872
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -23405,7 +23437,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2919
+  m_VersionIndex: 2952
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -23618,6 +23650,7 @@ Transform:
   - {fileID: 1349621371512230768}
   - {fileID: 5103629002749569794}
   - {fileID: 1999297083434492508}
+  - {fileID: 5729918739844874600}
   - {fileID: 5982689044692791154}
   - {fileID: 3067288152172034377}
   m_Father: {fileID: 3327322189657895767}
@@ -24737,7 +24770,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2925
+  m_VersionIndex: 2958
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -25093,7 +25126,7 @@ GameObject:
   - component: {fileID: 8620257130777073127}
   - component: {fileID: 5877440939739435461}
   - component: {fileID: 8407321152018705556}
-  m_Layer: 3
+  m_Layer: 14
   m_Name: Pulpit kontrolny
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26444,7 +26477,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2919
+  m_VersionIndex: 2952
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -27632,10 +27665,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2225338470804485968}
-    - targetCorrespondingSourceObject: {fileID: 1521873403153511361, guid: 22e4b5951d8818844baf873a9421f9cc,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5729918739844874600}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7066723615508226653, guid: 22e4b5951d8818844baf873a9421f9cc,
         type: 3}

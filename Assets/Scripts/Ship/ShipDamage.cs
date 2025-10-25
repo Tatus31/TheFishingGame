@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Services.Analytics;
 using UnityEngine;
 using UnityEngine.Analytics;
@@ -257,14 +258,12 @@ public class ShipDamage : MonoBehaviour
         currentHealth = Mathf.Max(0, currentHealth);
         OnDamageTaken?.Invoke(this, actualDamage);
 
-        CustomEvent resault = new CustomEvent("OnShipDamageTaken")
+        var analiticsData = new Dictionary<string, object>
         {
-            {"damageAmount", actualDamage }
+            { "damageAmount", actualDamage },
         };
-        AnalyticsService.Instance.RecordEvent(resault);
-        AnalyticsService.Instance.Flush();
+        AnalyticsEvents.SendAnalyticsEvent("OnShipDamageTaken", analiticsData);
 
-        Debug.Log($"analitics: {resault}");
 
         UpdateAttributes();
 

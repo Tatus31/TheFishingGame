@@ -37,7 +37,7 @@ public class RespawnShip : ShipTransporter
             ShipMovement shipMovement = FindObjectOfType<ShipMovement>();
             StickToShip stickToShip = FindObjectOfType<StickToShip>();
 
-            stickToShip.isControllingShip = false;
+            stickToShip.IsControllingShip = false;
             shipMovement.SetNeutralSpeed();
             shipMovement.HaltShip();
             startFire.FireActionStop();

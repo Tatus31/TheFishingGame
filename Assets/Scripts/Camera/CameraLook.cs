@@ -32,10 +32,14 @@ public class CameraLook : MonoBehaviour
 
     void LateUpdate()
     {
-        if (lockCamera)
+        if (!lockCamera)
         {
-            return;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
+
+        if (lockCamera)
+            return;
 
         if (rotateAroundOrentationPoint)
             MouseAroundOrientationLook();

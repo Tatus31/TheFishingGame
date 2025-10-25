@@ -1,4 +1,7 @@
 using Game;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class StickToShip : MonoBehaviour
@@ -15,9 +18,7 @@ public class StickToShip : MonoBehaviour
     [SerializeField] float additionalDownForce = 20f;
 
     bool isOnShip;
-    public bool IsOnShip { get { return isOnShip; } }
-
-    public bool isControllingShip;
+    public bool IsControllingShip;
 
     Vector3 localPositionOffset;
     Quaternion localRotationOffset;
@@ -30,6 +31,8 @@ public class StickToShip : MonoBehaviour
     Quaternion previousShipRotation;
     Vector3 moveDirection;
 
+    public bool IsOnShip { get { return isOnShip; } }
+
     private void Awake()
     {
         if (Instance != null)
@@ -38,7 +41,6 @@ public class StickToShip : MonoBehaviour
             Debug.LogWarning($"there exists a {Instance.name} in the scene already");
 #endif
         }
-
 
         Instance = this;
 
@@ -61,7 +63,7 @@ public class StickToShip : MonoBehaviour
         if (shipRb == null || !isOnShip)
             return;
 
-        if (isControllingShip)
+        if (IsControllingShip)
         {
             transform.localPosition = localPositionOffset;
             transform.localRotation = localRotationOffset;
@@ -79,6 +81,7 @@ public class StickToShip : MonoBehaviour
                 playerRb.MovePosition(playerRb.position + shipMovement);
 
                 Quaternion rotationDelta = shipTransform.rotation * Quaternion.Inverse(previousShipRotation);
+
                 Vector3 playerRelativePosition = transform.position - shipTransform.position;
                 Vector3 rotatedPosition = shipTransform.position + rotationDelta * playerRelativePosition;
                 Vector3 rotationMovement = rotatedPosition - transform.position;
@@ -99,20 +102,38 @@ public class StickToShip : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && MouseWorldPosition.GetInteractable(shipControlsLayerMask) && isOnShip)
+        if (InputManager.Instance.GetInteractInputDown() && MouseWorldPosition.GetInteractable(shipControlsLayerMask) && isOnShip)
         {
             ToggleShipControl();
         }
     }
 
+    IEnumerator DataCollectionForControllingShipTime()
+    {
+        float timeControlingShip = 0f;
+
+        while (IsControllingShip)
+        {
+            timeControlingShip += Time.deltaTime;
+            yield return null;
+        }
+
+        timeControlingShip = (float)Math.Round(timeControlingShip, 2);
+
+        var analyticsData = new Dictionary<string, object>
+        {
+            { "timeControllingShip", timeControlingShip }
+        };
+
+        AnalyticsEvents.SendAnalyticsEvent("OnPlayerControlShipTime", analyticsData);
+        Debug.Log($"Player time controling ship: {timeControlingShip} seconds");
+    }
+
     private void ToggleShipControl()
     {
-        if (isControllingShip)
+        if (IsControllingShip)
         {
-            isControllingShip = false;
-
-            if (playerRb != null)
-                //playerRb.interpolation = RigidbodyInterpolation.Interpolate;
+            IsControllingShip = false;
 
             PlayerMovement.Instance.IsControllable = true;
 
@@ -129,10 +150,7 @@ public class StickToShip : MonoBehaviour
             localPositionOffset = transform.localPosition;
             localRotationOffset = transform.localRotation;
 
-            isControllingShip = true;
-
-            if (playerRb != null)
-                //playerRb.interpolation = RigidbodyInterpolation.None;
+            IsControllingShip = true;
 
             PlayerMovement.Instance.IsControllable = false;
 
@@ -140,17 +158,21 @@ public class StickToShip : MonoBehaviour
             {
                 shipMovement.IsControllingShip = true;
             }
+
+            StartCoroutine(DataCollectionForControllingShipTime());
         }
 
-        Events.onEnteredInteraction.CanShowPanel = isControllingShip;
+        Events.onEnteredInteraction.CanShowPanel = IsControllingShip;
         EventManager.Broadcast(Events.onEnteredInteraction);
     }
+
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.CompareTag("Ship") && !isOnShip && !ChangeWaterLevelUnderDeck.Instance.ShipSank)
         {
             isOnShip = true;
+
             transform.SetParent(shipRb.transform);
             PlayerMovement.Instance.orientation.SetParent(null, true);
             shipMovement = collision.gameObject.GetComponent<ShipMovement>();
@@ -171,7 +193,7 @@ public class StickToShip : MonoBehaviour
         if (collision.collider.CompareTag("Ship") && isOnShip)
         {
             isOnShip = false;
-            isControllingShip = false;
+            IsControllingShip = false;
             transform.SetParent(null);
 
             PlayerMovement.Instance.orientation.SetParent(transform, true);
@@ -180,11 +202,7 @@ public class StickToShip : MonoBehaviour
             if (playerRb != null && playerRb.isKinematic == false)
             {
                 Vector3 exitVelocity = shipRb.GetPointVelocity(transform.position);
-                playerRb.velocity = new Vector3(
-                    playerRb.velocity.x + exitVelocity.x * 0.8f,
-                    playerRb.velocity.y,
-                    playerRb.velocity.z + exitVelocity.z * 0.8f
-                );
+                playerRb.velocity = new Vector3(playerRb.velocity.x + exitVelocity.x * 0.8f, playerRb.velocity.y, playerRb.velocity.z + exitVelocity.z * 0.8f);
             }
         }
     }

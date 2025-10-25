@@ -111,6 +111,7 @@ public abstract class MovementBaseState
         return vector - contactNormal * Vector3.Dot(vector, contactNormal);
     }
 
+
     public virtual void EvaluateCollision(Collision collision)
     {
         for (int i = 0; i < collision.contactCount; i++)
@@ -126,7 +127,7 @@ public abstract class MovementBaseState
 
     protected virtual void CheckGroundContacts(PlayerMovement player)
     {
-        if (Physics.Raycast(player.transform.position, Vector3.down, out RaycastHit hit, 1.1f))
+        if (Physics.Raycast(player.transform.position, Vector3.down, out RaycastHit hit, 1.5f))
         {
             if (hit.normal.y >= minGroundDotProduct)
             {
@@ -136,16 +137,16 @@ public abstract class MovementBaseState
         }
     }
 
-    bool SnapToGround(PlayerMovement player)
+    protected bool SnapToGround(PlayerMovement player)
     {
-        if (Physics.Raycast(player.transform.position, Vector3.down, out RaycastHit hit, 1.5f))
+        if (player.rb.velocity.y > 0.1f) return false;
+        if (Physics.Raycast(player.transform.position, Vector3.down, out RaycastHit hit, 3f))
         {
             if (hit.normal.y >= minGroundDotProduct)
             {
                 contactNormal = hit.normal;
                 groundContactCount = 1;
-                Vector3 adjustedVelocity = ProjectOnContactPlane(player.rb.velocity);
-                player.rb.velocity = adjustedVelocity;
+                player.rb.position = hit.point;
                 return true;
             }
         }

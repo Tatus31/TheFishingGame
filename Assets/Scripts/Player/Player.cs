@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -78,10 +79,10 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        var item = other.GetComponent<ItemPhysical>();
-        if (item)
+        var itemObj = other.GetComponent<ItemPhysical>();
+        if (itemObj)
         {
-            Item _item = new Item(item.item);
+            Item _item = new Item(itemObj.item);
             inventory.AddItem(_item, 1, _item.weight);
 
             var marker = other.GetComponent<Marker>();
@@ -90,13 +91,28 @@ public class Player : MonoBehaviour
                 compass.DeleteMarker(marker);
             }
 
+            var analiticsData = new Dictionary<string, object>
+            {
+                { "pickedUpItem", itemObj.item.data.name },
+                { "isQuestItem", itemObj.item.data.isQuestItem }
+            };
+
+            if (itemObj.item.data.isQuestItem)
+            {
+                AnalyticsEvents.SendAnalyticsEvent("OnQuestItemPickUp", analiticsData);
+            }
+            else
+            {
+                AnalyticsEvents.SendAnalyticsEvent("OnItemPickUp", analiticsData);
+            }
+
             Destroy(other.gameObject);
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        var monster = collision.gameObject.GetComponent<MonsterLargeStateMachine>();
+        //var monster = collision.gameObject.GetComponent<MonsterLargeStateMachine>();
 
         //if (monster)
         //{
