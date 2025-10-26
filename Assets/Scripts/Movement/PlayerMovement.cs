@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -114,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
         OnPlayerSpeedChange?.Invoke(this, FlatVel);
 
         currentState.UpdateState(this);
-        currentState.UpdateState();
+        currentState.UpdateState(this);
     }
 
     void FixedUpdate()
@@ -137,6 +139,8 @@ public class PlayerMovement : MonoBehaviour
             isSwimming = true;
             OnPlayerSwimmingChange?.Invoke(this, isSwimming);
 
+            StartCoroutine(DataCollectionForSwimmingTime());
+
             if (volume != null)
                 volume.SetActive(false);
 
@@ -153,6 +157,8 @@ public class PlayerMovement : MonoBehaviour
 
             SwitchState(WalkState);
 
+            StartCoroutine(DataCollectionForSwimmingTime());
+
             if (volume != null)
                 volume.SetActive(true);
 
@@ -160,6 +166,28 @@ public class PlayerMovement : MonoBehaviour
                 animator.PlayAnimation(harpoonAnimator, AnimationController.HARPOON_AIM, false);
         }
     }
+
+    IEnumerator DataCollectionForSwimmingTime()
+    {
+        float timeInWater = 0f;
+
+        while (isSwimming)
+        {
+            timeInWater += Time.deltaTime;
+            yield return null;
+        }
+
+        timeInWater = (float)Math.Round(timeInWater, 2);
+
+        var analyticsData = new Dictionary<string, object>
+        {
+            { "timeUnderWater", timeInWater }
+        };
+
+        AnalyticsEvents.SendAnalyticsEvent("OnPlayerTimeUnderWater", analyticsData);
+        Debug.Log($"Player time under water: {timeInWater} seconds");
+    }
+
 
     private void OnCollisionEnter(Collision collision)
     {
