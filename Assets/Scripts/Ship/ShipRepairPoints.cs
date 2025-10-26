@@ -89,7 +89,17 @@ public class ShipRepairPoints : MonoBehaviour
         if (holesToSpawn > 0)
         {
             int damagePerHole = damageTaken / holesToSpawn;
-            for (int i = 0; i < holesToSpawn; i++) pendingHoleDamages.Enqueue(damagePerHole);
+            for (int i = 0; i < holesToSpawn; i++)
+            {
+                pendingHoleDamages.Enqueue(damagePerHole);
+
+                var analyticsData = new Dictionary<string, object>
+                {
+                    { "numberOfOpenedHoles", holesToSpawn }
+                };
+
+                AnalyticsEvents.SendAnalyticsEvent("OnShipHoleSpawn", analyticsData);
+            }
         }
         else
         {

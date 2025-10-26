@@ -10,11 +10,12 @@ public class StartFire : MonoBehaviour
 {
     [SerializeField] GameObject fireVFX;
     [SerializeField] GameObject sparksVFX;
-    [SerializeField] private float fireTickInterval = 1.0f;
-    [SerializeField] private float FireProbability;
-    [SerializeField] private float fireGracePeriodTime = 10f;
+    [SerializeField] float fireTickInterval = 1.0f;
+    [SerializeField] float FireProbability;
+    [SerializeField] float fireGracePeriodTime = 10f;
 
-    private float FireProbabilityMaxValue = 500f;
+    float FireProbabilityMaxValue = 500f;
+    float fireTime = 0f;
 
     ElectricalDevice electricalDevice;
     ShipDamage shipDamage;
@@ -81,6 +82,7 @@ public class StartFire : MonoBehaviour
         while (isOnFire)
         {
             Debug.Log($"isOnFire inside {isOnFire}");
+            fireTime += Time.deltaTime;
 
             if (!isOnFire)
             {
@@ -125,6 +127,16 @@ public class StartFire : MonoBehaviour
 
         fireVFX.SetActive(false);
         StartCoroutine(FireGracePeriod());
+
+        fireTime = (float)Math.Round(fireTime, 2);
+
+        var analyticsData = new Dictionary<string, object>
+        {
+            { "timeShipWasOnFire", fireTime }
+        };
+
+        AnalyticsEvents.SendAnalyticsEvent("OnShipOnFireTime", analyticsData);
+        fireTime = 0f;
     }
 
     IEnumerator FireGracePeriod()
