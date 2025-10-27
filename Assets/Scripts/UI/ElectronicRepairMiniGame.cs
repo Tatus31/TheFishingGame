@@ -26,7 +26,7 @@ public class ElectronicRepairMiniGame : MonoBehaviour
     ElectricalWire currentWire;
 
     bool isDrawing = false;
-    bool isMiniGameActive = false;
+    bool IsMiniGameActive = false;
     bool isMiniGamePlayable = false;
 
     private void Start()
@@ -45,15 +45,15 @@ public class ElectronicRepairMiniGame : MonoBehaviour
         if (!isMiniGamePlayable)
             return;
 
-        if (Input.GetMouseButtonDown(0))
+        if (InputManager.Instance.IsLeftMouseButtonPressed())
         {
             StartDrawing();
         }
-        else if (Input.GetMouseButton(0))
+        else if (InputManager.Instance.IsLeftMouseButtonHeld())
         {
             UpdateDrawing();
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (InputManager.Instance.IsLeftMouseButtonReleased())
         {
             StopDrawing();
         }
@@ -72,12 +72,14 @@ public class ElectronicRepairMiniGame : MonoBehaviour
             wire.isConnected = false;
         }
 
-        isMiniGameActive = true;
+        IsMiniGameActive = true;
     }
 
     void StartDrawing()
     {
         GameObject clickedObject = MouseWorldPosition.GetObjectOverMouse("Wire");
+
+        //CameraLook.LockCamera(true);
 
         if (clickedObject != null)
         {
@@ -155,9 +157,7 @@ public class ElectronicRepairMiniGame : MonoBehaviour
 
         if (allConnected)
         {
-            Debug.Log("Minigame complete");
-
-            isMiniGameActive = false;
+            IsMiniGameActive = false;
             isMiniGamePlayable = false;
 
             ElectricalDevice device = FindObjectOfType<ElectricalDevice>();
@@ -212,7 +212,7 @@ public class ElectronicRepairMiniGame : MonoBehaviour
 
     void HandleDegradation(object sender, EventArgs e)
     {
-        if (!isMiniGameActive)
+        if (!IsMiniGameActive)
         {
             ResetMiniGame();
 

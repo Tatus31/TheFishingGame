@@ -19,6 +19,8 @@ public class CameraLook : MonoBehaviour
 
     static bool lockCamera;
 
+    public static bool IsCursorForcedVisible = false;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -32,6 +34,14 @@ public class CameraLook : MonoBehaviour
 
     void LateUpdate()
     {
+        if (IsCursorForcedVisible)
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+            return;
+        }
+
+
         if (!lockCamera)
         {
             Cursor.lockState = CursorLockMode.Locked;

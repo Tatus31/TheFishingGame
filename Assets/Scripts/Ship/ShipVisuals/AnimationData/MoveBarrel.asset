@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8158b55520b44cc49aaa7c28c8f613d9, type: 3}
-  m_Name: MoveDesk
+  m_Name: MoveBarrel
   m_EditorClassIdentifier: 
   AnimationData:
-  - TransformName: DeskMovingBackAndForth
-    MoveToPosition: {x: 2.136, y: 1.8965865, z: 0.365}
-    RotateToRotation: {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
-    MoveDuration: 2
+  - TransformName: BarrelMovingBackAndForth
+    MoveToPosition: {x: -0.92, y: 2.3684187, z: -1.51}
+    RotateToRotation: {x: 0, y: 0.64971346, z: 0, w: 0.7601792}
+    MoveDuration: 1.9
     RotateDuration: 3
     MoveEase: 2
     RotateEase: 1
     UseWorldSpace: 0
   previewTarget: {fileID: 9029051350204327151, guid: 7ac79618d75d3a4448e4db5f86cbb356,
     type: 3}
-  loopPreview: 1
+  loopPreview: 0

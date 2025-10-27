@@ -64,17 +64,17 @@ public class Testing : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) && MouseWorldPosition.GetInteractable(InteractableElectronic) && !isRepairing)
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
             isRepairing = true;
+            CameraLook.IsCursorForcedVisible = true;
             cameraLook.Sensitivity = 0f;
+
         }
         else if (Input.GetKeyDown(KeyCode.E) && isRepairing) 
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
             isRepairing = false;
+            CameraLook.IsCursorForcedVisible = false;
             cameraLook.Sensitivity = 1f;
+
         }
 
         if (isRepairing && MouseWorldPosition.GetObjectOverMouse("Blue_Pipe") && InputManager.Instance.IsLeftMouseButtonHeld())

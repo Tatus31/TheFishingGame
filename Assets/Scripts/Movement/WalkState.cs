@@ -9,6 +9,8 @@ public class WalkState : MovementBaseState
     float accelAmount;
     float frictionAmount;
 
+    float footstepBlockDuration = 1f;
+
     Vector3 lastContactNormal;
 
     public WalkState(PlayerMovement player, float maxSpeed, float accelAmount, float frictionAmount)
@@ -19,12 +21,12 @@ public class WalkState : MovementBaseState
         this.frictionAmount = frictionAmount;
     }
 
-    public override void EnterState(PlayerMovement player) 
+    public override void EnterState(PlayerMovement player)
     {
         base.EnterState(player);
     }
 
-    public override void ExitState() 
+    public override void ExitState()
     {
         lastContactNormal = contactNormal;
     }
@@ -42,7 +44,34 @@ public class WalkState : MovementBaseState
         UpdateState(player);
         Move(player, player.maxSpeedTime, maxSpeed, accelAmount);
         ApplyFriction(player, frictionAmount);
+
+        HandleFootstepAudio();
     }
+
+
+    private void HandleFootstepAudio()
+    {
+        bool isSwimming = PlayerMovement.Instance.IsSwimming;
+        bool isStill = player.rb.velocity.magnitude < 0.1f;
+
+        if (isSwimming || isStill)
+        {
+            AudioManager.MuteSound(AudioManager.WalkSound);
+            return;
+        }
+
+        bool enoughTimePassedSinceWater = (Time.time - player.LastExitWaterTime) > footstepBlockDuration;
+
+        if (OnGround && enoughTimePassedSinceWater)
+        {
+            AudioManager.UnmuteSound(AudioManager.WalkSound);
+        }
+        else
+        {
+            AudioManager.MuteSound(AudioManager.WalkSound);
+        }
+    }
+
 
     public override void ApplyFriction(PlayerMovement player, float frictionAmount)
     {

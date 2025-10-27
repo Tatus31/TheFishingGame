@@ -30,8 +30,12 @@ public class SwimmingState : MovementBaseState
     public override void EnterState(PlayerMovement player)
     {
         ClimbLadderToShip.OnClimb += ClimbLadderToShip_OnClimb;
+        AudioManager.MuteSound(AudioManager.WalkSound);
 
         this.player = player;
+
+        groundContactCount = 0;
+        contactNormal = Vector3.up;
 
         PlayerSetup();
     }
@@ -46,6 +50,8 @@ public class SwimmingState : MovementBaseState
         if (player != null)
         {
             player.rb.useGravity = true;
+
+            player.LastExitWaterTime = Time.time;
         }
     }
 

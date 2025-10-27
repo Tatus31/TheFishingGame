@@ -112,4 +112,15 @@ public class MouseWorldPosition : MonoBehaviour
         return false;
     }
 
+    public static LayerMask GetLayerMaskUnderMouse()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, Instance.interactionRange, Instance.InteractableMask))
+        {
+            int hitLayerIndex = raycastHit.collider.gameObject.layer;
+            return 1 << hitLayerIndex;
+        }
+        return 0;
+    }
+
 }
