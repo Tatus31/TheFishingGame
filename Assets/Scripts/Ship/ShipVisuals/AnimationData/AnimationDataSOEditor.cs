@@ -83,24 +83,6 @@ public class AnimationDataSOEditor : Editor
             SceneView.RepaintAll();
         }
 
-        if (GUILayout.Button("0", GUILayout.Width(30))) 
-        { 
-            previewTime = 0f; 
-            SceneView.RepaintAll();
-        }
-
-        if (GUILayout.Button("|<", GUILayout.Width(30))) 
-        { 
-            previewTime = Mathf.Max(0f, previewTime - 0.1f);
-            SceneView.RepaintAll(); 
-        }
-
-        if (GUILayout.Button(">|", GUILayout.Width(30))) 
-        { 
-            previewTime = Mathf.Min(totalDuration, previewTime + 0.1f); 
-            SceneView.RepaintAll(); 
-        }
-
         EditorGUILayout.EndHorizontal();
     }
 
@@ -252,14 +234,18 @@ public class AnimationDataSOEditor : Editor
 
         foreach (var mf in meshes)
         {
-            if (mf.sharedMesh == null) 
+            if (mf.sharedMesh == null)
                 continue;
 
             Transform meshTransform = mf.transform;
 
-            Matrix4x4 rootToMesh = Matrix4x4.TRS(meshTransform.localPosition, meshTransform.localRotation, meshTransform.localScale);
-            Matrix4x4 rootWorld = Matrix4x4.TRS(worldPos, worldRot, target.lossyScale);
-            Matrix4x4 matrix = rootWorld * Matrix4x4.TRS(meshTransform.localPosition, meshTransform.localRotation, meshTransform.lossyScale);
+            Vector3 localOffset = target.InverseTransformPoint(meshTransform.position);
+            Quaternion localRotOffset = Quaternion.Inverse(target.rotation) * meshTransform.rotation;
+
+            Vector3 ghostMeshPos = worldPos + worldRot * localOffset;
+            Quaternion ghostMeshRot = worldRot * localRotOffset;
+
+            Matrix4x4 matrix = Matrix4x4.TRS(ghostMeshPos, ghostMeshRot, meshTransform.lossyScale);
 
             s_GhostMaterial.SetPass(0);
 
