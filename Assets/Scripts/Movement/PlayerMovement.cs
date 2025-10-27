@@ -39,10 +39,14 @@ public class PlayerMovement : MonoBehaviour
 
     float xDir, yDir;
 
+    float lastExitWaterTime = -999f;
+
     bool isSwimming = false;
 
     public bool isControllable = true;
     public bool IsControllable { get { return isControllable; } set { isControllable = value; } }
+    public bool IsSwimming { get { return isSwimming; } }
+    public float LastExitWaterTime { get { return lastExitWaterTime; } set { lastExitWaterTime = value; } }
 
     AnimationController animator;
     StickToShip stickToShip;
@@ -185,7 +189,6 @@ public class PlayerMovement : MonoBehaviour
         };
 
         AnalyticsEvents.SendAnalyticsEvent("OnPlayerTimeUnderWater", analyticsData);
-        Debug.Log($"Player time under water: {timeInWater} seconds");
     }
 
 

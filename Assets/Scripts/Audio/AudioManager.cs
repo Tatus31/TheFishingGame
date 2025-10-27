@@ -89,6 +89,24 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public static void UnmuteSound(string soundName)
+    {
+        if (Instance == null) return;
+        GameObject soundObj = GameObject.Find(soundName);
+        if (soundObj != null)
+        {
+            AudioSource audioSource = soundObj.GetComponent<AudioSource>();
+            if (audioSource != null)
+            {
+                audioSource.mute = false;
+                if (!Instance.playingSounds.Contains(audioSource))
+                {
+                    Instance.playingSounds.Add(audioSource);
+                }
+            }
+        }
+    }
+
     public static void ChangeAudioVolume(string soundName, float volume)
     {
         GameObject soundObj = GameObject.Find(soundName);

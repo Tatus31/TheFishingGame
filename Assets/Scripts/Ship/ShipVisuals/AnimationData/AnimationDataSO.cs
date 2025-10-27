@@ -9,7 +9,7 @@ public class AnimationDataSO : ScriptableObject
 
     [Header("Preview Settings")]
     public Transform previewTarget; 
-    public bool loopPreview = false; 
+    public bool loopPreview = false;
 }
 
 [Serializable]
@@ -25,4 +25,6 @@ public class AnimationData
     [Space(5f)]
     public Ease MoveEase;
     public Ease RotateEase;
+    [Space(5f)]
+    public bool UseWorldSpace = false;
 }

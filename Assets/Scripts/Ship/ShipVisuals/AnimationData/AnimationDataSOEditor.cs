@@ -11,18 +11,28 @@ public class AnimationDataSOEditor : Editor
     float totalDuration = 0f;
     float lastEditorUpdateTime = 0f;
 
+    static Material s_GhostMaterial;
+
     void OnEnable()
     {
         so = (AnimationDataSO)target;
         SceneView.duringSceneGui += DuringSceneGUI;
         EditorApplication.update += EditorUpdate;
         lastEditorUpdateTime = (float)EditorApplication.timeSinceStartup;
+
+        EnsureGhostMaterial();
     }
 
     void OnDisable()
     {
         SceneView.duringSceneGui -= DuringSceneGUI;
         EditorApplication.update -= EditorUpdate;
+
+        if (s_GhostMaterial != null)
+        {
+            Object.DestroyImmediate(s_GhostMaterial);
+            s_GhostMaterial = null;
+        }
     }
 
     public override void OnInspectorGUI()
@@ -36,6 +46,9 @@ public class AnimationDataSOEditor : Editor
             return;
         }
 
+        EditorGUILayout.Space();
+
+        EditorGUILayout.BeginHorizontal();
         if (!isPreviewing)
         {
             if (GUILayout.Button("Play Preview"))
@@ -45,17 +58,61 @@ public class AnimationDataSOEditor : Editor
         {
             if (GUILayout.Button("Stop Preview"))
                 StopPreview();
+
+            if (GUILayout.Button("Restart"))
+            {
+                previewTime = 0f;
+                lastEditorUpdateTime = (float)EditorApplication.timeSinceStartup;
+            }
         }
+
+        if (GUILayout.Button("Reset"))
+            SceneView.RepaintAll();
+
+        EditorGUILayout.EndHorizontal();
+
+        if (totalDuration <= 0f)
+            ComputeTotalDuration();
+
+        EditorGUILayout.BeginHorizontal();
+        float newPreviewTime = EditorGUILayout.Slider(previewTime, 0f, Mathf.Max(0.0001f, totalDuration));
+
+        if (!Mathf.Approximately(newPreviewTime, previewTime))
+        {
+            previewTime = newPreviewTime;
+            SceneView.RepaintAll();
+        }
+
+        if (GUILayout.Button("0", GUILayout.Width(30))) 
+        { 
+            previewTime = 0f; 
+            SceneView.RepaintAll();
+        }
+
+        if (GUILayout.Button("|<", GUILayout.Width(30))) 
+        { 
+            previewTime = Mathf.Max(0f, previewTime - 0.1f);
+            SceneView.RepaintAll(); 
+        }
+
+        if (GUILayout.Button(">|", GUILayout.Width(30))) 
+        { 
+            previewTime = Mathf.Min(totalDuration, previewTime + 0.1f); 
+            SceneView.RepaintAll(); 
+        }
+
+        EditorGUILayout.EndHorizontal();
     }
 
     void StartPreview()
     {
+        if (so == null || so.AnimationData == null)
+            return;
+
         isPreviewing = true;
         previewTime = 0f;
 
-        totalDuration = 0f;
-        foreach (var anim in so.AnimationData)
-            totalDuration += Mathf.Max(anim.MoveDuration, anim.RotateDuration);
+        ComputeTotalDuration();
 
         lastEditorUpdateTime = (float)EditorApplication.timeSinceStartup;
         SceneView.RepaintAll();
@@ -66,6 +123,19 @@ public class AnimationDataSOEditor : Editor
         isPreviewing = false;
         previewTime = 0f;
         SceneView.RepaintAll();
+    }
+
+    void ComputeTotalDuration()
+    {
+        totalDuration = 0f;
+        if (so.AnimationData == null)
+            return;
+
+        foreach (var anim in so.AnimationData)
+            totalDuration += Mathf.Max(anim.MoveDuration, anim.RotateDuration);
+
+        if (totalDuration <= 0f)
+            totalDuration = 0.0001f;
     }
 
     void EditorUpdate()
@@ -91,7 +161,10 @@ public class AnimationDataSOEditor : Editor
 
     void DuringSceneGUI(SceneView sceneView)
     {
-        if (!isPreviewing || so.AnimationData == null) 
+        if ((isPreviewing == false && Event.current.type != EventType.Repaint) && Event.current.type != EventType.Layout)
+            return;
+
+        if (so == null || so.AnimationData == null)
             return;
 
         MoveObjectsWithShip targetComponent = FindSceneTarget();
@@ -99,65 +172,119 @@ public class AnimationDataSOEditor : Editor
         if (targetComponent == null)
             return;
 
-        Transform target = targetComponent.transform;
-        Vector3 currentPos = target.localPosition;
-        Quaternion currentRot = target.localRotation;
+        Transform t = targetComponent.transform;
 
-        Vector3 startLocalPos = target.localPosition;
-        Quaternion startLocalRot = target.localRotation;
+        Vector3 currentWorldPos = t.position;
+        Quaternion currentWorldRot = t.rotation;
 
         float elapsed = 0f;
 
         foreach (var anim in so.AnimationData)
         {
-            Vector3 targetLocalPos = anim.MoveToPosition; 
-            Quaternion targetLocalRot = anim.RotateToRotation; 
+            float segDur = Mathf.Max(0f, Mathf.Max(anim.MoveDuration, anim.RotateDuration));
 
-            float moveT = Mathf.Clamp01((previewTime - elapsed) / anim.MoveDuration);
-            float rotT = Mathf.Clamp01((previewTime - elapsed) / anim.RotateDuration);
+            Vector3 segStartPos = currentWorldPos;
+            Quaternion segStartRot = currentWorldRot;
 
-            float easedMoveT = DOVirtual.EasedValue(0f, 1f, moveT, anim.MoveEase);
-            float easedRotT = DOVirtual.EasedValue(0f, 1f, rotT, anim.RotateEase);
+            Vector3 segTargetPosWorld = segStartPos; 
+            Quaternion segTargetRotWorld = segStartRot; 
 
-            currentPos = Vector3.Lerp(currentPos, targetLocalPos, easedMoveT);
-            currentRot = Quaternion.Slerp(currentRot, targetLocalRot, easedRotT);
+            if (anim.MoveDuration > 0f)
+            {
+                if (anim.UseWorldSpace)
+                {
+                    segTargetPosWorld = anim.MoveToPosition;
+                }
+                else
+                {
+                    Transform parent = t.parent;
 
-            elapsed += Mathf.Max(anim.MoveDuration, anim.RotateDuration);
+                    if (parent != null)
+                        segTargetPosWorld = parent.TransformPoint(anim.MoveToPosition);
+                    else
+                        segTargetPosWorld = anim.MoveToPosition;
+                }
+            }
+
+            if (anim.RotateDuration > 0f)
+            {
+                if (anim.UseWorldSpace)
+                {
+                    segTargetRotWorld = anim.RotateToRotation;
+                }
+                else
+                {
+                    Transform parent = t.parent;
+
+                    if (parent != null)
+                        segTargetRotWorld = parent.rotation * anim.RotateToRotation;
+                    else
+                        segTargetRotWorld = anim.RotateToRotation;
+                }
+            }
+
+            float moveT = anim.MoveDuration > Mathf.Epsilon ? Mathf.Clamp01((previewTime - elapsed) / anim.MoveDuration) : (previewTime >= elapsed ? 1f : 0f);
+            float rotT = anim.RotateDuration > Mathf.Epsilon ? Mathf.Clamp01((previewTime - elapsed) / anim.RotateDuration) : (previewTime >= elapsed ? 1f : 0f);
+
+            float easedMoveT = anim.MoveDuration > Mathf.Epsilon ? DOVirtual.EasedValue(0f, 1f, moveT, anim.MoveEase) : (moveT >= 1f ? 1f : 0f);
+            float easedRotT = anim.RotateDuration > Mathf.Epsilon ? DOVirtual.EasedValue(0f, 1f, rotT, anim.RotateEase) : (rotT >= 1f ? 1f : 0f);
+
+            Vector3 nextPos = Vector3.Lerp(segStartPos, segTargetPosWorld, easedMoveT);
+            Quaternion nextRot = Quaternion.Slerp(segStartRot, segTargetRotWorld, easedRotT);
+
+            currentWorldPos = nextPos;
+            currentWorldRot = nextRot;
+
+            elapsed += segDur;
+
+            if (previewTime < elapsed)
+                break;
         }
 
-
-        DrawGhost(target, currentPos, currentRot);
+        DrawGhost(t, currentWorldPos, currentWorldRot);
     }
 
-    void DrawGhost(Transform target, Vector3 localPos, Quaternion localRot)
+    void DrawGhost(Transform target, Vector3 worldPos, Quaternion worldRot)
     {
-        MeshFilter[] meshes = target.GetComponentsInChildren<MeshFilter>();
+        if (s_GhostMaterial == null) EnsureGhostMaterial();
+
+        MeshFilter[] meshes = target.GetComponentsInChildren<MeshFilter>(true);
 
         foreach (var mf in meshes)
         {
-            if (mf.sharedMesh == null)
+            if (mf.sharedMesh == null) 
                 continue;
 
-            Transform parent = mf.transform.parent;
-            Vector3 worldPos = parent != null ? parent.TransformPoint(localPos) : localPos;
-            Quaternion worldRot = parent != null ? parent.rotation * localRot : localRot;
+            Transform meshTransform = mf.transform;
 
-            Vector3 worldScale = mf.transform.lossyScale;
+            Matrix4x4 rootToMesh = Matrix4x4.TRS(meshTransform.localPosition, meshTransform.localRotation, meshTransform.localScale);
+            Matrix4x4 rootWorld = Matrix4x4.TRS(worldPos, worldRot, target.lossyScale);
+            Matrix4x4 matrix = rootWorld * Matrix4x4.TRS(meshTransform.localPosition, meshTransform.localRotation, meshTransform.lossyScale);
 
-            Matrix4x4 matrix = Matrix4x4.TRS(worldPos, worldRot, worldScale);
+            s_GhostMaterial.SetPass(0);
 
-            Material ghostMat = new Material(Shader.Find("Hidden/Internal-Colored"));
-            ghostMat.SetColor("_Color", new Color(0f, 1f, 1f, 0.25f));
-            ghostMat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            ghostMat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            ghostMat.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
-            ghostMat.SetInt("_ZWrite", 0);
-            ghostMat.SetPass(0);
+            if (s_GhostMaterial.HasProperty("_Color"))
+                s_GhostMaterial.SetColor("_Color", new Color(0f, 1f, 1f, 0.25f));
 
             Graphics.DrawMeshNow(mf.sharedMesh, matrix);
         }
     }
 
+    void EnsureGhostMaterial()
+    {
+        if (s_GhostMaterial != null) return;
+
+        Shader shader = Shader.Find("Hidden/Internal-Colored");
+        if (shader == null)
+            shader = Shader.Find("Sprites/Default"); 
+
+        s_GhostMaterial = new Material(shader);
+        s_GhostMaterial.hideFlags = HideFlags.HideAndDontSave;
+        s_GhostMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        s_GhostMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        s_GhostMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
+        s_GhostMaterial.SetInt("_ZWrite", 0);
+    }
 
     MoveObjectsWithShip FindSceneTarget()
     {

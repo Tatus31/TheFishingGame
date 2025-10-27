@@ -4,7 +4,7 @@ public abstract class MovementBaseState
 {
     protected Vector3 contactNormal = Vector3.up;
     protected int groundContactCount = 0;
-    protected bool OnGround => groundContactCount > 0;
+    protected bool OnGround => groundContactCount > 0 && !PlayerMovement.Instance.IsSwimming;
 
     protected float angleMovmentBoost = 1.5f;
 
@@ -42,7 +42,7 @@ public abstract class MovementBaseState
 
     public virtual void UpdateState(PlayerMovement player)
     {
-        groundContactCount = 0;
+        //groundContactCount = 0;
         contactNormal = Vector3.zero;
 
         CheckGroundContacts(player);
@@ -59,10 +59,10 @@ public abstract class MovementBaseState
     public abstract void FixedUpdateState();
     public virtual void ApplyFriction(PlayerMovement player, float frictionAmount)
     {
-        if (player.GetMoveDirection().magnitude < 0.01f)
+        if (player.GetMoveDirection().magnitude <= 0.01f)
         {
             Vector3 horizontalVelocity = new Vector3(player.rb.velocity.x, 0, player.rb.velocity.z);
-            if (horizontalVelocity.magnitude > 0)
+            if (horizontalVelocity.magnitude >= 0)
             {
                 Vector3 frictionForce = -horizontalVelocity.normalized * frictionAmount;
                 player.rb.AddForce(frictionForce, ForceMode.Acceleration);
@@ -114,6 +114,9 @@ public abstract class MovementBaseState
 
     public virtual void EvaluateCollision(Collision collision)
     {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("WaterSurface"))
+            return;
+
         for (int i = 0; i < collision.contactCount; i++)
         {
             Vector3 normal = collision.GetContact(i).normal;
@@ -127,7 +130,9 @@ public abstract class MovementBaseState
 
     protected virtual void CheckGroundContacts(PlayerMovement player)
     {
-        if (Physics.Raycast(player.transform.position, Vector3.down, out RaycastHit hit, 1.5f))
+        int ignoreMask = ~(1 << LayerMask.NameToLayer("WaterSurface"));
+
+        if (Physics.Raycast(player.transform.position, Vector3.down, out RaycastHit hit, 1.5f, ignoreMask))
         {
             if (hit.normal.y >= minGroundDotProduct)
             {
@@ -139,8 +144,13 @@ public abstract class MovementBaseState
 
     protected bool SnapToGround(PlayerMovement player)
     {
-        if (player.rb.velocity.y > 0.1f) return false;
-        if (Physics.Raycast(player.transform.position, Vector3.down, out RaycastHit hit, 3f))
+        if (player.rb.velocity.y > 0.1f)
+            return false;
+
+        int ignoreMask = ~(1 << LayerMask.NameToLayer("WaterSurface"));
+
+        if (Physics.Raycast(player.transform.position, Vector3.down,
+            out RaycastHit hit, 3f, ignoreMask, QueryTriggerInteraction.Ignore))
         {
             if (hit.normal.y >= minGroundDotProduct)
             {
@@ -152,4 +162,5 @@ public abstract class MovementBaseState
         }
         return false;
     }
+
 }

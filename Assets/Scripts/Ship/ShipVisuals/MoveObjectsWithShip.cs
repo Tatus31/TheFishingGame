@@ -5,20 +5,23 @@ using DG.Tweening;
 
 public class MoveObjectsWithShip : MonoBehaviour
 {
+    [Header("Refrances")]
     [SerializeField]
     AnimationDataSO animationDataSO;
     [SerializeField]
     ShipMovement shipMovement;
 
+    [Header("Animation Smoothing")]
+    [SerializeField] float smoothTime = 0.1f;
+
     List<Tweener> moveTweeners = new List<Tweener>();
     List<Tweener> rotateTweeners = new List<Tweener>();
+
     bool tweensInitialized = false;
+
     float invMaxWheelRotationTimesTwo;
     float currentAnimationPosition = 0f;
     float animationVelocity = 0f;
-
-    [Header("Animation Smoothing")]
-    [SerializeField] float smoothTime = 0.1f;
 
     public AnimationDataSO AnimationDataSO { get { return animationDataSO; } }
 
@@ -54,7 +57,7 @@ public class MoveObjectsWithShip : MonoBehaviour
 
     private void Update()
     {
-        if (!tweensInitialized || shipMovement == null)
+        if (!tweensInitialized || shipMovement == null || !shipMovement.IsShipMoving())
             return;
 
         UpdateAnimationBasedOnWheelRotation();

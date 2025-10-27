@@ -326,4 +326,9 @@ public class ShipMovement : MonoBehaviour
 
         Debug.Log("Ship halted");
     }
+
+    public bool IsShipMoving()
+    {
+        return ShipFlatVel.magnitude > 0.1f;
+    }
 }
