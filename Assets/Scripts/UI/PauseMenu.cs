@@ -27,9 +27,15 @@ public class PauseMenu : MonoBehaviour
 
     void TogglePause()
     {
-        pauseMenuUIObj.SetActive(!pauseMenuUIObj.activeSelf);
-        CameraLook.LockCamera(pauseMenuUIObj.activeSelf);
+        bool isPaused = !pauseMenuUIObj.activeSelf;
+        pauseMenuUIObj.SetActive(isPaused);
+
+        //if (!ElectronicRepairMiniGame.IsMiniGameActive)
+        //{
+        //    CameraLook.LockCamera(isPaused);
+        //}
     }
+
 
     public void CollectDataButton()
     {

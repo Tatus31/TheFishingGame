@@ -12,7 +12,7 @@ public class MoveObjectsWithShip : MonoBehaviour
     ShipMovement shipMovement;
     [Header("Animation Smoothing")]
     [SerializeField] float smoothSpeed = 5f;
-    [SerializeField] float inputReleaseDelay = 0.2f;
+    //[SerializeField] float inputReleaseDelay = 0.2f;
 
     List<Tweener> moveTweeners = new List<Tweener>();
     List<Tweener> rotateTweeners = new List<Tweener>();
