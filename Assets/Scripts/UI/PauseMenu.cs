@@ -29,13 +29,9 @@ public class PauseMenu : MonoBehaviour
     {
         bool isPaused = !pauseMenuUIObj.activeSelf;
         pauseMenuUIObj.SetActive(isPaused);
-
-        //if (!ElectronicRepairMiniGame.IsMiniGameActive)
-        //{
-        //    CameraLook.LockCamera(isPaused);
-        //}
+        
+        CameraLook.LockCamera(isPaused);
     }
-
 
     public void CollectDataButton()
     {

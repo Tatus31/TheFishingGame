@@ -62,26 +62,27 @@ public class Testing : MonoBehaviour
         //    }
         //}
 
+        if (CameraLook.lockCamera)
+            return;
+
         if (Input.GetKeyDown(KeyCode.E) && MouseWorldPosition.GetInteractable(InteractableElectronic) && !isRepairing)
         {
             isRepairing = true;
             CameraLook.IsCursorForcedVisible = true;
             cameraLook.Sensitivity = 0f;
-
         }
         else if (Input.GetKeyDown(KeyCode.E) && isRepairing) 
         {
             isRepairing = false;
             CameraLook.IsCursorForcedVisible = false;
             cameraLook.Sensitivity = 1f;
-
         }
 
         if (isRepairing && MouseWorldPosition.GetObjectOverMouse("Blue_Pipe") && InputManager.Instance.IsLeftMouseButtonHeld())
         {
             GameObject obj = MouseWorldPosition.GetObjectOverMouse("Blue_Pipe");
 
-            if (obj != null)
+            if (obj)
             {
                 Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
                 mouseWorldPosition.z = 0;
