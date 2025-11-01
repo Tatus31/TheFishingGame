@@ -38,7 +38,7 @@ public class CameraLook : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
-            return; // Exit early - don't process camera movement
+            return; 
         }
 
         if (IsCursorForcedVisible)
