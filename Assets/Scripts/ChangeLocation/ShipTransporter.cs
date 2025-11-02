@@ -13,9 +13,9 @@ public class ShipTransporter : MonoBehaviour
     [SerializeField] float teleportCooldown = 0.5f;
 
     public bool isUnderDeck = false;
-    bool isInsideTransportArea = false;
-    Collider playerCollider = null;
-    float lastTeleportTime = 0f;
+    bool _isInsideTransportArea = false;
+    Collider _playerCollider = null;
+    float _lastTeleportTime = 0f;
 
     private void Start()
     {
@@ -23,13 +23,13 @@ public class ShipTransporter : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && isInsideTransportArea && playerCollider != null &&
-            Time.time - lastTeleportTime > teleportCooldown)
+        if (Input.GetKeyDown(KeyCode.E) && _isInsideTransportArea && _playerCollider &&
+            Time.time - _lastTeleportTime > teleportCooldown)
         {
-            if (IsCollision(playerCollider))
+            if (IsCollision(_playerCollider))
             {
                 MovePlayer(targetPoint, transportedObject);
-                lastTeleportTime = Time.time;
+                _lastTeleportTime = Time.time;
                 StartCoroutine(ResetTransportState());
             }
         }
@@ -40,10 +40,10 @@ public class ShipTransporter : MonoBehaviour
         yield return new WaitForFixedUpdate();
         yield return new WaitForFixedUpdate();
 
-        if (playerCollider != null && !GetComponent<Collider>().bounds.Contains(playerCollider.bounds.center))
+        if (_playerCollider && !GetComponent<Collider>().bounds.Contains(_playerCollider.bounds.center))
         {
-            isInsideTransportArea = false;
-            playerCollider = null;
+            _isInsideTransportArea = false;
+            _playerCollider = null;
         }
     }
 
@@ -51,8 +51,8 @@ public class ShipTransporter : MonoBehaviour
     {
         if (IsCollision(other))
         {
-            isInsideTransportArea = true;
-            playerCollider = other;
+            _isInsideTransportArea = true;
+            _playerCollider = other;
         }
     }
 
@@ -60,8 +60,8 @@ public class ShipTransporter : MonoBehaviour
     {
         if (IsCollision(other))
         {
-            isInsideTransportArea = false;
-            playerCollider = null;
+            _isInsideTransportArea = false;
+            _playerCollider = null;
         }
     }
 
@@ -70,17 +70,17 @@ public class ShipTransporter : MonoBehaviour
 
         OnClimb?.Invoke(true);
 
-        if (transportedObject == null || targetPoint == null) return;
+        if (!transportedObject || !targetPoint) return;
 
         Rigidbody playerRigidbody = transportedObject.GetComponent<Rigidbody>();
         CharacterController characterController = transportedObject.GetComponent<CharacterController>();
 
-        if (characterController != null)
+        if (characterController)
         {
             characterController.enabled = false;
         }
 
-        if (playerRigidbody != null)
+        if (playerRigidbody)
         {
             playerRigidbody.velocity = Vector3.zero;
             playerRigidbody.angularVelocity = Vector3.zero;
@@ -105,14 +105,14 @@ public class ShipTransporter : MonoBehaviour
         yield return new WaitForFixedUpdate();
         yield return new WaitForFixedUpdate();
 
-        if (rb != null)
+        if (rb)
         {
             rb.isKinematic = false;
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
 
-        if (cc != null)
+        if (cc)
         {
             cc.enabled = true;
         }
@@ -122,18 +122,18 @@ public class ShipTransporter : MonoBehaviour
 
     protected void RespawnShip()
     {
-        if (transportedObject == null || targetPoint == null) return;
+        if (!transportedObject || !targetPoint) return;
 
         GameObject obj = transportedObject;
         Rigidbody shipRigidbody = obj.GetComponent<Rigidbody>();
         CharacterController characterController = obj.GetComponent<CharacterController>();
 
-        if (characterController != null)
+        if (characterController)
         {
             characterController.enabled = false;
         }
 
-        if (shipRigidbody != null)
+        if (shipRigidbody)
         {
             shipRigidbody.velocity = Vector3.zero;
             shipRigidbody.angularVelocity = Vector3.zero;
@@ -153,10 +153,10 @@ public class ShipTransporter : MonoBehaviour
 
     public virtual void MovePlayerManually()
     {
-        if (Time.time - lastTeleportTime > teleportCooldown)
+        if (Time.time - _lastTeleportTime > teleportCooldown)
         {
             MovePlayer(targetPoint, transportedObject);
-            lastTeleportTime = Time.time;
+            _lastTeleportTime = Time.time;
         }
     }
 

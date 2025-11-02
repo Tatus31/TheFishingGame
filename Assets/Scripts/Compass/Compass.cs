@@ -10,12 +10,12 @@ public class Compass : MonoBehaviour
     [SerializeField] Transform playerOrientationTransform;
     [SerializeField] float compassViewAngle = 180f;
 
-    float halfCompassWidth;
+    float _halfCompassWidth;
     public List<Marker> markers = new List<Marker>();
 
     private void Start()
     {
-        halfCompassWidth = compassImage.rectTransform.rect.width / 2f;
+        _halfCompassWidth = compassImage.rectTransform.rect.width / 2f;
     }
 
     private void Update()
@@ -27,7 +27,7 @@ public class Compass : MonoBehaviour
         foreach (var marker in markers)
         {
             Vector2 position = GetPositionOnCompass(marker, orientationTransform);
-            marker.image.gameObject.SetActive(Mathf.Abs(position.x) <= halfCompassWidth);
+            marker.image.gameObject.SetActive(Mathf.Abs(position.x) <= _halfCompassWidth);
             marker.image.rectTransform.anchoredPosition = position;
         }
     }
@@ -60,9 +60,9 @@ public class Compass : MonoBehaviour
 
     public void DeleteMarker(Marker marker)
     {
-        if (marker == null)
+        if (!marker)
             return;
-        if (marker.image != null && marker.image.gameObject != null)
+        if (marker.image && marker.image.gameObject)
             Destroy(marker.image.gameObject);
         markers.Remove(marker);
     }
@@ -75,7 +75,7 @@ public class Compass : MonoBehaviour
         float angle = Vector3.SignedAngle(orientationTransform.forward, directionToMarker, Vector3.up);
         float pixelsPerDegree = compassImage.rectTransform.rect.width / compassViewAngle;
         float positionX = angle * pixelsPerDegree;
-        positionX = Mathf.Clamp(positionX, -halfCompassWidth, halfCompassWidth);
+        positionX = Mathf.Clamp(positionX, -_halfCompassWidth, _halfCompassWidth);
         return new Vector2(positionX, 0f);
     }
 }

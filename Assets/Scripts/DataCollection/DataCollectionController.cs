@@ -18,9 +18,17 @@ public static class AnalyticsEvents
         AnalyticsService.Instance.Flush();
 
         if (DataCollectionController.IsCollectingData)
+        {
+#if UNITY_EDITOR
             Debug.Log($"Sent analytics event: {eventName}");
+#endif
+        }
         else
+        {
+#if UNITY_EDITOR
             Debug.LogWarning($"Data collection is disabled. Event {eventName} was not sent.");
+#endif
+        }
     }
 
 }
@@ -37,7 +45,9 @@ public class DataCollectionController : MonoBehaviour
     {
         if (Instance != null)
         {
+#if UNITY_EDITOR
             Debug.LogWarning($"there exists a {Instance.name} in the scene already");
+#endif
         }
         Instance = this;
     }
@@ -53,13 +63,17 @@ public class DataCollectionController : MonoBehaviour
     {
         AnalyticsService.Instance.StartDataCollection();
         isCollectingData = true;
+#if UNITY_EDITOR
         Debug.Log("Data collection started");
+#endif
     }
 
     public void StopCollectingData()
     {
         AnalyticsService.Instance.StopDataCollection();
         isCollectingData = false;
+#if UNITY_EDITOR
         Debug.Log("Data collection stopped");
+#endif
     }
 }

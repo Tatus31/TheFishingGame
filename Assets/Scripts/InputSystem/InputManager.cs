@@ -86,4 +86,9 @@ public class InputManager : MonoBehaviour
     {
         return playerInputActions.Player.Interact.WasPressedThisFrame();
     }
+
+    public bool GetLightsInputDown()
+    {
+        return playerInputActions.Player.Light.WasPressedThisFrame();
+    }
 }

@@ -7,6 +7,13 @@ public class RespawnShip : ShipTransporter
 {
     public static RespawnShip Instance;
 
+    private StartFire _startFire;
+    private ShipDamage _shipDamage;
+    private ShipRepairPoints _shipRepairPoints;
+    private ElectricalDevice _electricalDevice;
+    private ShipMovement _shipMovement;
+    private StickToShip _stickToShip;
+    
     private void Awake()
     {
         if (Instance != null)
@@ -23,26 +30,27 @@ public class RespawnShip : ShipTransporter
 
     private void Start()
     {
+        _startFire = FindObjectOfType<StartFire>();
+        _shipDamage = FindObjectOfType<ShipDamage>();
+        _shipRepairPoints = FindObjectOfType<ShipRepairPoints>();
+        _electricalDevice = FindObjectOfType<ElectricalDevice>();
+        _shipMovement = FindObjectOfType<ShipMovement>();
+        _stickToShip = FindObjectOfType<StickToShip>();
+        
         SinkShip.OnShipSank += SinkShip_OnShipSank;
     }
 
+    // ReSharper disable Unity.PerformanceAnalysis
     private void SinkShip_OnShipSank(bool isSinking)
     {
         if (isSinking)
         {
-            StartFire startFire = FindObjectOfType<StartFire>();
-            ShipDamage shipDamage = FindObjectOfType<ShipDamage>();
-            ShipRepairPoints shipRepairPoints = FindObjectOfType<ShipRepairPoints>();
-            ElectricalDevice electricalDevice = FindObjectOfType<ElectricalDevice>();
-            ShipMovement shipMovement = FindObjectOfType<ShipMovement>();
-            StickToShip stickToShip = FindObjectOfType<StickToShip>();
-
-            stickToShip.IsControllingShip = false;
-            shipMovement.SetNeutralSpeed();
-            shipMovement.HaltShip();
-            startFire.FireActionStop();
-            shipDamage.RestoreHealth(shipDamage.GetPermanentModifiedStatValue(Stats.Health));
-            electricalDevice.RepairDevice(100);
+            _stickToShip.IsControllingShip = false;
+            _shipMovement.SetNeutralSpeed();
+            _shipMovement.HaltShip();
+            _startFire.FireActionStop();
+            _shipDamage.RestoreHealth(_shipDamage.GetPermanentModifiedStatValue(Stats.Health));
+            _electricalDevice.RepairDevice(100);
         }
     }
 }

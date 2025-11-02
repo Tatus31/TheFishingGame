@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class LightsManager : MonoBehaviour
 {
@@ -8,16 +9,25 @@ public class LightsManager : MonoBehaviour
 
     [SerializeField] GameObject lightsPrefab;
     [SerializeField] float flickerTimer = 0.2f;
-    float flickerTime;
-
-    bool areLightsOn;
-    bool startFlickering;
+    [SerializeField] float lightProtectionRadius = 20f;
+    
+    private ShipCorruptionProtection _shipCorruptionProtectionCached;
+        
+    float _flickerTime;
+    
+    bool _areLightsOn;
+    bool _startFlickering;
 
     private void Start()
     {
         if (lightsPrefab == null)
         {
             return;
+        }
+        
+        if(TryGetComponent<ShipCorruptionProtection>(out ShipCorruptionProtection shipCorruptionProtection))
+        {
+            _shipCorruptionProtectionCached = shipCorruptionProtection;
         }
 
         ElectricalDevice.OnDegradation += ElectricalDevice_OnDegradation;
@@ -27,36 +37,36 @@ public class LightsManager : MonoBehaviour
     {
         ElectricalDevice electricalDevice = (ElectricalDevice)sender;
 
-        if(electricalDevice != null)
+        if(electricalDevice)
         {
             if (electricalDevice.CurrentDegradation == ElectricalDevice.DegradationCondition.Bad)
             {
-                startFlickering = true;
+                _startFlickering = true;
             }
             else
             {
-                startFlickering = false;
+                _startFlickering = false;
             }
         }
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        if (InputManager.Instance.GetLightsInputDown())
         {
             ToggleLights();
         }
 
-        if (startFlickering)
+        if (_startFlickering)
         {
-            flickerTime += Time.deltaTime;
-            if (flickerTime >= flickerTimer)
+            _flickerTime += Time.deltaTime;
+            if (_flickerTime >= flickerTimer)
             {
                 lightsPrefab.SetActive(!lightsPrefab.activeSelf);
-                flickerTime = 0;
+                _flickerTime = 0;
             }
 
-            OnLightsFlicker?.Invoke(this, startFlickering);
+            OnLightsFlicker?.Invoke(this, _startFlickering);
         }
 
     }
@@ -64,7 +74,23 @@ public class LightsManager : MonoBehaviour
     public void ToggleLights()
     {
         lightsPrefab.SetActive(!lightsPrefab.activeSelf);
-        areLightsOn = lightsPrefab.activeSelf;
-        OnLightsToggled?.Invoke(this, areLightsOn);
+        _areLightsOn = lightsPrefab.activeSelf;
+        OnLightsToggled?.Invoke(this, _areLightsOn);
+
+        float previous = 8f;
+            
+        if (_shipCorruptionProtectionCached)
+        {
+            previous = _shipCorruptionProtectionCached.radius;
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning("The lights are cached but the lights are not in cache");
+#endif
+        }
+
+        _shipCorruptionProtectionCached.radius = _areLightsOn ? lightProtectionRadius : previous;
+        
     }
 }

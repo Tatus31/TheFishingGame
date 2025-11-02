@@ -10,6 +10,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
     Transform monsterTransform;
     ShipMovement shipMovement;
     Rigidbody rb;
+    Animator animator;
 
     float swimAttackSpeed;
     float monsterEscapeTime;
@@ -59,10 +60,14 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
     public override void EnterState(LakeMonsterStateMachine monsterState)
     {
+#if UnityEditor
         Debug.Log($"Entering Attacking State {monsterTransform.name}");
+#endif
         AudioManager.ChangeAudioPitch(AudioManager.HeartBeatSound, maxPitch);
-        InitializeAttackState();
 
+        animator = AnimationController.Instance.GetAnimator(AnimationController.Animators.MonsterAnimator);
+        
+        InitializeAttackState();
         SubscribeEvents();
         SetTargetDirection();
     }
@@ -70,7 +75,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
     public override void ExitState()
     {
         UnsubscribeEvents();
-        CameraOverlayManager.Instance.EndEvent();
+        CameraOverlay.Instance.EndOverlayEvent(1f);
         isMonsterPursuing = false;
     }
 
@@ -97,7 +102,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
     void InitializeAttackState()
     {
-        CameraOverlayManager.Instance.TriggerEventWithDelay();
+        CameraOverlay.Instance.TriggerOverlayWithDelay(1f);
         AudioManager.PlaySound(AudioManager.HeartBeatSound);
 
         if(shipMovement.IsControllingShip)
@@ -138,6 +143,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
     void OnShipDamageTaken(object sender, int e)
     {
+        AnimationController.Instance.PlayAnimation(animator, AnimationController.ON_MONSTER_BITE, false);
         numberOfAttacks++;
         attackDuration = 0f;
         StartRetreatAndWindUp();
@@ -162,11 +168,13 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
             predictedPosition = playerTransform.position;
         }
         else if (distanceToShip <= stopPredictionAttackRange)
-        {
+        {            
+            AnimationController.Instance.PlayAnimation(animator, AnimationController.ON_MONSTER_BITE, true);
             predictedPosition = AttackShipPosition();
         }
         else
         {
+            AnimationController.Instance.PlayAnimation(animator, AnimationController.ON_MONSTER_BITE, false);
             predictedPosition = PredictShipPosition();
         }
 
@@ -176,18 +184,18 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
     Vector3 PredictShipPosition()
     {
-        if (shipTransform == null)
+        if (!shipTransform)
             return Vector3.zero;
 
         Vector3 predictedPosition = shipTransform.position;
 
-        if (shipMovement != null)
+        if (shipMovement)
         {
             Vector3 shipVelocity = shipMovement.ShipFlatVel;
 
             if (shipVelocity.magnitude > 0.1f)
             {
-                predictedPosition += shipVelocity.normalized * shipVelocity.magnitude * predictionValue;
+                predictedPosition += shipVelocity.normalized * (shipVelocity.magnitude * predictionValue);
             }
         }
 
@@ -196,11 +204,11 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
 
     Vector3 AttackShipPosition()
     {
-        if (shipTransform == null)
+        if (!shipTransform)
             return Vector3.zero;
 
         Vector3 attackPosition = shipTransform.position;
-
+        
         //if (shipMovement != null)
         //{
         //    Vector3 shipVelocity = shipMovement.ShipFlatVel;
@@ -237,8 +245,9 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
         if (attackDuration > maxAttackDuration)
         {
             numberOfAttacks++;
-
+#if UNITY_EDITOR
             Debug.Log($"Monster missed attack {numberOfAttacks}");
+#endif
 
             isMonsterRetreating = true;
             attackDuration = 0f;

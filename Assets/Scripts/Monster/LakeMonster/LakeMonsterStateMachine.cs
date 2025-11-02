@@ -182,7 +182,7 @@ public class LakeMonsterStateMachine : MonoBehaviour
             if (Physics.SphereCast(monsterHead.position, sphereRadius, dir, out RaycastHit hit, obstacleAvoidanceDistance, obstacleLayer))
             {
                 float proximity = 1f - (hit.distance / obstacleAvoidanceDistance);
-                Vector3 awayFromObstacle = hit.normal * proximity * weightMultiplier;
+                Vector3 awayFromObstacle = hit.normal * (proximity * weightMultiplier);
                 avoidance += awayFromObstacle;
                 hitCount++;
 

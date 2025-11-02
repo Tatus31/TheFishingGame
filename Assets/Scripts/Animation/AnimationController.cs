@@ -19,6 +19,7 @@ public class AnimationController: MonoBehaviour
         ShipGearAnimator,
         ShipWheelAnimator,
         WrenchAnimator,
+        MonsterAnimator
     }
 
     [Serializable]
@@ -47,6 +48,7 @@ public class AnimationController: MonoBehaviour
     [HideInInspector] public const string IS_FIXING_HOLE = "isFixingHole";
     [HideInInspector] public const string FIX_SPEED_MULTIPLIER = "fixSpeedMultiplier";
     [HideInInspector] public const string ON_USE = "onUse";
+    public const string ON_MONSTER_BITE = "IsBiting";
 
     void Awake()
     {

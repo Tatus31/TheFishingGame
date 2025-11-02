@@ -6,7 +6,7 @@ public class UIFadeManager : MonoBehaviour
 {
     public static UIFadeManager Instance { get; private set; }
 
-    private readonly Dictionary<CanvasGroup, Coroutine> activeFades = new();
+    private readonly Dictionary<CanvasGroup, Coroutine> _activeFades = new();
 
     private void Awake()
     {
@@ -20,13 +20,14 @@ public class UIFadeManager : MonoBehaviour
 
     public void Fade(CanvasGroup group, float targetAlpha, float duration, System.Action onComplete = null)
     {
-        if (group == null) return;
+        if (!group) 
+            return;
 
-        if (activeFades.TryGetValue(group, out Coroutine existing))
+        if (_activeFades.TryGetValue(group, out Coroutine existing))
             StopCoroutine(existing);
 
         Coroutine fadeCoroutine = StartCoroutine(FadeRoutine(group, targetAlpha, duration, onComplete));
-        activeFades[group] = fadeCoroutine;
+        _activeFades[group] = fadeCoroutine;
     }
 
     private IEnumerator FadeRoutine(CanvasGroup group, float targetAlpha, float duration, System.Action onComplete)
@@ -45,6 +46,6 @@ public class UIFadeManager : MonoBehaviour
         group.alpha = targetAlpha;
         onComplete?.Invoke();
 
-        activeFades.Remove(group);
+        _activeFades.Remove(group);
     }
 }
