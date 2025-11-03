@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Serialization;
 
 public class MoveObjectsWithShip : MonoBehaviour
 {
@@ -11,7 +12,8 @@ public class MoveObjectsWithShip : MonoBehaviour
     [SerializeField]
     ShipMovement shipMovement;
     [Header("Animation Smoothing")]
-    [SerializeField] float smoothSpeed = 5f;
+    [SerializeField] float inertiaTweenTime = 0.2f;
+    Tweener inertiaTween;
     //[SerializeField] float inputReleaseDelay = 0.2f;
 
     List<Tweener> moveTweeners = new List<Tweener>();
@@ -63,7 +65,7 @@ public class MoveObjectsWithShip : MonoBehaviour
 
     private void Update()
     {
-        if (!tweensInitialized || shipMovement == null)
+        if (!tweensInitialized || !shipMovement)
             return;
 
         bool hasInput = IsWheelBeingControlled();
@@ -103,15 +105,22 @@ public class MoveObjectsWithShip : MonoBehaviour
     {
         Vector2 movementInput = InputManager.Instance.GetShipMovement();
         float turnInput = movementInput.x;
-
         float targetNormalizedPosition = Mathf.Clamp01(turnInput * 0.5f + 0.5f);
 
-        //lastTargetPosition = targetNormalizedPosition;
-        currentAnimationPosition = Mathf.MoveTowards(currentAnimationPosition, targetNormalizedPosition, smoothSpeed * Time.deltaTime);
+        if (Mathf.Approximately(currentAnimationPosition, targetNormalizedPosition))
+            return;
 
-        ApplyAnimationPosition();
+        float distance = Mathf.Abs(targetNormalizedPosition - currentAnimationPosition);
+        float tweenTime = distance / inertiaTweenTime;
+
+        inertiaTween?.Kill();
+        inertiaTween = DOTween.To(() => currentAnimationPosition, x =>
+        {
+            currentAnimationPosition = x;
+            ApplyAnimationPosition();
+        }, targetNormalizedPosition, tweenTime).SetEase(Ease.OutQuad);
     }
-
+    
     private void ApplyAnimationPosition()
     {
         foreach (var moveTween in moveTweeners)
@@ -135,14 +144,12 @@ public class MoveObjectsWithShip : MonoBehaviour
     {
         foreach (var tween in moveTweeners)
         {
-            if (tween != null)
-                tween.Kill();
+            tween?.Kill();
         }
 
         foreach (var tween in rotateTweeners)
         {
-            if (tween != null)
-                tween.Kill();
+            tween?.Kill();
         }
 
         moveTweeners.Clear();

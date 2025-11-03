@@ -284,6 +284,7 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
         SetTargetDirection();
     }
 
+#if UNITY_EDITOR
     public override void DrawGizmos(LakeMonsterStateMachine monsterState)
     {
         if (monsterTransform == null)
@@ -325,5 +326,6 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
         Gizmos.DrawWireSphere(targetPosition, 1.5f);
         Gizmos.DrawLine(monsterTransform.position, targetPosition);
     }
+#endif
 
 }

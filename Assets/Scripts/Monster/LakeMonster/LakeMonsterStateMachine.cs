@@ -122,7 +122,7 @@ public class LakeMonsterStateMachine : MonoBehaviour
 
     public void SwitchState(BaseLakeMonsterState newState)
     {
-        if (ShipDamage.Instance != null && ShipDamage.Instance.IsInvincible)
+        if (ShipDamage.Instance && ShipDamage.Instance.IsInvincible)
             return;
 
         currentState?.ExitState();
@@ -300,7 +300,7 @@ public class LakeMonsterStateMachine : MonoBehaviour
     {
         return Vector3.Distance(monsterHead.position, shipTransform.position);
     }
-
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (monsterHead != null)
@@ -311,4 +311,5 @@ public class LakeMonsterStateMachine : MonoBehaviour
             currentState.DrawGizmos(this);
         }
     }
+#endif
 }

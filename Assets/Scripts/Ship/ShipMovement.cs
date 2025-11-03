@@ -60,7 +60,8 @@ public class ShipMovement : MonoBehaviour
     public SpeedLevel CurrentSpeedLevel { get { return currentSpeedLevel; } }
     public float AbsoluteSpeedLimit { get { return absoluteSpeedLimit; } set { absoluteSpeedLimit = value; } }
     public float MaxWheelRotation { get { return maxWheelRotation; } set { maxWheelRotation = value; } }
-
+    public float TurnSpeed { get { return turnSpeed; } }
+    
     void Awake()
     {
         shipRigidbody = GetComponent<Rigidbody>();

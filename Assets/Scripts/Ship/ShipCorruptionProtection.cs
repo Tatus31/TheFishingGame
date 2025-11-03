@@ -18,25 +18,27 @@ public class ShipCorruptionProtection : MonoBehaviour
         float distance = Vector3.Distance(playerTransform.position, transform.position);
         bool insideNow = distance <= radius;
         
-        if (!insideNow && _isInside)
+        if (!insideNow && _isInside && !IsUnderDeck.isUnderDeck)
         {
             _isInside = false;
             StartCorruption();
         }
 
-        if (insideNow && !_isInside)
+        if ((insideNow || IsUnderDeck.isUnderDeck) && !_isInside)
         {
             _isInside = true;
             StopCorruption();
         }
+
     }
 
     private void StartCorruption()
     {
+        StopCorruption(); 
         CameraOverlay.Instance.TriggerOverlayWithDelay(0f, corruptionTime);
-
         _corruptRoutine = StartCoroutine(CorruptionTimer());
     }
+
 
     private void StopCorruption()
     {
