@@ -9,13 +9,14 @@ public class AudioManager : MonoBehaviour
     public static string HeartBeatSound = "HeartBeatSound";
     public static string HeartBeatSlowSound = "HeartBeatSlowSound";
     public static string WalkSound = "Audio";
+    public static string SprinklerSound = "SprinklerSound";
 
     [SerializeField]
     private List<AudioSource> playingSounds = new List<AudioSource>();
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (Instance && Instance != this)
         {
 #if UNITY_EDITOR
             Debug.LogWarning($"Multiple instances of AudioManager found. Destroying duplicate on {gameObject.name}");
@@ -29,19 +30,23 @@ public class AudioManager : MonoBehaviour
 
     public static void PlaySound(string soundName)
     {
-        if (Instance == null)
+        if (!Instance)
         {
+#if UNITY_EDITOR
             Debug.LogError("AudioManager instance is null. Cannot play sound.");
+#endif
             return;
         }
 
         StopAllSounds();
 
         GameObject soundObj = GameObject.Find(soundName);
-        if (soundObj != null)
+        
+        if (soundObj)
         {
             AudioSource audioSource = soundObj.GetComponent<AudioSource>();
-            if (audioSource != null)
+            
+            if (audioSource)
             {
                 audioSource.mute = false;
                 audioSource.Play();
@@ -49,22 +54,27 @@ public class AudioManager : MonoBehaviour
             }
             else
             {
+#if UNITY_EDITOR
                 Debug.LogWarning($"No AudioSource component found on {soundName}");
+#endif
             }
         }
         else
         {
+#if UNITY_EDITOR
             Debug.LogWarning($"Sound object '{soundName}' not found in scene");
+#endif
         }
     }
 
     public static void StopAllSounds()
     {
-        if (Instance == null) return;
+        if (!Instance) 
+            return;
 
         foreach (AudioSource source in Instance.playingSounds)
         {
-            if (source != null)
+            if (source)
             {
                 source.mute = true;
             }
@@ -73,32 +83,55 @@ public class AudioManager : MonoBehaviour
         Instance.playingSounds.Clear();
     }
 
-    public static void MuteSound(string soundName)
+    public static void MuteSound(string soundName, float fadeDuration = 1f)
     {
-        if (Instance == null) return;
+        if (!Instance) 
+            return;
 
         GameObject soundObj = GameObject.Find(soundName);
-        if (soundObj != null)
+
+        if (soundObj)
         {
             AudioSource audioSource = soundObj.GetComponent<AudioSource>();
-            if (audioSource != null)
+
+            if (audioSource)
             {
-                audioSource.mute = true;
-                Instance.playingSounds.Remove(audioSource);
+                Instance.StartCoroutine(FadeOutAndMute(audioSource, fadeDuration));
             }
         }
     }
 
+    private static IEnumerator FadeOutAndMute(AudioSource audioSource, float duration)
+    {
+        float startVolume = audioSource.volume;
+
+        while (audioSource.volume > 0f)
+        {
+            audioSource.volume -= startVolume * Time.deltaTime / duration;
+            yield return null;
+        }
+
+        audioSource.volume = 0f;
+        audioSource.mute = true;
+
+        Instance.playingSounds.Remove(audioSource);
+    }
+    
     public static void UnmuteSound(string soundName)
     {
-        if (Instance == null) return;
+        if (!Instance) 
+            return;
+        
         GameObject soundObj = GameObject.Find(soundName);
-        if (soundObj != null)
+        
+        if (soundObj)
         {
             AudioSource audioSource = soundObj.GetComponent<AudioSource>();
-            if (audioSource != null)
+            
+            if (audioSource)
             {
                 audioSource.mute = false;
+                audioSource.volume = 1f;
                 if (!Instance.playingSounds.Contains(audioSource))
                 {
                     Instance.playingSounds.Add(audioSource);
@@ -110,54 +143,68 @@ public class AudioManager : MonoBehaviour
     public static void ChangeAudioVolume(string soundName, float volume)
     {
         GameObject soundObj = GameObject.Find(soundName);
-        if (soundObj != null)
+        
+        if (soundObj)
         {
             AudioSource audioSource = soundObj.GetComponent<AudioSource>();
-            if (audioSource != null)
+            
+            if (audioSource)
             {
                 audioSource.volume = Mathf.Clamp01(volume);
             }
             else
             {
+#if UNITY_EDITOR
                 Debug.LogWarning($"No AudioSource component found on {soundName}");
+#endif
             }
         }
         else
         {
+#if UNITY_EDITOR
             Debug.LogWarning($"Sound object '{soundName}' not found in scene");
+#endif
         }
     }
 
     public static void ChangeAudioPitch(string soundName, float pitch)
     {
         GameObject soundObj = GameObject.Find(soundName);
-        if (soundObj != null)
+        
+        if (soundObj)
         {
             AudioSource audioSource = soundObj.GetComponent<AudioSource>();
-            if (audioSource != null)
+            
+            if (audioSource)
             {
                 audioSource.pitch = pitch;
             }
             else
             {
+#if UNITY_EDITOR
                 Debug.LogWarning($"No AudioSource component found on {soundName}");
+#endif
             }
         }
         else
         {
+#if UNITY_EDITOR
             Debug.LogWarning($"Sound object '{soundName}' not found in scene");
+#endif
         }
     }
 
     public static bool IsSoundPlaying(string soundName)
     {
-        if (Instance == null) return false;
+        if (!Instance)
+            return false;
 
         GameObject soundObj = GameObject.Find(soundName);
-        if (soundObj != null)
+        
+        if (soundObj)
         {
             AudioSource audioSource = soundObj.GetComponent<AudioSource>();
-            if (audioSource != null)
+            if (audioSource)
             {
                 return audioSource.isPlaying && !audioSource.mute;
             }

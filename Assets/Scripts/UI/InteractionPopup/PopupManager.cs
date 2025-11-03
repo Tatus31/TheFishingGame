@@ -23,10 +23,19 @@ public class PopupManager : MonoBehaviour
     private void Start()
     {
         if (popupsSO == null || popupsSO.Length == 0)
+        {
+#if UNITY_EDITOR
             Debug.LogError("PopupSO is not assigned in PopupManager.");
+#endif
+        }
+
 
         if (panelPrefab == null)
+        {
+#if UNITY_EDITOR
             Debug.LogError("Panel Prefab is not assigned in PopupManager.");
+#endif
+        }
 
         InfoKey infoKey = panelPrefab.GetComponentInChildren<InfoKey>(true);
         InteractKey interactKey = panelPrefab.GetComponentInChildren<InteractKey>(true);
@@ -43,7 +52,9 @@ public class PopupManager : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR
             Debug.LogError("CanvasGroup component not found on panelPrefab.");
+#endif
         }
 
         EventManager.AddListener<OnEnteredInteraction>(OnEnteredInteraction);
@@ -109,10 +120,10 @@ public class PopupManager : MonoBehaviour
 
         panelCanvasGroup.alpha = 0f;
 
-        if (infoText != null)
+        if (infoText)
             infoText.text = popup.InformationKey.ToString();
 
-        if (interactText != null)
+        if (interactText)
             interactText.text = popup.InteractionKey.ToString();
 
         OnPopupActivated?.Invoke(popup);

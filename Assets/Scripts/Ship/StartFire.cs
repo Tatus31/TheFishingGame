@@ -81,12 +81,10 @@ public class StartFire : MonoBehaviour
     {
         while (isOnFire)
         {
-            Debug.Log($"isOnFire inside {isOnFire}");
             fireTime += Time.deltaTime;
 
             if (!isOnFire)
             {
-                Debug.Log("Fire stopped");
                 yield break;
             }
 

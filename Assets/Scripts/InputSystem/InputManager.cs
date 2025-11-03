@@ -91,4 +91,9 @@ public class InputManager : MonoBehaviour
     {
         return playerInputActions.Player.Light.WasPressedThisFrame();
     }
+
+    public bool GetSprinklersInputDown()
+    {
+        return playerInputActions.Player.Sprinklers.WasPressedThisFrame();
+    }
 }

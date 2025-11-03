@@ -4,22 +4,35 @@ using UnityEngine.VFX;
 
 public class ActivateSprinklers : MonoBehaviour
 {
-    [SerializeField]
-    GameObject SprinklerVFXObj;
+    [SerializeField] GameObject SprinklerVFXObj;
+    [SerializeField] GameObject SprinklerCooldownVFXObj; 
 
     StartFire startFire;
-    float sprinklerTime = 5f;
+    
+    float sprinklerTime = 15f;
     float cooldownTime = 60f;
+    
     bool isOnCooldown = false;
 
     private void Start()
     {
         if (SprinklerVFXObj == null)
         {
+#if UNITY_EDITOR
             Debug.LogError("SprinklerVFXObj is not assigned in the inspector.");
+#endif
             return;
         }
 
+        if (SprinklerCooldownVFXObj == null)
+        {
+#if UNITY_EDITOR
+            Debug.LogError("SprinklerCooldownVFXObj is not assigned in the inspector.");
+#endif
+            return;
+        }
+        
+        SprinklerCooldownVFXObj.SetActive(false);
         SprinklerVFXObj.SetActive(false);
 
         if (TryGetComponent<StartFire>(out StartFire startFire))
@@ -30,7 +43,7 @@ public class ActivateSprinklers : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (InputManager.Instance.GetSprinklersInputDown())
         {
             if (!isOnCooldown)
             {
@@ -38,13 +51,18 @@ public class ActivateSprinklers : MonoBehaviour
             }
             else
             {
+                if(!SprinklerCooldownVFXObj.activeSelf)
+                    SprinklerCooldownVFXObj.SetActive(true);
+#if UNITY_EDITOR
                 Debug.Log("Sprinklers are cooling down.");
+#endif
             }
         }
     }
 
     void StartSprinklers()
     {
+        SprinklerCooldownVFXObj.SetActive(false);
         StartCoroutine(SprinklerRoutine());
     }
 
@@ -55,17 +73,29 @@ public class ActivateSprinklers : MonoBehaviour
         var vfx = SprinklerVFXObj.GetComponent<VisualEffect>();
         SprinklerVFXObj.SetActive(true);
         vfx?.Play();
+        AudioManager.PlaySound(AudioManager.SprinklerSound);
 
         yield return new WaitForSeconds(sprinklerTime);
 
         vfx?.Stop();
         startFire.FireActionStop();
+        AudioManager.MuteSound(AudioManager.SprinklerSound);
 
-        SprinklerVFXObj.SetActive(false);
-
+        // yield return new WaitForSeconds(fadeOutDuration); 
+        //SprinklerVFXObj.SetActive(false);
+        
+        if(!SprinklerCooldownVFXObj.activeSelf)
+            SprinklerCooldownVFXObj.SetActive(true);
+        
         yield return new WaitForSeconds(cooldownTime);
 
         isOnCooldown = false;
+        
+        if(SprinklerCooldownVFXObj.activeSelf)
+            SprinklerCooldownVFXObj.SetActive(false);
+#if UNITY_EDITOR        
         Debug.Log("Sprinklers are ready to use again.");
+#endif
     }
+
 }
