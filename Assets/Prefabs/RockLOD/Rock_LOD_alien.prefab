@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 622028293285202424}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rock_LOD_alien
-  m_TagString: Untagged
+  m_TagString: Danger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -112,8 +112,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -6448023033563820972, guid: 18004df2105399c468aae25b49ca9711,
         type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -6448023033563820972, guid: 18004df2105399c468aae25b49ca9711,
+        type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -6448023033563820972, guid: 18004df2105399c468aae25b49ca9711,
+        type: 3}
+      propertyPath: m_TagString
+      value: Danger
       objectReference: {fileID: 0}
     - target: {fileID: -4959543001603277200, guid: 18004df2105399c468aae25b49ca9711,
         type: 3}
@@ -142,18 +152,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -3106951733352098118, guid: 18004df2105399c468aae25b49ca9711,
         type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -3106951733352098118, guid: 18004df2105399c468aae25b49ca9711,
+        type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3106951733352098118, guid: 18004df2105399c468aae25b49ca9711,
+        type: 3}
+      propertyPath: m_TagString
+      value: Danger
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 18004df2105399c468aae25b49ca9711,
         type: 3}
       propertyPath: m_Name
       value: Rock_alien
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 18004df2105399c468aae25b49ca9711,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1774559729694889979, guid: 18004df2105399c468aae25b49ca9711,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1774559729694889979, guid: 18004df2105399c468aae25b49ca9711,
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1774559729694889979, guid: 18004df2105399c468aae25b49ca9711,
+        type: 3}
+      propertyPath: m_TagString
+      value: Danger
       objectReference: {fileID: 0}
     - target: {fileID: 4212432942555908572, guid: 18004df2105399c468aae25b49ca9711,
         type: 3}
@@ -306,11 +341,11 @@ LODGroup:
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 6077873292929628742}
-  - screenRelativeHeight: 0.3
+  - screenRelativeHeight: 0.48499128
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 4079034979990883479}
-  - screenRelativeHeight: 0.10231632
+  - screenRelativeHeight: 0.36849862
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 1998389336022514350}
