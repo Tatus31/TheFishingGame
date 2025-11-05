@@ -124,10 +124,14 @@ public class ShipDamage : MonoBehaviour
 #endif    
             return;
         }
-        
+
+        if (!collision.collider.CompareTag(TagHolder.PLAYER))
+        {
 #if UNITY_EDITOR 
-        Debug.Log($"collided with: {collision.gameObject.name}");
+            Debug.Log($"collided with: {collision.gameObject.name}");
 #endif 
+        }
+
         if (collision.collider.CompareTag(TagHolder.danger))
         {
 #if UNITY_EDITOR

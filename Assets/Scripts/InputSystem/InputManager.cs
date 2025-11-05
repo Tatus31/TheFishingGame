@@ -96,4 +96,9 @@ public class InputManager : MonoBehaviour
     {
         return playerInputActions.Player.Sprinklers.WasPressedThisFrame();
     }
+
+    public bool GetInventoryInputDown()
+    {
+        return playerInputActions.Player.Inventory.WasPressedThisFrame();
+    }
 }

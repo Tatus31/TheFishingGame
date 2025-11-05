@@ -8,6 +8,7 @@ public static class TagHolder
     public static string toxicDanger = "ToxicDanger";
     public static string monsterDanger = "MonsterDanger";
     public static string DANGER_AREA = "DangerArea";
+    public static string PLAYER = "Player";
 
     public static string[] dangers = { danger, monsterDanger, toxicDanger };
 }

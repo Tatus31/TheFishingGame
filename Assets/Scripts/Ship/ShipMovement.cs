@@ -171,12 +171,12 @@ public class ShipMovement : MonoBehaviour
 
     void UpdateGearAnimation()
     {
-        if (AnimationController.Instance == null)
+        if (!AnimationController.Instance)
             return;
 
         Animator gearAnimator = AnimationController.Instance.GetAnimator(AnimationController.Animators.ShipGearAnimator);
 
-        if (gearAnimator == null)
+        if (!gearAnimator)
             return;
 
         int gearState = (int)currentSpeedLevel;
@@ -225,7 +225,8 @@ public class ShipMovement : MonoBehaviour
                 maxSpeed = forward3Speed;
                 break;
             case SpeedLevel.reverse:
-                moveInput = -1f;
+                moveInput = -1;
+                maxSpeed = forward1Speed * 0.5f;
                 break;
         }
 
@@ -240,7 +241,12 @@ public class ShipMovement : MonoBehaviour
         shipRigidbody.AddForce(moveDirection, ForceMode.Acceleration);
 
         float speedSquared = shipRigidbody.velocity.sqrMagnitude;
-        Vector3 waterResistance = -shipRigidbody.velocity.normalized * speedSquared * waterDragMultiplier * 0.01f;
+        float resistanceScale = 1f;
+        
+        if (currentSpeedLevel == SpeedLevel.reverse)
+            resistanceScale = 0.5f;
+        
+        Vector3 waterResistance = -shipRigidbody.velocity.normalized * (speedSquared * waterDeceleration * waterDragMultiplier * resistanceScale);
 
         shipRigidbody.AddForce(waterResistance, ForceMode.Acceleration);
     }
@@ -297,7 +303,6 @@ public class ShipMovement : MonoBehaviour
 
         if (previousLevel != currentSpeedLevel)
         {
-            Debug.Log($"Ship speed set to neutral: {currentSpeedLevel}");
             UpdateGearAnimation();
         }
     }
@@ -324,8 +329,6 @@ public class ShipMovement : MonoBehaviour
 
         OnDetectionChange?.Invoke(this, currentSpeedLevel);
         OnShipSpeedChange?.Invoke(this, ShipFlatVel);
-
-        Debug.Log("Ship halted");
     }
 
     public bool IsShipMoving()

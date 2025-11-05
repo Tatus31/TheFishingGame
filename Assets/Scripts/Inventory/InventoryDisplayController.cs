@@ -5,46 +5,41 @@ using UnityEngine.UI;
 
 public class InventoryDisplayController : MonoBehaviour
 {
-    bool isHiden = true;
+    bool isHidden = true;
+
     [SerializeField] GameObject player;
     [SerializeField] GameObject mainCamera;
     [SerializeField] GameObject inventoryUIObj;
     [SerializeField] GameObject shipEquipmentUIObj;
     [SerializeField] GameObject craftingUIObj;
+
     [SerializeField] LayerMask shipEquipmentLayerUI;
     [SerializeField] LayerMask craftingLayerUI;
-    CameraLook cameraLook;
 
     private void Start()
     {
         inventoryUIObj.SetActive(false);
         shipEquipmentUIObj.SetActive(false);
         craftingUIObj.SetActive(false);
-
-        cameraLook = FindObjectOfType<CameraLook>();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I)) 
+        if (InputManager.Instance.GetInventoryInputDown())
         {
-            if (isHiden)
-            {
+            if (isHidden)
                 DisplayInventory();
-            }
             else
-            {
                 HideInventory();
-            }
         }
     }
 
     void DisplayInventory()
     {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        isHiden = false;
+        isHidden = false;
         inventoryUIObj.SetActive(true);
+
+        CameraLook.LockCamera(true);
 
         if (MouseWorldPosition.GetInteractable(craftingLayerUI))
         {
@@ -57,18 +52,19 @@ public class InventoryDisplayController : MonoBehaviour
             shipEquipmentUIObj.SetActive(true);
             player.SetActive(false);
         }
-        cameraLook.enabled = false;
     }
 
     void HideInventory()
     {
-        inventoryUIObj.GetComponent<UserInterface>().DisableToolTip();
+        var ui = inventoryUIObj.GetComponent<UserInterface>();
+        
+        if (ui)
+            ui.DisableToolTip();
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        isHiden = true;
-
+        isHidden = true;
         inventoryUIObj.SetActive(false);
+
+        CameraLook.LockCamera(false);
 
         if (shipEquipmentUIObj.activeSelf)
         {
@@ -76,10 +72,10 @@ public class InventoryDisplayController : MonoBehaviour
             mainCamera.SetActive(true);
             player.SetActive(true);
         }
+
         if (craftingUIObj.activeSelf)
         {
             craftingUIObj.SetActive(false);
         }
-        cameraLook.enabled = true;
     }
 }

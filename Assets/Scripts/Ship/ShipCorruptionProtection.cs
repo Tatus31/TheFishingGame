@@ -30,7 +30,7 @@ public class ShipCorruptionProtection : MonoBehaviour
         float distance = Vector3.Distance(playerTransform.position, transform.position);
         bool insideNow = distance <= radius;
         
-        if (IsUnderDeck.isUnderDeck)
+        if (IsUnderDeck.isUnderDeck || TraderArea.IsInsideTraderArea)
         {
             if (!_isInside)
             {
@@ -55,7 +55,7 @@ public class ShipCorruptionProtection : MonoBehaviour
 
     private void StartCorruption()
     {
-        if(IsUnderDeck.isUnderDeck)
+        if(IsUnderDeck.isUnderDeck || TraderArea.IsInsideTraderArea)
             return;
         
         CameraOverlay.Instance.TriggerOverlayWithDelay(0f, corruptionTime);

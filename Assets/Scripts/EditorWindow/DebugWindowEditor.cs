@@ -68,6 +68,14 @@ public class DebugWindowEditor : EditorWindow
         SpawnButton.style.marginTop = 5;
         SpawnButton.style.marginBottom = 5;
         teleportSectionContainer.Add(SpawnButton);
+        
+        Button TraderButton = new Button(TeleportToTrader);
+        TraderButton.name = "TeleportToTrader";
+        TraderButton.text = "Teleport To Trader";
+        TraderButton.style.marginTop = 5;
+        TraderButton.style.marginBottom = 5;
+        teleportSectionContainer.Add(TraderButton);
+
 
         root.Add(teleportSectionContainer);
 
@@ -408,6 +416,25 @@ public class DebugWindowEditor : EditorWindow
     void TeleportToSpawn()
     {
         MoveToSpawn moveToSpawn = MoveToSpawn.Instance;
+
+        if (moveToSpawn != null)
+        {
+            moveToSpawn.MovePlayerManually();
+#if UNITY_EDITOR
+            Debug.Log($"Player teleported to {moveToSpawn.targetPoint}.");
+#endif
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"{moveToSpawn} instance not found in the scene. (Are you in playmode?)");
+#endif
+        }
+    }
+    
+    void TeleportToTrader()
+    {
+        ClimbLadderToTrader_1 moveToSpawn = ClimbLadderToTrader_1.Instance;
 
         if (moveToSpawn != null)
         {
