@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,8 +54,9 @@ public class WalkState : MovementBaseState
     {
         bool isSwimming = PlayerMovement.Instance.IsSwimming;
         bool isStill = player.rb.velocity.magnitude < 0.1f;
+        bool isControllingShip = StickToShip.Instance.IsControllingShip;
 
-        if (isSwimming || isStill)
+        if (isSwimming || isStill || isControllingShip)
         {
             AudioManager.MuteSound(AudioManager.WalkSound);
             return;

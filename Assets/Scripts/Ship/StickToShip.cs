@@ -14,9 +14,6 @@ public class StickToShip : MonoBehaviour
     [Header("Mask")]
     [SerializeField] LayerMask shipControlsLayerMask;
 
-    [Header("Ship Controls")]
-    [SerializeField] float additionalDownForce = 20f;
-
     bool isOnShip;
     public bool IsControllingShip;
 
@@ -60,7 +57,7 @@ public class StickToShip : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (shipRb == null || !isOnShip)
+        if (!shipRb || !isOnShip)
             return;
 
         if (IsControllingShip)
@@ -70,15 +67,15 @@ public class StickToShip : MonoBehaviour
         }
         else
         {
-            Vector3 shipMovement = shipTransform.position - previousShipPosition;
+            Vector3 shipTransformPosition = shipTransform.position - previousShipPosition;
 
-            if (characterController != null && characterController.enabled)
+            if (characterController && characterController.enabled)
             {
-                characterController.Move(shipMovement);
+                characterController.Move(shipTransformPosition);
             }
-            else if (playerRb != null)
+            else if (playerRb)
             {
-                playerRb.MovePosition(playerRb.position + shipMovement);
+                playerRb.MovePosition(playerRb.position + shipTransformPosition);
 
                 Quaternion rotationDelta = shipTransform.rotation * Quaternion.Inverse(previousShipRotation);
 
@@ -88,16 +85,21 @@ public class StickToShip : MonoBehaviour
 
                 playerRb.MovePosition(playerRb.position + rotationMovement);
 
-                playerRb.AddForce(-transform.up * additionalDownForce, ForceMode.Force);
+                //playerRb.AddForce(-transform.up * additionalDownForce, ForceMode.Force);
             }
             else
             {
-                transform.position += shipMovement;
+                transform.position += shipTransformPosition;
             }
         }
 
         previousShipPosition = shipTransform.position;
         previousShipRotation = shipTransform.rotation;
+    }
+
+    private void LateUpdate()
+    {
+        
     }
 
     private void Update()
@@ -126,7 +128,6 @@ public class StickToShip : MonoBehaviour
         };
 
         AnalyticsEvents.SendAnalyticsEvent("OnPlayerControlShipTime", analyticsData);
-        Debug.Log($"Player time controling ship: {timeControlingShip} seconds");
     }
 
     private void ToggleShipControl()
@@ -137,7 +138,7 @@ public class StickToShip : MonoBehaviour
 
             PlayerMovement.Instance.IsControllable = true;
 
-            if (shipMovement != null)
+            if (shipMovement)
             {
                 shipMovement.IsControllingShip = false;
             }
@@ -154,7 +155,7 @@ public class StickToShip : MonoBehaviour
 
             PlayerMovement.Instance.IsControllable = false;
 
-            if (shipMovement != null)
+            if (shipMovement)
             {
                 shipMovement.IsControllingShip = true;
             }
@@ -183,7 +184,7 @@ public class StickToShip : MonoBehaviour
 
             if (playerRb != null && playerRb.isKinematic == false)
             {
-                playerRb.velocity = shipRb.GetPointVelocity(transform.position);
+                playerRb.velocity = (shipTransform.position - previousShipPosition) / Time.fixedDeltaTime;
             }
         }
     }
@@ -201,7 +202,7 @@ public class StickToShip : MonoBehaviour
 
             if (playerRb != null && playerRb.isKinematic == false)
             {
-                Vector3 exitVelocity = shipRb.GetPointVelocity(transform.position);
+                Vector3 exitVelocity = (shipTransform.position - previousShipPosition) / Time.fixedDeltaTime;
                 playerRb.velocity = new Vector3(playerRb.velocity.x + exitVelocity.x * 0.8f, playerRb.velocity.y, playerRb.velocity.z + exitVelocity.z * 0.8f);
             }
         }

@@ -109,13 +109,34 @@ public class ShipDamage : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (isInvincible)
+        {
+#if UNITY_EDITOR
+            Debug.Log("is invisible");
+#endif
             return;
+        }
+
 
         if (isInDamageCooldown)
+        {
+#if UNITY_EDITOR
+            Debug.Log("Is on cooldown");
+#endif    
             return;
+        }
+
+        if (!collision.collider.CompareTag(TagHolder.PLAYER))
+        {
+#if UNITY_EDITOR 
+            Debug.Log($"collided with: {collision.gameObject.name}");
+#endif 
+        }
 
         if (collision.collider.CompareTag(TagHolder.danger))
         {
+#if UNITY_EDITOR
+            Debug.Log("hit rock");
+#endif
             TakeCollisionDamage(baseCollisionDamage);
         }
 

@@ -68,7 +68,7 @@ public class InkDialogueController : MonoBehaviour
         if (questManager.isDone)
             return;
 
-        if (InputManager.Instance.IsLeftMouseButtonPressed() && MouseWorldPosition.GetInteractable(interactableMask))
+        if (InputManager.Instance.GetInteractInputDown() && MouseWorldPosition.GetInteractable(interactableMask))
         {
             if (story != null && story.variablesState.GlobalVariableExistsWithName("startQuest"))
             {
@@ -115,10 +115,10 @@ public class InkDialogueController : MonoBehaviour
         {
             bool shouldPlaceMarker = (bool)story.variablesState["placeMarker"];
 
-            if (shouldPlaceMarker && !markerPlaced && questManager != null && compass != null)
+            if (shouldPlaceMarker && !markerPlaced && questManager && compass)
             {
                 Quest currentQuest = questManager.GetCurrentQuest();
-                if (currentQuest != null && currentQuest.questMarker != null)
+                if (currentQuest != null && currentQuest.questMarker)
                 {
                     compass.AddMarker(currentQuest.questMarker);
                     markerPlaced = true;
@@ -130,14 +130,14 @@ public class InkDialogueController : MonoBehaviour
 
     public bool HasRequiredItem()
     {
-        if (requiredItem == null)
+        if (!requiredItem)
         {
             return false;
         }
 
         var player = FindObjectOfType<Player>();
 
-        if (player == null || player.inventory == null)
+        if (!player || !player.inventory)
         {
             return false;
         }
@@ -156,10 +156,11 @@ public class InkDialogueController : MonoBehaviour
 
     public void TakeRequiredItem()
     {
-        if (requiredItem == null) return;
+        if (!requiredItem)
+            return;
 
         var player = FindObjectOfType<Player>();
-        if (player != null && player.inventory != null)
+        if (player && player.inventory)
         {
             for (int i = 0; i < player.inventory.GetSlots.Length; i++)
             {
@@ -169,12 +170,12 @@ public class InkDialogueController : MonoBehaviour
                     player.inventory.GetSlots[i].RemoveItem();
                     var currentQuest = questManager.GetCurrentQuest();
 
-                    if (currentQuest.rewardItem != null)
+                    if (currentQuest.rewardItem)
                         player.inventory.GetSlots[i].UpdateSlot(currentQuest.rewardItem.data, currentQuest.rewardAmount);
 
-                    if (questManager != null && compass != null)
+                    if (questManager && compass)
                     {
-                        if (currentQuest != null && currentQuest.questMarker != null)
+                        if (currentQuest.questMarker)
                         {
                             compass.DeleteMarker(currentQuest.questMarker);
                         }
@@ -193,15 +194,15 @@ public class InkDialogueController : MonoBehaviour
         isQuestCompleted = false;
         markerPlaced = false;
 
-        if (inkJSONAsset != null)
+        if (inkJSONAsset)
         {
             InitializeStory();
         }
 
-        if (addToCompass && questManager != null && compass != null)
+        if (addToCompass && questManager && compass)
         {
             Quest currentQuest = questManager.GetCurrentQuest();
-            if (currentQuest != null && currentQuest.questMarker != null)
+            if (currentQuest != null && currentQuest.questMarker)
             {
                 if (story != null && story.variablesState.GlobalVariableExistsWithName("placeMarker"))
                 {
@@ -223,7 +224,7 @@ public class InkDialogueController : MonoBehaviour
 
     void InitializeStory()
     {
-        if (inkJSONAsset == null)
+        if (!inkJSONAsset)
         {
             return;
         }
@@ -239,7 +240,7 @@ public class InkDialogueController : MonoBehaviour
 
     void StartStory()
     {
-        if (inkJSONAsset == null)
+        if (!inkJSONAsset)
         {
             return;
         }
@@ -345,7 +346,7 @@ public class InkDialogueController : MonoBehaviour
         choiceText.text = text;
 
         HorizontalLayoutGroup layoutGroup = choice.GetComponent<HorizontalLayoutGroup>();
-        if (layoutGroup != null)
+        if (layoutGroup)
         {
             layoutGroup.childForceExpandHeight = false;
         }
@@ -370,10 +371,10 @@ public class InkDialogueController : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        if (questManager != null)
+        if (questManager)
         {
             Quest currentQuest = questManager.GetCurrentQuest();
-            if (currentQuest != null && currentQuest.questMarker != null && compass != null)
+            if (currentQuest != null && currentQuest.questMarker && compass)
             {
                 compass.DeleteMarker(currentQuest.questMarker);
             }
@@ -393,7 +394,7 @@ public class InkDialogueController : MonoBehaviour
 
     void RemoveChildren()
     {
-        if (textContainer != null)
+        if (textContainer)
         {
             int childCount = textContainer.childCount;
             for (int i = childCount - 1; i >= 0; --i)
@@ -402,7 +403,7 @@ public class InkDialogueController : MonoBehaviour
             }
         }
 
-        if (choicesContainer != null)
+        if (choicesContainer)
         {
             int childCount = choicesContainer.childCount;
             for (int i = childCount - 1; i >= 0; --i)
@@ -414,19 +415,19 @@ public class InkDialogueController : MonoBehaviour
 
     void TurnCanvasElementsOn()
     {
-        if (canvas != null)
+        if (canvas)
         {
             canvas.gameObject.SetActive(true);
         }
-        if (dialoguePanel != null)
+        if (dialoguePanel)
         {
             dialoguePanel.gameObject.SetActive(true);
         }
-        if (textContainer != null)
+        if (textContainer)
         {
             textContainer.gameObject.SetActive(true);
         }
-        if (choicesContainer != null)
+        if (choicesContainer)
         {
             choicesContainer.gameObject.SetActive(true);
         }
@@ -434,19 +435,19 @@ public class InkDialogueController : MonoBehaviour
 
     void TurnCanvasElementsOff()
     {
-        if (canvas != null)
+        if (canvas)
         {
             canvas.gameObject.SetActive(false);
         }
-        if (dialoguePanel != null)
+        if (dialoguePanel)
         {
             dialoguePanel.gameObject.SetActive(false);
         }
-        if (textContainer != null)
+        if (textContainer)
         {
             textContainer.gameObject.SetActive(false);
         }
-        if (choicesContainer != null)
+        if (choicesContainer)
         {
             choicesContainer.gameObject.SetActive(false);
         }
@@ -454,23 +455,13 @@ public class InkDialogueController : MonoBehaviour
 
     void LockCamera()
     {
-        if (cameraLook != null)
-        {
-            isInteracting = true;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            cameraLook.enabled = false;
-        }
+        isInteracting = true;
+        CameraLook.LockCamera(true); 
     }
 
     void UnlockCamera()
     {
-        if (cameraLook != null)
-        {
-            isInteracting = false;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            cameraLook.enabled = true;
-        }
+        isInteracting = false;
+        CameraLook.LockCamera(false);
     }
 }
