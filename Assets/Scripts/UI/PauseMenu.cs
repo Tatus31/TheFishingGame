@@ -15,6 +15,7 @@ public class PauseMenu : MonoBehaviour
         }
 
         pauseMenuUIObj.SetActive(false);
+        Time.timeScale = 1f;
     }
 
     private void Update()
@@ -29,9 +30,12 @@ public class PauseMenu : MonoBehaviour
     {
         bool isPaused = !pauseMenuUIObj.activeSelf;
         pauseMenuUIObj.SetActive(isPaused);
-        
+
+        Time.timeScale = isPaused ? 0f : 1f;
+
         CameraLook.LockCamera(isPaused);
     }
+
 
     public void CollectDataButton()
     {
