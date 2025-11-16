@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Threading;
 using UnityEngine;
 
 public class LakeMonsterAttackingState : BaseLakeMonsterState
@@ -70,6 +68,11 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
         InitializeAttackState();
         SubscribeEvents();
         SetTargetDirection();
+    }
+
+    public override void DrawGizmos(LakeMonsterStateMachine monsterState)
+    {
+
     }
 
     public override void ExitState()
@@ -285,47 +288,47 @@ public class LakeMonsterAttackingState : BaseLakeMonsterState
     }
 
 #if UNITY_EDITOR
-    public override void DrawGizmos(LakeMonsterStateMachine monsterState)
-    {
-        if (monsterTransform == null)
-            return;
-
-        Gizmos.color = isMonsterRetreating ? Color.blue : Color.red;
-        Gizmos.DrawRay(monsterTransform.position, currentMoveDirection * 5f);
-
-        Transform currentTarget = isPlayerSwimming ? playerTransform : shipTransform;
-
-        if (currentTarget == null)
-            return;
-
-        float sphereSize = isMonsterRetreating ? 2f : 1f;
-        Gizmos.DrawWireSphere(currentTarget.position, sphereSize);
-
-        Vector3 targetPosition;
-
-        if (isPlayerSwimming)
-        {
-            targetPosition = playerTransform.position;
-        }
-        else
-        {
-            float distanceToShip = Vector3.Distance(monsterTransform.position, shipTransform.position);
-
-            if (distanceToShip <= stopPredictionAttackRange)
-            {
-                targetPosition = AttackShipPosition();
-                Gizmos.color = Color.magenta; 
-            }
-            else
-            {
-                targetPosition = PredictShipPosition();
-                Gizmos.color = Color.yellow;
-            }
-        }
-
-        Gizmos.DrawWireSphere(targetPosition, 1.5f);
-        Gizmos.DrawLine(monsterTransform.position, targetPosition);
-    }
+    // public override void DrawGizmos(LakeMonsterStateMachine monsterState)
+    // {
+    //     if (monsterTransform == null)
+    //         return;
+    //
+    //     Gizmos.color = isMonsterRetreating ? Color.blue : Color.red;
+    //     Gizmos.DrawRay(monsterTransform.position, currentMoveDirection * 5f);
+    //
+    //     Transform currentTarget = isPlayerSwimming ? playerTransform : shipTransform;
+    //
+    //     if (currentTarget == null)
+    //         return;
+    //
+    //     float sphereSize = isMonsterRetreating ? 2f : 1f;
+    //     Gizmos.DrawWireSphere(currentTarget.position, sphereSize);
+    //
+    //     Vector3 targetPosition;
+    //
+    //     if (isPlayerSwimming)
+    //     {
+    //         targetPosition = playerTransform.position;
+    //     }
+    //     else
+    //     {
+    //         float distanceToShip = Vector3.Distance(monsterTransform.position, shipTransform.position);
+    //
+    //         if (distanceToShip <= stopPredictionAttackRange)
+    //         {
+    //             targetPosition = AttackShipPosition();
+    //             Gizmos.color = Color.magenta; 
+    //         }
+    //         else
+    //         {
+    //             targetPosition = PredictShipPosition();
+    //             Gizmos.color = Color.yellow;
+    //         }
+    //     }
+    //
+    //     Gizmos.DrawWireSphere(targetPosition, 1.5f);
+    //     Gizmos.DrawLine(monsterTransform.position, targetPosition);
+    // }
 #endif
 
 }

@@ -46,27 +46,27 @@ public class HeartBeatSoundDistanceManager : MonoBehaviour
         AudioManager.ChangeAudioPitch(AudioManager.HeartBeatSlowSound, pitch);
     }
 
-    private void OnDrawGizmos()
-    {
-        if (monsterTransform != null)
-        {
-            Gizmos.DrawLine(monsterTransform.position, shipTransform.position);
-
-            if ((monsterTransform.position - shipTransform.position).sqrMagnitude < maxDistanceSqr)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(monsterTransform.position, shipTransform.position);
-            }
-            else
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(monsterTransform.position, shipTransform.position);
-            }
-
-            string distanceLabel = $"Distance: {(monsterTransform.position - shipTransform.position).sqrMagnitude:F2} < {maxDistanceSqr}";
-
-            Vector3 labelPosition = shipTransform.position - Vector3.down * 0.5f;
-            Handles.Label(labelPosition, distanceLabel);
-        }
-    }
+    // private void OnDrawGizmos()
+    // {
+    //     if (monsterTransform != null)
+    //     {
+    //         Gizmos.DrawLine(monsterTransform.position, shipTransform.position);
+    //
+    //         if ((monsterTransform.position - shipTransform.position).sqrMagnitude < maxDistanceSqr)
+    //         {
+    //             Gizmos.color = Color.red;
+    //             Gizmos.DrawLine(monsterTransform.position, shipTransform.position);
+    //         }
+    //         else
+    //         {
+    //             Gizmos.color = Color.green;
+    //             Gizmos.DrawLine(monsterTransform.position, shipTransform.position);
+    //         }
+    //
+    //         string distanceLabel = $"Distance: {(monsterTransform.position - shipTransform.position).sqrMagnitude:F2} < {maxDistanceSqr}";
+    //
+    //         Vector3 labelPosition = shipTransform.position - Vector3.down * 0.5f;
+    //         Handles.Label(labelPosition, distanceLabel);
+    //     }
+    // }
 }

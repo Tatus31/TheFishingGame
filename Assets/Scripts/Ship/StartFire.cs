@@ -8,6 +8,8 @@ using Unity.Mathematics;
 
 public class StartFire : MonoBehaviour
 {
+    public static event Action OnFireStart;
+    
     [SerializeField] GameObject fireVFX;
     [SerializeField] GameObject sparksVFX;
     [SerializeField] float fireTickInterval = 1.0f;
@@ -62,6 +64,7 @@ public class StartFire : MonoBehaviour
         if (electricalDevice.CurrentDegradation == ElectricalDevice.DegradationCondition.Bad)
         {
             FireActionStart();
+
         }
     }
 
@@ -105,7 +108,8 @@ public class StartFire : MonoBehaviour
             StopCoroutine(fireTickCoroutine);
             fireTickCoroutine = null;
         }
-
+        
+        OnFireStart?.Invoke();
         fireVFX.SetActive(true);
         isOnFire = true;
         fireTickCoroutine = StartCoroutine(FireTickDamage());
